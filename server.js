@@ -29,7 +29,7 @@ require('mongoose-double')(mongoose);
 // Eliminar mensaje deprecation warning
 mongoose.Promise = global.Promise;
 
-const dbConCloud = "mongodb://llaos-bd:%40Llaos2019@llaos-serv-y0xgc.gcp.mongodb.net:27017/llaosserv";
+const dbConCloud = "mongodb://llaos-bd:%40Llaos2019@llaos-serv-y0xgc.gcp.mongodb.net/llaosserv";
 const dbConLocal = "mongodb://localhost:27017/llaosserv";
 
 
