@@ -1,0 +1,221 @@
+extends ../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora();
+
+            if($('#chk').text() == 'true'){
+                $('#chkAutorizar').prop('checked', true);
+            } else {
+                $('#chkAutorizar').prop('checked', false);
+            } 
+
+            $('#chkAutorizar').checkboxpicker({
+                offLabel: 'No',
+                onLabel: 'Si'
+            }); 
+
+            $('#nacimiento').datetimepicker(
+                {   
+                    format: 'dd-MM-yyyy'
+                }
+            );             
+
+            $('#subMenuUsuarios').removeClass('hidden');
+            $('#spanMenuUsuarios').removeClass('fa-angle-left');
+            $('#spanMenuUsuarios').addClass('fa-angle-down');
+
+            if( $('#menuSistemas').hasClass('hidden')){
+                $('#subMenuSistemas').addClass('hidden');
+                $('#spanMenuSistemas').removeClass('fa-angle-down');
+                $('#spanMenuSistemas').addClass('fa-angle-left');
+            }    
+
+                                                
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+
+        function zfill(number, width) {
+            var numberOutput = Math.abs(number); /* Valor absoluto del número */
+            var length = number.toString().length; /* Largo del número */ 
+            var zero = "0"; /* String de cero */  
+            
+            if (width <= length) {
+                if (number < 0) {
+                    return ("-" + numberOutput.toString()); 
+                } else {
+                    return numberOutput.toString(); 
+                }
+            } else {
+                if (number < 0) {
+                    return ("-" + (zero.repeat(width - length)) + numberOutput.toString()); 
+                } else {
+                    return ((zero.repeat(width - length)) + numberOutput.toString()); 
+                }
+            }
+        }
+
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-user-plus(style="margin-right: 10px;")
+                |   Editar usuario
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    form#frm(role="form" method="post" action="/usuarios/editar/usuario/#{usr.id}?_method=put")
+        .row
+            .col-lg-12
+                h4.page-header
+                    | Datos del usuario
+        .row
+            .col-lg-7
+                .form-group
+                    label | Nombre
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user-circle
+                        input.form-control(required type="text" name="nombre" placeholder="Nombre" tabindex="1" value="#{usr.nombre}")
+            .col-lg-5
+                .form-group
+                    label | Correo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-envelope
+                        input.form-control(required type="mail" name="correo" placeholder="Correo" tabindex="2" value="#{usr.correo}")
+        .row
+            .col-lg-4
+                .form-group
+                    label | Usuario
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user
+                        input.form-control(required type="text" name="usuario" placeholder="Usuario" tabindex="3" value="#{usr.usuario}")
+            .col-lg-4
+                .form-group
+                    label | Password
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-asterisk
+                        input.form-control(required type="password" name="password" placeholder="Password" tabindex="4" value="#{usr.password}")
+            .col-lg-4
+                .form-group
+                    label | Fecha Nacimiento
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar
+                        input#nacimiento.form-control(required type="text" name="nacimiento" tabindex="5" value="#{usr.nacimiento}")
+        .row
+            .col-lg-2
+                .form-group
+                    label | Número Nómina
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(required type="number" step="1" min="0" name="numero_nomina" placeholder="Número nómina" tabindex="6" value="#{usr.numero_nomina}")
+            .col-lg-5
+                .form-group
+                    label | Empresa
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-building
+                        select.form-control(required id="cmbEmpresa" name="empresa" tabindex="7")
+                            option(value="") << Seleccione >>
+                            option(value="Llaos Acuacultura S.A. de C.V.", selected=('Llaos Acuacultura S.A. de C.V.'== usr.empresa)) Llaos Acuacultura S.A. de C.V.
+                            option(value="Renegados", selected=('Renegados'== usr.empresa)) Renegados
+                            option(value="Crap", selected=('Crap'== usr.empresa)) Crap
+                            option(value="Anclar", selected=('Anclar'== usr.empresa)) Anclar
+            .col-lg-5
+                .form-group
+                    label | Unidad de Negocios
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-asterisk
+                        select.form-control(required id="cmbUnidadNeg" name="unidad_negocio" tabindex="8")
+                            option(value="") << Seleccione >>
+                            option(value="Matriz", selected=('Matriz'== usr.unidad_negocio)) Matriz
+                            option(value="Granja", selected=('Granja'== usr.unidad_negocio)) Granja
+                            option(value="Planta", selected=('Planta'== usr.unidad_negocio)) Planta
+        .row
+            .col-lg-5
+                .form-group
+                    label | Permisos
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-building
+                        select.form-control(required id="cmbPermisos" name="permisos" tabindex="9")
+                            option(value="") << Seleccione >>
+                            option(value="usuario", selected=('usuario'== usr.permisos)) usuario
+                            option(value="compras", selected=('compras'== usr.permisos)) compras
+                            option(value="admin", selected=('admin'== usr.permisos)) admin
+                            option(value="almacen_camaron", selected=('almacen_camaron'== usr.permisos)) almacen_camaron
+                            option(value="owner", selected=('owner'== usr.permisos)) owner
+                            option(value="master", selected=('master'== usr.permisos)) master
+                            option(value="externo", selected=('externo'== usr.permisos)) externo
+                            option(value="developer", selected=('developer'== usr.permisos)) developer
+            label#chk.hidden #{usr.autorizador}
+            .col-lg-7(style="margin-top: 25px;")
+                .form-check
+                    input#chkAutorizar(type="checkbox" name="autoriza" tabindex="10")
+                    label(style="margin-left: 15px;")
+                        |   ¿El usuario podrá autorizar requisiciones?
+        .divider
+        .row
+            .col-lg-2.btn-group.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-save.text-success
+                        input(type="submit" value="Guardar" tabindex="11").btn.btn-success.form-control

@@ -1,0 +1,424 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .labelError {
+            background-color: red; 
+            color: white; 
+            border-radius: 4px;
+            font-size: 1em
+        }
+
+        .right-padding {
+            margin-right: -220px;
+        }
+
+        @media (max-width: 1366px) {
+            .right-padding {
+                margin-right: -80px;
+            }
+        }
+
+        @media (max-width: 1600px) and (min-width: 1600px){
+            .right-padding {
+                margin-right: -140px;
+            }
+        }
+
+    script.
+        $(document).ready( function(){
+
+            $('#subMenuInventarios').removeClass('hidden');
+            $('#spanMenuInvetarios').removeClass('fa-angle-left');
+            $('#spanMenuInvetarios').addClass('fa-angle-down');
+            $('#subMenuGranja').removeClass('hidden');
+            $('#spanMenuGranja').removeClass('fa-angle-left');
+            $('#spanMenuGranja').addClass('fa-angle-down');
+    
+
+            obtenerfecha();
+            obtenerhora();
+
+            $('#cantidad').on('change', function(){
+                if(parseFloat(this.value) > parseFloat($('#stock').val())){
+                    $('#msg').removeClass('hidden');
+                    $('#msg').text('La cantidad excede al stock, no puede realizar salida');
+                    $('#btnRegistrar').attr('disabled', true);
+                    $('#btnRegistrar').removeClass('btn-success');
+                    $('#btnRegistrar').addClass('btn-default');
+                    $('#iBtn').removeClass('text-success');
+                    $('#iBtn').addClass('text-default');
+                } else {
+                    $('#msg').addClass('hidden');
+                    $('#msg').text('');
+                    $('#btnRegistrar').removeClass('btn-default');
+                    $('#btnRegistrar').addClass('btn-success');
+                    $('#btnRegistrar').attr('disabled', false);
+                    $('#iBtn').removeClass('text-default');
+                    $('#iBtn').addClass('text-success');
+                }   
+            });
+
+            costoStock();
+            
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        window.onload = function () { 
+            var nProd = parseFloat($('#numProc').text());
+
+            for(var i = 0; i < nProd; i++){
+               $('#pNeto'+ i).text(FormatMoney(true,parseFloat($('#pNeto'+ i).text())));
+            }
+
+            var total = parseFloat($('#costoTotal').val()) * parseFloat($('#stock').val());
+            $('#costoStock').val(total.toFixed(2));
+        }
+
+        function FormatMoney(bol, valor){
+            var total = 0;
+
+            if (bol) {
+                total += valor;
+            } else {
+                total-=valor;
+            }
+            
+            var entero = '';
+            
+            Entero_Decimal = total.toString().split('.');
+            
+            cadena = Entero_Decimal[0].split('').reverse().join('');
+            
+            for (var z = cadena.length; z >=0; z--) {
+                numero = cadena.charAt(z)
+                
+                if ((cadena.length >= 4 && z ==3 ) || (cadena.length >= 7 && z ==6 ) || (cadena.length >= 10 && z == 9 ) || (cadena.length >= 13 && z ==12 ) || (cadena.length >= 16 && z ==15 )) {
+                    numero +=  ",";
+                }
+
+                entero += numero;
+            }
+            
+            if(Entero_Decimal[1]) {
+                decimales = '.'+ Entero_Decimal[1];
+            } else {
+                decimales = '.00';
+            }
+            
+            return "$ " + entero + decimales;
+        }
+
+        function obtenerModulos(){
+           if ($('#areas').val() == "Intensivo"){
+                $('#modulos').removeClass('hidden');
+                $('#sel').removeClass('hidden');
+                $('#a').removeClass('hidden');
+                $('#b').removeClass('hidden');
+                $('#ac').addClass('hidden');
+                $('#bc').addClass('hidden');
+                $('#d').addClass('hidden');
+                $('#e').addClass('hidden');
+                $('#reser').removeClass('hidden');
+                $('#estanque').removeClass('hidden');
+                $('#estanque').attr('required', true);
+            } else if ($('#areas').val() == "Semi-intensivo"){
+                $('#modulos').removeClass('hidden');
+                $('#sel').removeClass('hidden');
+                $('#a').addClass('hidden');
+                $('#b').addClass('hidden');
+                $('#ac').removeClass('hidden');
+                $('#bc').removeClass('hidden');
+                $('#d').removeClass('hidden');
+                $('#e').removeClass('hidden');
+                $('#reser').removeClass('hidden');
+                $('#estanque').removeClass('hidden');
+                $('#estanque').attr('required', true);
+            } else {
+                $('#modulos').addClass('hidden');
+                $('#estanque').addClass('hidden');
+                $('#estanque').attr('required', false);
+            }
+        }
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-sign-in-alt(style="margin-right: 10px;")
+                |   Nueva salida
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Realiza: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-search(style="margin-right: 10px;")
+                | Búsqueda Producto
+    form#frm(role="form" method="post" action="/inventarios/buscar/articulo/2")
+        label#productos.hidden #{productos}
+        .row
+            .col-lg-4
+                .form-group
+                    label | Criterio de búsqueda
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-search-plus
+                        select.form-control(required name="criterio" tabindex="1")
+                            option(value="codigo", selected=("codigo"== criterio)) Código
+                            option(value="nombre",  selected=("nombre"== criterio)) Nombre
+            .col-lg-6
+                .form-group
+                    label | Código Producto
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-search
+                        input#codigo.form-control(required type="text" name="codigo" placeholder="Buscar.." value="#{codigo}" tabindex="0")
+            .col-lg-2
+                .form-group
+                    label &nbsp;
+                    .input-group
+                        span.input-group-addon
+                            i.fa.fa-search.text-success
+                        button#btnBuscar.form-control.btn.btn-success(type="submit" tabindex="2")
+                            |   Buscar
+    if Object.keys(productos).length > 0
+        .row
+            .col-lg-12(style="margin-top: -20px;")
+                h4.page-header
+                    i.fas.fa-list-alt(style="margin-right: 10px;")
+                    | Artículos encontrados 
+        .row
+            .col-lg.12
+                table.table
+                    thead
+                        tr
+                            th Código
+                            th Unidad
+                            th Nombre
+                            th Proveedor
+                            th Precio Neto
+                            th Acciones
+                    tbody
+                        label.hidden#numProc #{ Object.keys(productos).length }
+                        each p, index in productos
+                            tr
+                                td.text-center #{p.codigo}
+                                td.text-center #{p.unidad}
+                                td #{p.nombre}
+                                each prov in proveedores
+                                    if prov.id == p.proveedor
+                                    
+                                td  
+                                td  
+                                    a(id="link#{index}" href="", data-toggle="tooltip", data-placement="top",title="Agregar")
+                                        i.fas.fa-plus-circle.text-success.fa-lg
+    //
+    // Form 2 para agregar los datos de las entradas
+    //
+    form#frm2(role="form" method="post" action="/inventarios/registrar/salida/#{producto.id}")
+        .row
+            .col-lg-12(style="margin-top: -20px;")
+                h4.page-header
+                    i.fas.fa-box(style="margin-right: 10px;")
+                    | Datos Artículo                           
+        .row
+            .col-lg-5
+                .form-group
+                    label | Nombre
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-search
+                        input.form-control(readonly type="text"  value="#{producto.nombre}" placeholder="Nombre")
+            .col-lg-7
+                .form-group
+                    label | Descripción
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-search
+                        input.form-control(readonly type="text"  value="#{producto.descripcion}" placeholder="Descripcion")
+        .row
+            each pro in proveedores
+                if pro.id == producto.proveedor
+                    label#prod.hidden true
+                    .col-lg-6
+                        .form-group
+                            label | Proveedor
+                            .input-group
+                                span.input-group-addon
+                                    i.fas.fa-shipping-fast
+                                input.form-control(readonly type="text" value="#{pro.nombreEmpresa}" placeholder="Nombre")
+            .col-lg-2
+                .form-group
+                    label | Costo Unitario
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input.form-control(readonly type="number"  value="#{producto.precioUnitario}" placeholder="Costo Unitario")
+            .col-lg-2
+                .form-group
+                    label | Iva
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input.form-control(readonly type="number"  value="#{producto.iva}" placeholder="Iva")
+            .col-lg-2
+                .form-group
+                    label | Costo Total
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input#costoTotal.form-control(readonly type="number"  value="#{producto.precioNeto}" placeholder="Costo Total")
+        .row
+            .col-lg-4
+                .form-group
+                    label | Lugar
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-map-marked-alt
+                        input.form-control(readonly type="text" name="lugar" value="#{user.unidad_negocio}")
+            .col-lg-4
+                .form-group
+                    label | Almacen
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-warehouse
+                        select#prov.form-control(reanonly name="almacen")
+                            option General
+                            option Alimento
+                            option Gasolina
+                            option Diesel
+            .col-lg-2
+                .form-group
+                    label | En Stock
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-check-square
+                        input#stock.form-control(readonly type="number" value="#{producto.cantidad}" placeholder="Stock")
+            .col-lg-2
+                .form-group
+                    label | Costo Stock
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input#costoStock.form-control(readonly type="number"  placeholder="Costo Stock")
+        .row
+            .col-lg-12(style="margin-top: -20px;")
+                h4.page-header
+                    i.fas.fa-list-alt(style="margin-right: 10px;")
+                    | Datos Salida
+                    span#msg.hidden.pull-right.label.labelError
+        .row
+            .col-lg-3
+                .form-group
+                    label | Cantidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#cantidad.form-control(required type="number" name="cantidad" placeholder="Cantidad")
+            .col-lg-9
+                .form-group
+                    label | Solicitante
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user-circle
+                        input.form-control(required type="text" name="solicitante" placeholder="Solicita")
+        .row
+            .col-lg-4
+                .form-group
+                    label | Area
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-map-signs
+                        select#areas.form-control(required name="area" tabindex="3" value="" onchange="obtenerModulos()")
+                            option(value="") << Seleccione >>
+                            option(value="Administración - Granja") Administración - Granja
+                            option(value="Intensivo") Intensivo
+                            option(value="Semi-intensivo") Semi-intensivo
+                            option(value="Laboratorio") Laboratorio
+                            option(value="Probioticos") Probioticos
+                            option(value="Taller Mecánico") Taller Mecánico
+                            option(value="Taller Eléctrico") Taller Eléctrico 
+                            option(value="Equipo Bombeo") Equipo Bombeo
+                            option(value="Administración - Matriz") Administración - Matriz
+                            option(value="Planta - Administración") Planta - Administración
+                            option(value="Planta - Mantenimiento") Planta - Mantenimiento
+                            option(value="Planta - Proceso") Planta - Proceso
+            
+            .col-lg-4#modulos.hidden
+                .form-group
+                    label | Modulo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user-circle
+                        select.form-control(name="modulo" tabindex="4")
+                            option#sel.hidden(value="") << Seleccione >>
+                            option#a.hidden(value="A") Modulo A
+                            option#b.hidden(value="B") Modulo B
+                            option#ac.hidden(value="AC") Modulo A y Medio C
+                            option#bc.hidden(value="BC") Modulo B y Medio C
+                            option#d.hidden(value="D") Modulo D
+                            option#e.hidden(value="E") Modulo E
+                            option#reser.hidden(value="Reservorio") Reservorio
+            .col-lg-4#estanque.hidden
+                .form-group
+                    label | Estanque
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-tint
+                        input.form-control(type="text" name="estanque" placeholder="No. Estanque")
+        .divider
+        .row(style="margin-bottom: 20px;")
+            .col-lg-2.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i#iBtn.fas.fa-save.text-success
+                        input#btnRegistrar.btn.btn-success.form-control(type="submit" value="Registrar" tabindex="12" style="margin-right: 15px;")

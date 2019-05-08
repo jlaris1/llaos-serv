@@ -1,0 +1,158 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .round {
+            border-radius: 5px !important;
+            -moz-border-radius: 5px !important;
+            -webkit-border-radius: 5px !important;
+        }
+        thead {
+            background-color: black;
+            color: #fff;
+        }
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora(); 
+
+            $('#subMenuParametros').removeClass('hidden');
+            $('#spanMenuParametros').removeClass('fa-angle-left');
+            $('#spanMenuParametros').addClass('fa-angle-down');
+
+            $('#modulo').on('change', function(){
+                document.frm2.submit();
+            });
+
+            $('#estanques').on('change', function(){
+                $('#est').val(this.value);
+            });
+
+
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2 
+                i.fas.fa-eye-dropper(style="margin-right: 10px;")
+                |   Registro de Parámetros
+    .divider
+    .row
+        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-right.text-right
+            span
+                | Usuario: 
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .divider
+    .row
+        form(role="form" name="frm2" method="post" action="/parametros/find")
+            .col-lg-3
+                .form-group
+                    label | Modulo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-water
+                        select#modulo.form-control(required value="#{modulo}" name="modulo" tabindex="1")
+                            option(value="") << Seleccione >>
+                            each mod in modulos
+                                option(value="#{mod.id}") #{ mod.nombre}
+            .col-lg-3
+                .form-group
+                    label | Estanque
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-water
+                        select#estanques.form-control(name="estanque" tabindex="2")
+                            option(value="") << Seleccione >>
+                            each est in estanques
+                                option(value="#{est.id}") #{ est.codigo}
+    form#frm(role="form" method="post" action="/parametros/add")
+        input#est.hidden(required name="estanque")
+        .row
+            .col-lg-12
+                .panel.panel-primary
+                    .panel-heading
+                        i.fas.fa-vial
+                    .panel-body
+                        .col-lg-1.col-md-1.col-sm-1.col-sm-offset-0.col-md-offset-0.col-lg-offset-0
+                        .col-lg-2.col-md-2.col-xs-12
+                            .form-group
+                                label | Oxigeno Disuelto (mg/L)
+                                input.form-control(type="text" value="#{parametro.oxigeno}" name="oxigeno" placeholder="# Necro" tabindex="3")
+                        .col-lg-2.col-md-2.col-xs-12
+                            .form-group
+                                label | pH
+                                input.form-control(type="text" value="#{parametro.ph}" name="ph" placeholder="# Necro" tabindex="4")
+                        .col-lg-2.col-md-2.col-xs-12
+                            .form-group
+                                label | Salinidad
+                                input.form-control(type="text" value="#{parametro.salinidad}" name="salinidad" placeholder="# Necro" tabindex="5")
+                        .col-lg-2.col-md-2.col-xs-12
+                            .form-group
+                                label | Temperatura (°C)
+                                input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="6")
+                        .col-lg-2.col-md-2.col-xs-12
+                            .form-group
+                                label | Nivel de Agua
+                                input.form-control(type="text" value="#{parametro.nivel_agua}" name="nivel_agua" placeholder="# Necro" tabindex="7")
+        .divider
+        .row  
+            .col-lg-2.col-md-4.col-xs-6.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-plus-circle.text-success
+                        input(type="submit" value="Agregar" tabindex="8").btn.btn-success.form-control     
+            .col-lg-2.col-md-4.col-xs-6.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-arrow-circle-right.text-primary
+                        a(tabindex="9" style="color: white;" onclick="").btn.btn-primary.form-control
+                            | Siguiente Piscina 

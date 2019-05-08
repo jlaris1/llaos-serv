@@ -1,0 +1,58 @@
+extends ../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#subMenuCompras').removeClass('hidden');
+            $('#spanMenuCompras').removeClass('fa-angle-left');
+            $('#spanMenuCompras').addClass('fa-angle-down');
+            $('#subMenuOrdenes').removeClass('hidden');
+            $('#spanMenuOrdenes').removeClass('fa-angle-left');
+            $('#spanMenuOrdenes').addClass('fa-angle-down');
+
+            if($('#url').text() != ''){
+                url = '../../../../../'+ $('#url').text();
+                window.open(url, 'Download');
+                $('#url').text('');
+            }
+
+            $('#orders').dataTable();
+        });
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-shopping-cart(style="margin-right: 10px;")
+                |   Órdenes de Compra Anteriores
+    .row
+        label#url.hidden #{url}
+        table#orders.table.table-striped.table-hover
+            thead.thead-dark
+                th(scope="col").text-center
+                    |   # Serie
+                th(scope="col")
+                    |   Proveedor
+                th(scope="col")
+                    |   Estatus
+                th(scope="col")
+                    |   Fecha
+            tbody
+                each ord in orders
+                    tr(scope="row")
+                        td.text-center #{ord.serie}
+                        each prov in proveedores
+                            if prov.id == ord.proveedor
+                                td #{prov.nombreEmpresa}
+                        td
+                            if ord.estatus == "Nueva"
+                                label.label.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{ord.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if ord.estatus == "Generada"
+                                label.label.label-success &nbsp;&nbsp;&nbsp;&nbsp; #{ord.estatus} &nbsp;&nbsp;&nbsp;&nbsp;
+                            else if ord.estatus == "Cancelada" 
+                                label.label.label-danger &nbsp;&nbsp;&nbsp;&nbsp;#{ord.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if ord.estatus == "Enviada"
+                                label.label.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{ord.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if ord.estatus == "En Ruta"
+                                label.label(style="background-color: #ffa500;") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{ord.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if ord.estatus == "Cerrada"
+                                label.label.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{ord.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                        td #{ord.fecha} - #{ord.hora} 

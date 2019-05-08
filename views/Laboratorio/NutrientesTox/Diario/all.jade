@@ -1,0 +1,61 @@
+extends ../../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function() { 
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#subMenuLaboratorio').removeClass('hidden');
+            $('#spanMenuLaboratorio').removeClass('fa-angle-left');
+            $('#spanMenuLaboratorio').addClass('fa-angle-down');
+            $('#subMenuNutrientesTox').removeClass('hidden');
+            $('#spanMenuNutrientesTox').removeClass('fa-angle-left');
+            $('#spanMenuNutrientesTox').addClass('fa-angle-down');
+            $('#subMenuNutrientesToxDiario').removeClass('hidden');
+            $('#spanMenuNutrientesToxDiario').removeClass('fa-angle-left');
+            $('#spanMenuNutrientesToxDiario').addClass('fa-angle-down');
+            $('#mediciones').dataTable();
+        });
+        //Termina Javascript
+
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-vials(style="margin-right: 10px;")
+                |   Mediciones Nutrientes y Metabolitos Tóxicos (Diario)
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 55px;") 
+            a.btn.btn-special(href="/nutrientestox/diario/new", style="margin-right: 5px;")
+                i.fas.fa-plus-circle
+                |   Nueva
+            if user.permisos != "usuario"
+                a.btn.btn-special(href="#")
+                    i.fas.fa-file-pdf
+                    |   Reportes
+    .divider
+    .row
+        .table-responsive   
+            table#mediciones.table.table-striped.table-hover
+                thead
+                    th Estanque
+                    th Fecha
+                    th Amonia
+                    th Alcalinidad CaCO
+                        sub 3
+                    th Alcalinidad HCO
+                        sub 3
+                    th Alcalinidad CO
+                        sub 3
+                    th Nitrito N
+                    th Nitrito NO
+                        sub 3 
+                    th TAN
+                tbody
+                    each med in mediciones
+                        tr
+                            td.text-center #{ med.estanque }
+                            td.text-center #{ new Date(med.fecha).getDate()+ '/' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
+                            td.text-center #{ med.amonia }
+                            td.text-center #{ med.alcalinidad_CaCO3 }
+                            td.text-center #{ med.alcalinidad_HCO3 }
+                            td.text-center #{ med.alcalinidad_CO3 }
+                            td.text-center #{ med.nitrito_N }
+                            td.text-center #{ med.nitrito_NO3 }
+                            td.text-center #{ med.TAN }

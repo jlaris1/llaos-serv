@@ -1,0 +1,52 @@
+extends ../../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){
+            $('#subMenuAdministracion').removeClass('hidden');
+            $('#spanMenuAdministracion').removeClass('fa-angle-left');
+            $('#spanMenuAdministracion').addClass('fa-angle-down'); 
+            
+            $('#subMenuAdmPlanta').removeClass('hidden');
+            $('#spanMenuAdmPlanta').removeClass('fa-angle-left');
+            $('#spanMenuAdmPlanta').addClass('fa-angle-down');     
+
+            $('#subMenuTipoCamaron').removeClass('hidden');
+            $('#spanMenuTipoCamaron').removeClass('fa-angle-left');
+            $('#spanMenuTipoCamaron').addClass('fa-angle-down');
+
+            $('#orders').dataTable();
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2 
+                i.fas.fa-fish(style="margin-right: 10px;")
+                |   Tipos Camarón
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;") 
+            if user.permisos == "admin" || user.permisos == "developer"
+                a.btn.btn-special(href="/tiposcamaron/new/tipocamaron")
+                        i.fas.fa-plus-circle
+                        |   Nuevo
+    .divider
+    .row
+        table#orders.table.table-striped.table-hover
+            thead.thead-dark
+                th.text-center Nombre
+                th Talla
+                th Presentación
+                th Almacen
+                th Acciones
+            tbody
+                each tp in tiposCamaron
+                    tr
+                        td.text-center #{tp.nombre}
+                        td.text-center #{tp.talla}
+                        td.text-center #{tp.presentacion}
+                        td.text-center #{tp.almacen}
+                        td
+                            a(href="/tiposcamaron/ver/#{tp.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 10px;")
+                                i.fas.fa-eye.text-default.fa-lg
+                            a(href="/tiposcamaron/editar/#{tp.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 10px; color: #057e95;")
+                                    i.fas.fa-pencil-alt.fa-lg
+                            a(href="/tiposcamaron/eliminar/#{tp.id}", data-toggle="tooltip", data-placement="top", title="Eliminar")
+                                    i.fas.fa-minus-circle.text-danger.fa-lg

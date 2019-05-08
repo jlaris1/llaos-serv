@@ -1,0 +1,418 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .labelReq {
+            font-size: 2em; 
+            background-color: black; 
+            color: white; 
+            border-radius: 8px;
+        }
+
+        .labelSta {
+            color: white;
+            font-size: 2em; 
+            border-radius: 8px;
+        } 
+
+        @media (max-width: 1366px) and (min-width: 1366px){
+            .right-padding {
+                margin-right: -70px;
+            }
+        }
+
+        @media (max-width: 1600px) and (min-width: 1600px){
+            .right-padding {
+                margin-right: -140px;
+            }
+        }
+
+        @media (min-width: 1900px){
+            .right-padding {
+                margin-right: -210px;
+            }
+        }
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora();
+            obtenerModulos();
+
+            $('#chkProveedor').on('change', function() {
+                if($(this).is(":checked") == true){
+                    $('#tituloProveedor').removeClass('hidden');
+                    $('#panelProveedor').removeClass('hidden');
+                } else {
+                    $('#tituloProveedor').addClass('hidden');
+                    $('#panelProveedor').addClass('hidden');
+                }
+            });
+
+            var href = $("#btnEnviar").attr("href");
+            $("#btnEnviar").attr("href","");
+            $("#btnEnviar").attr("href", href + $("#responsable").val());
+
+            $('#chkProveedor').checkboxpicker({
+                offLabel: 'No',
+                onLabel: 'Si'
+            });
+
+            $('#subMenuRequisiciones').removeClass('hidden');
+            $('#spanMenuRequisiciones').removeClass('fa-angle-left');
+            $('#spanMenuRequisiciones').addClass('fa-angle-down');
+
+            if( $('#menuProductos').hasClase('hidden')){
+                $('#subMenuProductos').addClass('hidden');
+                $('#spanMenuProductos').removeClass('fa-angle-down');
+                $('#spanMenuProductos').addClass('fa-angle-left');
+            }
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+
+        function zfill(number, width) {
+            var numberOutput = Math.abs(number); /* Valor absoluto del número */
+            var length = number.toString().length; /* Largo del número */ 
+            var zero = "0"; /* String de cero */  
+            
+            if (width <= length) {
+                if (number < 0) {
+                    return ("-" + numberOutput.toString()); 
+                } else {
+                    return numberOutput.toString(); 
+                }
+            } else {
+                if (number < 0) {
+                    return ("-" + (zero.repeat(width - length)) + numberOutput.toString()); 
+                } else {
+                    return ((zero.repeat(width - length)) + numberOutput.toString()); 
+                }
+            }
+        }
+
+        function obtenerModulos(){
+           if ($('#areas').val() == "Intensivo"){
+                $('#modulos').removeClass('hidden');
+                $('#sel').removeClass('hidden');
+                $('#a').removeClass('hidden');
+                $('#b').removeClass('hidden');
+                $('#ac').addClass('hidden');
+                $('#bc').addClass('hidden');
+                $('#d').addClass('hidden');
+                $('#e').addClass('hidden');
+                $('#reser').removeClass('hidden');
+                $('#module').attr('required', true);
+            } else if ($('#areas').val() == "Semi-intensivo"){
+                $('#modulos').removeClass('hidden');
+                $('#sel').removeClass('hidden');
+                $('#a').addClass('hidden');
+                $('#b').addClass('hidden');
+                $('#ac').removeClass('hidden');
+                $('#bc').removeClass('hidden');
+                $('#d').removeClass('hidden');
+                $('#e').removeClass('hidden');
+                $('#reser').removeClass('hidden');
+                $('#module').attr('required', true);
+            } else {
+                $('#modulos').addClass('hidden');
+                $('#module').attr('required', false);
+            }
+        }
+
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-clipboard-list(style="margin-right: 10px;")
+                |   Nueva requisición
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    form(role="form" method="post" action="/requisiciones/requisicion")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-bars(style="margin-right: 10px;")
+                    | Datos de la requisición
+        .row
+            .col-lg-3.pull-left.right-padding
+                label.labelReq
+                    | &nbsp;&nbsp; #{req.codigoRequi} &nbsp;&nbsp;
+            .col-lg-5.pull-left
+                if req.estatus == "Nueva"
+                    label.labelSta.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{req.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                else if req.estatus == "Autorizada"
+                    label.labelSta.label-success &nbsp;&nbsp;&nbsp;&nbsp;#{req.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                else if req.estatus == "Cancelada" 
+                    label.labelSta.label-danger &nbsp;&nbsp;&nbsp;&nbsp;#{req.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                else if req.estatus == "Compra parcial"
+                    label.labelSta.label-warning #{req.estatus}&nbsp;
+                else if req.estatus == "Detenida"
+                    label.labelSta.label-default  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{req.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                else if req.estatus == "Cerrada"
+                    label.labelSta.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{req.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            .col-lg-4.pull-right
+                .form-group
+                    label | Código Requisición
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(readonly type="text" name="codigo" placeholder="Código" value="#{req.id}")
+        .row
+            .col-lg-4
+                .form-group
+                    label | Área
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-map-signs
+                        select#areas.form-control(required name="area" tabindex="1" value="" onchange="obtenerModulos()")
+                            option(value="") << Seleccione >>
+                            option(value="Administración - Granja", selected=('Administración - Granja'== req.area)) Administración - Granja
+                            option(value="Intensivo", selected=('Intensivo'== req.area)) Intensivo
+                            option(value="Semi-intensivo", selected=("Semi-intensivo"== req.area)) Semi-intensivo
+                            option(value="Laboratorio", selected=("Laboratorio"== req.area)) Laboratorio
+                            option(value="Probioticos", selected=("Probioticos"== req.area)) Probioticos
+                            option(value="Taller Mecánico", selected=("Taller Mecánico"== req.area)) Taller Mecánico
+                            option(value="Taller Eléctrico", selected=("Tallr Eléctrico"== req.area)) Taller Eléctrico 
+                            option(value="Equipo Bombeo", selected=("Equipo Bombeo"== req.area)) Equipo Bombeo
+                            option(value="Administración - Matriz", selected=('Administración - Matriz'== req.area)) Administración - Matriz
+                            option(value="Planta - Administración", selected=('Planta - Administración'== req.area)) Planta - Administración
+                            option(value="Planta - Mantenimiento", selected=('Planta - Mantenimiento'== req.area)) Planta - Mantenimiento
+                            option(value="Planta - Proceso", selected=('Planta - Proceso'== req.area)) Planta - Proceso
+            .col-lg-4#modulos.hidden
+                .form-group
+                    label | Modulo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user-circle
+                        select.form-control(name="modulo" tabindex="2")
+                            option#sel.hidden(value="") << Seleccione >>
+                            option#a.hidden(value="A", selected=("A"== req.modulo)) Modulo A
+                            option#b.hidden(value="B", selected=("B"== req.modulo)) Modulo B
+                            option#ac.hidden(value="AC", selected=("AC"== req.modulo)) Modulo A y Medio C
+                            option#bc.hidden(value="BC", selected=("BC"== req.modulo)) Modulo B y Medio C
+                            option#d.hidden(value="D", selected=("D"== req.modulo)) Modulo D
+                            option#e.hidden(value="E", selected=("E"== req.modulo)) Modulo E
+                            option#reser.hidden(value="Reservorio", selected=("Reservorio"== req.modulo)) Reservorio
+        .row
+            .col-lg-4
+                .form-group
+                    label | Autoriza
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user-circle
+                        select#responsable.form-control(required name="responsable" tabindex="3" onchange="selectResponsable()")
+                            option(value="") << Seleccione >>
+                            each usuario in usuarios
+                                option(value=usuario.id, selected=(usuario.id== req.responsable)) #{usuario.nombre}
+            .col-lg-8
+                .form-group
+                    label | Uso
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-cogs
+                        input.form-control(required type="text" name="uso" placeholder="Uso" tabindex="4" value="#{req.uso}") 
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-box(style="margin-right: 10px;")
+                    | Datos del Artículo
+        .row    
+            .col-lg-2
+                .form-group
+                    label | Cantidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(required type="number" step=".01" name="cantidad" placeholder="Cantidad" tabindex="5")
+            .col-lg-2
+                .form-group
+                    label | Unidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-asterisk
+                        select.form-control(required id="cmbUnidad" name="unidad" tabindex="6")
+                            option(value="") << Seleccione >>
+                            option(value="PZA") PZA
+                            option(value="KG") KG
+                            option(value="TRAMO") TRAMO
+                            option(value="GAL") GAL
+                            option(value="LT") LT
+                            option(value="M") M
+                            option(value="PAR") PAR
+                            option(value="KIT") KIT
+                            option(value="CUBETA") CUBETA
+                            option(value="ROLLO") ROLLO
+                            option(value="CAJA") CAJA
+                            option(value="PIES") PIES
+                            option(value="SERVICIO") SERVICIO
+                            option(value="JUEGO") JUEGO
+                            option(value="TON") TONELADA
+                            option(value="PAQ") PAQUETE
+            .col-lg-8
+                .form-group
+                    label | Descripción
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-bars
+                        input.form-control(required type="text" name="descripcion" placeholder="Descripción" tabindex="7")
+        .row
+            .col-lg-4
+                .form-group
+                    label | Urgencia
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user-circle
+                        select.form-control(required name="estatus" tabindex="8")
+                            option(value="") << Seleccione >>
+                            option(value="Bajo") Bajo
+                            option(value="Normal") Normal
+                            option(value="Urgente") Urgente
+                            option(value="Extemporaneo") Extemporaneo
+        .divider
+        .row
+            .col-lg-6
+                .form-check
+                    input#chkProveedor(type="checkbox" name="proveedor" onclick="obtenerChecked()" tabindex="9")
+                    label(style="margin-left: 15px;")
+                        |   ¿Conoce al proveedor?
+        .row#tituloProveedor.hidden
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-shipping-fast(style="margin-right: 10px;")
+                    | Datos del proveedor   
+        .row#panelProveedor.hidden
+            .col-lg-5
+                .form-group
+                    label | Nombre proveedor
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-building
+                        input.form-control(type="text" name="nombreProveedor" placeholder="Nombre" tabindex="10")
+            .col-lg-3
+                .form-group
+                    label | Teléfono
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-phone
+                        input.form-control(type="text" name="telefonoProveedor" placeholder="Teléfono" tabindex="11")
+            .col-lg-4
+                .form-group
+                    label | Correo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-envelope
+                        input.form-control(type="text" name="correoProveedor" placeholder="Correo" tabindex="12")
+        .divider
+        .row.pull-right
+                .col-lg-2.btn-group.pull-right(style="margin-bottom: 20px;")
+                    .form-group
+                        .input-group
+                            span.input-group-addon.text-success
+                                i.fas.fa-plus-circle.text-success
+                            input.form-control(type="submit" value="Agregar" tabindex="13").btn.btn-success
+        if (Object.keys(listaRequisicion).length > 0)
+            .row    
+                .col-lg-12(style="margin-top: -65px;")
+                    h4.page-header
+                        i.fas.fa-boxes(style="margin-right: 10px;")
+                        | Artículos en Requisición  
+                .table-responsive
+                    table.table.table-striped.table-hover
+                        thead
+                            th(scope="col").text-center
+                                |   Cantidad
+                            th(scope="col")
+                                |   Unidad
+                            th(scope="col")
+                                |   Descripción
+                            th(scope="col")
+                                |   Estatus
+                            th(scope="col")
+                                |   Acciones
+                        tbody
+                            each lr in listaRequisicion
+                                tr(scope="row")
+                                    td.text-center #{ lr.cantidad }
+                                    td #{ lr.unidad }
+                                    td #{ lr.descripcion }
+                                    if lr.estatus == 'Bajo'
+                                        td 
+                                            label.label.label-default &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{lr.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    if lr.estatus == 'Normal'
+                                        td 
+                                            label.label.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{lr.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    if lr.estatus == 'Urgente'
+                                        td 
+                                            label.label.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{lr.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    if lr.estatus == 'Extemporaneo'
+                                        td 
+                                            label.label.label-danger &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{lr.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    if lr.estatus == 'No Autorizado'
+                                        td 
+                                            label.label.label-close &nbsp; #{lr.estatus}&nbsp;
+                                    td
+                                        a(href="/requisiciones/editar/articulo-requisicion/#{lr.id}/#{req.id}", title="Editar", style="margin-right: 15px;")
+                                            i.fas.fa-pencil-alt.text-info.fa-lg
+                                        a(href="/requisiciones/eliminar/articulo-requisicion/#{lr.id}", title="Eliminar")
+                                            i.fas.fa-minus-circle.text-danger.fa-lg
+            
+        if Object.keys(listaRequisicion).length > 0
+            .divider
+            .row.pull-right(style="margin-bottom: 20px;")
+                .col-lg-2.btn-group.pull-right
+                    .form-group
+                        .input-group
+                            span.input-group-addon.text-primary
+                                i.fas.fa-envelope.text-primary
+                            a#btnEnviar(href="/requisiciones/enviar/requisicion/#{req.id}/").btn.btn-primary.form-control
+                                |   Enviar
+            

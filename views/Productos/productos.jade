@@ -1,0 +1,53 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function() {
+            $('#products').dataTable();
+            $('#subMenuProductos').removeClass('hidden');
+            $('#spanMenuProductos').removeClass('fa-angle-left');
+            $('#spanMenuProductos').addClass('fa-angle-down');
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+        //Termina Javascript
+    
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-boxes(style="margin-right: 10px;")
+                |   Productos
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;") 
+            a.btn.btn-special(href="/productos/new/producto")
+                i.fas.fa-plus-circle
+                |   Nuevo
+    .divider
+    .row
+        table#products.table.table-striped.table-hover
+            thead
+                th.text-center  Código
+                th Unidad
+                th Nombre
+                th Proveedor
+                th Precio
+                th IVA
+                th Precio Neto
+                th Moneda
+                th Acciones
+            tbody
+                each p in productos
+                    tr(scope="row")
+                        td.text-center #{ p.codigo }
+                        td #{ p.unidad }
+                        td #{ p.nombre }
+                        td 
+                            each pro in proveedores
+                                if pro.id == p.proveedor
+                                    strong #{ pro.nombreEmpresa }
+                        td #{ p.precioUnitario}
+                        td #{ p.iva }
+                        td #{ p.precioNeto }
+                        td #{ p.moneda }
+                        td
+                            a(href="productos/producto/editar/#{p.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 15px;")
+                                i.fas.fa-pencil-alt.text-info.fa-lg
+                            a(href="productos/producto/eliminar/#{p.id}",data-toggle="tooltip", data-placement="top", title="Eliminar")
+                                i.fas.fa-times-circle.text-danger.fa-lg

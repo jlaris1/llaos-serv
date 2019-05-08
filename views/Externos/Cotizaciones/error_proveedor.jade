@@ -1,0 +1,20 @@
+extends ../../layouts/layout.jade
+block contenido
+    div.container
+        div.col-xs-10.text-center(style="margin-top: 150px;")
+            div.col-xs-12.margin-abajo
+                img(src="/imgs/caution.png")
+            div.col-xs-12
+                span(style="font-size: 36px; font-weight: 700;") Error de Provedor
+            div.col-xs-12
+                span(style="font-size: 24px; font-weight: 700;") 
+                    i.fa.fa-times-circle.text-danger
+                    span &nbsp; El proveedor de la cotización no existe
+            div.col-xs-12
+                span(style="font-size: 16px;") ¡Para poder convertir esta cotización en orden necesita los datos del proveedor!
+            div.col-xs-12
+                strong(style="font-size: 16px;") NOTA: &nbsp;
+                span(style="font-size: 16px;") 
+                    |   ¡Ve a la sección de 
+                    strong Compras > Proveedores > Nuevo
+                    |   , para agregarlo!

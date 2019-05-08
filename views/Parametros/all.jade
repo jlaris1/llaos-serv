@@ -1,0 +1,61 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+    script.
+        $(document).ready( function() { 
+            $('#subMenuParametros').removeClass('hidden');
+            $('#spanMenuParametros').removeClass('fa-angle-left');
+            $('#spanMenuParametros').addClass('fa-angle-down');
+            $('#mediciones').dataTable();
+        });
+        //Termina Javascript
+
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-eye-dropper(style="margin-right: 10px;")
+                |   Parámetros
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
+            a.btn.btn-special(href="/parametros/new", style="margin-right: 5px;")
+                i.fas.fa-plus-circle
+                |   Nuevo
+            if user.permisos != "usuario"
+                a.btn.btn-special(href="#")
+                    i.fas.fa-file-pdf
+                    |   Reportes
+    .divider
+    .row
+        .table-responsive   
+            table#mediciones.table.table-striped.table-hover
+                thead
+                    th Est.
+                    th Oxigeno (mg/L)
+                    th pH
+                    th Salinidad (ppm)
+                    th Temperatura (°C)
+                    th Nivel Agua
+                    th Fecha
+                    th Hora
+                    th Parametrista
+                tbody
+                    each med in mediciones
+                        tr
+                            td #{ med.estanque.codigo }
+                            if med.oxigeno > 4
+                                td.text-danger
+                                    i.fas.fa-exclamation-circle.text-danger &nbsp;
+                                    b #{ med.oxigeno }
+                            else
+                                td #{ med.oxigeno }
+                            if med.ph > 7
+                                td.text-danger
+                                    i.fas.fa-exclamation-circle.text-danger &nbsp;
+                                    b #{ med.ph }
+                            else
+                                td #{ med.ph }
+                            td #{ med.salinidad }
+                            td #{ med.temperatura }
+                            td #{ med.nivel_agua }
+                            td.text-center #{ new Date(med.fecha).getDate()+ '/' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
+                            td #{ med.hora }
+                            td #{ med.parametrista.nombre }

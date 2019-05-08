@@ -1,0 +1,73 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora();
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+        
+    //Termina Javascript
+
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-user-plus(style="margin-right: 10px;")
+                |   Alta de Personal
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    
+    form(role="form" method="post" action="/empleados/empleado/documentos")
+        input(type="file" name="my_profile_pic")
+        input(type="file" name="my_pet")
+        input(type="file" name="my_cover_photo")
+        input(type="submit" value="Agregar")

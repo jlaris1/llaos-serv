@@ -1,0 +1,296 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .fileContainer {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .fileContainer [type=file] {
+            display: block;
+            font-size: 999px;
+            filter: alpha(opacity=0);
+            min-height: 100%;
+            min-width: 100%;
+            opacity: 0;
+            position: absolute;
+            right: 0;
+            text-align: right;
+            top: 0;
+        }
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora();
+
+            $('#subMenuSistemas').removeClass('hidden');
+            $('#spanMenuSistemas').removeClass('fa-angle-left');
+            $('#spanMenuSistemas').addClass('fa-angle-down');
+            $('#subMenuTickets').removeClass('hidden');
+            $('#spanMenuTickets').removeClass('fa-angle-left');
+            $('#spanMenuTickets').addClass('fa-angle-down');
+
+            $('#adjunto').change(function(e){
+                var fileName = e.target.files[0].name;
+                $('#adjunto_nombre').val(fileName);
+            });
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        function subcategorias(e){
+            var e = document.getElementById("categoria");
+            var cat = e.options[e.selectedIndex].value;
+            switch(cat){
+                case 'Red/Internet':
+                    esconderTodos();
+                    $('#Red').removeClass('hidden');
+                    remueveRequired();
+                    $('#subcategoriaRed').attr('required',true);
+                    break;
+                case 'Equipo de cómputo':
+                    esconderTodos();
+                    $('#Hard').removeClass('hidden');
+                    remueveRequired();
+                    $('#subcategoriaHard').prop('required',true);
+                    break;
+                case 'Software/Programas':
+                    esconderTodos();
+                    $('#Soft').removeClass('hidden');
+                    remueveRequired();
+                    $('#subcategoriaSoft').prop('required',true);
+                    break;
+                case 'Sistema Llaos':
+                    esconderTodos();
+                    $('#Sistema').removeClass('hidden');
+                    remueveRequired();
+                    $('#subcategoriaSistema').prop('required',true);
+                    break;
+                case 'Correo':
+                    esconderTodos();
+                    $('#Correo').removeClass('hidden');
+                    remueveRequired();
+                    $('#subcategoriaCorreo').prop('required',true);
+                    break;
+                case 'Otro':
+                    esconderTodos();
+                    $('#Otro').removeClass('hidden');
+                    remueveRequired();
+                    $('#otro').prop('required',true);
+                    break;
+                case '':
+                    esconderTodos();
+                    $('#Default').removeClass('hidden');
+                    remueveRequired();
+                    $('#subDefault').prop('required',true);
+                    break;
+            }
+        }
+
+        function esconderTodos(){
+            $('#Red').addClass('hidden');
+            $('#Hard').addClass('hidden');
+            $('#Soft').addClass('hidden');
+            $('#Sistema').addClass('hidden');
+            $('#Otro').addClass('hidden');
+            $('#Correo').addClass('hidden');
+            $('#Default').addClass('hidden');
+        }
+
+        function remueveRequired(){
+            $('#subDefault').prop('required', false);
+            $('#subcategoriaRed').prop('required', false);
+            $('#subcategoriaHard').prop('required', false);
+            $('#subcategoriaSoft').prop('required', false);
+            $('#subcategoriaSistema').prop('required', false);
+            $('#subcategoriaCorreo').prop('required', false);
+            $('#otro').prop('required', false);
+        }
+
+        
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-ticket-alt
+                sup(style="margin-right: 10px;")
+                    i.fas.fa-plus
+                |   Nuevo Ticket
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    // FORM DE TICKET
+    form(role="form" method="post" action="/tickets/ticket" enctype='multipart/form-data')
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-ticket-alt(style="margin-right: 10px;")
+                    | Datos
+        .row
+            .col-lg-6
+                .form-group
+                    label | Título
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-bars
+                        input.form-control(required type="text" name="titulo")
+            .col-lg-3
+                .form-group
+                    label | Categoría
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-tags
+                        select.form-control(required type="text" id="categoria" name="categoria" onchange="subcategorias()")
+                            option(value="") << Seleccione >>
+                            option(value="Red/Internet")  Red/Internet
+                            option(value="Equipo de cómputo")  Equipo de cómputo
+                            option(value="Software/Programas")  Software/Programas
+                            option(value="Sistema Llaos")  Sistema Llaos
+                            option(value="Correo")  Correo
+                            option(value="Otro")  Otro
+            .col-lg-3#Default
+                .form-group
+                    label | Subcategoría
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-tags
+                        select.form-control(type="text" id="subDefault" name="subDefault")
+                            option(value="") << Seleccione categoría >>
+            .col-lg-3#Red.hidden
+                .form-group
+                    label | Subcategoría de Red/Internet
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-tags
+                        select.form-control(type="text" id="subcategoriaRed" name="subcategoriaRed")
+                            option(value="") << Seleccione >>
+                            option(value="Alta-No hay Internet")  No hay Internet
+                            option(value="Alta-Falla mucho")  Falla mucho
+                            option(value="Media-Internet lento")  Internet lento
+            .col-lg-3#Hard.hidden
+                .form-group
+                    label | Subcategoría de Equipo de cómputo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-tags
+                        select.form-control(type="text" id="subcategoriaHard" name="subcategoriaHard")
+                            option(value="") << Seleccione >>
+                            option(value="Media-Teclado o Mouse falla")  Teclado o Mouse falla
+                            option(value="Baja-Impresora no instalada")  Impresora no instalada
+                            option(value="Media-Impresora no imprime")  Impresora no imprime
+                            option(value="Alta-No enciende mi equipo")  No enciende mi equipo
+                            option(value="Alta-No enciende mi monitor")  No enciende mi monitor
+            .col-lg-3#Soft.hidden
+                .form-group
+                    label | Subcategoría de Software/Programas
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-tags
+                        select.form-control(type="text" id="subcategoriaSoft" name="subcategoriaSoft")
+                            option(value="") << Seleccione >>
+                            option(value="Media-Office (Word, Excel,Outlook/Correo)")  Office (Word, Excel,Outlook/Correo)
+                            option(value="Media-Contabilidad")  Contabilidad
+                            option(value="Media-Java")  Java
+                            option(value="Baja-Páginas especiales")  Páginas especiales
+                            option(value="Alta-Sistema operativo")  Sistema operativo
+                            option(value="Alta-Pantalla azul")  Pantalla azul
+            .col-lg-3#Sistema.hidden
+                .form-group
+                    label | Subcategoría de Sistema Llaos
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-tags
+                        select.form-control(type="text" id="subcategoriaSistema" name="subcategoriaSistema")
+                            option(value="") << Seleccione >>
+                            option(value="Baja-No descarga archivos")  No descarga archivos
+                            option(value="Baja-Solicitud de mejora/desarrollo")  Solicitud de mejora/desarrollo
+                            option(value="Baja-Permisos")  Permisos
+            .col-lg-3#Correo.hidden
+                .form-group
+                    label | Subcategoría de Correo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-tags
+                        select.form-control(type="text" id="subcategoriaCorreo" name="subcategoriaCorreo")
+                            option(value="") << Seleccione >>
+                            option(value="Media-Problema de envío/recepción")  Problema de envío/recepción
+                            option(value="Media-Correo no configurado")  Correo no configurado
+                            option(value="Alta-Solicitar correo")  Solicitar correo
+            .col-lg-3#Otro.hidden
+                .form-group
+                    label | Especifique
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-tags
+                        input.form-control(type="text" id="otro" name="otro")
+        .row
+            .col-lg-6
+                .form-group
+                    label | Descripción
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-align-left
+                        textarea.form-control(required type="text" name="solicitud" rows="4" style="resize: none;")
+            .col-lg-6
+                .form-group
+                    label | Imagen
+                    .input-group
+                        label.input-group-btn
+                            input.form-control(style="min-width: 400px" name="adjunto_nombre" id="adjunto_nombre" type="text" placeholder="Imagen relacionada" readonly)
+                        label.btn.form-control.btn-primary.fileContainer Buscar...
+                            input(type="file", name="adjunto", id="adjunto")
+        .divider
+        .row
+            .col-lg-2.btn-group.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-save.text-success
+                        input.btn.btn-success.form-control(type="submit" value="Guardar" tabindex="38")

@@ -1,0 +1,201 @@
+extends ../../layouts/layout.jade
+block contenido
+    style.
+        .round {
+            border-radius: 5px !important;
+            -moz-border-radius: 5px !important;
+            -webkit-border-radius: 5px !important;
+        }
+        thead {
+            background-color: black;
+            color: #fff;
+        }
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora(); 
+
+            $('#subMenuLaboratorio').removeClass('hidden');
+            $('#spanMenuLaboratorio').removeClass('fa-angle-left');
+            $('#spanMenuLaboratorio').addClass('fa-angle-down');
+            $('#subMenuZooplancton').removeClass('hidden');
+            $('#spanMenuZooplancton').removeClass('fa-angle-left');
+            $('#spanMenuZooplancton').addClass('fa-angle-down');
+
+            $('#nauplios').keyup(function(){ obtenerPorcentajes(); });
+            $('#copepodos').keyup(function(){ obtenerPorcentajes(); });
+            $('#rotiferos').keyup(function(){ obtenerPorcentajes(); });
+            $('#poliquetos').keyup(function(){ obtenerPorcentajes(); });
+            $('#otros').keyup(function(){ obtenerPorcentajes(); });
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+
+        function obtenerPorcentajes(){
+            var nauplios = parseInt($('#nauplios').val());
+            var copepodos = parseInt($('#copepodos').val());
+            var rotiferos = parseInt($('#rotiferos').val());
+            var poliquetos = parseInt($('#poliquetos').val());
+            var otros = parseInt($('#otros').val());
+            var total = 0;
+
+            total += nauplios;
+            total += copepodos;
+            total += rotiferos;
+            total += poliquetos;
+            total += otros;
+
+            $('#total').text(total.toFixed(2));
+            $('#totalI').val(total.toFixed(2));
+
+            $('#nauplios_porcent').text(((nauplios/total)*100).toFixed(2));
+            $('#copepodos_porcent').text(((copepodos/total)*100).toFixed(2));
+            $('#rotiferos_porcent').text(((rotiferos/total)*100).toFixed(2));
+            $('#poliquetos_porcent').text(((poliquetos/total)*100).toFixed(2));
+            $('#otros_porcent').text(((otros/total)*100).toFixed(2));
+        }
+    // Termina Javascript
+
+    .row
+        .col-lg-12.col-md-12.col-xs-12
+            h2
+                i.fas.fa-vials(style="margin-right: 10px;")
+                |   Actualiar Medición Zooplancton
+    .divider
+    .row
+        .col-lg-6.col-md-6.col-xs-6.pull-right.text-right
+            span
+                | Usuario: 
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.col-md-6.col-xs-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .divider
+    form#frm(role="form" method="post" action="/zooplancton/update/#{zooplancton.id}?_method=put")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Módulo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-water
+                        input.form-control(disabled value="#{zooplancton.estanque.modulo.nombre}")
+            .col-lg-3
+                .form-group
+                    label | Estanque
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-water
+                        input.form-control(disabled value="#{zooplancton.estanque.codigo}")
+            .col-lg-3
+                .form-group
+                    label | Fecha
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar-alt
+                        input#fechaI.form-control(required type="date" value="#{zooplancton.fecha.toISOString().substr(0, 10)}" name="fecha")
+        .row
+            .col-lg-12
+                .panel.panel-primary
+                    .panel-heading
+                        i.fas.fa-eye-dropper
+                    .panel-body
+                        .col-lg-1.col-md-1.col-sm-1.col-sm-offset-0.col-md-offset-0.col-lg-offset-0
+                        .col-lg-2.col-sm-2.col-md-2.col-xs-12
+                            .form-group
+                                label | Nauplios
+                                input#nauplios.round.form-control(required type="text" value="#{zooplancton.nauplios}" name="nauplios" placeholder="# Nauplios" tabindex="3")
+                            .center-label.text-center
+                                label#nauplios_porcent #{zooplancton.nauplios_porcent} 
+                                label %
+                                    .col-of
+                        .col-lg-2.col-sm-2.col-md-2.col-xs-12
+                            .form-group
+                                label | Copepodos
+                                input#copepodos.round.form-control(required type="text"  value="#{zooplancton.copepodos}" name="copepodos" placeholder="# Copepodos" tabindex="4")
+                            .center-label.text-center
+                                label#copepodos_porcent #{zooplancton.copepodos_porcent} 
+                                label %
+                                    .col-of
+                        .col-lg-2.col-sm-2.col-md-2.col-xs-12
+                            .form-group
+                                label | Rotiferos
+                                input#rotiferos.round.form-control(required type="text"  value="#{zooplancton.rutiferos}" name="rutiferos" placeholder="# Rotiferos" tabindex="5")
+                            .center-label.text-center
+                                label#rotiferos_porcent #{zooplancton.rutiferos_porcent} 
+                                label %
+                                    .col-of
+                        .col-lg-2.col-sm-2.col-md-2.col-xs-12
+                            .form-group
+                                label | Poliquetos
+                                input#poliquetos.round.form-control(required type="text"  value="#{zooplancton.poliquetos}" name="poliquetos" placeholder="# Poliquetos" tabindex="6")
+                            .center-label.text-center
+                                label#poliquetos_porcent #{zooplancton.poliquetos_porcent} 
+                                label %
+                                    .col-of
+                        .col-lg-2.col-sm-2.col-md-2.col-xs-12
+                            .form-group
+                                label | Otros
+                                input#otros.round.form-control(required type="text"  value="#{zooplancton.otros}" name="otros" placeholder="# Otros" tabindex="7")
+                            .center-label.text-center
+                                label#otros_porcent #{zooplancton.otros_porcent} 
+                                label %
+                    .panel-footer.text-right
+                        input.hidden#totalI(type="text" name="total")
+                        i.fas.fa-bug(style="margin-right: 5px;")
+                        label
+                            |   Total: 
+                            strong#total #{zooplancton.total_organismos}
+                            |   cél/ml            
+        .divider
+        .row
+            .col-lg-2.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-plus-circle.text-success
+                        input(type="submit" value="Actualizar" tabindex="8").btn.btn-success.form-control

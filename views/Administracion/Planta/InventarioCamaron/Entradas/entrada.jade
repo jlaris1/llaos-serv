@@ -1,0 +1,672 @@
+extends ../../../../layouts/layout.jade
+block contenido
+    style.
+        .labelSer {
+            font-size: 2em; 
+            background-color: black; 
+            color: white; 
+            border-radius: 8px;
+        }
+
+        .error {
+            border-color: rgb(255, 144, 0);
+            box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075)inset, 0 0 8px rgba(255,144,0,0.6);
+            outline: 0 none;
+        }
+    script.
+        var entradas = [];
+        var tipos = [];
+
+        $(document).ready( function(){
+            $('#subMenuAdministracion').removeClass('hidden');
+            $('#spanMenuAdministracion').removeClass('fa-angle-left');
+            $('#spanMenuAdministracion').addClass('fa-angle-down'); 
+            
+            $('#subMenuAdmPlanta').removeClass('hidden');
+            $('#spanMenuAdmPlanta').removeClass('fa-angle-left');
+            $('#spanMenuAdmPlanta').addClass('fa-angle-down');     
+
+            $('#subMenuInventarioCam').removeClass('hidden');
+            $('#spanMenuInventarioCam').removeClass('fa-angle-left');
+            $('#spanMenuInventarioCam').addClass('fa-angle-down');
+            
+            $('#cmbTipoCamaron').on('change', function(){
+                if(this.value == '<< Seleccione >>'){
+                    $('#talla').val('');
+                    $('#presentacion').val('');
+                } else {
+                    var text = $('#cmbTipoCamaron option:selected').html();
+                    $('#talla').val(text.split(" - ")[0]);
+                    $('#presentacion').val(text.split(" - ")[1]);
+                    $('#cmbTipoCamaron').removeClass('error');
+                    $('#error').addClass('hidden');
+                    $('#error').text("");
+                }
+            });
+
+            $('#cantidad_master').on('keyup', function(){
+                if(parseFloat(this.value) > 0){
+                    var pesoM = 0.00;
+
+                    if($('#presentacion').val().toLowerCase() == 'frizado 20 kgs'){
+                        pesoM = 20.00;
+                        $('#peso_master').val(pesoM);
+                    } else if($('#presentacion').val().toLowerCase() == 'top open 40lbs'){
+                        pesoM = 18.1416;
+                        $('#peso_master').val(pesoM);
+                    } else if($('#presentacion').val().toLowerCase() == 'iqf 10 x 4 40lbs'){
+                        pesoM = 18.1416;
+                        $('#peso_master').val(pesoM);
+                    }
+
+                    var kgs = parseFloat(this.value) * parseFloat(pesoM);
+                    var lbs;
+
+
+                    lbs = parseFloat(kgs) * 2.20462;
+                    $('#total_kgs').val(kgs.toFixed(2));
+                    $('#total_lbs').val(lbs.toFixed(2));
+
+                    $('#cantidad_master').removeClass('error');
+                    $('#error').addClass('hidden');
+                    $('#registrar').removeClass('disabled');
+                    $('#registrar').attr('disabled', false);
+                    $('#registrar').addClass('btn-success');
+                    $('#registrar').removeClass('btn-default');
+                    $('#terminar').removeClass('disabled');
+                    $('#terminar').attr('disabled', false);
+                    $('#terminar').addClass('btn-primary');
+                    $('#terminar').removeClass('btn-default');
+                } else {
+                    $('#total_kgs').val(0.00);
+                    $('#total_lbs').val(0.00);
+                    $('#cantidad_master').addClass('error');
+                    $('#error').removeClass('hidden');
+                    $('#error').text("ERROR: Ingresar cantidad master mayor a 0.");
+                    $('#registrar').addClass('disabled');
+                    $('#registrar').attr('disabled', true);
+                    $('#registrar').removeClass('btn-success');
+                    $('#registrar').addClass('btn-default');
+                    $('#terminar').addClass('disabled');
+                    $('#terminar').attr('disabled', true);
+                    $('#terminar').removeClass('btn-primary');
+                    $('#terminar').addClass('btn-default');
+                }
+            });
+
+            $('#almacen').on('change', function(){
+                tipoAlmacen();
+            });
+
+            $('#bod').on('keyup', function(){
+                if(this.value != ''){
+                    $('#bod').removeClass('error');
+                    $('#error').addClass('hidden');
+                    $('#error').text("");
+                }
+            });
+
+            $('#tarima').on('keyup', function(){
+                if(this.value != ''){
+                    $('#tarima').removeClass('error');
+                    $('#error').addClass('hidden');
+                    $('#error').text("");
+                }
+            });
+
+            $('#lote_prod').on('keyup', function(){
+                if(this.value != ''){
+                    $('#lote_prod').removeClass('error');
+                    $('#error').addClass('hidden');
+                    $('#error').text("");
+                }
+            });
+
+
+            obtenerfecha();
+            obtenerhora();
+            convertirArray();
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            if($('#codigo').val() != ''){
+                $('#rem').attr('readonly', true);
+                $('#dest').attr('readonly', true);
+                $('#ref').attr('readonly', true);
+                $('#almacen').attr('readonly', true);
+                $('#almacen').attr('disabled', true);
+                $('#obs').attr('readonly', true);
+
+                documentoToArray();
+                tipoAlmacen();
+            }
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        function FormatMoney(bol, valor){
+            var total = 0;
+
+            if (bol) {
+                total += valor;
+            } else {
+                total-=valor;
+            }
+            
+            var entero = '';
+            
+            Entero_Decimal = total.toString().split('.');
+            
+            cadena = Entero_Decimal[0].split('').reverse().join('');
+            
+            for (var z = cadena.length; z >=0; z--) {
+                numero = cadena.charAt(z)
+                
+                if ((cadena.length >= 4 && z ==3 ) || (cadena.length >= 7 && z ==6 ) || (cadena.length >= 10 && z == 9 ) || (cadena.length >= 13 && z ==12 ) || (cadena.length >= 16 && z ==15 )) {
+                    numero +=  ",";
+                }
+
+                entero += numero;
+            }
+            
+            if(Entero_Decimal[1]) {
+                if( Entero_Decimal[1].length == 1){
+                    decimales = '.'+ Entero_Decimal[1]+'0';
+                } else {
+                    decimales = '.'+ Entero_Decimal[1];
+                }
+                
+            } else {
+                decimales = '.00';
+            }
+            
+            return "$ " + entero + decimales;
+        }
+
+        function registrarEntrada(){
+            if($('#codigo_prod').val() == ''){
+                $('#codigo_prod').val("-")
+            }
+
+            rowCount = $('#tblEntradas >tbody >tr').length;
+            var tipo = $('#cmbTipoCamaron').val().trim();
+            var entrada;
+
+            $('#tblEntradas > tbody:last').append(
+                "<tr id='tr" + rowCount + "'>" +
+                "   <td>" + $('#bod').val() + "</td> " +
+                "   <td>" + $('#tarima').val() + "</td> " +
+                "   <td>" + $('#codigo_prod').val() + "</td> " +
+                "   <td>" + $('#lote_prod').val() + "</td> " +
+                "   <td>" + $('#talla').val() + "</td> " +
+                "   <td>" + $('#cantidad_master').val() + "</td> " +
+                "   <td>" + $('#peso_master').val() + "</td> " +
+                "   <td>" + $('#total_kgs').val() + "</td> " +
+                "   <td>" + $('#total_lbs').val() + "</td> " +
+                "   <td>" + $('#presentacion').val() + "</td> " +
+                "   <td>"+
+                "       <a id='" + rowCount + "' href='#', data-toggle='tooltip', data-placement='top', title='Eliminar' onclick='eliminarSalida(this.id)'> "+ 
+                "          <i class='fas fa-minus-circle text-danger fa-lg'></i>" +
+                "       </a>" +
+                "</tr>"
+            );
+
+            entrada = new Object();
+
+            entrada.tipoCamaron = tipo.trim();
+            entrada.bod = $('#bod').val();
+            entrada.tarima = $('#tarima').val();
+            entrada.codigo_prod = $('#codigo_prod').val();
+            entrada.lote_prod = $('#lote_prod').val();
+            entrada.talla = $('#talla').val();
+            entrada.cantidad_master = $('#cantidad_master').val();
+            entrada.peso_master = parseFloat($('#peso_master').val()).toFixed(2);
+            entrada.total_kgs =  parseFloat($('#total_kgs').val()).toFixed(2);
+            entrada.total_lbs = parseFloat($('#total_lbs').val()).toFixed(2);
+            entrada.presentacion = $('#presentacion').val();
+
+            entradas.push(entrada);
+
+            $('#articulo').val(JSON.stringify(entrada));
+            $("#entradas").val(JSON.stringify(entradas));
+
+            totales();
+
+            $('#bod').val("");
+            $('#tarima').val("");
+            $('#codigo_prod').val("");
+            $('#lote_prod').val("");
+            $('#talla').val("");
+            $('#cantidad_master').val("");
+            $('#peso_master').val("");
+            $('#total_kgs').val("");
+            $('#presentacion').val("");
+            $('#total_lbs').val("");
+            $('#cmbTipoCamaron').val('0');
+        }
+
+        function eliminarEntrada(id){
+            $("#tr"+id).remove();
+            entradas.splice(id, 1);
+            $("#entradas").val(entradas);
+        }
+
+        function totales(){
+            var sumaKgs  = 0;
+            var sumaLbs = 0;
+            var sumaMaster = 0;
+            
+            for(var i = 0; i < entradas.length; i++){
+                sumaKgs = parseFloat(sumaKgs) + parseFloat(entradas[i].total_kgs);
+                sumaLbs = parseFloat(sumaLbs) + parseFloat(entradas[i].total_lbs);
+                sumaMaster = parseFloat(sumaMaster) + parseFloat(entradas[i].cantidad_master);
+            }
+
+            $("#totalMaster").val(sumaMaster.toFixed(2));
+            $("#totalKgs").val(sumaKgs.toFixed(2));
+            $("#totalLbs").val(sumaLbs.toFixed(2));
+        }
+
+        function convertirArray(){
+            var obj = new Object();
+            var arr = $('#tipos').val().split("},");
+
+            for(var i = 0; i < arr.length; i ++){
+                var aObj = arr[i].replace(/'/g, '');
+
+                obj.id = aObj.split(",")[0].split(":")[1];
+                obj.nombre = aObj.split(",")[1].split(":")[1];
+                obj.talla = aObj.split(",")[2].split(":")[1];
+                obj.presentacion = aObj.split(",")[3].split(":")[1];
+                obj.cantidadMaster = aObj.split(",")[4].split(":")[1];
+                obj.almacen = aObj.split(",")[5].split(":")[1];
+
+                tipos.push(obj);
+                obj = new Object();
+
+            }
+        }
+
+        function documentoToArray(){
+            var obj = new Object();
+            var arr = $('#articulos').val().split("},");
+
+            for(var i = 0; i < arr.length; i ++){
+                var aObj = arr[i].replace(/'/g, '');
+
+                obj.tipoCamaron = aObj.split(",")[1].split(":")[1].trim()
+                obj.bod = aObj.split(",")[2].split(":")[1]
+                obj.tarima = aObj.split(",")[3].split(":")[1]
+                obj.codigo_prod = aObj.split(",")[4].split(":")[1]
+                obj.lote_prod = aObj.split(",")[5].split(":")[1]
+                obj.talla = aObj.split(",")[6].split(":")[1]
+                obj.cantidad_master = aObj.split(",")[7].split(":")[1]
+                obj.peso_master = aObj.split(",")[8].split(":")[1]
+                obj.total_kgs =  aObj.split(",")[9].split(":")[1]
+                obj.total_lbs = aObj.split(",")[10].split(":")[1]
+                obj.presentacion = aObj.split(",")[11].split(":")[1].replace("}","")
+
+                rowCount = $('#tblEntradas >tbody >tr').length;
+
+                $('#tblEntradas > tbody:last').append(
+                    "<tr id='tr" + rowCount + "'>" +
+                    "   <td>" + obj.bod + "</td> " +
+                    "   <td>" + obj.tarima + "</td> " +
+                    "   <td>" + obj.codigo_prod + "</td> " +
+                    "   <td>" + obj.lote_prod + "</td> " +
+                    "   <td>" + obj.talla + "</td> " +
+                    "   <td>" + obj.cantidad_master + "</td> " +
+                    "   <td>" + obj.peso_master + "</td> " +
+                    "   <td>" + obj.total_kgs + "</td> " +
+                    "   <td>" + obj.total_lbs + "</td> " +
+                    "   <td>" + obj.presentacion + "</td> " +
+                    "   <td>"+
+                    "       <a id='" + rowCount + "' href='#', data-toggle='tooltip', data-placement='top', title='Eliminar' onclick='eliminarSalida(this.id)'> "+ 
+                    "          <i class='fas fa-minus-circle text-danger fa-lg'></i>" +
+                    "       </a>" +
+                    "</tr>"
+                );
+
+                entradas.push(obj);
+                obj = new Object();
+
+            }
+        }
+
+        function submit(){
+            if(comprobarDetalles()){
+                registrarEntrada();
+                document.frm.submit();
+            }
+        }
+
+        function comprobarDetalles(){
+            if($('#bod').val() == ''){
+                $('#bod').addClass('error');
+                $('#error').removeClass('hidden');
+                $('#error').text("ERROR: Es necesario ingresar el campo bodega.");
+                return false;
+            } else if($('#tarima').val() == ''){
+                $('#tarima').addClass('error');
+                $('#error').removeClass('hidden');
+                $('#error').text("ERROR: Es necesario ingresar un número de tarima.");
+                return false;
+            } else if($('#lote_prod').val() == ''){
+                $('#lote_prod').addClass('error');
+                $('#error').removeClass('hidden');
+                $('#error').text("ERROR: Debe indicar el lote de producción.");
+                return false;
+            } else if($('#talla').val() == ''){
+                $('#cmbTipoCamaron').addClass('error');
+                $('#error').removeClass('hidden');
+                $('#error').text("ERROR: Debe especificar el tipo de camarón.");
+                return false;
+            } else if($('#presentacion').val() == ''){
+                $('#cmbTipoCamaron').addClass('error');
+                $('#error').removeClass('hidden');
+                $('#error').text("ERROR: Debe especificar el tipo de camarón.");
+                return false;
+            } else if($('#cantidad_master').val() == ''){
+                $('#cantidad_master').addClass('error');
+                $('#error').removeClass('hidden');
+                $('#error').text("ERROR: Es necesario ingresar la cantidad de master.");
+                return false;
+            }
+            
+            return true;
+        }
+
+        function tipoAlmacen(){
+            $('#cmbTipoCamaron').empty();
+                
+            $("#cmbTipoCamaron").append($('<option>', { 
+                value: "0",
+                text : "<< Seleccione >>"
+            }));
+
+            for(var i = 0; i < tipos.length; i ++){
+                if( $("#almacen").val().trim() == tipos[i].almacen.trim()){
+                    $("#cmbTipoCamaron").append($('<option>', { 
+                        value: tipos[i].id,
+                        text : tipos[i].nombre 
+                    }));
+                }
+            }
+        }
+
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-sign-in-alt(style="margin-right: 10px;")
+                |   Nueva entrada
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Realiza: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-truck-loading(style="margin-right: 10px;")
+                | Datos Entrada
+    //label#url.hidden #{url}
+    form#frm(role="form" name="frm" method="post" action="/inventarioscamaron/entrada/agregar")
+        input#articulo.hidden(type="text" name="articulo")
+        input#entradas.hidden(type="text" name="entradas")
+        input#articulos.hidden(type="text" name="articulos" value="#{entrada.articulos}")
+        input#tipos.hidden(type="text" name="tipos" value="#{tipos}")
+        .row
+            .col-lg-4.pull-left
+                label.label.labelSer    #{entrada.folio}
+            .col-lg-4.pull-right
+                .form-group
+                    label | Código
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#codigo.form-control(readonly type="text" name="codigo" value="#{entrada.id}")
+        .row
+            .col-lg-4
+                .form-group
+                    label | Remitente
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-share-square
+                        input#rem.form-control(required type="text" name="remitente"  placeholder="Remitente" tabindex="1" value="#{entrada.remitente}")
+            .col-lg-4
+                .form-group
+                    label | Destinatario
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-share-square.fa-rotate-180
+                        input#dest.form-control(required type="text" name="destinatario"  placeholder="Destinatario" tabindex="2" value="#{entrada.destinatario}")
+            .col-lg-4
+                .form-group
+                    label | Referencia
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#ref.form-control(required type="text" name="referencia"  placeholder="Referencia" tabindex="3" value="#{entrada.referencia}")
+        .row
+            .col-lg-4
+                .form-group
+                    label | Almacén
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-warehouse
+                        select#almacen.form-control(required name="almacen" tabindex="2")
+                            option(value="0") << Seleccione >>
+                            option(value="Llaos Acuacultura",  selected= ("Llaos Acuacultura"== entrada.almacen)) Llaos Acuacultura
+                            option(value="Oswaldo Nuñez", selected= ("Oswaldo Nuñez"== entrada.almacen)) Oswaldo Nuñez
+                            option(value="Costa Rica", selected= ("Costa Rica"== entrada.almacen)) Costa Rica
+            .col-lg-8
+                .form-group
+                    label | Observaciones
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-bars
+                        input#obs.form-control(type="text" name="observaciones"  placeholder="Observaciones" tabindex="4" value="#{entrada.observaciones}")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-info-circle(style="margin-right: 10px;")
+                    | Detalles Entrada
+                    label#error.label.label-danger.pull-right.hidden
+                        |   
+        .row
+            .col-lg-4
+                .form-group
+                    label | Bodega
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control( type="text" id="bod" placeholder="Bodega" tabindex="5" onkeyup="javascript:this.value=this.value.toUpperCase();")
+            .col-lg-4
+                .form-group
+                    label | # Tarima
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control( type="text" id="tarima"  placeholder="# Tarima" tabindex="6")
+            .col-lg-4
+                .form-group
+                    label | Lote Producción
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control( type="text" id="lote_prod"  placeholder="Lote Producción" tabindex="7")
+        .row    
+            .col-lg-4
+                .form-group
+                    label | Tipo Camaron
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-fish
+                        select.form-control( id="cmbTipoCamaron" tabindex="8")
+                            option(value="0") << Seleccione >>
+            .col-lg-4
+                .form-group
+                    label | Talla
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-ruler-combined
+                        input#talla.form-control(readonly type="text" placeholder="Talla")
+            .col-lg-4
+                .form-group
+                    label | Presentación
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-inbox
+                        input#presentacion.form-control(readonly type="text" placeholder="Presentación")  
+        .row
+            .col-lg-3
+                .form-group
+                    label | Código Producto
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-inbox
+                        input.form-control(type="text" id="codigo_prod" placeholder="Código Producto" tabindex="10")
+            .col-lg-3
+                .form-group
+                    label | Cantidad Master
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control( type="text" id="cantidad_master" placeholder="Cantidad Master" tabindex="11")
+            .col-lg-2
+                .form-group
+                    label | Peso Master
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-weight-hanging
+                        input.form-control(readonly type="text" id="peso_master" placeholder="Peso Master")
+            .col-lg-2
+                .form-group
+                    label | Total Kgs
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-weight
+                        input.form-control(readonly type="text" id="total_kgs" placeholder="Total Kgs")
+            .col-lg-2
+                .form-group
+                    label | Total Lbs
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-weight
+                        input.form-control(readonly type="text" id="total_lbs" placeholder="Total Lbs")      
+        .divider
+        .row
+            .col-lg-2.pull-right(style="margin-left: -25px;")
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-save.text-success
+                        a#registrar.btn.btn-success.form-control(href="javascript:submit();" tabindex="12")
+                            |   Registrar
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-list-alt(style="margin-right: 10px;")
+                    | Tipos en Entrada
+        .row
+            .col-lg-12
+                table#tblEntradas.table
+                    thead 
+                        th Bod 
+                        th Tarima 
+                        th Código Producto
+                        th Lote Producción
+                        th Talla 
+                        th Cantidad Master 
+                        th Peso Master 
+                        th Total Kgs
+                        th Total Lbs
+                        th Presentacion               
+                        th Acciones
+                    tbody
+        .divider
+        .row
+        .col-lg-4.pull-right  
+                .form-group
+                    label | Total Lbs
+                        .input-group
+                            span.input-group-addon
+                                i.fas.fa-weight
+                            input#totalLbs.form-control(readonly type="text" name="totalLbs" placeholder="Total Lbs" value="#{entrada.total_lbs}")  
+            .col-lg-4.pull-right  
+                .form-group
+                    label | Total Kgs
+                        .input-group
+                            span.input-group-addon
+                                i.fas.fa-weight
+                            input#totalKgs.form-control(readonly type="text" name="totalKgs" placeholder="Total Kgs" value="#{entrada.total_kgs}")
+            .col-lg-4.pull-right  
+                .form-group
+                    label | Total Master
+                        .input-group
+                            span.input-group-addon
+                                i.fas.fa-hashtag
+                            input#totalMaster.form-control(readonly type="text" name="totalMaster" placeholder="Total Master" value="#{entrada.total_master}")
+        .divider
+        .row(style="margin-bottom: 20px;")
+            .col-lg-2.pull-right(style="margin-left: -25px;")
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-save.text-primary
+                        a#terminar.btn.btn-primary.form-control(href="/inventarioscamaron/entrada/terminar/#{entrada.id}" tabindex="13")
+                            |   Terminar
+                    
+                        
+                        
+    
+
+
+
+

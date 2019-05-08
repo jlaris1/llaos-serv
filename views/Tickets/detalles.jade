@@ -1,0 +1,244 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .comentario {
+            align: left;
+            padding: 10px;
+            border-radius: 10px;
+            background: #DADADA;
+        }
+
+        .comentarioPropio {
+            align: right;
+            padding: 10px;
+            border-radius: 10px;
+            /*#128eea*/
+            background: #329966;
+            color: white;
+        }
+
+        .label2{
+            font-size: 70% !important;
+        }
+
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora();
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#subMenuSistemas').removeClass('hidden');
+            $('#spanMenuSistemas').removeClass('fa-angle-left');
+            $('#spanMenuSistemas').addClass('fa-angle-down');
+            $('#subMenuTickets').removeClass('hidden');
+            $('#spanMenuTickets').removeClass('fa-angle-left');
+            $('#spanMenuTickets').addClass('fa-angle-down');
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+        
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-ticket-alt
+                |   Ticket 
+                b #{ticket.folio}
+                if ticket.estatus == "Nuevo"
+                    label.label.label2.label-primary(style="margin-left: 20px") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{ticket.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                else if ticket.estatus == "Asignado"
+                    label.label.label2.label-warning(style="margin-left: 20px") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{ticket.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                else if ticket.estatus == "En proceso"
+                    label.label.label2.label-success(style="margin-left: 20px") &nbsp;&nbsp;&nbsp;&nbsp;#{ticket.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                else if ticket.estatus == "Cancelado"
+                    label.label.label2.label-danger(style="margin-left: 20px") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{ticket.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                else if ticket.estatus == "Cerrado"
+                    label.label.label2.label-close(style="margin-left: 20px") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{ticket.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    if user.permisos == "developer"
+        if ticket.estatus!='Cerrado'
+            if ticket.estatus!='Cancelado'
+                .row
+                    .col-lg-12
+                        h4.page-header
+                            i.fas.fa-ticket-alt(style="margin-right: 10px;")
+                            | Asignación
+                .row
+                    form(role="form" method="post" action="/tickets/asignar/#{ticket.id}?_method=put")
+                        if ticket.encargado
+                            .col-lg-4
+                                .form-group
+                                    label | Encargado
+                                    .input-group
+                                        span.input-group-addon
+                                            i.fas.fa-circle
+                                        select.form-control(type="text" name="encargado" value="#{ticket.encargado}")
+                                            option(value="") << Seleccione >>
+                                            option(value="Francisco Javier López Laris", selected=('Francisco Javier López Laris' == ticket.encargado))  Francisco Javier López Laris
+                                            option(value="Carlos Javier López Higuera", selected=('Carlos Javier López Higuera' == ticket.encargado))  Carlos Javier López Higuera
+                        else
+                            .col-lg-4
+                                .form-group
+                                    label | Encargado
+                                    .input-group
+                                        span.input-group-addon
+                                            i.fas.fa-circle
+                                        select.form-control(type="text" name="encargado")
+                                            option(value="") << Seleccione >>
+                                            option(value="Francisco Javier López Laris")  Francisco Javier López Laris
+                                            option(value="Carlos Javier López Higuera")  Carlos Javier López Higuera
+                        .col-lg-2.btn-group.pull-right(style="padding-top:24px")
+                            .form-group
+                                .input-group
+                                    span.input-group-addon
+                                        i.fas.fa-save.text-success
+                                    input.btn.btn-success.form-control(type="submit" value="Asignar")
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-ticket-alt(style="margin-right: 10px;")
+                | Datos
+    .row
+        .col-lg-6
+            .form-group
+                label | Título
+                .input-group
+                    span #{ticket.titulo}
+        if ticket.encargado
+            .col-lg-3
+                .form-group
+                    label | Encargado
+                    .input-group
+                        span #{ticket.encargado}
+        else
+            .col-lg-3
+                .form-group
+                    label | Encargado
+                    .input-group
+                        span El Ticket no ha sido asignado.
+        if ticket.prioridad
+            .col-lg-3
+                .form-group
+                    label | Prioridad
+                    .input-group
+                        if ticket.prioridad == "Alta"
+                                label.label.label-danger  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{ticket.prioridad}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if ticket.prioridad == "Media"
+                                label.label.label-warning  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{ticket.prioridad}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if ticket.prioridad == "Baja"
+                                label.label.label-primary  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{ticket.prioridad}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        else
+            .col-lg-3
+                .form-group
+                    label | Prioridad
+                    .input-group
+                        span Prioridad no asigada.
+    .row
+        .col-lg-3
+            .form-group
+                label | Solicitante
+                .input-group
+                    span #{ticket.usuario.nombre}
+        .col-lg-3
+            .form-group
+                label | Fecha
+                .input-group
+                    span #{ticket.fecha} a las #{ticket.hora}
+        .col-lg-3
+            .form-group
+                label | Categoría
+                .input-group
+                    span #{ticket.categoria}
+        .col-lg-3
+            .form-group
+                label | Subcategoría
+                .input-group
+                    span #{ticket.subcategoria}
+    .row
+        .col-lg-6
+            .form-group
+                label | Descripción
+                .input-group
+                    span #{ticket.solicitud}
+        .col-lg-6
+            .form-group
+                label | Imagen
+                .input-group
+                    if ticket.imagen
+                            a(href="../../../Tickets/#{ticket.imagen}" target="_blank")
+                                img(src="../../../Tickets/#{ticket.imagen}" height="180px")
+                        else
+                            span No se adjuntó imagen
+    form(role="form" method="post" action="/tickets/comentar/#{ticket.id}?_method=put")
+        .row
+            .col-lg-6
+                .form-group
+                    label | Comentarios
+                    ul.list-unstyled(id="listaComentarios" name="comentarios")
+                        each c in ticket.comentarios 
+                            if c.usuario == user.nombre
+                                li(align="right")
+                                    label #{c.usuario}
+                                    br
+                                    label.comentarioPropio(title="#{c.fecha} #{c.hora}" data-toggle="tooltip" data-placement="right") #{c.comentario}
+                            else
+                                li
+                                    label #{c.usuario}
+                                    br
+                                    label.comentario(title="#{c.fecha} #{c.hora}" data-toggle="tooltip" data-placement="right") #{c.comentario}
+        if ticket.estatus!='Cerrado'
+            if ticket.estatus!='Cancelado'
+                .row(style="margin-bottom: 30px;")
+                    .col-lg-6
+                        .input-group
+                            input.form-control(required type="text" name="comentario")
+                            .input-group-btn
+                                input.btn.form-control(type="submit" value="Comentar" style="background:#128eea; color:white; border-radius: 0px 4px 4px 0px;")

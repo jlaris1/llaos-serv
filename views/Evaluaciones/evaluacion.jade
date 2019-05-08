@@ -1,0 +1,182 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .vertical {
+            -webkit-transform: rotate(-90deg);
+            -moz-transform: rotate(-90deg);
+            -ms-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+            left: -40px;
+            top: 35px;
+            position: absolute;
+            font-size:26px;
+            font-weight:bold;
+        }
+    script.
+        $(document).ready( function() {
+            obtenerfecha();
+            obtenerhora();
+
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuEvaluacion').removeClass('hidden');
+            $('#spanMenuEvaluacion').removeClass('fa-angle-left');
+            $('#spanMenuEvaluacion').addClass('fa-angle-down');
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+        function obtenerfecha(){
+                var fecha = new Date()
+                var dia = fecha.getDate();
+                var mes = fecha.getMonth()+1;
+                var anio = fecha.getFullYear();
+
+                if(dia < 10){
+                    dia = "0"+dia;
+                }
+
+                if(mes < 10){
+                    mes = "0"+mes;
+                }
+
+                $('#fecha').text(dia+"/"+mes+"/"+anio);
+            }
+
+            function obtenerhora(){
+                var tiempo = new Date();
+                var horas = tiempo.getHours();
+                var minutos = tiempo.getMinutes();
+                var segundos = tiempo.getSeconds();
+                var dn ="";
+
+                if(horas < 12){
+                    dn = "a.m.";
+                }else{
+                    dn = "p.m.";
+                }
+
+                if(minutos < 10){
+                    minutos = "0"+minutos;
+                }
+
+                if(segundos < 10){
+                    segundos = "0"+segundos;
+                }
+                    
+                $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+                setTimeout('obtenerhora()',1000);
+            }
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-clipboard(style="margin-right: 3px;")
+                |   Evaluación a #{evaluacion.empleado.nombre} - #{evaluacion.mes} #{evaluacion.anio}
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    // FORM DE Evaluacion
+    form(role="form" method="post" action="#")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-list-ul(style="margin-right: 10px;")
+                    | ¿Qué?
+        .row
+            .col-lg-6
+                .form-group
+                    label | Responsabilidad
+                    span.form-control #{objetivos.objetivo1}
+            .col-lg-2
+                .form-group
+                    label | Peso
+                    span.form-control #{objetivos.peso1}
+            .col-lg-2
+                .form-group
+                    label | Calificación
+                    span.form-control #{evaluacion.calif1}
+            .col-lg-2
+                .form-group
+                    label | Valor
+                    span.form-control #{evaluacion.valor1}
+        .row
+            .col-lg-6
+                .form-group
+                    span.form-control #{objetivos.objetivo2}
+            .col-lg-2
+                .form-group
+                    span.form-control #{objetivos.peso2}
+            .col-lg-2
+                .form-group
+                    span.form-control #{evaluacion.calif2}
+            .col-lg-2
+                .form-group
+                    span.form-control #{evaluacion.valor2}
+        .row
+            .col-lg-6
+                .form-group
+                    span.form-control #{objetivos.objetivo3}
+            .col-lg-2
+                .form-group
+                    span.form-control #{objetivos.peso3}
+            .col-lg-2
+                .form-group
+                    span.form-control #{evaluacion.calif3}
+            .col-lg-2
+                .form-group
+                    span.form-control #{evaluacion.valor3}
+        .row
+            .col-lg-6
+                .form-group
+                    span.form-control #{objetivos.objetivo4}
+            .col-lg-2
+                .form-group
+                    span.form-control #{objetivos.peso4}
+            .col-lg-2
+                .form-group
+                    span.form-control #{evaluacion.calif4}
+            .col-lg-2
+                .form-group
+                    span.form-control #{evaluacion.valor4}
+        .row
+            .col-lg-6
+                .form-group
+                    span.form-control #{objetivos.objetivo5}
+            .col-lg-2
+                .form-group
+                    span.form-control #{objetivos.peso5}
+            .col-lg-2
+                .form-group
+                    span.form-control #{evaluacion.calif5}
+            .col-lg-2
+                .form-group
+                    span.form-control #{evaluacion.valor5}
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-list-ul(style="margin-right: 10px;")
+                    | ¿Cómo?
+        .row
+            .col-lg-6
+                .form-group
+                    label | Responsabilidad
+                    span.form-control #{objetivos.objetivo6}
+            .col-lg-2
+                .form-group
+                    label | Peso (%)
+                    span.form-control #{objetivos.peso6}
+            .col-lg-2
+                .form-group
+                    label | Calificación
+                    span.form-control #{evaluacion.calif6}
+            .col-lg-2
+                .form-group
+                    label | Valor
+                    span.form-control #{evaluacion.valor6}

@@ -1,0 +1,49 @@
+extends ../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function() { 
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#subMenuLaboratorio').removeClass('hidden');
+            $('#spanMenuLaboratorio').removeClass('fa-angle-left');
+            $('#spanMenuLaboratorio').addClass('fa-angle-down');
+            $('#subMenuPatologico').removeClass('hidden');
+            $('#spanMenuPatologico').removeClass('fa-angle-left');
+            $('#spanMenuPatologico').addClass('fa-angle-down');
+
+            $('#analisis').dataTable();
+        });
+    //Termina Javascript
+
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-vials(style="margin-right: 10px;")
+                |   Análisis Patológicos
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
+            a.btn.btn-special(href="/patologicos/new", style="margin-right: 5px;")
+                i.fas.fa-plus-circle
+                |   Nuevo
+            if user.permisos != "usuario"
+                a.btn.btn-special(href="#")
+                    i.fas.fa-file-pdf
+                    |   Reportes
+    .divider
+    .row
+        .table-responsive     
+            table#analisis.table.table-striped.table-hover
+                thead
+                    th Estanque
+                    th Fecha
+                    th Biólogo
+                    th Acciones
+                tbody
+                    each an in analisis
+                        tr
+                            td #{ an.estanque.nombre}
+                            td.text-center #{ new Date(an.fecha).getDate()+ '/' + (new Date(an.fecha).getMonth() + 1)+ '/' + new Date(an.fecha).getFullYear()}
+                            td #{ an.biologo }
+                            td 
+                                a(href="#", data-toggle="tooltip", data-placement="top", title="Ver detalles", style="margin-right: 5px;")
+                                    i.fas.fa-eye.text-primary.fa-lg
+                                a(href="#", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px; color: #057e95;")
+                                    i.fas.fa-pencil-alt.fa-lg

@@ -1,0 +1,304 @@
+extends ../../layouts/layout.jade
+block contenido
+    style.
+        .labelFol {
+            font-size: 2em; 
+            background-color: black; 
+            color: white; 
+            border-radius: 8px;
+        }
+    script.
+        $(document).ready( function(){
+            $('#subMenuCompras').removeClass('hidden');
+            $('#spanMenuCompras').removeClass('fa-angle-left');
+            $('#spanMenuCompras').addClass('fa-angle-down');
+            $('#subMenuOrdenes').removeClass('hidden');
+            $('#spanMenuOrdenes').removeClass('fa-angle-left');
+            $('#spanMenuOrdenes').addClass('fa-angle-down');       
+            $('#subMenuOrdenesRuta').removeClass('hidden');
+            $('#spanMenuOrdenesRuta').removeClass('fa-angle-left');
+            $('#spanMenuOrdenesRuta').addClass('fa-angle-down'); 
+            
+            obtenerfecha();
+            obtenerhora();
+            $('[data-toggle="tooltip"]').tooltip();
+
+
+            if($('#url').text() != ''){
+                url = '../../../../../'+ $('#url').text();
+                window.open(url, 'Download');
+                $('#url').text('');
+            }
+
+            $('#criterio').on('change', function(){
+                if(this.value == 'Proveedor'){
+                    $('#cmbProve').removeClass('hidden');
+                    $('#Busca').addClass('hidden');
+                    $('#cmbProveedor').attr('required', true);
+                    $('#txtBusca').attr('required', false);
+                } else {
+                    $('#cmbProve').addClass('hidden');
+                    $('#Busca').removeClass('hidden');
+                    $('#cmbProveedor').attr('required', false);
+                    $('#txtBusca').attr('required', true);
+                }
+            });
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        window.onload = function () { 
+
+        }
+
+        function FormatMoney(bol, valor){
+            var total = 0;
+
+            if (bol) {
+                total += valor;
+            } else {
+                total-=valor;
+            }
+            
+            var entero = '';
+            
+            Entero_Decimal = total.toString().split('.');
+            
+            cadena = Entero_Decimal[0].split('').reverse().join('');
+            
+            for (var z = cadena.length; z >=0; z--) {
+                numero = cadena.charAt(z)
+                
+                if ((cadena.length >= 4 && z ==3 ) || (cadena.length >= 7 && z ==6 ) || (cadena.length >= 10 && z == 9 ) || (cadena.length >= 13 && z ==12 ) || (cadena.length >= 16 && z ==15 )) {
+                    numero +=  ",";
+                }
+
+                entero += numero;
+            }
+            
+            if(Entero_Decimal[1]) {
+                decimales = '.'+ Entero_Decimal[1];
+            } else {
+                decimales = '.00';
+            }
+            
+            return "$ " + entero + decimales;
+        }
+
+        function asignarIdOrden(idOrd){
+            $('#frm2').prop('action', $('#frm2').prop('action').replace('idOrd',idOrd));
+            //alert( $('#frm2').prop('action'));
+            document.frm2.submit();
+        }
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-truck-loading(style="margin-right: 10px;")
+                |   Órdenes en Ruta
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Envía: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    label#url.hidden #{url}
+    form#frm(role="form" method="post" action="/ordenes/buscar/orden")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-bars(style="margin-right: 10px;")
+                    | Datos Orden Ruta
+        
+        .row
+            .col-lg-3.pull-left.right-padding
+                label.labelFol
+                    | &nbsp;&nbsp; ORD#{folio} &nbsp;&nbsp;
+            .col-lg-4.pull-right
+                .form-group
+                    label | Código Envió
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#codigo.form-control(readonly type="text" name="codigo" placeholder="Código" value="#{codigo}")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-search(style="margin-right: 10px;")
+                    | Búsqueda
+        .row
+            .col-lg-4
+                .form-group
+                    label | Criterio de búsqueda
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-search-plus
+                        select#criterio.form-control(required name="criterio" tabindex="3")
+                            option(value="") << Seleccione >>
+                            option(value="Serie", selected=("Serie"== criterio)) Serie
+                            option(value="Proveedor",  selected=("Proveedor"== criterio)) Proveedor
+            .col-lg-6#cmbProve.hidden
+                .form-group
+                    label | Proveedor
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-building
+                        select(required id="cmbProveedor" name="proveedor" tabindex="10").form-control
+                            option(value="") << Seleccione >>
+                            each p in proveedores
+                                option(value=p.id) #{ p.nombreEmpresa }
+            .col-lg-6#Busca
+                .form-group
+                    label | Buscar
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-search
+                        input#txtBusca.form-control(required type="text" name="buscar" placeholder="Buscar.." value="#{busca}" tabindex="2")
+            .col-lg-2
+                .form-group
+                    label &nbsp;
+                    .input-group
+                        span.input-group-addon.text-success
+                            i.fa.fa-search.text-success
+                        button.form-control.btn.btn-success(type="submit" tabindex="4")
+                            |   Buscar
+    form#frm2(role="form" name="frm2" method="post" action="/ordenes/agregar/enruta/idOrd")
+        input.hidden.form-control(readonly type="text" name="codigo" placeholder="Código" value="#{codigo}")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-truck(style="margin-right: 10px;")
+                    | Datos de transportación
+        .row
+            .col-lg-4
+                .form-group
+                    label | Unidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-shipping-fast
+                        select.form-control(required name="unidad" tabindex="5")
+                            option(value="") << Seleccione >>
+                            option(value="Trailer Kenworth", selected=("Trailer Kenworth"== unidad)) Trailer Kenworth
+                            option(value="Camión Pasajeros", selected=("Camión Pasajeros"== unidad)) Camión Pasajeros
+                            option(value="Doble Rodado #1", selected=("Doble Rodado #1"== unidad)) Doble Rodado #1
+                            option(value="Doble Rodado #2", selected=("Doble Rodado #2"== unidad)) Doble Rodado #2
+                            option(value="Tundra", selected=("Tundra"== unidad)) Tundra
+            .col-lg-6
+                .form-group
+                    label | Chofer
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user
+                        input.form-control(required type="text" name="chofer" placeholder="Chofer" value="#{chofer}" tabindex="6")
+    if Object.keys(ordenes).length > 0    
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-list-alt(style="margin-right: 10px;")
+                    | Órdenes encontradas
+        table.table
+            thead 
+                th Serie
+                th Proveedor
+                th Estatus
+                th Total
+                th Acciones
+            tbody
+                each ord in ordenes
+                    tr
+                        td #{ord.serie}
+                        td #{ord.proveedor}
+                        td #{ord.estatus}
+                        td #{ord.total}
+                        td
+                            a(id="#{ord.id}" href="#" data-toggle="tooltip" data-placement="top" title="Agregar" onclick="asignarIdOrden(this.id)")
+                                i.fas.fa-plus-circle.text-success.fa-lg
+    if Object.keys(articulosRuta).length > 0
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-boxes(style="margin-right: 10px;")
+                    | Artículos en ruta 
+        table.table
+            thead 
+                th Cantidad
+                th Unidad
+                th Codigo
+                th Descripción
+                th Orden
+                th Proveedor
+                th Acciones
+            tbody
+                each art in articulosRuta
+                    tr
+                        td #{art.cantidad}
+                        td #{art.unidad}
+                        td #{art.codigo}
+                        td #{art.descripcion}
+                        td #{art.orden.serie}
+                        td #{art.proveedor.nombreEmpresa}
+                        td
+                            //a(href="/ordenes/articuloruta/editar/#{art.id}/#{codigo}"  data-toggle="tooltip", data-placement="top", title="Editar" style="margin-right: 10px;")
+                            //    i.fas.fa-pencil-alt.text-info.fa-lg
+                            a(href="/ordenes/articuloruta/eliminar/#{art.id}/#{codigo}"  data-toggle="tooltip", data-placement="top", title="Eliminar")
+                                i.fas.fa-minus-circle.text-danger.fa-lg
+        .divider
+        .row(style="margin-bottom: 20px;")
+            .col-lg-2.pull-right(style="margin-left: -25px;")
+                    .form-group
+                        .input-group
+                            span.input-group-addon
+                                i.fas.fa-envelope.text-primary
+                            a.btn.btn-primary.form-control(href="/ordenes/enviar/ordenruta/#{codigo}")
+                                |   Enviar
+                .col-lg-2.pull-right
+                    .form-group
+                        .input-group
+                            span.input-group-addon
+                                i.fas.fa-file-pdf.text-danger
+                            a.btn.btn-danger.form-control(href="/ordenes/pdf/ordenruta/#{codigo}")
+                                |   PDF

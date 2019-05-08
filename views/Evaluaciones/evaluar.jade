@@ -1,0 +1,269 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .vertical {
+            -webkit-transform: rotate(-90deg);
+            -moz-transform: rotate(-90deg);
+            -ms-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+            left: -40px;
+            top: 35px;
+            position: absolute;
+            font-size:26px;
+            font-weight:bold;
+        }
+    script.
+        $(document).ready( function() {
+            obtenerfecha();
+            obtenerhora();
+
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuEvaluacion').removeClass('hidden');
+            $('#spanMenuEvaluacion').removeClass('fa-angle-left');
+            $('#spanMenuEvaluacion').addClass('fa-angle-down');
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        function calcular(){
+            var peso1 = parseFloat($("#peso1").text());
+            var peso2 = parseFloat($("#peso2").text());
+            var peso3 = parseFloat($("#peso3").text());
+            var peso4 = parseFloat($("#peso4").text());
+            var peso5 = parseFloat($("#peso5").text());
+            var peso6 = parseFloat($("#peso6").text());
+            
+            var calif1 = parseFloat($("#calif1").val());
+            var calif2 = parseFloat($("#calif2").val());
+            var calif3 = parseFloat($("#calif3").val());
+            var calif4 = parseFloat($("#calif4").val());
+            var calif5 = parseFloat($("#calif5").val());
+            var calif6 = parseFloat($("#calif6").val());
+            
+            var valor1 = peso1*calif1/100;
+            var valor2 = peso2*calif2/100;
+            var valor3 = peso3*calif3/100;
+            var valor4 = peso4*calif4/100;
+            var valor5 = peso5*calif5/100;
+            var valor6 = peso6*calif6/100;
+            if(isNaN(valor1))
+                valor1=0;
+            $("#valor1").val(valor1);
+            if(isNaN(valor2))
+                valor2=0;
+            $("#valor2").val(valor2);
+            if(isNaN(valor3))
+                valor3=0;
+            $("#valor3").val(valor3);
+            if(isNaN(valor4))
+                valor4=0;
+            $("#valor4").val(valor4);
+            if(isNaN(valor5))
+                valor5=0;
+            $("#valor5").val(valor5);
+            if(isNaN(valor6))
+                valor6=0;
+            $("#valor6").val(valor6);
+
+            var final = valor1+valor2+valor3+valor4+valor5+valor6;
+            if(isNaN(final))
+                $("#final").val(0);
+            else
+                $("#final").val(final);
+
+        }
+
+    
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-clipboard(style="margin-right: 3px;")
+                |   Evaluación a #{empleado.nombre} - #{mes} #{objetivos.anio}
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    // FORM DE Evaluacion
+    form(role="form" method="post" action="/evaluaciones/evaluar/registrar/#{empleado.id}/#{mes}/#{objetivos.anio}")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-list-ul(style="margin-right: 10px;")
+                    | ¿Qué?
+        .row
+            .col-lg-6
+                .form-group
+                    label | Responsabilidad
+                    span.form-control #{objetivos.objetivo1}
+            .col-lg-2
+                .form-group
+                    label | Peso (%)
+                    span.form-control#peso1 #{objetivos.peso1}
+            .col-lg-2
+                .form-group
+                    label | Calificación
+                    select.form-control#calif1(required name="calif1" onchange="calcular()")
+                        option(value="") << Seleccione >>
+                        option(value="80") 80
+                        option(value="100") 100
+                        option(value="130") 130
+            .col-lg-2
+                .form-group
+                    label | Valor
+                    input.form-control#valor1(type="text" readonly name="valor1")
+        .row
+            .col-lg-6
+                .form-group
+                    span.form-control #{objetivos.objetivo2}
+            .col-lg-2
+                .form-group
+                    span.form-control#peso2 #{objetivos.peso2}
+            .col-lg-2
+                .form-group
+                    select.form-control#calif2(required name="calif2" onchange="calcular()")
+                        option(value="") << Seleccione >>
+                        option(value="80") 80
+                        option(value="100") 100
+                        option(value="130") 130
+            .col-lg-2
+                .form-group
+                    input.form-control#valor2(type="text" readonly name="valor2")
+        .row
+            .col-lg-6
+                .form-group
+                    span.form-control #{objetivos.objetivo3}
+            .col-lg-2
+                .form-group
+                    span.form-control#peso3 #{objetivos.peso3}
+            .col-lg-2
+                .form-group
+                    select.form-control#calif3(required name="calif3" onchange="calcular()")
+                        option(value="") << Seleccione >>
+                        option(value="80") 80
+                        option(value="100") 100
+                        option(value="130") 130
+            .col-lg-2
+                .form-group
+                    input.form-control#valor3(type="text" readonly name="valor3")
+        .row
+            .col-lg-6
+                .form-group
+                    span.form-control #{objetivos.objetivo4}
+            .col-lg-2
+                .form-group
+                    span.form-control#peso4 #{objetivos.peso4}
+            .col-lg-2
+                .form-group
+                    select.form-control#calif4(required name="calif4" onchange="calcular()")
+                        option(value="") << Seleccione >>
+                        option(value="80") 80
+                        option(value="100") 100
+                        option(value="130") 130
+            .col-lg-2
+                .form-group
+                    input.form-control#valor4(type="text" readonly name="valor")
+        .row
+            .col-lg-6
+                .form-group
+                    span.form-control #{objetivos.objetivo5}
+            .col-lg-2
+                .form-group
+                    span.form-control#peso5 #{objetivos.peso5}
+            .col-lg-2
+                .form-group
+                    select.form-control#calif5(required name="calif5" onchange="calcular()")
+                        option(value="") << Seleccione >>
+                        option(value="80") 80
+                        option(value="100") 100
+                        option(value="130") 130
+            .col-lg-2
+                .form-group
+                    input.form-control#valor5(type="text" readonly name="valor5")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-list-ul(style="margin-right: 10px;")
+                    | ¿Cómo?
+        .row
+            .col-lg-6
+                .form-group
+                    label | Responsabilidad
+                    span.form-control #{objetivos.objetivo6}
+            .col-lg-2
+                .form-group
+                    label | Peso (%)
+                    span.form-control#peso6 #{objetivos.peso6}
+            .col-lg-2
+                .form-group
+                    label | Calificación
+                    select.form-control#calif6(required name="calif6" onchange="calcular()")
+                        option(value="") << Seleccione >>
+                        option(value="80") 80
+                        option(value="100") 100
+                        option(value="130") 130
+            .col-lg-2
+                .form-group
+                    label | Valor
+                    input.form-control#valor6(type="text" readonly name="valor6")
+        .row
+            .col-lg-2.pull-right
+                .form-group
+                    label Calificación Final
+                    input.form-control#final(type="text" readonly name="final")
+        .divider
+        .row
+            .col-lg-2.btn-group.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-save.text-success
+                        input.btn.btn-success.form-control(type="submit" value="Guardar")

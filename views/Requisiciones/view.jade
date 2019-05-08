@@ -1,0 +1,299 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .labelReq {
+            font-size: 2em; 
+            background-color: black; 
+            color: white; 
+            border-radius: 8px;
+        }
+
+        .labelSta {
+            color: white;
+            font-size: 2em; 
+            border-radius: 8px;
+        }     
+
+        @media (max-width: 1366px) and (min-width: 1366px){
+            .right-padding {
+                margin-right: -70px;
+            }
+        }
+
+        @media (max-width: 1600px) and (min-width: 1600px){
+            .right-padding {
+                margin-right: -140px;
+            }
+        }
+
+        @media (min-width: 1900px){
+            .right-padding {
+                margin-right: -210px;
+            }
+        }
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora();
+            obtenerModulos();
+
+            $('#chkProveedor').on('change', function() {
+                if($(this).is(":checked") == true){
+                    $('#tituloProveedor').removeClass('hidden');
+                    $('#panelProveedor').removeClass('hidden');
+                } else {
+                    $('#tituloProveedor').addClass('hidden');
+                    $('#panelProveedor').addClass('hidden');
+                }
+            });
+
+            $('#chkProveedor').checkboxpicker();
+
+            $('#subMenuRequisiciones').removeClass('hidden');
+            $('#spanMenuRequisiciones').removeClass('fa-angle-left');
+            $('#spanMenuRequisiciones').addClass('fa-angle-down');
+
+            if($('#permisoAut').text() == 'false'){
+                $('#autoriza').addClass('hidden');
+            } else {
+                $('#autoriza').removeClass('hidden');
+            }
+                     
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date();
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+
+        function obtenerModulos(){
+           if ($('#areas').val() == "Intensivo"){
+                $('#modulos').removeClass('hidden');
+                $('#sel').removeClass('hidden');
+                $('#a').removeClass('hidden');
+                $('#b').removeClass('hidden');
+                $('#ac').addClass('hidden');
+                $('#bc').addClass('hidden');
+                $('#d').addClass('hidden');
+                $('#e').addClass('hidden');
+                $('#reser').removeClass('hidden');
+            } else if ($('#areas').val() == "Semi-intensivo"){
+                $('#modulos').removeClass('hidden');
+                $('#sel').removeClass('hidden');
+                $('#a').addClass('hidden');
+                $('#b').addClass('hidden');
+                $('#ac').removeClass('hidden');
+                $('#bc').removeClass('hidden');
+                $('#d').removeClass('hidden');
+                $('#e').removeClass('hidden');
+                $('#reser').removeClass('hidden');
+            } else {
+                $('#modulos').addClass('hidden');
+            }
+        }
+
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-clipboard-list(style="margin-right: 10px;")
+                |   Ver requisición
+    .row
+        .col-lg-6.pull-right.text-right
+            span(style="margin-right: 15px;")
+                | Usuario:
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    label.hidden#permisoAut #{user.autorizador}
+    form(role="form" method="post" action="#")
+        .row
+            .col-lg-12
+                h4.page-header
+                    | Datos de la requisición
+        .row
+            .col-lg-3.pull-left.right-padding
+                label.labelReq
+                    | &nbsp;&nbsp; #{codReq} &nbsp;&nbsp;
+            .col-lg-5.pull-left
+                if req.estatus == "Nueva"
+                    label.labelSta.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{req.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                else if req.estatus == "Autorizada"
+                    label.labelSta.label-success &nbsp;&nbsp;&nbsp;&nbsp;#{req.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                else if req.estatus == "Cancelada" 
+                    label.labelSta.label-danger &nbsp;&nbsp;&nbsp;&nbsp;#{req.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                else if req.estatus == "Compra parcial"
+                    label.labelSta.label-warning #{req.estatus}&nbsp;
+                else if req.estatus == "Detenida"
+                    label.labelSta.label-default  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{req.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                else if req.estatus == "Cerrada"
+                    label.labelSta.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{req.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            .col-lg-3.pull-right
+                .form-group
+                    label | Código Requisición
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(disabled type="text" value="#{req.id}")
+        .row
+            .col-lg-4
+                .form-group
+                    label | Solicita
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user
+                        input.form-control(disabled type="text" value="#{req.solicita}") 
+            .col-lg-4
+                .form-group
+                    label | Area
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-map-signs
+                        select#areas.form-control(disabled)
+                            option(value="") << Seleccione >>
+                            option(value="Administración - Granja", selected=('Administración - Granja'== req.area)) Administración - Granja
+                            option(value="Intensivo", selected=('Intensivo'== req.area)) Intensivo
+                            option(value="Semi-intensivo", selected=("Semi-intensivo"== req.area)) Semi-intensivo
+                            option(value="Laboratorio", selected=("Laboratorio"== req.area)) Laboratorio
+                            option(value="Probioticos", selected=("Probioticos"== req.area)) Probioticos
+                            option(value="Taller Mecánico", selected=("Taller Mecánico"== req.area)) Taller Mecánico
+                            option(value="Taller Eléctrico", selected=("Tallr Eléctrico"== req.area)) Taller Eléctrico 
+                            option(value="Equipo Bombeo", selected=("Equipo Bombeo"== req.area)) Equipo Bombeo
+                            option(value="Administración - Matriz", selected=('Administración - Matriz'== req.area)) Administración - Matriz
+                            option(value="Planta - Administración", selected=('Planta - Administración'== req.area)) Planta - Administración
+                            option(value="Planta - Mantenimiento", selected=('Planta - Mantenimiento'== req.area)) Planta - Mantenimiento
+                            option(value="Planta - Proceso", selected=('Planta - Proceso'== req.area)) Planta - Proceso
+            .col-lg-4#modulos.hidden
+                .form-group
+                    label | Modulo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user-circle
+                         select.form-control(name="modulo" tabindex="4" disabled)
+                            option#sel.hidden(value="0") << Seleccione >>
+                            option#a.hidden(value="A", selected=("A"== req.modulo)) Modulo A
+                            option#b.hidden(value="B", selected=("B"== req.modulo)) Modulo B
+                            option#ac.hidden(value="AC", selected=("AC"== req.modulo)) Modulo A y Medio C
+                            option#bc.hidden(value="BC", selected=("BC"== req.modulo)) Modulo B y Medio C
+                            option#d.hidden(value="D", selected=("D"== req.modulo)) Modulo D
+                            option#e.hidden(value="E", selected=("E"== req.modulo)) Modulo E
+                            option#reser.hidden(value="Reservorio", selected=("Reservorio"== req.modulo)) Reservorio
+        .row
+            .col-lg-4
+                .form-group
+                    label | Autoriza
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user-circle
+                        select#responsable.form-control(name="responsable" tabindex="6" disabled)
+                            option(value="0") << Seleccione >>
+                            each usuario in usuarios
+                                option(value=usuario.id, selected=(usuario.id== req.responsable)) #{usuario.nombre}
+            .col-lg-8
+                .form-group
+                    label | Uso
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-cogs
+                        input.form-control(disabled type="text" value="#{req.uso}") 
+        .row
+            .col-lg-12
+                h4.page-header
+                    | Datos de los artículos
+        table.table
+            thead
+                th(scope="col").text-center
+                    |   Cantidad
+                th(scope="col")
+                    |   Unidad
+                th(scope="col")
+                    |   Descripción
+                th(scope="col")
+                    |   Urgencia
+            tbody
+                each lr, index in listaRequisicion
+                    tr(scope="row")
+                        td.text-center #{ lr.cantidad }
+                        td #{ lr.unidad }
+                        td #{ lr.descripcion }
+                        if lr.estatus == 'Bajo'
+                            td 
+                                label.label.label-default &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{lr.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        if lr.estatus == 'Normal'
+                            td 
+                                label.label.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{lr.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        if lr.estatus == 'Urgente'
+                            td 
+                                label.label.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{lr.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        if lr.estatus == 'Extemporaneo'
+                            td 
+                                label.label.label-danger &nbsp; #{lr.estatus}&nbsp;
+                        if lr.estatus == 'No Autorizado'
+                            td 
+                                label.label.label-close &nbsp; #{lr.estatus}&nbsp;
+        if user.permisos == "admin" || user.permisos == "developer"
+            .divider
+            .row.pull-right(style="margin-bottom: 20px;")
+                .col-lg-2.btn-group.pull-right(style="margin-left: -25px;")
+                    .form-group
+                        .input-group
+                            span.input-group-addon.text-danger
+                                i.fas.fa-times-circle.text-danger
+                            a#btnEnviar(href="/requisiciones/requisicion/cancelar/#{req.id}").btn.btn-danger.form-control
+                                |   Cancelar
+                .col-lg-2.btn-group.pull-right#autoriza(style="margin-left: -25px;").hidden
+                    .form-group
+                        .input-group
+                            span.input-group-addon.text-success
+                                i.fas.fa-check-circle.text-success
+                            a#btnEnviar(href="/requisiciones/requisicion/autorizar/#{req.id}").btn.btn-success.form-control
+                                |   Autorizar
+                .col-lg-2.btn-group.pull-right
+                    .form-group
+                        .input-group
+                            span.input-group-addon.text-primary
+                                i.fas.fa-pencil-alt.text-primary
+                            a#btnEnviar(href="/requisiciones/requisicion/editar/#{req.id}").btn.btn-primary.form-control
+                                |   Editar

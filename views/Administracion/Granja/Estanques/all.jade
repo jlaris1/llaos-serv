@@ -1,0 +1,55 @@
+extends ../../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function() { 
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $('#subMenuAdministracion').removeClass('hidden');
+            $('#spanMenuAdministracion').removeClass('fa-angle-left');
+            $('#spanMenuAdministracion').addClass('fa-angle-down'); 
+            $('#subMenuAdmGranja').removeClass('hidden');
+            $('#spanMenuAdmGranja').removeClass('fa-angle-left');
+            $('#spanMenuAdmGranja').addClass('fa-angle-down');
+            $('#subMenuEstanques').removeClass('hidden');
+            $('#spanMenuEstanques').removeClass('fa-angle-left');
+            $('#spanMenuEstanques').addClass('fa-angle-down');
+            $('#subMenuEstanques').removeClass('hidden');
+            $('#spanMenuEstanques').removeClass('fa-angle-left');
+            $('#spanMenuEstanques').addClass('fa-angle-down');
+            $('#estanques').dataTable();
+        });
+
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2 
+                i.fas.fa-water(style="margin-right: 10px;")
+                |   Estanques
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
+            a.btn.btn-special(href="/estanque/new")
+                i.fas.fa-plus-circle
+                |   Nuevo
+    .divider
+    .row
+        .table-responsive
+            table#estanques.table.table-striped.table-hover
+                thead
+                    th Código
+                    th Nombre
+                    th Modulo
+                    th Tipo de Estaque
+                    th Acciones
+                tbody
+                    each e in estanques
+                        tr
+                            td #{ e.codigo }
+                            td #{ e.nombre }
+                            td #{ e.modulo.nombre }
+                            td #{ e.tipo.nombre }
+                            td.text-center
+                                a(href="/estanque/detail/#{e.id}", data-toggle="tooltip", data-placement="top", title="Ver Detalle", style="margin-right: 15px;")
+                                    i.fas.fa-eye.text-info.fa-lg
+                                a(href="#", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 15px;")
+                                    i.fas.fa-pencil-alt.text-info.fa-lg
+                                a(data-toggle="tooltip" href="#" title="Eliminar")
+                                    i.fas.fa-minus-circle.text-danger.fa-lg
+

@@ -1,0 +1,544 @@
+doctype html
+html(lang="es")
+    head
+        title Llaos 2.0
+        meta(charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+        link(rel="shortcut icon" href="/imgs/icono128.ico")
+        link(href="/css/bootstrap.min.css" rel="stylesheet")
+        link(href="/css/inicio.css" rel="stylesheet")
+        link(href="/css/card.css" rel="stylesheet")
+        link(href='/fontawesome-free-5.7.2-web/css/all.css' rel='stylesheet' type='text/css')
+        link(href='/vendor/datatables-responsive/dataTables.responsive.css' rel='stylesheet' type='text/css')
+        link(href='/css/animate.css' rel='stylesheet' type='text/css')
+        link(href='/css/datatables.css' rel='stylesheet' type='text/css')
+        link(href='https://unpkg.com/leaflet@1.4.0/dist/leaflet.css' rel="stylesheet")
+        script(type='text/javascript' src='/js/jquery.min.js')
+        script(type='text/javascript' src='/js/bootstrap.min.js')
+        script(type="text/javascript" charset="utf8" src="/js/dataTables.js")
+        script(type='text/javascript' src='/js/app.js')
+        script(type="text/javascript" src="/js/bootstrap-checkbox.min.js")
+        script(type="text/javascript" src="/js/moment.js")
+        script(type="text/javascript" src="/js/locale/es.js")
+        script(src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js")
+        script(src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0")
+    body
+        #wrapper
+            // Navigation
+            nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bottom: 0')
+                .navbar-header
+                    button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+                        span.sr-only Toggle navigation
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand(href='#') 
+                        img(src="/imgs/llaos-web-2-1.png", alt="", style="width:100px; margin-top: -10px;")
+                ul.nav.navbar-top-links.navbar-right
+                    // /.dropdown
+                    li.dropdown
+                        a.dropdown-toggle(data-toggle='dropdown', href='#')
+                            i.fas.fa-user-circle.fa-fw &nbsp;&nbsp;
+                            i.fa.fa-caret-down
+                        ul.dropdown-menu.dropdown-user
+                            li
+                                a(href='#')
+                                    i.fas.fa-user.fa-fw
+                                    |  Perfil de usuario
+                            li
+                                a(href='#')
+                                    i.fas.fa-cogs.fa-fw
+                                    |  Configuración
+                            li.divider
+                            li
+                                a(href='/cerrar_sesion')
+                                    i.fas.fa-sign-out-alt.fa-fw
+                                    |  Cerrar sesión
+                .navbar-default.sidebar(role='navigation')
+                    .sidebar-nav.navbar-collapse
+                        ul#side-menu.nav
+                            if user.permisos != "externo"
+                                // MENÚ INICIO
+                                li 
+                                    a(href='/home')
+                                        i.fas.fa-home.fa-fw
+                                        |  Inicio
+                                // MENÚ ADMINISTRACIÓN
+                                if user.permisos == "admin" || user.permisos == "developer" || user.permisos == "almacen_camaron"
+                                    li
+                                        a(href='#')#menuAdministracion
+                                            i.fas.fa-briefcase.fa-fw
+                                            |  Administración
+                                            span#spamMenuAdministracion.fas.fa-angle-left
+                                        ul#subMenuAdministracion.nav.nav-second-level.hidden
+                                            li
+                                                a(href='#')#menuAdmPlanta
+                                                    i.fas.fa-industry.fa-fw
+                                                    |   Planta
+                                                    span#spanMenuAdmPlanta.fas.fa-angle-left
+                                                ul#subMenuAdmPlanta.nav.nav-third-level.hidden
+                                                    li
+                                                        a(href='#')#menuInventarioCam
+                                                            i.fas.fa-box-open.fa-fw 
+                                                            |   Inventario Camarón
+                                                            span#spanMenuInventarioCam.fas.fa-angle-left
+                                                        ul#subMenuInventarioCam.nav.nav-fourth-level.hidden
+                                                            li
+                                                                a(href='/inventarioscamaron')
+                                                                    i.fas.fa-box-open.fa-fw 
+                                                                    |   Inventario
+                                                            li
+                                                                a(href='/inventarioscamaron/entradas')
+                                                                    i.fas.fa-sign-in-alt.fa-fw 
+                                                                    |   Entradas
+                                                            li
+                                                                a(href='/inventarioscamaron/salidas')
+                                                                    i.fas.fa-sign-out-alt.fa-fw 
+                                                                    |   Salidas
+                                                    li
+                                                        a(href='#')#menuTipoCamaron
+                                                            i.fas.fa-fish.fa-fw 
+                                                            |   Tipo Camarón
+                                                            span#spanMenuTipoCamaron.fas.fa-angle-left
+                                                        ul#subMenuTipoCamaron.nav.nav-fifth-level.hidden
+                                                            li
+                                                                a(href='/tiposcamaron')
+                                                                    i.fas.fa-table.fa-fw 
+                                                                    |   Bandeja
+                                                            li
+                                                                a(href='/tiposcamaron/new/tipocamaron')
+                                                                    i.fas.fa-plus-circle.fa-fw 
+                                                                    |   Nuevo
+                                            li
+                                                a(href='#')#menuAdmGranja
+                                                    i.fas.fa-tractor.fa-fw
+                                                    |   Granja
+                                                    span#spanMenuAdmGranja.fas.fa-angle-left
+                                                ul#subMenuAdmGranja.nav.nav-third-level.hidden
+                                                    li
+                                                        a(href='#')#menuEstanques
+                                                            i.fas.fa-water.fa-fw 
+                                                            |   Estanques
+                                                            span#spanMenuEstanques.fas.fa-angle-left
+                                                        ul#subMenuEstanques.nav.nav-fourth-level.hidden
+                                                            li
+                                                                a(href='/estanque/all')
+                                                                    i.fas.fa-table.fa-fw
+                                                                    |   Bandeja Estanques
+                                                            li
+                                                                a(href='/estanque/new')
+                                                                    i.fas.fa-plus-circle.fa-fw
+                                                                    |   Nuevo                   
+                                    // /.nav-second-level
+                                // MENÚ COMPRAS
+                                if user.permisos == "admin" || user.permisos == "developer" || user.permisos == "compras"
+                                    li
+                                        a(href='#')#menuCompras
+                                            i.fas.fa-dollar-sign.fa-fw
+                                            |  Compras
+                                            span#spanMenuCompras.fas.fa-angle-left
+                                        ul#subMenuCompras.nav.nav-second-level.hidden
+                                            li
+                                                a(href='#')#menuOrdenes
+                                                    i.fas.fa-shopping-cart.fa-fw
+                                                    |   Órdenes
+                                                    span#spanMenuOrdenes.fas.fa-angle-left
+                                                ul#subMenuOrdenes.nav.nav-third-level.hidden
+                                                    li
+                                                        a(href='/ordenes') 
+                                                            i.fas.fa-table.fa-fw 
+                                                            |   Bandeja Órdenes
+                                                    li
+                                                        a(href='/ordenes/compras/new/orden')
+                                                            i.fas.fa-cart-plus.fa-fw 
+                                                            |   Nueva
+                                                    li
+                                                        a(href='#')#menuOrdenesRuta
+                                                            i.fas.fa-directions
+                                                            |   Órdenes en Ruta
+                                                            span#spanMenuOrdenesRuta.fas.fa-angle-left
+                                                        ul#subMenuOrdenesRuta.nav.nav-fourth-level.hidden
+                                                            li
+                                                                a(href='/ordenes/ordenesruta') 
+                                                                    i.fas.fa-table.fa-fw 
+                                                                    |   Bandeja Órdenes
+                                                            li
+                                                                a(href='/ordenes/enruta')
+                                                                    i.fas.fa-plus-circle.fa-fw 
+                                                                    |   Nuevo envío
+                                                                
+                                            li
+                                                a(href="#")#menuProveedores 
+                                                    i.fas.fa-shipping-fast
+                                                    |   Proveedores
+                                                    span#spanMenuProveedores.fas.fa-angle-left
+                                                ul#subMenuProveedores.nav.nav-third-level.hidden
+                                                    li
+                                                        a(href='/proveedores') 
+                                                            i.fas.fa-table.fa-fw 
+                                                            |   Bandeja Proveedores
+                                                    li
+                                                        a(href='/proveedores/new/proveedor')
+                                                            i.fas.fa-plus-circle.fa-fw
+                                                            |   Nuevo
+                                        // /.nav-second-level
+                                // MENÚ DESARROLLO HUMANO
+                                if user.permisos == "admin" || user.permisos == "developer" || user.permisos == "registro" || user.permisos == "humanos"
+                                    li
+                                        a(href='#')#menuDesarrollo
+                                            i.fas.fa-users.fa-fw
+                                            |  Desarrollo Humano
+                                            span#spanMenuDesarrollo.fas.fa-angle-left
+                                        ul#subMenuDesarrollo.nav.nav-second-level.hidden
+                                            li 
+                                                a(href="#")#menuEmpleados
+                                                    i.fas.fa-users-cog.fa-fw
+                                                    |   Colaboradores
+                                                    span#spanMenuEmpleados.fas.fa-angle-left
+                                                ul#subMenuEmpleados.nav.nav-third-level.hidden
+                                                    li
+                                                        a(href="/empleados")
+                                                            i.fas.fa-table.fa-fw
+                                                            |   Bandeja Colaboradores
+                                                    li
+                                                        a(href='/empleados/new/empleado')
+                                                            i.fas.fa-user-plus.fa-fw
+                                                            |   Nuevo Colaborador
+                                            li
+                                                a(href="#")#menuFormatos
+                                                    i.fas.fa-folder-open.fa-fw
+                                                    |   Formatos
+                                                    span#spanMenuFormatos.fas.fa-angle-left
+                                                ul#subMenuFormatos.nav.nav-third-level.hidden
+                                                    li
+                                                        a(href="/Formatos/Solicitud Empleo.pdf" target="_blank")
+                                                            i.fas.fa-file-alt.fa-fw
+                                                            |   Solicitud Empleo
+                                                    li
+                                                        a(href="/Formatos/Lista Participación.pdf" target="_blank")
+                                                            i.fas.fa-file-alt.fa-fw
+                                                            |   Lista Participación
+                                            li 
+                                                a(href="#")#menuPuestos
+                                                    i.fas.fa-user-tag.fa-fw
+                                                    |   Puestos
+                                                    span#spanMenuPuestos.fas.fa-angle-left
+                                                ul#subMenuPuestos.nav.nav-third-level.hidden
+                                                    li
+                                                        a(href="/puestos")
+                                                            i.fas.fa-table.fa-fw
+                                                            |   Bandeja Puestos
+                                                    li
+                                                        a(href='/puestos/new/puesto')
+                                                            i.fas.fa-plus-circle.fa-fw
+                                                            |   Nuevo Puesto
+                                // MENÚ FINANZAS
+                                li.hidden
+                                    a(href='#')
+                                        i.far.fa-money-bill-alt.fa-fw
+                                        |  Finanzas
+                                        span.fas.fa-angle-left
+                                    ul.nav.nav-second-level.hidden
+                                        li
+                                            a(href='#') Second Level Item
+                                        li
+                                            a(href='#') Second Level Item
+                                        li
+                                            a(href='#')
+                                                | Third Level 
+                                                span.fa.arrow
+                                            ul.nav.nav-third-level
+                                                li
+                                                    a(href='#') Third Level Item
+                                                li
+                                                    a(href='#') Third Level Item
+                                                li
+                                                    a(href='#') Third Level Item
+                                                li
+                                                    a(href='#') Third Level Item
+                                            // /.nav-third-level
+                                    // /.nav-second-level
+                                // MENÚ INVENTARIOS 
+                                li
+                                    a(href='#')#menuInventarios
+                                        i.fas.fa-warehouse.fa-fw
+                                        |  Inventarios
+                                        span#spanMenuInvetarios.fas.fa-angle-left
+                                    ul#subMenuInventarios.nav.nav-second-level.hidden
+                                        if user.unidad_negocio == 'Granja' || user.permisos == 'developer'
+                                            li
+                                                a(href='#')#menuGranja
+                                                    i.fas.fa-box-open.fa-fw
+                                                    |  Granja
+                                                    span#spanMenuGranja.fas.fa-angle-left
+                                                ul#subMenuGranja.nav.nav-third-level.hidden
+                                                    li
+                                                        a(href='/inventarios/granja') 
+                                                            i.fas.fa-box-open.fa-fw 
+                                                            |   Inventarios
+                                                    li
+                                                        a(href='/inventarios/entradas')
+                                                            i.fas.fa-sign-in-alt.fa-fw 
+                                                            |   Entradas
+                                                    li
+                                                        a(href='/inventarios/salidas')
+                                                            i.fas.fa-sign-out-alt.fa-fw 
+                                                            |   Salidas
+                                        if user.unidad_negocio == 'Matriz' || user.permisos == 'developer'
+                                            li
+                                                a(href='#')#menuOficina
+                                                    i.fas.fa-box-open.fa-fw 
+                                                    |   Oficina
+                                                    span#spanMenuOficina.fas.fa-angle-left
+                                                ul#subMenuOficina.nav.nav-third-level.hidden
+                                                    li
+                                                        a(href='/inventarios/oficina') 
+                                                            i.fas.fa-box-open.fa-fw 
+                                                            |   Inventarios
+                                                    li
+                                                        a(href='/inventarios/entradas')
+                                                            i.fas.fa-sign-in-alt.fa-fw 
+                                                            |   Entradas
+                                                    li
+                                                        a(href='/inventarios/salidas')
+                                                            i.fas.fa-sign-out-alt.fa-fw 
+                                                            |   Salidas
+                                        if user.unidad_negocio == 'Planta' || user.permisos == 'developer'
+                                            li
+                                                a(href='#')#menuPlanta
+                                                    i.fas.fa-box-open.fa-fw 
+                                                    |   Planta
+                                                    span#spanMenuPlanta.fas.fa-angle-left
+                                                ul#subMenuPlanta.nav.nav-third-level.hidden
+                                                    li
+                                                        a(href='/inventarios/planta') 
+                                                            i.fas.fa-box-open.fa-fw 
+                                                            |   Inventarios
+                                                    li
+                                                        a(href='/inventarios/entradas')
+                                                            i.fas.fa-sign-in-alt.fa-fw 
+                                                            |   Entradas
+                                                    li
+                                                        a(href='/inventarios/salidas')
+                                                            i.fas.fa-sign-out-alt.fa-fw 
+                                                            |   Salidas
+                                // MENÚ LABORATORIO
+                                li
+                                    a(href='#')#menuLaboratorio
+                                        i.fas.fa-flask.fa-fw
+                                        |  Laboratorio
+                                        span#spanMenuLaboratorio.fas.fa-angle-left
+                                    ul#subMenuLaboratorio.nav.nav-second-level.hidden
+                                        li
+                                            a(href='#')#menuPatologico
+                                                i.fas.fa-vial.fa-fw 
+                                                |   Análisis Patológico
+                                                span#spanMenuPatologico.fas.fa-angle-left
+                                            ul#subMenuPatologico.nav.nav-third-level.hidden
+                                                li
+                                                    a(href='/patologicos/all') 
+                                                        i.fas.fa-table.fa-fw 
+                                                        |   Bandeja Análisis
+                                                li
+                                                    a(href='/patologicos/new')
+                                                        i.fas.fa-plus-circle.fa-fw 
+                                                        |   Nuevo
+                                        li
+                                            a(href='#')#menuBacteriologia
+                                                i.fas.fa-vial.fa-fw 
+                                                |   Bacteriología
+                                                span#spanMenuBacteriologia.fas.fa-angle-left
+                                            ul#subMenuBacteriologia.nav.nav-third-level.hidden
+                                                li
+                                                    a(href='/bacteriologia/all') 
+                                                        i.fas.fa-table.fa-fw 
+                                                        |   Bandeja Bacteriología
+                                                li
+                                                    a(href='/bacteriologia/new')
+                                                        i.fas.fa-plus-circle.fa-fw 
+                                                        |   Nuevo
+                                        li
+                                            a(href='#')#menuFitoplancton
+                                                i.fas.fa-vial.fa-fw 
+                                                |   Fitoplancton
+                                                span#spanMenuFitoplancton.fas.fa-angle-left
+                                            ul#subMenuFitoplancton.nav.nav-third-level.hidden
+                                                li
+                                                    a(href='/fitoplancton/all') 
+                                                        i.fas.fa-table.fa-fw 
+                                                        |   Bandeja
+                                                li
+                                                    a(href='/fitoplancton/new')
+                                                        i.fas.fa-plus-circle.fa-fw 
+                                                        |   Nuevo
+                                        li
+                                            a(href='#')#menuNutrientesTox
+                                                i.fas.fa-vial.fa-fw 
+                                                |   Nutrientes y Metabolitos
+                                                span#spanMenuNutrientesTox.fas.fa-angle-left
+                                            ul#subMenuNutrientesTox.nav.nav-third-level.hidden
+                                                li
+                                                    a(href='#')#menuNutrientesToxDiario
+                                                        i.fas.fa-calendar-day.fa-fw 
+                                                        |   Diario
+                                                        span#spanMenuNutrientesToxDiario.fas.fa-angle-left
+                                                    ul#subMenuNutrientesToxDiario.nav.nav-fourth-level.hidden
+                                                        li
+                                                            a(href='/nutrientestox/diario/all') 
+                                                                i.fas.fa-table.fa-fw 
+                                                                |   Bandeja Nutrientes
+                                                        li
+                                                            a(href='/nutrientestox/diario/new')
+                                                                i.fas.fa-plus-circle.fa-fw 
+                                                                |   Nuevo
+                                                li
+                                                    a(href='#')#menuNutrientesToxSemanal
+                                                        i.fas.fa-calendar-alt.fa-fw 
+                                                        |   Semanal
+                                                        span#spanMenuNutrientesToxSemanal.fas.fa-angle-left
+                                                    ul#subMenuNutrientesToxSemanal.nav.nav-fourth-level.hidden
+                                                        li
+                                                            a(href='/nutrientestox/semanal/all') 
+                                                                i.fas.fa-table.fa-fw 
+                                                                |   Bandeja Nutrientes
+                                                        li
+                                                            a(href='/nutrientestox/semanal/new')
+                                                                i.fas.fa-plus-circle.fa-fw 
+                                                                |   Nuevo
+                                        li
+                                            a(href='#')#menuZooplancton
+                                                i.fas.fa-vial.fa-fw 
+                                                |   Zooplancton
+                                                span#spanMenuZooplancton.fas.fa-angle-left
+                                            ul#subMenuZooplancton.nav.nav-third-level.hidden
+                                                li
+                                                    a(href='/zooplancton/all') 
+                                                        i.fas.fa-table.fa-fw 
+                                                        |   Bandeja Zooplanton
+                                                li
+                                                    a(href='/zooplancton/new')
+                                                        i.fas.fa-plus-circle.fa-fw 
+                                                        |   Nuevo
+                                // MENÚ LABORATORIO LARVAS
+                                li
+                                    a(href='#')#menuLaboratorioLarvas
+                                        i.fas.fa-fill-drip.fa-fw 
+                                        |   Laboratorio Larvas
+                                        span#spanMenuLaboratorioLarvas.fas.fa-angle-left
+                                    ul#submenuLaboratorioLarvas.nav.nav-third-level.hidden
+                                        li
+                                            a(href='/laboratoriolarvas/all') 
+                                                i.fas.fa-table.fa-fw 
+                                                |   Bandeja
+                                        li
+                                            a(href='/laboratoriolarvas/new')
+                                                i.fas.fa-plus-circle.fa-fw 
+                                                |   Nuevo
+                                // MENÚ PARAMETROS
+                                li
+                                    a(href='#')#menuParametros
+                                        i.fas.fa-eye-dropper.fa-fw
+                                        |  Parámetros
+                                        span#spanMenuParametros.fas.fa-angle-left
+                                    ul#subMenuParametros.nav.nav-second-level.hidden
+                                        li
+                                            a(href='/parametros/all') 
+                                                i.fas.fa-table.fa-fw 
+                                                |   Bandeja
+                                        li
+                                            a(href='/parametros/new')
+                                                i.fas.fa-plus-circle.fa-fw 
+                                                |   Nuevo
+                                // MENÚ PRODUCTOS
+                                if user.permisos == "admin" || user.permisos == "developer" || user.permisos == "compras"
+                                    li
+                                        a(href='#')#menuProductos 
+                                            i.fas.fa-boxes.fa-fw
+                                            |  Productos
+                                            span#spanMenuProductos.fas.fa-angle-left
+                                        ul#subMenuProductos.nav.nav-second-level.hidden
+                                                    li
+                                                        a(href='/productos') 
+                                                            i.fas.fa-table.fa-fw 
+                                                            |   Bandeja Productos
+                                                    li
+                                                        a(href='/productos/new/producto') 
+                                                            i.fas.fa-plus-circle.fa-fw
+                                                            |   Nuevo
+                                // MENÚ REQUISICIONES
+                                li
+                                    a(href='#')#menuRequisiciones
+                                        i.fas.fa-tasks
+                                        |   Requisiciones
+                                        span#spanMenuRequisiciones.fas.fa-angle-left
+                                    ul#subMenuRequisiciones.nav.nav-third-level.hidden
+                                        li
+                                            a(href='/requisiciones') 
+                                                i.fas.fa-table.fa-fw 
+                                                |   Bandeja Requisiciones
+                                        li
+                                            a(href='/requisiciones/new/requisicion')
+                                                i.fas.fa-plus-circle.fa-fw
+                                                |   Nueva
+                                // MENÚ SISTEMAS
+                                li
+                                    a(href='#')#menuSistemas
+                                        i.fas.fa-desktop.fa-fw
+                                        |  Sistemas
+                                        span#spanMenuSistemas.fas.fa-angle-left
+                                    ul#subMenuSistemas.nav.nav-second-level.hidden
+                                        li
+                                            a(href='#')#menuTickets
+                                                    i.fas.fa-ticket-alt.fa-fw 
+                                                    |   Tickets
+                                                    span#spanMenuTickets.fas.fa-angle-left
+                                                ul#subMenuTickets.nav.nav-third-level.hidden
+                                                    li
+                                                        a(href='/tickets') 
+                                                            i.fas.fa-table.fa-fw 
+                                                            |   Bandeja Tickets
+                                                    li
+                                                        a(href='/tickets/new/ticket')
+                                                            i.fas.fa-plus-circle.fa-fw
+                                                            |   Nuevo Ticket
+                                        if user.permisos == "master" || user.permisos == "developer"
+                                            li
+                                                a(href='#')#menuUsuarios
+                                                    i.fas.fa-user-friends.fa-fw 
+                                                    |   Usuarios
+                                                    span#spanMenuUsuarios.fas.fa-angle-left
+                                                ul#subMenuUsuarios.nav.nav-third-level.hidden
+                                                    li
+                                                        a(href='/usuarios') 
+                                                            i.fas.fa-table.fa-fw 
+                                                            |   Bandeja Usuarios
+                                                    li
+                                                        a(href='/usuarios/new/usuario')
+                                                            i.fas.fa-user-plus.fa-fw 
+                                                            |   Nuevo
+                                        
+                                        if user.permisos == "developer"
+                                            li
+                                                a(href='/prueba') Prueba
+                                    // /.nav-second-level                   
+                            // MENÚ PROVEEDORES EXTERNO
+                            if user.permisos == "developer" || user.permisos == "externo"
+                                li
+                                    a(href='#')#menuProvExt
+                                        i.fas.fa-shipping-fast
+                                        |  Proveedores
+                                        span#spanMenuProvExt.fas.fa-angle-left
+                                    ul#subMenuProvExt.nav.nav-second-level.hidden
+                                        li
+                                            a(href='/externos/cotizaciones') 
+                                                i.fas.fa-table.fa-fw 
+                                                |   Bandeja de cotizaciones
+                                        li
+                                            a(href='/externos/cotizacion/new') 
+                                                i.fas.fa-plus-circle.fa-fw 
+                                                |   Nueva Cotización
+                            // /.sidebar-collapse
+                            // /.navbar-static-side
+            #page-wrapper
+                .container-fluid
+                    //.loader.centrar
+                    block contenido

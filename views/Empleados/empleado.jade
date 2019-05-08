@@ -1,0 +1,640 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .form-control2{
+            display:block;
+            width:100%;
+            height:34px;
+            padding:6px 12px;
+            font-size:14px;
+            line-height:1.42857143;
+            color:#555;
+            background-color:#e6e6e6;
+            background-image:none;
+            border: 0;
+            outline: none !important;
+        }
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+        .control-group {
+            display: inline-block;
+            vertical-align: top;
+            background: #fff;
+            text-align: left;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 200px;
+            height: 210px;
+            margin: 10px;
+        }
+        .control {
+            display: block;
+            position: relative;
+            padding-top: 5px;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .control input {
+            position: absolute;
+            opacity: 0;
+        }
+        .control__indicator {
+            position: absolute;
+            top: 2px;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background: #e6e6e6;
+        }
+        .control:hover input ~ .control__indicator,
+        .control input:focus ~ .control__indicator {
+            background: #ccc;
+        }
+        .control input:checked ~ .control__indicator {
+            background: #e07808;
+        }
+        .control:hover input:not([disabled]):checked ~ .control__indicator,
+        .control input:checked:focus ~ .control__indicator {
+            background: #e07808;
+        }
+        .control input:disabled ~ .control__indicator {
+            background: #e6e6e6;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .control__indicator:after {
+            content: '';
+            position: absolute;
+            display: none;
+        }
+        .control input:checked ~ .control__indicator:after {
+            display: block;
+        }
+        .control--checkbox .control__indicator:after {
+            left: 9px;
+            top: 3px;
+            width: 8px;
+            height: 16px;
+            border: solid #fff;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+        }
+        .control--checkbox input:disabled ~ .control__indicator:after {
+            border-color: #7b7b7b;
+        }
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora();
+
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuEmpleados').removeClass('hidden');
+            $('#spanMenuEmpleados').removeClass('fa-angle-left');
+            $('#spanMenuEmpleados').addClass('fa-angle-down');
+
+            $('#chkInfonavit').checkboxpicker({
+                offLabel: 'No',
+                onLabel: 'Si'
+            });
+
+            $('#chkInfonavit').on('change', function() {
+                if($(this).is(":checked") == true){
+                    $('#numeroCredito').removeClass('hidden');
+                    $('#factorDescuento').removeClass('hidden');
+                    $('#tituloInfonavit').removeClass('hidden');
+                } else {
+                    $('#numeroCredito').addClass('hidden');
+                    $('#factorDescuento').addClass('hidden');
+                    $('#tituloInfonavit').addClass('hidden');
+                }
+            });
+
+            $('#chkOtro').on('change', function() {
+                if($(this).is(":checked") == true){
+                    $('#inputOtro').removeClass('hidden');
+                } else {
+                    $('#inputOtro').addClass('hidden');
+                }
+            });
+
+            $('#mayuRFC').keyup(function(){
+                $(this).val($(this).val().toUpperCase());
+            });
+
+            $('#mayuCURP').keyup(function(){
+                $(this).val($(this).val().toUpperCase());
+            });
+
+            $('#fechaIngreso').datetimepicker(
+                {   
+                    format: 'dd-MM-yyyy'
+                }
+            );
+            $('#fnacimiento').datetimepicker(
+                {   
+                    format: 'dd-MM-yyyy'
+                }
+            );
+        });
+
+        function calcularSueldo(){
+            var total=0;
+            var apoyo=0;
+            var sueldoDiario=0;
+            var mulTipoSueldo=0;
+            if($('#apoyoTrans').val())
+                apoyo = parseFloat($('#apoyoTrans').val());
+            if($('#sueldoDiario').val())
+                sueldoDiario = parseFloat($('#sueldoDiario').val());
+            
+            if($('#tiposueldo').val() == 'Semanal')
+                mulTipoSueldo = 7;
+            if($('#tiposueldo').val() == 'Quincenal')
+                mulTipoSueldo = 15;
+            
+            total=(sueldoDiario*mulTipoSueldo)+apoyo;
+
+            $('#totalSueldo').val(total.toFixed(2));
+        };
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+        
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-user-plus(style="margin-right: 10px;")
+                |   Alta de Personal
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    // FORM DE ALTA
+    form(role="form" method="post" action="/empleados/empleado")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-id-badge(style="margin-right: 10px;")
+                    | Datos del puesto
+        .row
+            .col-lg-2
+                .form-group
+                    label | No. de empleado
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(required type="text" name="numero" tabindex="1" readonly)
+            .col-lg-3
+                .form-group
+                    label | Fecha de ingreso
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar-alt
+                        input#fechaIngreso.form-control(required type="date" name="fingreso" tabindex="2")
+            .col-lg-3
+                .form-group
+                    label | Duración de contrato
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-handshake
+                        select.form-control(required name="duracion_contrato" tabindex="3")
+                            option(value="") << Seleccione >>
+                            option(value="28 días") 28 días
+                            option(value="3 meses") 3 meses
+                            option(value="1 año") 1 año
+            .col-lg-4
+                .form-group
+                    label | Puesto
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-briefcase
+                        input.form-control(required type="text" name="puesto" tabindex="4")
+        .row
+            .col-lg-6
+                .form-group
+                    label | Área
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-cube
+                        input.form-control(required type="text" name="area" tabindex="5")
+            .col-lg-6
+                .form-group
+                    label | Módulo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-cubes
+                        input.form-control(type="text" name="modulo" tabindex="6")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Hora de entrada
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-clock
+                        input.form-control(required type="text" name="hora_entrada" tabindex="7")
+            .col-lg-3
+                .form-group
+                    label | Hora de salida
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-clock
+                        input.form-control(required type="text" name="hora_salida" tabindex="8")
+            .col-lg-6
+                .form-group
+                    label | Jefe Directo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user-secret
+                        input.form-control(required type="text" name="jefe_directo" tabindex="9")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Apoyo para transporte
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input#apoyoTrans.form-control(type="text" name="apoyo_transporte" tabindex="10" value="0" onkeyup="calcularSueldo()")
+
+            .col-lg-3
+                .form-group
+                    label | Sueldo Diario 
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input#sueldoDiario.form-control(required type="text" name="sueldo_diario" tabindex="11" onkeyup="calcularSueldo()")
+            .col-lg-3
+                .form-group
+                    label | Tipo de sueldo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        select#tiposueldo.form-control(required name="tipo_sueldo" onchange="calcularSueldo()" tabindex="12")
+                            option(value="") << Seleccione >>
+                            option(value="Semanal") Semanal
+                            option(value="Quincenal") Quincenal       
+            .col-lg-3
+                .form-group
+                    label | Apoyo + Sueldo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input#totalSueldo.form-control(type="text" name="apoyo_sueldo" readonly)
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-id-card(style="margin-right: 10px;")
+                    | Datos del colaborador
+        .row
+            .col-lg-6
+                .form-group
+                    label | Nombre completo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user
+                        input.form-control(required type="text" name="nombre" tabindex="15")
+            .col-lg-3
+                .form-group
+                    label | Sexo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        select.form-control(required name="sexo" tabindex="16")
+                            option(value="") << Seleccione >>
+                            option(value="Masculino")  Masculino
+                            option(value="Femenino") Femenino
+            .col-lg-3
+                .form-group
+                    label | Estado civil 
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        select.form-control(name="estado_civil" tabindex="17")
+                            option(value="") << Seleccione >>
+                            option(value="Soltero(a)")  Soltero(a)
+                            option(value="Casado(a)") Casado(a)
+                            option(value="Viduo(a)") Viduo(a)
+                            option(value="Divorciado(a)") Divorciado(a)
+        .row
+            .col-lg-3
+                .form-group
+                    label | Número de Seguro Social
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-briefcase-medical
+                        input.form-control(required type="text" name="nss" tabindex="18")
+            .col-lg-3
+                .form-group
+                    label | UMF 
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hospital-alt
+                        input.form-control(type="text" name="umf" tabindex="19")
+            .col-lg-3
+                .form-group
+                    label | RFC
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#mayuRFC.form-control(required type="text" name="rfc" tabindex="20")
+            .col-lg-3
+                .form-group
+                    label | CURP
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#mayuCURP.form-control(required type="text" name="curp" tabindex="21")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Nacionalidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-map-marker-alt
+                        input.form-control(type="text" name="nacionalidad" tabindex="22")
+            .col-lg-3
+                .form-group
+                    label | Lugar de nacimiento
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-map-marker-alt
+                        input.form-control(type="text" name="lugar_nacimiento" tabindex="23")
+            .col-lg-3
+                .form-group
+                    label | Edad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(type="text" name="edad" tabindex="24")
+            .col-lg-3
+                .form-group
+                    label | Fecha de nacimiento
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar
+                        input#fechaNacimiento.form-control(type="date" name="fnacimiento" tabindex="25")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-cogs(style="margin-right: 10px;")
+                    | Ejerció o posee habilidades como:
+        .row
+            .col-lg-3
+                label.control.control--checkbox
+                    | Albañil
+                    input(type='checkbox', name="chk_albanil")
+                    .control__indicator
+            .col-lg-3
+                label.control.control--checkbox
+                    | Carpintero
+                    input(type='checkbox', name="chk_carpintero")
+                    .control__indicator
+            .col-lg-3
+                label.control.control--checkbox
+                    | Chofer
+                    input(type='checkbox', name="chk_chofer")
+                    .control__indicator
+            .col-lg-3
+                label.control.control--checkbox
+                    | Electricista
+                    input(type='checkbox', name="chk_electricista")
+                    .control__indicator
+        .row
+            .col-lg-3
+                label.control.control--checkbox
+                    | Guardia de seguridad
+                    input(type='checkbox', name="chk_guardia")
+                    .control__indicator
+            .col-lg-3
+                label.control.control--checkbox
+                    | Herrero
+                    input(type='checkbox', name="chk_herrero")
+                    .control__indicator
+            .col-lg-3
+                label.control.control--checkbox
+                    | Mecánico
+                    input(type='checkbox', name="chk_mecanico")
+                    .control__indicator
+            .col-lg-3
+                label.control.control--checkbox
+                    | Plomero
+                    input(type='checkbox', name="chk_plomero")
+                    .control__indicator
+        .row
+            .col-lg-3
+                label.control.control--checkbox
+                    | Soldador
+                    input(type='checkbox', name="chk_soldador")
+                    .control__indicator
+            .col-lg-3
+                label.control.control--checkbox
+                    | Velador
+                    input(type='checkbox', name="chk_velador")
+                    .control__indicator
+            .col-lg-1
+                label.control.control--checkbox
+                    | Otro
+                    input#chkOtro(type='checkbox', name="chk_otro")
+                    .control__indicator
+            .col-lg-5.hidden#inputOtro
+                input.form-control2(type="text" name="otro_habilidad" tabindex="25" placeholder="Especifique")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-exclamation-triangle(style="margin-right: 10px;")
+                    | En caso de emergencia contactar a...
+        .row
+            .col-lg-6
+                .form-group
+                    label | Nombre
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user
+                        input.form-control(type="text" name="nombre_emergencia" tabindex="25")
+            .col-lg-3
+                .form-group
+                    label | Parentesco
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        select.form-control(type="text" name="parentesco_emergencia" tabindex="25")
+                            option(value="") << Seleccione >>
+                            option(value="Padre")  Padre
+                            option(value="Madre")  Madre
+                            option(value="Esposo(a)")  Esposo(a)
+                            option(value="Hijo(a)")  Hijo(a)
+                            option(value="Hermano(a)")  Hermano(a)
+
+            .col-lg-3
+                .form-group
+                    label | Teléfono o celular
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-phone
+                        input.form-control(type="text" name="telefono_emergencia" tabindex="25")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-map-marked-alt(style="margin-right: 10px;")
+                    | Domicilio
+            .col-lg-8
+                .form-group
+                    label | Dirección
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-location-arrow
+                        input.form-control(required type="text" name="direccion" tabindex="26")
+            .col-lg-4
+                .form-group
+                    label | Colonia
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-map-marker-alt
+                        input.form-control(required type="text" name="colonia" tabindex="27")
+        .row
+            .col-lg-4
+                .form-group
+                    label | Estado
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-map-marker-alt
+                        input.form-control(required type="text" name="estado" tabindex="28")
+            .col-lg-4
+                .form-group
+                    label | Delegación/Municipio
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-map-marker-alt
+                        input.form-control(required type="text" name="del_mun" tabindex="29")
+            .col-lg-4
+                .form-group
+                    label | Código Postal
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(type="text" name="cp" tabindex="30")
+        .row    
+            .col-lg-3
+                .form-group
+                    label | Teléfono de casa
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-phone
+                        input.form-control(type="text" name="telefono" tabindex="31")
+            .col-lg-3
+                .form-group
+                    label | Teléfono celular
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-mobile-alt
+                        input.form-control(type="text" name="celular" tabindex="32")
+            .col-lg-6
+                .form-group
+                    label | Correo electrónico
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-at
+                        input.form-control(required type="text" name="correo" tabindex="33")
+        .row
+            .col-lg-7(style="margin-bot: 25px;")
+                .form-check        
+                    label(style="margin-right: 10px;") |   ¿El solicitante tiene crédito INFONAVIT?
+                    input#chkInfonavit(type="checkbox" name="tiene_infonavit" tabindex="34")
+        .row#tituloInfonavit.hidden
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-home(style="margin-right: 10px;")
+                    | Datos de INFONAVIT
+        .row#numeroCredito.hidden
+            .col-lg-3
+                .form-group
+                    label | Número de Crédito
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(type="text" name="numero_credito" tabindex="35")
+            .col-lg-3#factorDescuento.hidden
+                .form-group
+                    label | Factor de descuento
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        select.form-control(name="factor_descuento" tabindex="36")
+                            option(value="") << Seleccione >>
+                            option(value="VSSM") VSSM
+                            option(value="Cuota fija") Cuota fija
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-ellipsis-h(style="margin-right: 10px;")
+                    | Otros        
+        .row
+            .col-lg-12
+                .form-group
+                    label | Observaciones y/o comentarios
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-comment-dots
+                        input.form-control(type="text" name="observaciones" tabindex="37")
+        .divider
+        .row
+            .col-lg-2.btn-group.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-save.text-success
+                        input.btn.btn-success.form-control(type="submit" value="Continuar" tabindex="38")

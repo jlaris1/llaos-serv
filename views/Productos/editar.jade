@@ -1,0 +1,296 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora();
+            
+            $('#subMenuProductos').removeClass('hidden');
+            $('#spanMenuProductos').removeClass('fa-angle-left');
+            $('#spanMenuProductos').addClass('fa-angle-down');
+            
+            if($('#chk').text() == 'true'){
+                $('#chkIVA').prop('checked', true);
+            } else {
+                $('#chkIVA').prop('checked', false);
+                $('#panelIVA').addClass('hidden');
+                $('#precioNeto').val(parseFloat($('#precioUnitario').val()).toFixed(2));
+                $('#IVA').val(0.000);
+                $('#chkUpd').val($('#chkIVA').val());
+            } 
+
+            $('#stock').on('change', function() {
+                var pNeto = parseFloat($('#precioNeto').val());
+                var stock = parseFloat($('#stock').val());
+                var total = pNeto * stock;
+
+                $('#costoStock').val(total.toFixed(2));
+            }); 
+
+            if($('#IVA').val() != 0.00){
+                $('#chkIVA').attr('checked', true);
+            } else {
+                $('#chkIVA').attr('checked', false);
+            }
+
+            $('#chkIVA').checkboxpicker(); 
+
+            $('#chkIVA').on('change', function() {
+                $('#chkUpd').val(this.value);
+                if($(this).is(":checked") == true){
+                    calcularMontos();
+                    $('#panelIVA').removeClass('hidden');
+                    
+                } else {
+                    calcularMontos();
+                    $('#panelIVA').addClass('hidden');
+                }
+            });
+
+            calcularMontos();
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+
+        function calcularMontos(){
+            var iva;
+            var importe;
+            var total;
+
+            if($('#chkIVA').is(":checked")){
+                iva = parseFloat($('#precioUnitario').val() * .16);
+                importe =  parseFloat($('#precioUnitario').val());
+                total = iva + importe;
+
+                $('#IVA').val(iva.toFixed(2));
+                $('#precioNeto').val(total.toFixed(2));
+            } else {
+                $('#IVA').val(0.000);
+                $('#precioNeto').val(parseFloat($('#precioUnitario').val()).toFixed(2));
+            }   
+        }
+
+        window.onload = function () {
+            calcularMontos();
+        }
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header Editar producto
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    form(role="form" method="post" action="/productos/actualizar/#{producto.id}?_method=put")
+        .row
+            .col-lg-12
+                h2.page-header 
+                    i.fas.fa-boxes(style="margin-right: 10px;")
+                    |   Datos del producto
+        .row
+            .col-lg-3
+                .form-group
+                        label | Código
+                        .input-group
+                            span.input-group-addon
+                                i.fas.fa-hashtag
+                            input.form-control(required type="text" name="codigo" tabindex="1" value="#{producto.codigo}")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Unidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-asterisk
+                        select.form-control(required id="cmbUnidad" name="unidad" tabindex="2" value="")
+                            option(value="") << Seleccione >>
+                            option( value="PZA", selected= ("PZA"== producto.unidad)) PZA
+                            option( value="KG", selected= ("KG"== producto.unidad)) KG
+                            option( value="TRAMO", selected= ("TRAMO"== producto.unidad)) TRAMO
+                            option( value="GAL", selected= ("GAL"== producto.unidad)) GAL
+                            option( value="LT", selected= ("LT"== producto.unidad)) LT
+                            option( value="M", selected= ("M"== producto.unidad)) M
+                            option( value="PAR", selected= ("PAR"== producto.unidad)) PAR
+                            option( value="KIT", selected= ("KIT"== producto.unidad)) KIT
+                            option( value="CUBETA", selected= ("CUBETA"== producto.unidad)) CUBETA
+                            option( value="ROLLO", selected= ("ROLLO"== producto.unidad)) ROLLO
+                            option( value="CAJA", selected= ("CAJA"== producto.unidad)) CAJA
+                            option( value="PIES", selected= ("PIES"== producto.unidad)) PIES
+                            option( value="SERVICIO", selected= ("SERVICIO"== producto.unidad)) SERVICIO
+                            option( value="JUEGO", selected= ("JUEGO"== producto.unidad)) JUEGO
+                            option( value="TON", selected= ("TON"== producto.unidad)) TONELADA
+                            option(value="PAQ", selected= ("PAQ"== producto.unidad)) PAQUETE
+            .col-lg-9
+                .form-group
+                    label | Nombre
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-box
+                        input.form-control(required type="text" name="nombre" tabindex="3" value="#{producto.nombre}")
+        .row
+            .col-lg-12
+                .form-group
+                    label | Descripción
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-bars
+                        input.form-control(required type="text" name="descripcion" tabindex="4" value="#{producto.descripcion}")
+        .row
+            .col-lg-4
+                .form-group
+                    label | Precio unitario
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input#precioUnitario.form-control(required type="number" min=0.00 value="#{producto.precioUnitario}" name="precioUnitario" tabindex="5" onkeyup="calcularMontos()" step=".01")
+            #panelIVA.col-lg-4
+                .form-group
+                    label | IVA
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input#IVA.form-control(readonly type="text" min=0 name="iva" value="#{producto.iva}")
+            .col-lg-4
+                .form-group
+                    label | Precio neto
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input#precioNeto.form-control(readonly type="text" min=0 name="precioNeto" value="#{producto.precioNeto}")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Moneda
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        select#mon.form-control(required name="moneda" onchange="cambiosMoneda()" tabindex="6")
+                            option(value="") << Seleccione >>
+                            option(value="MXN", selected=("MXN"== producto.moneda)) Pesos - MXN
+                            option(value="USD",  selected=("USD"== producto.moneda)) Dólares - USD
+            label#chk.hidden #{producto.exentoiva}
+            input#chkUpd.hidden(type="text" name="exentoiva")
+            .col-lg-6(style="margin-top: 25px;")
+                .form-check
+                    input#chkIVA(type="checkbox" tabindex="9")
+                    label(style="margin-left: 15px;")
+                        |   ¿Incluye IVA?
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-shipping-fast(style="margin-right: 10px;")
+                    | Datos del proveedor
+        .row
+            .col-lg-8
+                .form-group
+                    label | Nombre
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-building
+                        select(id="cmbProveedor" name="proveedor" tabindex="8").form-control
+                            option(value="0") << Seleccione >>
+                            each p in proveedores
+                                option(value=p.id, selected=(p.id==producto.proveedor)) #{p.nombreEmpresa}
+                .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-warehouse(style="margin-right: 10px;")
+                    | Datos de Inventario
+        .row
+            .col-lg-4
+                .form-group
+                    label | Almacen
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-warehouse
+                        select#prov.form-control(required name="almacen" tabindex="9")
+                            option(value="") << Seleccione >>
+                            option(value="General", selected=("General"== producto.almacen)) General
+                            option(value="Alimento", selected=("Alimento"== producto.almacen)) Alimento
+                            option(value="Gasolina", selected=("Gasolina"== producto.almacen)) Gasolina
+                            option(value="Diesel", selected=("Diesel"== producto.almacen)) Diesel
+            .col-lg-4
+                .form-group
+                    label | En Stock
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-check-square
+                        input#stock.form-control(readonly type="number" name="cantidad" placeholder="Cantidad" value="#{producto.cantidad}"  tabindex="10")
+            .col-lg-4
+                .form-group
+                    label | Costo Stock
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input#costoStock.form-control(readonly step=".01" type="text" value="#{producto.cantidad * producto.precioNeto}" placeholder="Costo Stock")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Mínimo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-sort-amount-down
+                        input.form-control(type="number" name="minimo" placeholder="Mínimo" value="#{producto.minimo}"  tabindex="11")
+            .col-lg-3
+                .form-group
+                    label | Máximo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-sort-amount-up
+                        input.form-control(type="number" name="maximo" placeholder="Máximo" value="#{producto.maximo}"  tabindex="12")
+        .divider
+        .row(style="margin-bottom: 30px;")
+            .col-lg-2.btn-group.pull-right(style="margin-right: -25px;")
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-save.text-success
+                        input(type="submit" value="Guardar" tabindex="13").btn.btn-success.form-control

@@ -1,0 +1,254 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora();
+
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuEmpleados').removeClass('hidden');
+            $('#spanMenuEmpleados').removeClass('fa-angle-left');
+            $('#spanMenuEmpleados').addClass('fa-angle-down');
+
+            if($('#url').text() != ''){
+                url = '../../../../../Desarrollo Humano/Empleados/Altas/'+ $('#url').text();
+                window.open(url, 'Download');
+                $('#url').text('');
+            }
+
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+        
+    //Termina Javascript
+
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-user(style="margin-right: 10px;")
+                |   Proceso Finalizado
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    // Div de resultados
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-id-card(style="margin-right: 10px;")
+                | Datos del colaborador
+    .row
+        .col-lg-2
+            .form-group
+                label | No. Empleado
+                .input-group
+                    label.input-group-btn
+                        label.form-control #{empleado.numero}
+        .col-lg-6
+            .form-group
+                label | Nombre
+                .input-group
+                    label.input-group-btn
+                        label.form-control #{empleado.nombre}
+        .col-lg-4
+            .form-group
+                label | Puesto
+                .input-group
+                    label.input-group-btn 
+                        label.form-control #{empleado.puesto}
+    label#url #{url}
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-folder-open(style="margin-right: 10px;")
+                | Documentos
+    .row
+        if empleado.rfcDoc_ruta
+            .col-lg-6
+                .form-group
+                    label | Comprobande de RFC
+                    .input-group
+                        label.input-group-btn
+                            span.form-control Documento registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-check-circle.fa-2x.text-success
+        else
+            .col-lg-6
+                .form-group
+                    label | Comprobande de RFC
+                    .input-group
+                        label.input-group-btn 
+                            span.form-control Documento no registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-times-circle.fa-2x.text-danger
+    .row
+        if empleado.actanaciDoc_ruta
+            .col-lg-6
+                .form-group
+                    label | Acta de Nacimiento
+                    .input-group       
+                        label.input-group-btn
+                            span.form-control Documento registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-check-circle.fa-2x.text-success
+        else
+            .col-lg-6
+                .form-group
+                    label | Acta de Nacimiento
+                    .input-group
+                        label.input-group-btn 
+                            span.form-control Documento no registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-times-circle.fa-2x.text-danger
+    .row
+        if empleado.credeDoc_ruta
+            .col-lg-6
+                .form-group
+                    label | Credencial de Elector
+                    .input-group
+                        label.input-group-btn
+                            span.form-control Documento registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-check-circle.fa-2x.text-success
+        else
+            .col-lg-6
+                .form-group
+                    label | Credencial de Elector
+                    .input-group
+                        label.input-group-btn 
+                            span.form-control Documento no registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-times-circle.fa-2x.text-danger
+    .row
+        if empleado.curpDoc_ruta
+            .col-lg-6
+                .form-group
+                    label | CURP
+                    .input-group       
+                        label.input-group-btn
+                            span.form-control Documento registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-check-circle.fa-2x.text-success
+        else
+            .col-lg-6
+                .form-group
+                    label | CURP
+                    .input-group
+                        label.input-group-btn 
+                            span.form-control Documento no registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-times-circle.fa-2x.text-danger
+    .row
+        if empleado.nssDoc_ruta
+            .col-lg-6
+                .form-group
+                    label | No. de Seguro Social
+                    .input-group       
+                        label.input-group-btn
+                            span.form-control Documento registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-check-circle.fa-2x.text-success
+        else
+            .col-lg-6
+                .form-group
+                    label | No. de Seguro Social
+                    .input-group
+                        label.input-group-btn 
+                            span.form-control Documento no registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-times-circle.fa-2x.text-danger
+    .row
+        if empleado.cdomDoc_ruta
+            .col-lg-6
+                .form-group
+                    label | Comprobante de domicilio
+                    .input-group       
+                        label.input-group-btn
+                            span.form-control Documento registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-check-circle.fa-2x.text-success
+        else
+            .col-lg-6
+                .form-group
+                    label | Comprobante de domicilio
+                    .input-group
+                        label.input-group-btn 
+                            span.form-control Documento no registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-times-circle.fa-2x.text-danger
+    .row
+        if empleado.solicitudDoc_ruta
+            .col-lg-6
+                .form-group
+                    label | Solicitud de empleo
+                    .input-group       
+                        label.input-group-btn
+                            span.form-control Documento registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-check-circle.fa-2x.text-success
+        else
+            .col-lg-6
+                .form-group
+                    label | Solicitud de empleo
+                    .input-group
+                        label.input-group-btn 
+                            span.form-control Documento no registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-times-circle.fa-2x.text-danger
+    .divider
+    .row
+        .col-lg-2.btn-group.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-envelope.text-primary
+                        a.btn.btn-primary.form-control(href="/empleados/correoalta/#{empleado.id}" tabindex="38")
+                            |   Enviar        

@@ -1,0 +1,157 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora();
+
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuEmpleados').removeClass('hidden');
+            $('#spanMenuEmpleados').removeClass('fa-angle-left');
+            $('#spanMenuEmpleados').addClass('fa-angle-down');
+
+            $('#fechaBaja').datetimepicker(
+                {   
+                    format: 'dd-MM-yyyy'
+                }
+            );
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+        
+    //Termina Javascript
+
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-user-times(style="margin-right: 10px;")
+                |   Baja de personal
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    form(role="form" method="post" action="/empleados/generarbaja")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-id-badge(style="margin-right: 10px;")
+                    | Datos del empleado
+        .row
+            input.hidden(name="idEmpleado" value="#{empleado.id}")
+            .col-lg-2
+                .form-group
+                    label | Número Empleado
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user
+                        input.form-control(disabled type="text" name="nombre" value="#{empleado.numero}")
+            .col-lg-7
+                .form-group
+                    label | Nombre completo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user
+                        input.form-control(disabled type="text" name="nombre" value="#{empleado.nombre}")
+            .col-lg-3
+                .form-group
+                    label | Número IMSS
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-briefcase-medical
+                        input.form-control(disabled type="text" name="nss" value="#{empleado.nss}")
+        .row
+            .col-lg-4
+                .form-group
+                    label | CURP
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(disabled type="text" name="curp" value="#{empleado.curp}")
+            .col-lg-3
+                .form-group
+                    label | Fecha de Ingreso
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar
+                        input.form-control(disabled type="date" name="fingreso" value="#{empleado.fingreso}")
+            .col-lg-3
+                .form-group
+                    label | Fecha de baja
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar
+                        input#fechaBaja.form-control(required type="date" name="fbaja" tabindex="1")
+        .row
+            .col-lg-12
+                .form-group
+                    label | Motivo de Baja
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-square
+                        input.form-control(required type="text" name="curp" tabindex="2")
+            .col-lg-8#otro.hidden
+                .form-group
+                    label | Especifique:
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-square
+                        input.form-control(required type="text" name="motivobaja" tabindex="3")
+        .divider
+        //span Al dar de baja se generará el formato de baja para su impresión, ¿está seguro de los datos?
+        .row
+            .col-lg-2.btn-group.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-chevron-circle-down.text-success
+                        input(type="submit" value="Dar de baja" tabindex="4").btn.btn-success.form-control
+
+            

@@ -1,0 +1,727 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+        .control-group {
+            display: inline-block;
+            vertical-align: top;
+            background: #fff;
+            text-align: left;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 200px;
+            height: 210px;
+            margin: 10px;
+        }
+        .control {
+            display: block;
+            position: relative;
+            padding-top: 5px;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .control input {
+            position: absolute;
+            opacity: 0;
+        }
+        .control__indicator {
+            position: absolute;
+            top: 2px;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background: #e6e6e6;
+        }
+        .control:hover input ~ .control__indicator,
+        .control input:focus ~ .control__indicator {
+            background: #ccc;
+        }
+        .control input:checked ~ .control__indicator {
+            background: #e07808;
+        }
+        .control:hover input:not([disabled]):checked ~ .control__indicator,
+        .control input:checked:focus ~ .control__indicator {
+            background: #e07808;
+        }
+        .control input:disabled ~ .control__indicator {
+            background: #e07808;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .control__indicator:after {
+            content: '';
+            position: absolute;
+            display: none;
+        }
+        .control input:checked ~ .control__indicator:after {
+            display: block;
+        }
+        .control--checkbox .control__indicator:after {
+            left: 9px;
+            top: 3px;
+            width: 8px;
+            height: 16px;
+            border: solid #fff;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+        }
+        .control--checkbox input:disabled ~ .control__indicator:after {
+            border-color: #fff;
+        }
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora();
+
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuEmpleados').removeClass('hidden');
+            $('#spanMenuEmpleados').removeClass('fa-angle-left');
+            $('#spanMenuEmpleados').addClass('fa-angle-down');
+
+            $('#chkInfonavit').checkboxpicker({
+                offLabel: 'No',
+                onLabel: 'Si'
+            });
+
+            if($('#chk').text() == 'true'){
+                $('#chkInfonavit').prop('checked', true);
+                $('#numeroCredito').removeClass('hidden');
+                $('#factorDescuento').removeClass('hidden');
+                $('#tituloInfonavit').removeClass('hidden');
+                $('#numero_credito').prop('required', true);
+            } else {
+                $('#chkInfonavit').prop('checked', false);
+                $('#numeroCredito').addClass('hidden');
+                $('#factorDescuento').addClass('hidden');
+                $('#tituloInfonavit').addClass('hidden');
+                $('#numero_credito').prop('required', true);
+            }
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+        
+    //Termina Javascript
+
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-user(style="margin-right: 10px;")
+                |   Información del Empleado
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    //
+    //
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-id-badge(style="margin-right: 10px;")
+                | Datos del puesto
+    .row
+        .col-lg-2
+            .form-group
+                label | No. de empleado
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-hashtag
+                    label.form-control #{empleado.numero}
+        .col-lg-3
+            .form-group
+                label | Fecha de ingreso
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-calendar-alt
+                    label.form-control #{empleado.fingreso}
+        .col-lg-3
+            .form-group
+                label | Duración de contrato
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-handshake
+                    label.form-control #{empleado.duracion_contrato}
+
+        .col-lg-4
+            .form-group
+                label | Puesto
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-briefcase
+                    label.form-control #{empleado.puesto}
+    .row
+        .col-lg-6
+            .form-group
+                label | Área
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-cube
+                    label.form-control #{empleado.area}
+        .col-lg-6
+            .form-group
+                label | Módulo
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-cubes
+                    label.form-control #{empleado.modulo}
+    .row
+        .col-lg-3
+            .form-group
+                label | Hora de entrada
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-clock
+                    label.form-control #{empleado.hora_entrada}
+        .col-lg-3
+            .form-group
+                label | Hora de salida
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-clock
+                    label.form-control #{empleado.hora_salida}
+        .col-lg-6
+            .form-group
+                label | Jefe Directo
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-user-secret
+                    label.form-control #{empleado.jefe_directo}
+    .row
+        .col-lg-3
+            .form-group
+                label | Apoyo para transporte
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-dollar-sign
+                    label.form-control #{empleado.apoyo_transporte}
+        .col-lg-3
+            .form-group
+                label | Sueldo Diario 
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-dollar-sign
+                    label.form-control #{empleado.sueldo_diario}
+        .col-lg-3
+            .form-group
+                label | Tipo de Sueldo
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-dollar-sign
+                    label.form-control #{empleado.tipo_sueldo}
+        .col-lg-3
+            .form-group
+                label | Apoyo + Sueldo 
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-dollar-sign
+                    label.form-control #{empleado.apoyo_sueldo}
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-id-card(style="margin-right: 10px;")
+                | Datos del colaborador
+    .row
+        .col-lg-6
+            .form-group
+                label | Nombre completo
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-user
+                    label.form-control #{empleado.nombre}
+        .col-lg-2
+            .form-group
+                label | Sexo
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-circle
+                    label.form-control #{empleado.sexo}
+        .col-lg-4
+            .form-group
+                label | Estado civil 
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-circle
+                    label.form-control #{empleado.estado_civil}
+    .row
+        .col-lg-3
+            .form-group
+                label | Número IMSS
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-briefcase-medical
+                    label.form-control #{empleado.nss}
+        .col-lg-3
+            .form-group
+                label | UMF 
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-hospital-alt
+                    label.form-control #{empleado.umf}
+        .col-lg-3
+            .form-group
+                label | RFC
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-hashtag
+                    label.form-control #{empleado.rfc}
+        .col-lg-3
+            .form-group
+                label | CURP
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-hashtag
+                    label.form-control #{empleado.curp}
+    .row
+        .col-lg-3
+            .form-group
+                label | Nacionalidad
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-map-marker-alt
+                    label.form-control #{empleado.nacionalidad}
+        .col-lg-3
+            .form-group
+                label | Lugar de nacimiento
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-map-marker-alt
+                    label.form-control #{empleado.lugar_nacimiento}
+        .col-lg-3
+            .form-group
+                label | Edad
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-hashtag
+                    label.form-control #{empleado.edad}
+        .col-lg-3
+            .form-group
+                label | Fecha de nacimiento
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-calendar
+                    label.form-control #{empleado.fnacimiento}
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-cogs(style="margin-right: 10px;")
+                | Ejerció o posee habilidades como:
+    if empleado.chk_albanil=='on'
+        .col-lg-3
+            label.control.control--checkbox
+                | Albañil
+                input(type='checkbox', name="chk_albanil" checked disabled)
+                .control__indicator
+    if empleado.chk_carpintero=='on'
+        .col-lg-3
+            label.control.control--checkbox
+                | Carpintero
+                input(type='checkbox', name="chk_carpintero" checked disabled)
+                .control__indicator
+    if empleado.chk_chofer=='on'
+        .col-lg-3
+            label.control.control--checkbox
+                | Chofer
+                input(type='checkbox', name="chk_chofer" checked disabled)
+                .control__indicator
+    if empleado.chk_electricista=='on'
+        .col-lg-3
+            label.control.control--checkbox
+                | Electricista
+                input(type='checkbox', name="chk_electricista" checked disabled)
+                .control__indicator
+    if empleado.chk_guardia=='on'
+        .col-lg-3
+            label.control.control--checkbox
+                | Guardia de seguridad
+                input(type='checkbox', name="chk_guardia" checked disabled)
+                .control__indicator
+    if empleado.chk_herrero=='on'
+        .col-lg-3
+            label.control.control--checkbox
+                | Herrero
+                input(type='checkbox', name="chk_herrero" checked disabled)
+                .control__indicator
+    if empleado.chk_mecanico=='on'
+        .col-lg-3
+            label.control.control--checkbox
+                | Mecánico
+                input(type='checkbox', name="chk_mecanico" checked disabled)
+                .control__indicator
+    if empleado.chk_plomero=='on'
+        .col-lg-3
+            label.control.control--checkbox
+                | Plomero
+                input(type='checkbox', name="chk_plomero" checked disabled)
+                .control__indicator
+    if empleado.chk_soldador=='on'
+        .col-lg-3
+            label.control.control--checkbox
+                | Soldador
+                input(type='checkbox', name="chk_soldador" checked disabled)
+                .control__indicator
+    if empleado.chk_velador=='on'
+        .col-lg-3
+            label.control.control--checkbox
+                | Velador
+                input(type='checkbox', name="chk_velador" checked disabled)
+                .control__indicator
+    if empleado.chk_otro=='on'
+        .col-lg-1
+            label.control.control--checkbox
+                | Otro
+                input(type='checkbox', name="chk_otro" checked disabled)
+                .control__indicator
+    if empleado.chk_otro=='on'
+        .col-lg-2
+            label.form-control #{empleado.otro_habilidad}
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-exclamation-triangle(style="margin-right: 10px;")
+                | En caso de emergencia contactar a...
+    .row
+        .col-lg-6
+            .form-group
+                label | Nombre
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-user
+                    label.form-control #{empleado.nombre_emergencia}
+        .col-lg-3
+            .form-group
+                label | Parentesco
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-circle
+                    label.form-control #{empleado.parentesco_emergencia}
+        .col-lg-3
+            .form-group
+                label | Teléfono o celular
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-phone
+                    label.form-control #{empleado.telefono_emergencia}
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-map-marked-alt(style="margin-right: 10px;")
+                | Domicilio
+        .col-lg-8
+            .form-group
+                label | Dirección
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-location-arrow
+                    label.form-control #{empleado.direccion}
+        .col-lg-4
+            .form-group
+                label | Colonia
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-map-marker-alt
+                    label.form-control #{empleado.colonia}
+    .row
+        .col-lg-4
+            .form-group
+                label | Estado
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-map-marker-alt
+                    label.form-control #{empleado.estado}
+        .col-lg-4
+            .form-group
+                label | Delegación/Municipio
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-map-marker-alt
+                    label.form-control #{empleado.del_mun}
+        .col-lg-4
+            .form-group
+                label | Código Postal
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-hashtag
+                    label.form-control #{empleado.cp}
+    .row    
+        .col-lg-3
+            .form-group
+                label | Teléfono de casa
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-phone
+                    label.form-control #{empleado.telefono}
+        .col-lg-3
+            .form-group
+                label | Teléfono celular
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-mobile-alt
+                    label.form-control #{empleado.celular}
+        .col-lg-6
+            .form-group
+                label | Correo electrónico
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-at
+                    label.form-control #{empleado.correo}
+    .row
+            label#chk.hidden #{empleado.tiene_infonavit}
+            .col-lg-7(style="margin-bot: 25px;")
+                .form-check
+                    label(style="margin-right: 10px;") |   ¿El solicitante tiene crédito INFONAVIT?
+                    input#chkInfonavit(type="checkbox" name="tiene_infonavit" disabled=true)
+
+        .row#tituloInfonavit.hidden
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-home(style="margin-right: 10px;")
+                    | Datos de INFONAVIT
+        .row#numeroCredito.hidden
+            .col-lg-3
+                .form-group
+                    label | Número de Crédito
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        label.form-control#ncredito #{empleado.numero_credito}
+            .col-lg-3#factorDescuento.hidden
+                .form-group
+                    label | Factor de descuento
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        label.form-control#fdescuento #{empleado.factor_descuento}
+        .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-ellipsis-h(style="margin-right: 10px;")
+                | Otros        
+    .row
+        .col-lg-12
+            .form-group
+                label | Observaciones y/o comentarios
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-comment-dots
+                    label.form-control #{empleado.observaciones}
+    .divider
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-folder-open(style="margin-right: 10px;")
+                | Documentos
+    .row
+        if empleado.contratoDoc_ruta
+            .col-lg-6
+                .form-group
+                    label | Contrato
+                    .input-group
+                        label.input-group-btn
+                            span.form-control Contrato generado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        a(href="../../../Desarrollo Humano/Empleados/Altas#{empleado.contratoDoc_ruta}", target="_blank", title="Descargar")
+                            i.fas.fa-cloud-download-alt.fa-2x.text-success
+        else
+            .col-lg-6
+                .form-group
+                    label | Contrato
+                    .input-group
+                        label.input-group-btn 
+                            span.form-control Contrato no generado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-times-circle.fa-2x.text-danger
+    .row
+        if empleado.rfcDoc_ruta
+            .col-lg-6
+                .form-group
+                    label | Comprobande de RFC
+                    .input-group
+                        label.input-group-btn
+                            span.form-control Documento registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        a(href="../../../Desarrollo Humano/Empleados/Altas#{empleado.rfcDoc_ruta}", target="_blank", title="Descargar")
+                            i.fas.fa-cloud-download-alt.fa-2x.text-success
+        else
+            .col-lg-6
+                .form-group
+                    label | Comprobande de RFC
+                    .input-group
+                        label.input-group-btn 
+                            span.form-control Documento no registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-times-circle.fa-2x.text-danger
+    .row
+        if empleado.actanaciDoc_ruta
+            .col-lg-6
+                .form-group
+                    label | Acta de Nacimiento
+                    .input-group       
+                        label.input-group-btn
+                            span.form-control Documento registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        a(href="../../../Desarrollo Humano/Empleados/Altas#{empleado.actanaciDoc_ruta}", target="_blank", title="Descargar")
+                            i.fas.fa-cloud-download-alt.fa-2x.text-success
+        else
+            .col-lg-6
+                .form-group
+                    label | Acta de Nacimiento
+                    .input-group
+                        label.input-group-btn 
+                            span.form-control Documento no registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-times-circle.fa-2x.text-danger
+    .row
+        if empleado.credeDoc_ruta
+            .col-lg-6
+                .form-group
+                    label | Credencial de Elector
+                    .input-group
+                        label.input-group-btn
+                            span.form-control Documento registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        a(href="../../../Desarrollo Humano/Empleados/Altas#{empleado.credeDoc_ruta}", target="_blank", title="Descargar")
+                            i.fas.fa-cloud-download-alt.fa-2x.text-success
+        else
+            .col-lg-6
+                .form-group
+                    label | Credencial de Elector
+                    .input-group
+                        label.input-group-btn 
+                            span.form-control Documento no registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-times-circle.fa-2x.text-danger
+    .row
+        if empleado.curpDoc_ruta
+            .col-lg-6
+                .form-group
+                    label | CURP
+                    .input-group       
+                        label.input-group-btn
+                            span.form-control Documento registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        a(href="../../../Desarrollo Humano/Empleados/Altas#{empleado.curpDoc_ruta}", target="_blank", title="Descargar")
+                            i.fas.fa-cloud-download-alt.fa-2x.text-success
+        else
+            .col-lg-6
+                .form-group
+                    label | CURP
+                    .input-group
+                        label.input-group-btn 
+                            span.form-control Documento no registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-times-circle.fa-2x.text-danger
+    .row
+        if empleado.nssDoc_ruta
+            .col-lg-6
+                .form-group
+                    label | No. de Seguro Social
+                    .input-group       
+                        label.input-group-btn
+                            span.form-control Documento registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        a(href="../../../Desarrollo Humano/Empleados/Altas#{empleado.nssDoc_ruta}", target="_blank", title="Descargar")
+                            i.fas.fa-cloud-download-alt.fa-2x.text-success
+        else
+            .col-lg-6
+                .form-group
+                    label | No. de Seguro Social
+                    .input-group
+                        label.input-group-btn 
+                            span.form-control Documento no registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-times-circle.fa-2x.text-danger
+    .row
+        if empleado.cdomDoc_ruta
+            .col-lg-6
+                .form-group
+                    label | Comprobante de domicilio
+                    .input-group       
+                        label.input-group-btn
+                            span.form-control Documento registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        a(href="../../../Desarrollo Humano/Empleados/Altas#{empleado.cdomDoc_ruta}", target="_blank", title="Descargar")
+                            i.fas.fa-cloud-download-alt.fa-2x.text-success
+        else
+            .col-lg-6
+                .form-group
+                    label | Comprobante de domicilio
+                    .input-group
+                        label.input-group-btn 
+                            span.form-control Documento no registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-times-circle.fa-2x.text-danger
+    .row
+        if empleado.solicitudDoc_ruta
+            .col-lg-6
+                .form-group
+                    label | Solicitud de empleo
+                    .input-group       
+                        label.input-group-btn
+                            span.form-control Documento registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        a(href="../../../Desarrollo Humano/Empleados/Altas#{empleado.solicitudDoc_ruta}", target="_blank", title="Descargar")
+                            i.fas.fa-cloud-download-alt.fa-2x.text-success
+        else
+            .col-lg-6
+                .form-group
+                    label | Solicitud de empleo
+                    .input-group
+                        label.input-group-btn 
+                            span.form-control Documento no registrado
+            .col-lg-6(style="margin-top: 28px; margin-left: -20px")
+                        i.fas.fa-times-circle.fa-2x.text-danger

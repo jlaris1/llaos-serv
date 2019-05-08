@@ -1,0 +1,68 @@
+extends ../../../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#subMenuAdministracion').removeClass('hidden');
+            $('#spanMenuAdministracion').removeClass('fa-angle-left');
+            $('#spanMenuAdministracion').addClass('fa-angle-down'); 
+            
+            $('#subMenuAdmPlanta').removeClass('hidden');
+            $('#spanMenuAdmPlanta').removeClass('fa-angle-left');
+            $('#spanMenuAdmPlanta').addClass('fa-angle-down');     
+
+            $('#subMenuInventarioCam').removeClass('hidden');
+            $('#spanMenuInventarioCam').removeClass('fa-angle-left');
+            $('#spanMenuInventarioCam').addClass('fa-angle-down');
+
+            if($('#url').text() != ''){
+                url = '../../../InventariosCamaron/Salidas/'+ $('#url').text();
+                window.open(url, 'Download');
+                $('#url').text('');
+            }
+
+            $('#orders').dataTable();
+        });
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-sign-out-alt(style="margin-right: 10px;")
+                |   Salidas de Camarón
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
+            a.btn.btn-special(href="/inventarioscamaron/salida")
+                i.fas.fa-sign-out-alt
+                |   Salida
+    .divider
+    .row
+        label#url.hidden #{url}
+        table#orders.table.table-striped.table-hover
+            thead.thead-dark
+                th Folio
+                th Remitente
+                th Destinatario
+                th Referencia
+                th Fecha
+                th Total Master
+                th Total Kgs
+                th Total Lbs
+                th Almacenista
+                th Acciones
+            tbody
+                each s in salidas
+                    tr(scope="row")
+                        td #{ s.folio }
+                        td #{ s.remitente }
+                        td #{ s.destinatario }
+                        td #{ s.referencia }
+                        td #{ s.fecha + "-" + s.hora }
+                        td #{ s.total_master }
+                        td #{ s.total_kgs }
+                        td #{ (s.total_kgs * 2.20462).toFixed(2) }
+                        td #{ s.almacenista }
+                        td
+                            a.disabled(href="#", data-toggle="tooltip", data-placement="top", title="Ver detalles", style="margin-right: 10px;")
+                                i.fas.fa-eye.text-default.fa-lg
+                            a(href="/inventarioscamaron/salida/editar/#{s.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px; color: #057e95;")
+                                i.fas.fa-pencil-alt.fa-lg
+                            a(href="/inventarioscamaron/salida/terminar/#{s.id}", data-toggle="tooltip", data-placement="top", title="Generar PDF", style="margin-left: 5px; color: #cf394f;")
+                                i.fas.fa-file-pdf.fa-lg

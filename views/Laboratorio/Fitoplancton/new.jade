@@ -1,0 +1,199 @@
+extends ../../layouts/layout.jade
+block contenido
+    style.
+        .round {
+            border-radius: 5px !important;
+            -moz-border-radius: 5px !important;
+            -webkit-border-radius: 5px !important;
+        }
+        thead {
+            background-color: black;
+            color: #fff;
+        }
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora(); 
+
+            $('#subMenuLaboratorio').removeClass('hidden');
+            $('#spanMenuLaboratorio').removeClass('fa-angle-left');
+            $('#spanMenuLaboratorio').addClass('fa-angle-down');
+            $('#subMenuFitoplancton').removeClass('hidden');
+            $('#spanMenuFitoplancton').removeClass('fa-angle-left');
+            $('#spanMenuFitoplancton').addClass('fa-angle-down');
+
+
+            $('#diatomeas').on('keyup', function(){ obtenerTotal() });
+            $('#cianofitas').on('keyup', function(){ obtenerTotal() });
+            $('#clorofitas').on('keyup', function(){ obtenerTotal() });
+            $('#dinoflagelados').on('keyup', function(){ obtenerTotal() });
+            $('#flagelados').on('keyup', function(){ obtenerTotal() });
+
+            $('#fechaI').datetimepicker(
+                {   
+                    format: 'dd-MM-yyyy'
+                }
+            );
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+
+        function obtenerTotal(){
+            var diatomeas =  parseFloat($('#diatomeas').val());
+            var cianofitas =  parseFloat($('#cianofitas').val());
+            var clorofitas =  parseFloat($('#clorofitas').val());
+            var dinoflagelados =  parseFloat($('#dinoflagelados').val());
+            var flagelados =  parseFloat($('#flagelados').val());
+
+            var totalCelMl = 0;
+
+            totalCelMl += diatomeas;
+            totalCelMl += cianofitas;
+            totalCelMl += clorofitas;
+            totalCelMl += dinoflagelados;
+            totalCelMl += flagelados;
+
+            $('#total').text(totalCelMl.toFixed(2));
+            $('#totalI').val(totalCelMl.toFixed(2));
+
+            $('#diatomeas_porcent').text(((diatomeas/totalCelMl) * 100).toFixed(2));
+            $('#cianofitas_porcent').text(((cianofitas/totalCelMl) * 100).toFixed(2));
+            $('#clorofitas_porcent').text(((clorofitas/totalCelMl) * 100).toFixed(2));
+            $('#dinoflagelados_porcent').text(((dinoflagelados/totalCelMl) * 100).toFixed(2));
+            $('#flagelados_porcent').text(((flagelados/totalCelMl) * 100).toFixed(2));
+        }
+    .row(style="margin-bottom: -5px;")
+        .col-lg-12.col-md-12.col-xs-12
+            h2
+                i.fas.fa-vials(style="margin-right: 10px;")
+                |  Nueva Medición Fitoplancton
+    .divider
+    .row
+        .col-lg-6.col-md-6.col-xs-6.pull-right.text-right
+            span
+                | Usuario: 
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.col-md-6.col-xs-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .divider
+    form#frm(role="form" method="post" action="/fitoplancton/add")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Estanque
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-water
+                        select.form-control(required name="estanque" tabindex="1")
+                            option(value="") << Seleccione >>
+                            each est in estanques
+                                option(value="#{est.id}") #{ est.codigo}
+            .col-lg-3
+                .form-group
+                    label | Fecha
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar-alt
+                        input#fechaI.form-control(required type="date" name="fecha" tabindex="2")
+        .row
+            .col-lg-12
+                .panel.panel-primary
+                    .panel-heading
+                        i.fas.fa-eye-dropper
+                    .panel-body
+                        .col-lg-1.col-md-1.col-sm-1.col-sm-offset-0.col-md-offset-0.col-lg-offset-0
+                        .col-lg-2.col-md-2.col-sm-2.col-xs-12
+                            .form-group
+                                label | Diatomeas
+                                input#diatomeas.round.form-control(type="text" value="0" name="diatomeas" placeholder="# Diatomeas" tabindex="3")
+                            .center-label.text-center
+                                label#diatomeas_porcent
+                                label %
+                        .col-lg-2.col-md-2.col-sm-2.col-xs-12
+                            .form-group
+                                label | Cianofitas
+                                input#cianofitas.round.form-control(type="text" value="0" name="cianofitas" placeholder="# Cianofitas" tabindex="4")
+                            .center-label.text-center
+                                label#cianofitas_porcent
+                                label %
+                        .col-lg-2.col-md-2.col-sm-2.col-xs-12
+                            .form-group
+                                label | Clorofitas
+                                input#clorofitas.round.form-control(type="text" value="0" name="clorofitas" placeholder="# Clorofitas" tabindex="5")
+                            .center-label.text-center
+                                label#clorofitas_porcent
+                                label %
+                        .col-lg-2.col-md-2.col-sm-2.col-xs-12
+                            .form-group
+                                label | Dinoflagelados
+                                input#dinoflagelados.round.form-control(type="text" value="0" name="dinoflagelados" placeholder="# Dinoflagelados" tabindex="6")
+                            .center-label.text-center
+                                label#dinoflagelados_porcent
+                                label %
+                        .col-lg-2.col-md-2.col-sm-2.col-xs-12
+                            .form-group
+                                label | Flagelados
+                                input#flagelados.round.form-control(type="text" value="0" name="flagelados" placeholder="# Flagelados" tabindex="7")
+                            .center-label.text-center
+                                label#flagelados_porcent
+                                label %
+                    .panel-footer.text-right
+                        input.hidden#totalI(type="text" name="total")
+                        i.fas.fa-bug(style="margin-right: 5px;")
+                        label
+                            |   Total: 
+                            strong#total
+                            |   cél/ml
+        .divider
+        .row
+            .col-lg-2.col-md-4.col-xs-6.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-plus-circle.text-success
+                        input(type="submit" value="Agregar" tabindex="8").btn.btn-success.form-control    

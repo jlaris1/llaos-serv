@@ -1,0 +1,64 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function() {
+            $('#emple').dataTable();
+
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuEmpleados').removeClass('hidden');
+            $('#spanMenuEmpleados').removeClass('fa-angle-left');
+            $('#spanMenuEmpleados').addClass('fa-angle-down');
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-users-cog(style="margin-right: 10px;")
+                |   Empleados
+    .row
+        .col-lg-12.text-right(style="margin-bottom: 25px;") 
+            a(href="/empleados/new/empleado")
+                i.fas.fa-plus-circle
+                |   Nuevo
+    table.table-hover#emple.table
+            thead
+                th.hidden
+                th.text-center No. Empleado
+                th Nombre
+                th Puesto
+                th Fecha de ingreso
+                th Estatus
+                th Acciones
+            tbody
+                each e in empleados
+                    tr(scope="row")
+                        td.hidden #{ e._id } 
+                        td.text-center #{ e.numero }
+                        td #{ e.nombre }
+                        td #{ e.puesto }
+                        td #{ e.fingreso }
+                        td 
+                            if e.estatus == "Nuevo"
+                                label.label.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{e.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if e.estatus == "Autorizado"
+                                label.label.label-success &nbsp;&nbsp;&nbsp;&nbsp;#{e.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if e.estatus == "Baja"
+                                label.label.label-danger &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{e.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if e.estatus == "Eliminado"
+                                label.label.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{e.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                        td
+                            a(href="/empleados/empleado/ver/#{e.id}", title="Ver detalles", style="margin-right: 15px;")
+                                i.fas.fa-eye.text-primary.fa-lg
+                            //if e.estatus == "Nuevo"
+                            //    a(href="/empleados/autorizar/#{e.id}", title="Autorizar", style="margin-right: 15px;")
+                            //        i.fas.fa-check-circle.text-success.fa-lg
+                            //else
+                            //    a.disabled(href="/empleados/autorizar/#{e.id}", title="Autorizar", style="margin-right: 15px;")
+                            //        i.fas.fa-check-circle.text-default.fa-lg
+                            a(href="/empleados/editar/empleado/#{e.id}", title="Editar", style="margin-right: 15px;")
+                                i.fas.fa-pencil-alt.text-info.fa-lg
+                            a(href="/empleados/baja/#{e.id}", title="Baja", style="margin-right: 15px;")
+                                i.fas.fa-chevron-circle-down.text-danger.fa-lg

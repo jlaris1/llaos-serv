@@ -1,0 +1,158 @@
+extends ../../layouts/layout.jade
+block contenido
+    style.
+        .labelFol {
+            font-size: 2em; 
+            background-color: black; 
+            color: white; 
+            border-radius: 8px;
+        }
+        .labelSta {
+            margin-left: -20px;
+            color: white;
+            font-size: 2em; 
+            border-radius: 8px;
+        }
+    script.
+        $(document).ready( function(){
+            $('#subMenuCompras').removeClass('hidden');
+            $('#spanMenuCompras').removeClass('fa-angle-left');
+            $('#spanMenuCompras').addClass('fa-angle-down');
+            $('#subMenuOrdenes').removeClass('hidden');
+            $('#spanMenuOrdenes').removeClass('fa-angle-left');
+            $('#spanMenuOrdenes').addClass('fa-angle-down');       
+            
+            obtenerfecha();
+            obtenerhora();
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-truck-loading(style="margin-right: 10px;")
+                |   Detalles Órden Ruta
+    .row
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-bars(style="margin-right: 10px;")
+                | Datos Orden Ruta
+    
+    .row
+        .col-lg-3.pull-left.right-padding
+            label.label.labelFol
+                | &nbsp;&nbsp; ORD#{oRuta.codigo} &nbsp;&nbsp;
+        if oRuta.estatus == "Nueva"
+            label.label.labelSta.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{oRuta.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        else if oRuta.estatus == "Generada"
+            label.label.labelSta.label-success &nbsp;&nbsp;&nbsp;&nbsp; #{oRuta.estatus} &nbsp;&nbsp;&nbsp;&nbsp;
+        else if oRuta.estatus == "Cancelada" 
+            label.label.labelSta.label-danger &nbsp;&nbsp;&nbsp;&nbsp;#{oRuta.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+        else if oRuta.estatus == "Enviada"
+            label.label.labelSta.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{oRuta.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        else if oRuta.estatus == "En Ruta"
+            label.label.labelSta(style="background-color: #ffa500;") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{oRuta.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        else if oRuta.estatus == "Cerrada"
+            label.label.labelSta.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{oRuta.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        .col-lg-4.pull-right
+            .form-group
+                label | Código Envió
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-hashtag
+                    input#codigo.form-control(readonly type="text" value="#{oRuta.id}")
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-truck(style="margin-right: 10px;")
+                | Datos de transportación
+    .row
+        .col-lg-4
+            .form-group
+                label | Unidad
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-shipping-fast
+                    select.form-control(reanonly)
+                        option(value="") << Seleccione >>
+                        option(value="Trailer Kenworth", selected=("Trailer Kenworth"== oRuta.unidad)) Trailer Kenworth
+                        option(value="Camión Pasajeros", selected=("Camión Pasajeros"== oRuta.unidad)) Camión Pasajeros
+                        option(value="Doble Rodado #1", selected=("Doble Rodado #1"== oRuta.unidad)) Doble Rodado #1
+                        option(value="Doble Rodado #2", selected=("Doble Rodado #2"== oRuta.unidad)) Doble Rodado #2
+                        option(value="Tundra", selected=("Tundra"== oRuta.unidad)) Tundra
+        .col-lg-6
+            .form-group
+                label | Chofer
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-user
+                    input.form-control(readonly type="text" value="#{oRuta.chofer}")
+    if Object.keys(articulosRuta).length > 0
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-boxes(style="margin-right: 10px;")
+                    | Artículos en ruta 
+        table.table
+            thead 
+                th Cantidad
+                th Unidad
+                th Codigo
+                th Descripción
+                th Orden
+                th Proveedor
+            tbody
+                each art in articulosRuta
+                    tr
+                        td #{art.cantidad}
+                        td #{art.unidad}
+                        td #{art.codigo}
+                        td #{art.descripcion}
+                        td #{art.orden.serie}
+                        td #{art.proveedor.nombreEmpresa}

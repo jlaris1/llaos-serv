@@ -1,0 +1,175 @@
+extends ../../../layouts/layout.jade
+block contenido
+    style.
+        .labelSer {
+            font-size: 2em; 
+            background-color: black; 
+            color: white; 
+            border-radius: 8px;
+        }
+    script.
+        $(document).ready( function(){
+            $('#subMenuAdministracion').removeClass('hidden');
+            $('#spanMenuAdministracion').removeClass('fa-angle-left');
+            $('#spanMenuAdministracion').addClass('fa-angle-down'); 
+            
+            $('#subMenuAdmPlanta').removeClass('hidden');
+            $('#spanMenuAdmPlanta').removeClass('fa-angle-left');
+            $('#spanMenuAdmPlanta').addClass('fa-angle-down');     
+
+            $('#subMenuTipoCamaron').removeClass('hidden');
+            $('#spanMenuTipoCamaron').removeClass('fa-angle-left');
+            $('#spanMenuTipoCamaron').addClass('fa-angle-down');   
+
+            $('#talla').on('change', function(){
+                asignarNombre();
+            });
+
+            $('#presentacion').on('change', function(){
+                asignarNombre();
+            });
+
+            obtenerfecha();
+            obtenerhora();
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        function asignarNombre(){
+            $('#nombre').val($('#talla').val() + ' - ' + $('#presentacion').val());
+        }
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-fish(style="margin-right: 10px;")
+                |   Editar tipo camarón
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Realiza: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-bars(style="margin-right: 10px;")
+                | Datos 
+    //label#url.hidden #{url}
+    form#frm(role="form" method="post" action="/tiposcamaron/edicion/#{tipoCamaron.id}?_method=put")
+        .row
+            .col-lg-3.pull-right
+                .form-group
+                    label | ID
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(readonly type="text" name="id" value="#{tipoCamaron.id}")
+        .row
+            .col-lg-6
+                .form-group
+                    label | Nombre
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#nombre.form-control(readonly type="text" tabindex="1" name="nombre" value="#{tipoCamaron.nombre}")
+            .col-lg-6
+                .form-group
+                    label | Almacen
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-warehouse
+                        select.form-control(required name="almacen" tabindex="2")
+                            option(value="0") << Seleccione >>
+                            option(value="Llaos Acuacultura", selected=("Llaos Acuacultura" == tipoCamaron.almacen)) Llaos Acuacultura
+                            option(value="Oswaldo Nuñez", selected=("Oswaldo Nuñez" == tipoCamaron.almacen)) Oswaldo Nuñez
+                            option(value="Costa Rica", selected=("Costa Rica" == tipoCamaron.almacen)) Costa Rica
+        .row
+            .col-lg-6
+                .form-group
+                    label | Talla
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-ruler-combined
+                        select#talla.form-control(required name="talla" tabindex="2")
+                            option(value="0") << Seleccione >>
+                            option(value="16/20", selected=("16/20" == tipoCamaron.talla)) 16/20
+                            option(value="20/30", selected=("20/30" == tipoCamaron.talla)) 20/30
+                            option(value="21/25", selected=("21/25" == tipoCamaron.talla)) 21/25
+                            option(value="26/30", selected=("26/30" == tipoCamaron.talla)) 26/30    
+                            option(value="30/40", selected=("30/40" == tipoCamaron.talla)) 30/40    
+                            option(value="31/35", selected=("31/35" == tipoCamaron.talla)) 31/35
+                            option(value="36/40", selected=("36/40" == tipoCamaron.talla)) 36/40
+                            option(value="40/50", selected=("40/50" == tipoCamaron.talla)) 40/50    
+                            option(value="41/50", selected=("41/50" == tipoCamaron.talla)) 41/50    
+                            option(value="50/60", selected=("50/60" == tipoCamaron.talla)) 50/60
+                            option(value="51/60", selected=("51/60" == tipoCamaron.talla)) 51/60    
+                            option(value="61/70", selected=("61/70" == tipoCamaron.talla)) 61/70    
+                            option(value="71/90", selected=("71/90" == tipoCamaron.talla)) 71/90
+                            option(value="91/110", selected=("91/110" == tipoCamaron.talla)) 91/110
+                            option(value="Rezaga", selected=("Rezaga" == tipoCamaron.talla)) Rezaga
+                            option(value="Piojo", selected=("Piojo" == tipoCamaron.talla)) Piojo  
+            .col-lg-6
+                .form-group
+                    label | Presentación
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-inbox
+                        select#presentacion.form-control(required name="presentacion" tabindex="2")
+                            option(value="0") << Seleccione >>
+                            option(value="Frizado 20 kgs", selected=("Frizado 20 kgs" == tipoCamaron.presentacion)) Frizado 20 kgs
+                            option(value="Top Open 40Lbs", selected=("Top Open 40Lbs" == tipoCamaron.presentacion)) Top Open 40Lbs
+                            option(value="IQF 10 x 4 40Lbs", selected=("IQF 10 x 4 40Lbs" == tipoCamaron.presentacion)) IQF 10 x 4 40Lbs   
+        .divider
+        .row(style="margin-bottom: 20px;")
+            .col-lg-2.pull-right(style="margin-left: -25px;")
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-save.text-success
+                        input.btn.btn-success.form-control(type="submit" value="Guardar")

@@ -1,0 +1,304 @@
+extends ../../../layouts/layout.jade
+block contenido
+    style.
+        .round {
+            border-radius: 5px !important;
+            -moz-border-radius: 5px !important;
+            -webkit-border-radius: 5px !important;
+        }
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora(); 
+
+            $('#subMenuLaboratorio').removeClass('hidden');
+            $('#spanMenuLaboratorio').removeClass('fa-angle-left');
+            $('#spanMenuLaboratorio').addClass('fa-angle-down');
+            $('#subMenuNutrientesTox').removeClass('hidden');
+            $('#spanMenuNutrientesTox').removeClass('fa-angle-left');
+            $('#spanMenuNutrientesTox').addClass('fa-angle-down');
+            $('#subMenuNutrientesToxSemanal').removeClass('hidden');
+            $('#spanMenuNutrientesToxSemanal').removeClass('fa-angle-left');
+            $('#spanMenuNutrientesToxSemanal').addClass('fa-angle-down');
+
+
+            $('#magnecio_mg').on('keyup', function(){
+                var dureza_ca = parseFloat($('#dureza_ca').val());
+                var magnecio_mg = parseFloat(this.value);
+                var balance_mg = parseFloat(magnecio_mg / dureza_ca);
+                $('#balance_mg').val(balance_mg.toFixed(2));
+            });
+
+            $('#potasio_k').on('keyup', function(){
+                var dureza_ca = parseFloat($('#dureza_ca').val());
+                var potasio_k = parseFloat(this.value);
+                var balance_k = parseFloat(potasio_k / dureza_ca);
+                $('#balance_k').val(balance_k.toFixed(2));
+            });
+
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+    .row
+        .col-lg-12.col-md-12.col-xs-12
+            h2 
+                i.fas.fa-vials(style="margin-right: 10px;")
+                |   Nutrientes y Metabolitos Tóxicos (Semanal)
+    .divider
+    .row
+        .col-lg-6.col-md-6.col-xs-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.col-md-6.col-xs-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .divider
+    form#frm(role="form" method="post" action="/nutrientestox/semanal/add")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Estanque
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-water
+                        select.form-control(required name="estanque" tabindex="1")
+                            option(value="") << Seleccione >>
+                            each est in estanques
+                                option(value="#{est.id}") #{ est.codigo}
+            .col-lg-3
+                .form-group
+                    label | Fecha
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar-alt
+                        input.form-control(required type="date" name="fecha" tabindex="2")
+            .col-lg-6
+                .form-group
+                    label | Observaciones
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-align-justify
+                        input.form-control(type="text" name="observaciones" tabindex="3")   
+        .row
+            // AMONIA
+            .col-lg-2.col-sm-2.col-xs-12
+                .panel.panel-primary
+                    .panel-heading
+                        |   Amonia
+                    .panel-body
+                        .col-lg-12.col-md-12.col-xs-12
+                            .form-group
+                                label NH
+                                    sub 3 
+                                label -NH
+                                    sub 4
+                                input.round.form-control(required type="text" value="0" name="amonia" placeholder="# Amonia" tabindex="4")
+            
+            // NITRITO
+            .col-lg-4.col-sm-4.col-xs-12
+                .panel.panel-primary
+                    .panel-heading
+                        |   Nitrito
+                    .panel-body
+                        .col-lg-6.col-md-6.col-xs-6
+                            .form-group
+                                label | N
+                                input.round.form-control(required type="text" value="0" step=".001" name="nitrito_N" placeholder="# N" tabindex="8")
+                        .col-lg-6.col-md-6.col-xs-6
+                            .form-group
+                                label | NO
+                                    sub 3 
+                                input.round.form-control(required type="text" value="0" name="nitrito_NO3" placeholder="# NO3" tabindex="9")
+            
+            // ALCALINIDAD
+            .col-lg-6.col-sm-6col-xs-12
+                .panel.panel-primary
+                    .panel-heading
+                        |   Alcalinidad
+                    .panel-body
+                        .col-lg-4.col-md-4.col-xs-4
+                            .form-group
+                                label | CaCO
+                                    sub 3 
+                                input.round.form-control(required type="text" value="0"  name="alcalinidad_CaCO3" placeholder="# CaCO3" tabindex="5")
+                        .col-lg-4.col-md-4.col-xs-4
+                            .form-group
+                                label | HCO
+                                    sub 3 
+                                input.round.form-control(required type="text" value="0"  name="alcalinidad_HCO3" placeholder="# HCO3" tabindex="6")
+                        .col-lg-4.col-md-4.col-xs-4
+                            .form-group
+                                label | CO
+                                    sub 3 
+                                input.round.form-control(required type="text" value="0"  name="alcalinidad_CO3" placeholder="# CO3" tabindex="7")
+        
+        .row
+            //  DUREZA EN CALCIO
+            .col-lg-4.col-sm-4.col-xs-12
+                .panel.panel-primary
+                    .panel-heading
+                        |   Dureza en Calcio
+                    .panel-body
+                        .col-lg-4.col-md-4.col-xs-4
+                            .form-group
+                                label | Dureza 
+                                input.round.form-control(required type="text" value="0"  name="dureza" placeholder="# Dureza" tabindex="5")
+                        .col-lg-4.col-md-4.col-xs-4
+                            .form-group
+                                label | CaCO
+                                    sub 3 
+                                input.round.form-control(required type="text" value="0"  name="dureza_CaCO3" placeholder="# Ca" tabindex="6")
+                        .col-lg-4.col-md-4.col-xs-4
+                            .form-group
+                                label | Ca
+                                input#dureza_ca.round.form-control(required type="text" value="0"  name="dureza_Ca" placeholder="# Ca" tabindex="7")
+            
+            //  SILICE
+            .col-lg-4.col-sm-4.col-xs-12
+                .panel.panel-primary
+                    .panel-heading
+                        |   Silice
+                    .panel-body
+                       .col-lg-6.col-md-6.col-xs-6
+                            .form-group
+                                label | SiO
+                                    sub 2 
+                                input.round.form-control(required type="text" value="0"  name="silice_SiO2" placeholder="# SiO2" tabindex="6")
+                        .col-lg-6.col-md-6.col-xs-6
+                            .form-group
+                                label | Si
+                                input.round.form-control(required type="text" value="0"  name="silice_Si" placeholder="# Si" tabindex="6")
+
+            //  NITRATO
+            .col-lg-4.col-sm-4.col-xs-12
+                .panel.panel-primary
+                    .panel-heading
+                        |   Nitrato
+                    .panel-body
+                       .col-lg-6.col-md-6.col-xs-6
+                            .form-group
+                                label | N
+                                input.round.form-control(required type="text" value="0"  name="nitrato_N" placeholder="# N" tabindex="6")
+                        .col-lg-6.col-md-6.col-xs-6
+                            .form-group
+                                label | NO
+                                    sub 3
+                                input.round.form-control(required type="text" value="0"  name="nitrato_NO3" placeholder="# NO3" tabindex="6")
+                                                                   
+        .row
+            //  FOSFATO
+            .col-lg-5.col-sm-5.col-xs-12
+                .panel.panel-primary
+                    .panel-heading
+                        |   Fosfato
+                    .panel-body
+                       .col-lg-6.col-md-6.col-xs-6
+                            .form-group
+                                label | PO
+                                    sub 4
+                                input.round.form-control(required type="text" value="0"  name="fosfato_PO4" placeholder="# PO4" tabindex="6")
+                        .col-lg-6.col-md-6.col-xs-6
+                            .form-group
+                                label | P
+                                input.round.form-control(required type="text" value="0"  name="fosfato_P" placeholder="# P" tabindex="6")
+               
+            // POTASIO
+            .col-lg-2.col-sm-2.col-xs-12
+                .panel.panel-primary
+                    .panel-heading
+                        |   Potasio
+                    .panel-body
+                        .col-lg-12.col-md-12.col-xs-12
+                            .form-group
+                                label K
+                                input#potasio_k.round.form-control(required type="text" value="0"  name="potasio" placeholder="# K" tabindex="10")
+        
+            //  MAGNECIO
+            .col-lg-5.col-sm-5.col-xs-12
+                .panel.panel-primary
+                    .panel-heading
+                        |   Magnecio
+                    .panel-body
+                       .col-lg-6.col-md-6.col-xs-6
+                            .form-group
+                                label | Mg
+                                input#magnecio_mg.round.form-control(required type="text" value="0"  name="magnecio_Mg" placeholder="# Mg" tabindex="6")
+                        .col-lg-6.col-md-6.col-xs-6
+                            .form-group
+                                label | CaCO
+                                    sub 3
+                                input.round.form-control(required type="text" value="0"  name="magnecio_CaCO3" placeholder="# CaCO3" tabindex="6")
+             
+        .row
+            // BALANCE IONICO
+            .col-lg-6.col-sm-6col-xs-12
+                .panel.panel-primary
+                    .panel-heading
+                        |   Balance Ionico
+                    .panel-body
+                        .col-lg-4.col-md-4.col-xs-4
+                            .form-group
+                                label | Ca
+                                input.round.form-control(required type="text" value="0"  name="balance_Ca" placeholder="# Ca" tabindex="5")
+                        .col-lg-4.col-md-4.col-xs-4
+                            .form-group
+                                label | Mg
+                                input#balance_mg.round.form-control(readonly type="text" value="0"  name="balance_Mg" placeholder="# Mg" tabindex="6")
+                        .col-lg-4.col-md-4.col-xs-4
+                            .form-group
+                                label | K
+                                input#balance_k.round.form-control(readonly type="text" value="0"  name="balance_K" placeholder="# K" tabindex="7")
+        
+        .divider
+        .row
+            .col-lg-2.col-md-4.col-xs-6.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-plus-circle.text-success
+                        input(type="submit" value="Agregar" tabindex="11").btn.btn-success.form-control

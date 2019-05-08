@@ -1,0 +1,160 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora();
+            total();
+            
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuEvaluacion').removeClass('hidden');
+            $('#spanMenuEvaluacion').removeClass('fa-angle-left');
+            $('#spanMenuEvaluacion').addClass('fa-angle-down');
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        function total(){
+            var peso1 = parseFloat($("#peso1").text());
+            var peso2 = parseFloat($("#peso2").text());
+            var peso3 = parseFloat($("#peso3").text());
+            var peso4 = parseFloat($("#peso4").text());
+            var peso5 = parseFloat($("#peso5").text());
+            var peso6 = parseFloat($("#peso6").text());
+
+            var total = peso1+peso2+peso3+peso4+peso5+peso6;
+
+            $("#total").text(total);
+        }
+        
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-list-alt(style="margin-right: 10px;")
+                |  Objetivos para el puesto #{objetivos.puesto.posicion} del año #{anio}
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    // FORM DE Evaluacion
+    form(role="form" method="post" action="#")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-list-ul(style="margin-right: 10px;")
+                    | ¿Qué?
+        .row
+            .col-lg-9
+                .form-group
+                    label | Responsabilidad
+                    span.form-control #{objetivos.objetivo1}
+            .col-lg-3
+                .form-group
+                    label | Peso
+                    span.form-control#peso1 #{objetivos.peso1}
+        .row
+            .col-lg-9
+                .form-group
+                    label | Responsabilidad
+                    span.form-control #{objetivos.objetivo2}
+            .col-lg-3
+                .form-group
+                    label | Peso
+                    span.form-control#peso2 #{objetivos.peso2}
+        .row
+            .col-lg-9
+                .form-group
+                    label | Responsabilidad
+                    span.form-control #{objetivos.objetivo3}
+            .col-lg-3
+                .form-group
+                    label | Peso
+                    span.form-control#peso3 #{objetivos.peso3}
+        .row
+            .col-lg-9
+                .form-group
+                    label | Responsabilidad
+                    span.form-control #{objetivos.objetivo4}
+            .col-lg-3
+                .form-group
+                    label | Peso
+                    span.form-control#peso4 #{objetivos.peso4}
+        .row
+            .col-lg-9
+                .form-group
+                    label | Responsabilidad
+                    span.form-control #{objetivos.objetivo5}
+            .col-lg-3
+                .form-group
+                    label | Peso
+                    span.form-control#peso5 #{objetivos.peso5}
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-list-ul(style="margin-right: 10px;")
+                    | ¿Cómo?
+        .row
+            .col-lg-9
+                .form-group
+                    label | Responsabilidad
+                    span.form-control #{objetivos.objetivo6}
+            .col-lg-3
+                .form-group
+                    label | Peso
+                    span.form-control#peso6 #{objetivos.peso6}
+        .row
+            .col-lg-9
+            .col-lg-3
+                .form-group
+                    label | Total
+                    span.form-control#total

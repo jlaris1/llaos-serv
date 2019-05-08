@@ -1,0 +1,67 @@
+extends ./layouts/layout.jade
+block contenido
+    .row
+        .col-lg-12
+            h2.page-header ¡Bienvenido #{user.nombre}!
+    if user.permisos == 'compras' || user.permisos == 'developer'
+        .row
+            .col-lg-3.col-md-6
+                .panel.panel-primary
+                    .panel-heading
+                        .row
+                            .col-xs-3
+                                i.fas.fa-list-ol.fa-5x
+                            .col-xs-9.text-right
+                                .huge #{requisiciones}
+                                div Req. Nuevas
+                    a(href='/requisiciones/requisiciones/nuevas')
+                        .panel-footer
+                            span.pull-left Ver Detalles
+                            span.pull-right
+                                i.fas.fa-eye
+                            .clearfix
+            .col-lg-3.col-md-6
+                .panel.panel-green
+                    .panel-heading
+                        .row
+                            .col-xs-3
+                                i.fas.fa-hand-holding-usd.fa-5x
+                            .col-xs-9.text-right
+                                .huge #{cotizaciones}
+                                div Cotizaciones Nuevas
+                    a(href='/externos/cotizaciones/nuevas')
+                        .panel-footer
+                            span.pull-left Ver Detalles
+                            span.pull-right
+                                i.fas.fa-eye
+                            .clearfix
+            .col-lg-3.col-md-6
+                .panel.panel-yellow
+                    .panel-heading
+                        .row
+                            .col-xs-3
+                                i.fa.fa-shopping-cart.fa-5x
+                            .col-xs-9.text-right
+                                .huge #{ordenes}
+                                div Órdenes Nuevas
+                    a(href='/ordenes/compras/ordenes/nuevas')
+                        .panel-footer
+                            span.pull-left Ver Detalles
+                            span.pull-right
+                                i.fas.fa-eye
+                            .clearfix
+            .col-lg-3.col-md-6
+                .panel.panel-red
+                    .panel-heading
+                        .row
+                            .col-xs-3
+                                i.fas.fa-times-circle.fa-5x
+                            .col-xs-9.text-right
+                                .huge #{canceladas}
+                                div Req. Canceladas
+                    a(href='/requisiciones/requisiciones/canceladas')
+                        .panel-footer
+                            span.pull-left Ver Detalles
+                            span.pull-right
+                                i.fas.fa-eye
+                            .clearfix

@@ -1,0 +1,66 @@
+extends ../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function() { 
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#subMenuLaboratorio').removeClass('hidden');
+            $('#spanMenuLaboratorio').removeClass('fa-angle-left');
+            $('#spanMenuLaboratorio').addClass('fa-angle-down');
+            $('#subMenuFitoplancto').removeClass('hidden');
+            $('#spanMenuFitoplancto').removeClass('fa-angle-left');
+            $('#spanMenuFitoplancto').addClass('fa-angle-down');
+            $('#mediciones').dataTable();
+        });
+        //Termina Javascript
+
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-vials(style="margin-right: 10px;")
+                |   Mediciones Fitoplancton
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
+            a.btn.btn-special(href="/fitoplancton/new", style="margin-right: 5px;")
+                i.fas.fa-plus-circle
+                |   Nueva
+            if user.permisos != "usuario"
+                a.btn.btn-special(href="#")
+                    i.fas.fa-file-pdf
+                    |   Reportes
+    .divider
+    .row
+        .table-responsive   
+            table#mediciones.table.table-striped.table-hover
+                thead
+                    th Est
+                    th Fecha
+                    th Diatomeas
+                    th % 
+                    th Cianofitas
+                    th % 
+                    th Clorofitas
+                    th % 
+                    th Dinoflagelados
+                    th % 
+                    th Flagelados
+                    th % 
+                    th Total Org/Lt.
+                    th
+                tbody
+                    each med in fitoplancton
+                        tr
+                            td.text-center #{ med.estanque.codigo }
+                            td.text-center #{ new Date(med.fecha).getDate() + "/" + (new Date(med.fecha).getMonth() + 1) + "/" + new Date(med.fecha).getFullYear() }
+                            td.text-center #{ med.diatomeas }
+                            td.text-center #{ med.diatomeas_porcent }
+                            td.text-center #{ med.cianofitas }
+                            td.text-center #{ med.cianofitas_porcent }
+                            td.text-center #{ med.clorofitas }
+                            td.text-center #{ med.clorofitas_porcent }
+                            td.text-center #{ med.dinoflagelados }
+                            td.text-center #{ med.dinoflagelados_porcent }
+                            td.text-center #{ med.flagelados }
+                            td.text-center #{ med.flagelados_porcent }
+                            td.text-center #{ med.total_cel_ml }
+                            td
+                                a(href="/fitoplancton/edit/#{med.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px; color: #057e95;")
+                                    i.fas.fa-pencil-alt.fa-lg

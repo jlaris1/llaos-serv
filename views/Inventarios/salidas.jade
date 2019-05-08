@@ -1,0 +1,69 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .mright {
+            margin-right: 15px;
+        }
+    script.
+        $(document).ready( function(){
+            
+            $('#subMenuInventarios').removeClass('hidden');
+            $('#spanMenuInvetarios').removeClass('fa-angle-left');
+            $('#spanMenuInvetarios').addClass('fa-angle-down');
+           
+            if($('#lugar').text() == 'Granja'){
+                $('#subMenuGranja').removeClass('hidden');
+                $('#spanMenuGranja').removeClass('fa-angle-left');
+                $('#spanMenuGranja').addClass('fa-angle-down');
+            } else if($('#lugar').text() == 'Planta'){
+                $('#subMenuPlanta').removeClass('hidden');
+                $('#spanMenuPlanta').removeClass('fa-angle-left');
+                $('#spanMenuPlanta').addClass('fa-angle-down');
+            } else if($('#lugar').text() == 'Matriz'){
+                $('#subMenuOficina').removeClass('hidden');
+                $('#spanMenuOficina').removeClass('fa-angle-left');
+                $('#spanMenuOficina').addClass('fa-angle-down');
+            }
+
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#salidas').dataTable();
+        });
+
+        window.onload = function () { 
+        }
+    //Termina Javascript
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-box-open(style="margin-right: 10px;")
+                |   Salidas Inventario #{lugar}
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
+            a.btn.btn-special(href="/inventarios/inventario/salida")
+                i.fas.fa-sign-out-alt
+                |   Salida 
+    .divider
+    label#lugar.hidden #{lugar}
+    .row(style="margin-top: 15px;")
+        table#salidas.table.table-striped.table-hover
+            thead.thead-dark
+                th Producto
+                th Cantidad
+                th Solicitó
+                th Área
+                th Modulo
+                th Estanque
+                th Fecha
+                th Hora
+                th Entregó
+            tbody
+                each s in salidas
+                    tr 
+                        td #{ s.producto }
+                        td #{ s.cantidad }
+                        td #{ s.solicitante }
+                        td #{ s.area }
+                        td #{ s.modulo }
+                        td #{ s.estanque }
+                        td #{ s.fecha }
+                        td #{ s.hora }
+                        td #{ s.usuario }

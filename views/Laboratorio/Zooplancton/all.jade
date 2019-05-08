@@ -1,0 +1,65 @@
+extends ../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function() { 
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#subMenuLaboratorio').removeClass('hidden');
+            $('#spanMenuLaboratorio').removeClass('fa-angle-left');
+            $('#spanMenuLaboratorio').addClass('fa-angle-down');
+            $('#subMenuZooplancton').removeClass('hidden');
+            $('#spanMenuZooplancton').removeClass('fa-angle-left');
+            $('#spanMenuZooplancton').addClass('fa-angle-down');
+            $('#mediciones').dataTable();
+        });
+            //Termina Javascript
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-vials(style="margin-right: 10px;")
+                |   Mediciones Zooplancton
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
+            a.btn.btn-special(href="/zooplancton/new", style="margin-right: 5px;")
+                i.fas.fa-plus-circle
+                |   Nueva
+            if user.permisos != "usuario"
+                a.btn.btn-special(href="#")
+                    i.fas.fa-file-pdf
+                    |   Reportes
+    .divider
+    .row
+        .table-responsive   
+            table#mediciones.table.table-striped.table-hover
+                thead
+                    th Estanque
+                    th Fecha
+                    th Nauplios
+                    th % 
+                    th Copepodos
+                    th % 
+                    th Rutiferos
+                    th % 
+                    th Poliquetos
+                    th % 
+                    th Otros
+                    th % Otros
+                    th Total Org/Lt.
+                    th
+                tbody
+                    each med in mediciones
+                        tr
+                            td.text-center #{ med.estanque.codigo }
+                            td.text-center #{ new Date(med.fecha).getDate() + "/" + (new Date(med.fecha).getMonth() + 1) + "/" + new Date(med.fecha).getFullYear() }
+                            td.text-center #{ med.nauplios }
+                            td.text-center #{ med.nauplios_porcent }
+                            td.text-center #{ med.copepodos }
+                            td.text-center #{ med.copepodos_porcent }
+                            td.text-center #{ med.rutiferos }
+                            td.text-center #{ med.rutiferos_porcent }
+                            td.text-center #{ med.poliquetos }
+                            td.text-center #{ med.poliquetos_porcent }
+                            td.text-center #{ med.otros }
+                            td.text-center #{ med.otros_porcent }
+                            td.text-center #{ med.total_organismos }
+                            td
+                                a(href="/zooplancton/edit/#{med.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px; color: #057e95;")
+                                    i.fas.fa-pencil-alt.fa-lg

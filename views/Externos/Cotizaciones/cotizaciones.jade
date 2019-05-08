@@ -1,0 +1,89 @@
+extends ../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#subMenuProvExt').removeClass('hidden');
+            $('#spanMenuProvExt').removeClass('fa-angle-left');
+            $('#spanMenuProvExt').addClass('fa-angle-down');
+            
+            $('#cotizaciones').dataTable();
+        });
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-money-check-alt(style="margin-right: 10px;")
+                |   Cotizaciones
+    .row
+        .col-lg-12.text-right(style="margin-bottom: 25px;") 
+            a(href="/externos/cotizacion/new")
+                i.fas.fa-plus-circle
+                |   Nueva cotizacion
+    .row
+        table#cotizaciones.table.table-hover
+            thead.thead-dark
+                th.text-center  No. Cotización
+                th Proveedor
+                th Estatus
+                th Fecha
+                th Acciones
+            tbody
+                each cot in cotizaciones
+                    tr(scope="row")
+                        td #{cot.codigo}
+                        td #{cot.proveedor}
+                        td
+                            if cot.estatus == "Nueva"
+                                label.badge.badge-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{cot.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            if cot.estatus == "Orden"
+                                label.badge.badge-order &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{cot.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if cot.estatus == "Generada"
+                                label.badge.badge-success &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{cot.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if cot.estatus == "Cancelada" 
+                                label.badge.badge-danger &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{cot.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if cot.estatus == "Enviada"
+                                label.badge.badge-send &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{cot.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if cot.estatus == "Pagada"
+                                label.badge.badge-pay &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{cot.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                            else if cot.estatus == "Cerrada"
+                                label.badge.badge-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{cot.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                        td #{cot.fecha} - #{cot.hora} 
+                        td
+                            a(href="/externos/cotizacion/ver/#{cot.id}", data-toggle="tooltip", data-placement="top", title="Ver detalles" style="margin-right: 10px;")
+                                i.fas.fa-eye.text-primary.fa-lg
+                            if cot.estatus == "Cancelada" || cot.estatus == "Pagada"
+                                a.disabled(href="/externos/cotizacion/cancelar/#{cot.id}", data-toggle="tooltip", data-placement="top", title="Cancelar", style="margin-right: 10px;")
+                                    i.fas.fa-times-circle.text-default.fa-lg
+                            else
+                                a(href="/externos/cotizacion/cancelar/#{cot.id}", data-toggle="tooltip", data-placement="top", title="Cancelar", style="margin-right: 10px;")
+                                    i.fas.fa-times-circle.text-danger.fa-lg
+                            if cot.estatus != 'Nueva'
+                                a.disabled(href="/externos/cotizacion/generar/pdf/#{cot.id}/1", data-toggle="tooltip", data-placement="top", title="Generar PDF", style="margin-right: 10px;")
+                                    i.fas.fa-file-pdf.text-default.fa-lg
+                            else
+                                a(href="/externos/cotizacion/generar/pdf/#{cot.id}/1", data-toggle="tooltip", data-placement="top", title="Generar PDF", style="margin-right: 10px; color: #cf394f;")
+                                    i.fas.fa-file-pdf.fa-lg
+                            if cot.estatus != 'Generada'
+                                a.disabled(href="/externos/cotizacion/enviar/#{cot.id}", data-toggle="tooltip", data-placement="top", title="Enviar", style="margin-right: 10px;")
+                                    i.fas.fa-envelope.text-default.fa-lg
+                            else
+                                a(href="/externos/cotizacion/enviar/#{cot.id}/2", data-toggle="tooltip", data-placement="top", title="Enviar", style="margin-right: 10px; color: #F5D870;")
+                                    i.fas.fa-envelope.fa-lg
+                            if cot.estatus != 'Enviada'
+                                a.disabled(href="/externos/cotizacion/orden/#{cot.id}", data-toggle="tooltip", data-placement="top", title="Convertir Orden" style="margin-right: 10px;")
+                                    i.fas.fa-cart-plus.text-defualt.fa-lg
+                            else
+                                a(href="/externos/cotizacion/orden/#{cot.id}", data-toggle="tooltip", data-placement="top", title="Convertir Orden" style="margin-right: 10px;")
+                                    i.fas.fa-cart-plus.text-success.fa-lg
+                            if user.permisos == "compras" || user.permisos == "developer" && cot.estatus == "Orden"
+                                a(href="/externos/cotizacion/pagar/#{cot.id}", data-toggle="tooltip", data-placement="top", title="Pagar" style="margin-right: 10px;")
+                                    i.fas.fa-hand-holding-usd.text-principal.fa-lg
+                            else
+                                a.disabled(href="/externos/cotizacion/pagar/#{cot.id}", data-toggle="tooltip", data-placement="top", title="Pagar" style="margin-right: 10px;")
+                                    i.fas.fa-hand-holding-usd.text-default.fa-lg
+                            if cot.estatus == 'Orden' || cot.estatus == 'Pagada' 
+                                a.disabled(href="/externos/cotizacion/eliminar/#{cot.id}", data-toggle="tooltip", data-placement="top", title="Eliminar")
+                                    i.fas.fa-minus-circle.text-default.fa-lg
+                            else
+                                a(href="/externos/cotizacion/eliminar/#{cot.id}", data-toggle="tooltip", data-placement="top", title="Eliminar")
+                                    i.fas.fa-minus-circle.text-danger.fa-lg

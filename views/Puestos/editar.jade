@@ -1,0 +1,367 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready(function(){
+            obtenerfecha();
+            obtenerhora();
+            obtenerConocimientos();
+            obtenerActividades();
+            obtenerExperiencia();
+            obtenerCompetencias();
+
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuPuestos').removeClass('hidden');
+            $('#spanMenuPuestos').removeClass('fa-angle-left');
+            $('#spanMenuPuestos').addClass('fa-angle-down');
+        });
+
+        var index=0;
+        var iCon=0;
+        var iExp=0;
+        var iCom=0;
+        var datos = [];
+        var datosCono = [];
+        var datosExp = [];
+        var datosComp = [];
+
+        var conosInicio = [];
+        var actsInicio = [];
+        var expsInicio = [];
+        var compsInicio = [];
+
+        //Conocimientos inicio
+        function obtenerConocimientos(){
+            conosInicio = document.getElementById("conos").value.split(",");
+            datosCono = conosInicio;
+            iCon = conosInicio.length-1;
+            cargarConocimientos();
+        }
+        function cargarConocimientos(){
+            for(i=0; i < conosInicio.length; i++){
+                var ul = document.getElementById("listaConocimientos");
+                var li = document.createElement("li");
+                li.setAttribute("id", "conocimiento_"+i);
+                li.innerHTML = "<div class=\"input-group\"><span class=\"input-group-addon\"><i class=\"fas fa-list\"></i></span><input required=\"required\" value=\""+conosInicio[i]+"\" onchange=\"ponerCono()\" type=\"text\" id=\"con_"+i+"\" name=\"conocimiento_"+i+"\" class=\"form-control\"/><div class=\"input-group-btn\"><span onclick=\"agregarCono()\" title=\"Agregar\" class=\"form-control btn-default\"><i class=\"fas fa-plus\"></i></span></div><div class=\"input-group-btn\"><span onclick=\"quitarCono()\" title=\"Eliminar\" id=\"con-"+i+"\" class=\"form-control btn-default\"><i class=\"fas fa-minus\"></i></span></div></div>";
+                ul.appendChild(li);
+            }
+        }
+        //Conocimientos
+        function agregarCono() {
+            var ul = document.getElementById("listaConocimientos");
+            var li = document.createElement("li");
+            iCon++;
+            li.setAttribute("id", "conocimiento_"+iCon);
+            li.innerHTML = "<div class=\"input-group\"><span class=\"input-group-addon\"><i class=\"fas fa-list\"></i></span><input required=\"required\" onchange=\"ponerCono()\" type=\"text\" id=\"con_"+iCon+"\" name=\"conocimiento_"+iCon+"\" class=\"form-control\"/><div class=\"input-group-btn\"><span onclick=\"agregarCono()\" title=\"Agregar\" class=\"form-control btn-default\"><i class=\"fas fa-plus\"></i></span></div><div class=\"input-group-btn\"><span onclick=\"quitarCono()\" title=\"Eliminar\" id=\"con-"+iCon+"\" class=\"form-control btn-default\"><i class=\"fas fa-minus\"></i></span></div></div>";
+            ul.appendChild(li);
+        }
+        function quitarCono(e){
+            var e = e || window.event;
+            var target = e.target || e.srcElement;
+            var elemento = (e.currentTarget.id).split("-")[1];
+            var ul = document.getElementById("listaConocimientos");
+            var li = document.getElementById("conocimiento_"+elemento);
+            datosCono[elemento]=undefined;
+            $("#conos").val(datosCono);
+            ul.removeChild(li);
+        }
+        function ponerCono(e){
+            var e = e || window.event;
+            var target = e.target || e.srcElement;
+            var elemento = e.currentTarget.id;
+            datosCono[elemento.split("_")[1]] = document.getElementById(elemento).value;
+            $("#conos").val(datosCono);
+        }
+        //Experiencia inicio
+        function obtenerExperiencia(){
+            expsInicio = document.getElementById("exps").value.split(",");
+            datosExp = expsInicio;
+            iExp = expsInicio.length-1;
+            cargarExperiencia();
+        }
+        function cargarExperiencia(){
+            for(i=0; i < expsInicio.length; i++){
+                var ul = document.getElementById("listaExperiencia");
+                var li = document.createElement("li");
+                li.setAttribute("id", "experiencia_"+i);
+                li.innerHTML = "<div class=\"input-group\"><span class=\"input-group-addon\"><i class=\"fas fa-list\"></i></span><input required=\"required\" value=\""+expsInicio[i]+"\" onchange=\"ponerExp()\" type=\"text\" id=\"e_"+i+"\" name=\"exp_"+i+"\" class=\"form-control\"/><div class=\"input-group-btn\"><span onclick=\"agregarExp()\" title=\"Agregar\" class=\"form-control btn-default\"><i class=\"fas fa-plus\"></i></span></div><div class=\"input-group-btn\"><span onclick=\"quitarExp()\" title=\"Eliminar\" id=\"e-"+i+"\" class=\"form-control btn-default\"><i class=\"fas fa-minus\"></i></span></div></div>";
+                ul.appendChild(li);
+            }
+        }
+        //Experiencia
+        function agregarExp() {
+            var ul = document.getElementById("listaExperiencia");
+            var li = document.createElement("li");
+            iExp++;
+            li.setAttribute("id", "experiencia_"+iExp);
+            li.innerHTML = "<div class=\"input-group\"><span class=\"input-group-addon\"><i class=\"fas fa-list\"></i></span><input required=\"required\" onchange=\"ponerExp()\" type=\"text\" id=\"e_"+iExp+"\" name=\"exp_"+iExp+"\" class=\"form-control\"/><div class=\"input-group-btn\"><span onclick=\"agregarExp()\" title=\"Agregar\" class=\"form-control btn-default\"><i class=\"fas fa-plus\"></i></span></div><div class=\"input-group-btn\"><span onclick=\"quitarExp()\" title=\"Eliminar\" id=\"e-"+iExp+"\" class=\"form-control btn-default\"><i class=\"fas fa-minus\"></i></span></div></div>";
+            ul.appendChild(li);
+        }
+        function quitarExp(e){
+            var e = e || window.event;
+            var target = e.target || e.srcElement;
+            var elemento = (e.currentTarget.id).split("-")[1];
+            var ul = document.getElementById("listaExperiencia");
+            var li = document.getElementById("experiencia_"+elemento);
+            datosExp[elemento]=undefined;
+            $("#exps").val(datosExp);
+            ul.removeChild(li);
+        }
+        function ponerExp(e){
+            var e = e || window.event;
+            var target = e.target || e.srcElement;
+            var elemento = e.currentTarget.id;
+            datosExp[elemento.split("_")[1]] = document.getElementById(elemento).value;
+            $("#exps").val(datosExp);
+        }
+        //Competencias inicio
+        function obtenerCompetencias(){
+            compsInicio = document.getElementById("comps").value.split(",");
+            datosComp = compsInicio;
+            iCom = compsInicio.length-1;
+            cargarCompetencias();
+        }
+        function cargarCompetencias(){
+            for(i=0; i < compsInicio.length; i++){
+                var ul = document.getElementById("listaCompetencias");
+                var li = document.createElement("li");
+                li.setAttribute("id", "competencia_"+i);
+                li.innerHTML = "<div class=\"input-group\"><span class=\"input-group-addon\"><i class=\"fas fa-list\"></i></span><input required=\"required\" value=\""+compsInicio[i]+"\" onchange=\"ponerCompetencias()\" type=\"text\" id=\"com_"+i+"\" name=\"comp_"+i+"\" class=\"form-control\"/><div class=\"input-group-btn\"><span onclick=\"agregarCompetencia()\" title=\"Agregar\" class=\"form-control btn-default\"><i class=\"fas fa-plus\"></i></span></div><div class=\"input-group-btn\"><span onclick=\"quitarCompetencia()\" title=\"Eliminar\" id=\"com-"+i+"\" class=\"form-control btn-default\"><i class=\"fas fa-minus\"></i></span></div></div>";
+                ul.appendChild(li);
+            }
+        }
+        //Competencias
+        function agregarCompetencia() {
+            var ul = document.getElementById("listaCompetencias");
+            var li = document.createElement("li");
+            iCom++;
+            li.setAttribute("id", "competencia_"+iCom);
+            li.innerHTML = "<div class=\"input-group\"><span class=\"input-group-addon\"><i class=\"fas fa-list\"></i></span><input required=\"required\" onchange=\"ponerCompetencias()\" type=\"text\" id=\"com_"+iCom+"\" name=\"comp_"+iCom+"\" class=\"form-control\"/><div class=\"input-group-btn\"><span onclick=\"agregarCompetencia()\" title=\"Agregar\" class=\"form-control btn-default\"><i class=\"fas fa-plus\"></i></span></div><div class=\"input-group-btn\"><span onclick=\"quitarCompetencia()\" title=\"Eliminar\" id=\"a-"+iCom+"\" class=\"form-control btn-default\"><i class=\"fas fa-minus\"></i></span></div></div>";
+            ul.appendChild(li);
+        }
+        function quitarCompetencia(e){
+            var e = e || window.event;
+            var target = e.target || e.srcElement;
+            var elemento = (e.currentTarget.id).split("-")[1];
+            var ul = document.getElementById("listaCompetencias");
+            var li = document.getElementById("competencia_"+elemento);
+            datosComp[elemento]=undefined;
+            $("#comps").val(datosComp);
+            ul.removeChild(li);
+        }
+        function ponerCompetencias(e){
+            var e = e || window.event;
+            var target = e.target || e.srcElement;
+            var elemento = e.currentTarget.id;
+            datosComp[elemento.split("_")[1]] = document.getElementById(elemento).value;
+            $("#comps").val(datosComp);
+        }
+        //Actividades inicio
+        function obtenerActividades(){
+            actsInicio = document.getElementById("acts").value.split(",");
+            datos = actsInicio;
+            index = actsInicio.length-1;
+            cargarActividades();
+        }
+        function cargarActividades(){
+            for(i=0; i < actsInicio.length; i++){
+                var ul = document.getElementById("listaActividades");
+                var li = document.createElement("li");
+                li.setAttribute("id", "actividad_"+i);
+                li.innerHTML = "<div class=\"input-group\"><span class=\"input-group-addon\"><i class=\"fas fa-list\"></i></span><input required=\"required\" value=\""+actsInicio[i]+"\" onchange=\"ponerDatos()\" type=\"text\" id=\"a_"+i+"\" name=\"act_"+i+"\" class=\"form-control\"/><div class=\"input-group-btn\"><span onclick=\"agregarActividad()\" title=\"Agregar\" class=\"form-control btn-default\"><i class=\"fas fa-plus\"></i></span></div><div class=\"input-group-btn\"><span onclick=\"quitarActividad()\" title=\"Eliminar\" id=\"a-"+i+"\" class=\"form-control btn-default\"><i class=\"fas fa-minus\"></i></span></div></div>";
+                ul.appendChild(li);
+            }
+        }
+        //Actividades
+        function agregarActividad(){
+            var ul = document.getElementById("listaActividades");
+            var li = document.createElement("li");
+            index++;
+            //datos[index]= index;
+            li.setAttribute("id", "actividad_"+index);
+            li.innerHTML = "<div class=\"input-group\"><span class=\"input-group-addon\"><i class=\"fas fa-list\"></i></span><input required=\"required\" onchange=\"ponerDatos()\" type=\"text\" id=\"a_"+index+"\" name=\"act_"+index+"\" class=\"form-control\"/><div class=\"input-group-btn\"><span onclick=\"agregarActividad()\" title=\"Agregar\" class=\"form-control btn-default\"><i class=\"fas fa-plus\"></i></span></div><div class=\"input-group-btn\"><span onclick=\"quitarActividad()\" title=\"Eliminar\" id=\"a-"+index+"\" class=\"form-control btn-default\"><i class=\"fas fa-minus\"></i></span></div></div>";
+            ul.appendChild(li);
+        }
+        function quitarActividad(e){
+            var e = e || window.event;
+            var target = e.target || e.srcElement;
+            var elemento = (e.currentTarget.id).split("-")[1];
+            var ul = document.getElementById("listaActividades");
+            var li = document.getElementById("actividad_"+elemento);
+            datos[elemento]=undefined;
+            $("#acts").val(datos);
+            ul.removeChild(li);
+        }
+        function ponerDatos(e){
+            var e = e || window.event;
+            var target = e.target || e.srcElement;
+            var elemento = e.currentTarget.id;
+            datos[elemento.split("_")[1]] = document.getElementById(elemento).value;
+            $("#acts").val(datos);
+        }
+        //
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+        
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-id-card(style="margin-right: 3px;")
+                sup
+                    i.fas.fa-plus(style="font-size: 15px;")
+                |   Editar Puesto
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    // FORM DE PUESTO
+    form(role="form" method="post" action="/puestos/puesto/#{puesto.id}?_method=put")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-id-badge(style="margin-right: 10px;")
+                    | Datos del puesto
+        .row
+            .col-lg-4
+                .form-group
+                    label | Posicion
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user-tag
+                        input.form-control(required type="text" name="posicion" value="#{puesto.posicion}")
+            
+            .col-lg-4
+                .form-group
+                    label | Reporta a:
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user-secret
+                        input.form-control(required type="text" name="reporta" value="#{puesto.reporta}")
+            .col-lg-4
+                .form-group
+                    label | Supervisa a:
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user-tie
+                        input.form-control(required type="text" name="supervisa" value="#{puesto.supervisa}")
+        .row
+            .col-lg-12
+                .form-group
+                    label | Objetivo general
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-bars
+                        input.form-control(required type="text" name="objetivo" value="#{puesto.objetivo}")
+        .row
+            .col-lg-4
+                .form-group
+                    label | Idiomas
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-language.fa-fw
+                        input.form-control(required type="text" name="idiomas" value="#{puesto.idiomas}")
+            .col-lg-4
+                .form-group
+                    label | Formación Académica
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-book
+                        select.form-control(type="text" name="formacion")
+                            option(value="") << Seleccione >>
+                            option(value="Primaria", selected=('Primaria' == puesto.formacion))  Primaria
+                            option(value="Secundaria", selected=('Secundaria' == puesto.formacion))  Secundaria
+                            option(value="Bachillerato", selected=('Bachillerato' == puesto.formacion))  Bachillerato
+                            option(value="Licenciatura", selected=('Licenciatura' == puesto.formacion))  Licenciatura
+                            option(value="Maestría", selected=('Maestría' == puesto.formacion))  Maestría
+                            option(value="Carrera trunca", selected=('Carrera trunca' == puesto.formacion))  Carrera trunca
+            .col-lg-4
+                .form-group
+                    label | Vacante
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-users
+                        select.form-control(name="vacante" value="#{puesto.vacante}")
+                            option(value="") << Seleccione >>
+                            option(value="Disponible", selected=('Disponible' == puesto.vacante))  Disponible
+                            option(value="Ocupado", selected=('Ocupado' == puesto.vacante))  Ocupado
+        .row
+            .col-lg-6
+                .form-group
+                    label | Conocimientos
+                    ul.list-unstyled(id="listaConocimientos" name="conocimientos")
+            .col-lg-6
+                .form-group
+                    label | Experiencia requerida
+                    ul.list-unstyled(id="listaExperiencia" name="experiencia")
+        .row
+            .col-lg-6
+                .form-group
+                    label | Competencias
+                    ul.list-unstyled(id="listaCompetencias" name="competencias")
+            .col-lg-6
+                .form-group
+                    label | Responsabilidades
+                    ul.list-unstyled(id="listaActividades" name="actividades")
+        .row.hidden
+            input#conos(type="text" name="listaConos" value="#{puesto.conocimientos}")
+        .row.hidden
+            input#exps(type="text" name="listaExps" value="#{puesto.experiencia}")
+        .row.hidden
+            input#comps(type="text" name="listaComps" value="#{puesto.competencias}")
+        .row.hidden
+            input#acts(type="text" name="listaActs" value="#{puesto.actividades}")
+        .divider 
+        .row
+            .col-lg-2.btn-group.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-save.text-success
+                        input.btn.btn-success.form-control(type="submit" value="Guardar")

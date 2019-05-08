@@ -1,0 +1,61 @@
+extends ../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#subMenuCompras').removeClass('hidden');
+            $('#spanMenuCompras').removeClass('fa-angle-left');
+            $('#spanMenuCompras').addClass('fa-angle-down');
+            $('#subMenuOrdenes').removeClass('hidden');
+            $('#spanMenuOrdenes').removeClass('fa-angle-left');
+            $('#spanMenuOrdenes').addClass('fa-angle-down');
+            $('#subMenuOrdenesRuta').removeClass('hidden');
+            $('#spanMenuOrdenesRuta').removeClass('fa-angle-left');
+            $('#spanMenuOrdenesRuta').addClass('fa-angle-down'); 
+
+            $('#orders').dataTable();
+        });
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2 
+                i.fas.fa-truck-loading(style="margin-right: 10px;")
+                |   Órdenes en Ruta
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;") 
+            if user.permisos == "compras" || user.permisos == "developer"
+                a.btn.btn-special(href="/ordenes/enruta")
+                        i.fas.fa-plus-circle
+                        |   Nuevo envío
+    .divider
+    .row
+        table#orders.table.table-striped.table-hover
+            thead.thead-dark
+                th.text-center # Folio
+                th Unidad
+                th Chofer
+                th Estatus
+                th Fecha
+                th Acciones
+            tbody
+                each ord in ordersRuta
+                    tr
+                        td.text-center #{ord.codigo}
+                        td.text-center #{ord.unidad}
+                        td.text-center #{ord.chofer}
+                        td
+                            if ord.estatus == "Nueva"
+                                label.label.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{ord.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if ord.estatus == "Generada"
+                                label.label.label-success &nbsp;&nbsp;&nbsp;&nbsp; #{ord.estatus} &nbsp;&nbsp;&nbsp;&nbsp;
+                            else if ord.estatus == "Cancelada" 
+                                label.label.label-danger &nbsp;&nbsp;&nbsp;&nbsp;#{ord.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if ord.estatus == "Enviada"
+                                label.label.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{ord.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if ord.estatus == "En Ruta"
+                                label.label(style="background-color: #ffa500;") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{ord.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if ord.estatus == "Cerrada"
+                                label.label.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{ord.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                        td #{ord.fecha} - #{ord.hora} 
+                        td
+                            a(href="/ordenes/ordenruta/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Ver detalles", style="margin-right: 10px;")
+                                i.fas.fa-eye.text-default.fa-lg
+                            

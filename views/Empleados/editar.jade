@@ -1,0 +1,719 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .form-control2{
+            display:block;
+            width:100%;
+            height:34px;
+            padding:6px 12px;
+            font-size:14px;
+            line-height:1.42857143;
+            color:#555;
+            background-color:#e6e6e6;
+            background-image:none;
+            border: 0;
+            outline: none !important;
+        }
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+        .control-group {
+            display: inline-block;
+            vertical-align: top;
+            background: #fff;
+            text-align: left;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 200px;
+            height: 210px;
+            margin: 10px;
+        }
+        .control {
+            display: block;
+            position: relative;
+            padding-top: 5px;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .control input {
+            position: absolute;
+            opacity: 0;
+        }
+        .control__indicator {
+            position: absolute;
+            top: 2px;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background: #e6e6e6;
+        }
+        .control:hover input ~ .control__indicator,
+        .control input:focus ~ .control__indicator {
+            background: #ccc;
+        }
+        .control input:checked ~ .control__indicator {
+            background: #e07808;
+        }
+        .control:hover input:not([disabled]):checked ~ .control__indicator,
+        .control input:checked:focus ~ .control__indicator {
+            background: #e07808;
+        }
+        .control input:disabled ~ .control__indicator {
+            background: #e6e6e6;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .control__indicator:after {
+            content: '';
+            position: absolute;
+            display: none;
+        }
+        .control input:checked ~ .control__indicator:after {
+            display: block;
+        }
+        .control--checkbox .control__indicator:after {
+            left: 9px;
+            top: 3px;
+            width: 8px;
+            height: 16px;
+            border: solid #fff;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+        }
+        .control--checkbox input:disabled ~ .control__indicator:after {
+            border-color: #7b7b7b;
+        }
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora();
+
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuEmpleados').removeClass('hidden');
+            $('#spanMenuEmpleados').removeClass('fa-angle-left');
+            $('#spanMenuEmpleados').addClass('fa-angle-down');
+            
+            $('#chkInfonavit').checkboxpicker({
+                offLabel: 'No',
+                onLabel: 'Si'
+            });
+
+            if($('#chk').text() == 'true'){
+                $('#chkInfonavit').prop('checked', true);
+                $('#numeroCredito').removeClass('hidden');
+                $('#factorDescuento').removeClass('hidden');
+                $('#tituloInfonavit').removeClass('hidden');
+                $('#numero_credito').prop('required', true);
+            } else {
+                $('#chkInfonavit').prop('checked', false);
+                $('#numeroCredito').addClass('hidden');
+                $('#factorDescuento').addClass('hidden');
+                $('#tituloInfonavit').addClass('hidden');
+                $('#numero_credito').prop('required', true);
+            }
+
+            if($('#Albanil').text() == 'on'){
+                $('#chkAlbanil').prop('checked', true);
+            }
+
+            if($('#Carpintero').text() == 'on'){
+                $('#chkCarpintero').prop('checked', true);
+            }
+
+            if($('#Chofer').text() == 'on'){
+                $('#chkChofer').prop('checked', true);
+            }
+
+            if($('#Electricista').text() == 'on'){
+                $('#chkElectricista').prop('checked', true);
+            }
+
+            if($('#Guardia').text() == 'on'){
+                $('#chkGuardia').prop('checked', true);
+            }
+
+            if($('#Herrero').text() == 'on'){
+                $('#chkHerrero').prop('checked', true);
+            }
+
+            if($('#Mecanico').text() == 'on'){
+                $('#chkMecanico').prop('checked', true);
+            }
+            
+            if($('#Plomero').text() == 'on'){
+                $('#chkPlomero').prop('checked', true);
+            }
+
+            if($('#Soldador').text() == 'on'){
+                $('#chkSoldador').prop('checked', true);
+            }
+
+            if($('#Velador').text() == 'on'){
+                $('#chkVelador').prop('checked', true);
+            }
+
+            if($('#Otro').text() == 'on'){
+                $('#chkOtro').prop('checked', true)
+                $('#inputOtro').removeClass('hidden');
+            }
+
+            $('#chkOtro').on('change', function() {
+                if($(this).is(":checked") == true){
+                    $('#inputOtro').removeClass('hidden');
+                } else {
+                    $('#inputOtro').addClass('hidden');
+                }
+            });
+
+            $('#chkInfonavit').on('change', function() {
+                if($(this).is(":checked") == true){
+                    $('#numeroCredito').removeClass('hidden');
+                    $('#factorDescuento').removeClass('hidden');
+                    $('#tituloInfonavit').removeClass('hidden');
+                    $('#ncredito').attr("required", "true");
+                    $('#fdescuento').attr("required", "true");
+                } else {
+                    $('#numeroCredito').addClass('hidden');
+                    $('#factorDescuento').addClass('hidden');
+                    $('#tituloInfonavit').addClass('hidden');
+                    $('#ncredito').val('');
+                    $('#fdescuento').val('');
+                    $('#fdescuento').selectpicker("refresh");
+                    $('#ncredito').attr("required", "false");
+                    $('#fdescuento').attr("required", "false");
+                }
+            });
+
+            $('#mayuRFC').keyup(function(){
+                $(this).val($(this).val().toUpperCase());
+            });
+
+            $('#mayuCURP').keyup(function(){
+                $(this).val($(this).val().toUpperCase());
+            });
+
+            $('#fechaIngreso').datetimepicker(
+                {   
+                    format: 'dd-MM-yyyy'
+                }
+            );
+            $('#fnacimiento').datetimepicker(
+                {   
+                    format: 'dd-MM-yyyy'
+                }
+            );
+        });
+
+        function calcularSueldo(){
+            var total=0;
+            var apoyo=0;
+            var sueldoDiario=0;
+            var mulTipoSueldo=0;
+            if($('#apoyoTrans').val())
+                apoyo = parseFloat($('#apoyoTrans').val());
+            if($('#sueldoDiario').val())
+                sueldoDiario = parseFloat($('#sueldoDiario').val());
+            
+            if($('#tiposueldo').val() == 'Semanal')
+                mulTipoSueldo = 7;
+            if($('#tiposueldo').val() == 'Quincenal')
+                mulTipoSueldo = 15;
+            
+            total=(sueldoDiario*mulTipoSueldo)+apoyo;
+
+            $('#totalSueldo').val(total.toFixed(2));
+        };
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+        
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-user-edit(style="margin-right: 10px;")
+                |   Editar personal
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    form(role="form" method="post" action="/empleados/empleado/#{empleado.id}?_method=put")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-id-badge(style="margin-right: 10px;")
+                    | Datos del puesto
+        .row
+            .col-lg-2
+                .form-group
+                    label | No. de empleado
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(required type="text" name="numero" tabindex="1" value="#{empleado.numero}")
+            .col-lg-3
+                .form-group
+                    label | Fecha de ingreso
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar-alt
+                        input#fechaIngreso.form-control(required type="date" name="fingreso" tabindex="2" value="#{empleado.fingreso}")
+            .col-lg-3
+                .form-group
+                    label | Duración de contrato
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-handshake
+                        select.form-control(required name="duracion_contrato" tabindex="3" value="#{empleado.duracion_contrato}")
+                            option(value="") << Seleccione >>
+                            option(value="28 días", selected=('28 días'== empleado.duracion_contrato)) 28 días
+                            option(value="3 meses", selected=('3 meses'== empleado.duracion_contrato)) 3 meses
+                            option(value="1 año", selected=('1 año'== empleado.duracion_contrato)) 1 año
+            .col-lg-4
+                .form-group
+                    label | Puesto
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-briefcase
+                        input.form-control(required type="text" name="puesto" tabindex="4" value="#{empleado.puesto}")
+        .row
+            .col-lg-6
+                .form-group
+                    label | Área
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-cube
+                        input.form-control(required type="text" name="area" tabindex="5" value="#{empleado.area}")
+            .col-lg-6
+                .form-group
+                    label | Módulo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-cubes
+                        input.form-control(required type="text" name="modulo" tabindex="6" value="#{empleado.modulo}")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Hora de entrada
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-clock
+                        input.form-control(required type="text" name="hora_entrada" tabindex="7" value="#{empleado.hora_entrada}")
+            .col-lg-3
+                .form-group
+                    label | Hora de salida
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-clock
+                        input.form-control(required type="text" name="hora_salida" tabindex="8" value="#{empleado.hora_salida}")
+            .col-lg-6
+                .form-group
+                    label | Jefe Directo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user-secret
+                        input.form-control(required type="text" name="jefe_directo" tabindex="9" value="#{empleado.jefe_directo}")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Apoyo para transporte
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input#apoyoTrans.form-control(required type="text" name="apoyo_transporte" tabindex="10" value="#{empleado.apoyo_transporte}" onkeyup="calcularSueldo()")
+            .col-lg-3
+                .form-group
+                    label | Sueldo Diario 
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input#sueldoDiario.form-control(required type="text" name="sueldo_diario" tabindex="11" value="#{empleado.sueldo_diario}" onkeyup="calcularSueldo()")
+            .col-lg-3
+                .form-group
+                    label | Tipo de sueldo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        select#tiposueldo.form-control(required name="tipo_sueldo" value="#{empleado.tipo_sueldo}" tabindex="12" onchange="calcularSueldo()")
+                            option(value="") << Seleccione >>
+                            option(value="Semanal", selected=('Semanal'== empleado.tipo_sueldo)) Semanal
+                            option(value="Quincenal", selected=('Quincenal'== empleado.tipo_sueldo)) Quincenal
+            .col-lg-3
+                .form-group
+                    label | Apoyo + Sueldo 
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input#totalSueldo.form-control(required type="text" name="apoyo_sueldo" value="#{empleado.apoyo_sueldo}" readonly)
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-id-card(style="margin-right: 10px;")
+                    | Datos del colaborador
+        .row
+            .col-lg-6
+                .form-group
+                    label | Nombre completo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user
+                        input.form-control(required type="text" name="nombre" tabindex="14" value="#{empleado.nombre}")
+            .col-lg-2
+                .form-group
+                    label | Sexo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        select.form-control(required name="sexo" tabindex="15" value="#{empleado.sexo}")
+                            option(value="") << Seleccione >>
+                            option(value="Masculino", selected=('Masculino' == empleado.sexo))  Masculino
+                            option(value="Femenino", selected=('Femenino' == empleado.sexo)) Femenino
+            .col-lg-4
+                .form-group
+                    label | Estado civil 
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        select.form-control(name="estado_civil" tabindex="16"  value="#{empleado.estado_civil}")
+                            option(value="") << Seleccione >>
+                            option(value="Soltero(a)", selected=('Soltero(a)'== empleado.estado_civil))  Soltero(a)
+                            option(value="Casado(a)", selected=('Casado(a)'== empleado.estado_civil)) Casado(a)
+                            option(value="Viduo(a)", selected=('Viduo(a)'== empleado.estado_civil)) Viduo(a)
+                            option(value="Divorciado(a)", selected=('Divorciado(a)'== empleado.estado_civil)) Divorciado(a)
+        .row
+            .col-lg-3
+                .form-group
+                    label | Número IMSS
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-briefcase-medical
+                        input.form-control(required type="text" name="nss" tabindex="17" value="#{empleado.nss}")
+            .col-lg-3
+                .form-group
+                    label | UMF 
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hospital-alt
+                        input.form-control(type="text" name="umf" tabindex="18" value="#{empleado.umf}")
+            .col-lg-3
+                .form-group
+                    label | RFC
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#mayuRFC.form-control(required type="text" name="rfc" tabindex="19" value="#{empleado.rfc}")
+            .col-lg-3
+                .form-group
+                    label | CURP
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#mayuCURP.form-control(required type="text" name="curp" tabindex="20" value="#{empleado.curp}")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Nacionalidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-map-marker-alt
+                        input.form-control(type="text" name="nacionalidad" tabindex="21" value="#{empleado.nacionalidad}")
+            .col-lg-3
+                .form-group
+                    label | Lugar de nacimiento
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-map-marker-alt
+                        input.form-control(type="text" name="lugar_nacimiento" tabindex="22" value="#{empleado.lugar_nacimiento}")
+            .col-lg-3
+                .form-group
+                    label | Edad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(type="text" name="edad" tabindex="23" value="#{empleado.edad}")
+            .col-lg-3
+                .form-group
+                    label | Fecha de nacimiento
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar
+                        input#fechaNacimiento.form-control(type="date" name="fnacimiento" tabindex="24" value="#{empleado.fnacimiento}")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-cogs(style="margin-right: 10px;")
+                    | Ejerció o posee habilidades como:
+        .row
+            label.hidden#Albanil #{empleado.chk_albanil} 
+            label.hidden#Carpintero #{empleado.chk_carpintero}
+            label.hidden#Chofer #{empleado.chk_chofer}
+            label.hidden#Electricista #{empleado.chk_electricista}
+            label.hidden#Guardia #{empleado.chk_guardia}
+            label.hidden#Herrero #{empleado.chk_herrero}
+            label.hidden#Mecanico #{empleado.chk_mecanico}
+            label.hidden#Plomero #{empleado.chk_plomero}
+            label.hidden#Soldador #{empleado.chk_soldador}
+            label.hidden#Velador #{empleado.chk_velador}
+            label.hidden#Otro #{empleado.chk_otro}
+        .row
+            .col-lg-3
+                label.control.control--checkbox
+                    | Albañil
+                    input#chkAlbanil(type='checkbox', name="chk_albanil")
+                    .control__indicator
+            .col-lg-3
+                label.control.control--checkbox
+                    | Carpintero
+                    input#chkCarpintero(type='checkbox', name="chk_carpintero")
+                    .control__indicator
+            .col-lg-3
+                label.control.control--checkbox
+                    | Chofer
+                    input#chkChofer(type='checkbox', name="chk_chofer")
+                    .control__indicator
+            .col-lg-3
+                label.control.control--checkbox
+                    | Electricista
+                    input#chkElectricista(type='checkbox', name="chk_electricista")
+                    .control__indicator
+        .row
+            .col-lg-3
+                label.control.control--checkbox
+                    | Guardia de seguridad
+                    input#chkGuardia(type='checkbox', name="chk_guardia")
+                    .control__indicator
+            .col-lg-3
+                label.control.control--checkbox
+                    | Herrero
+                    input#chkHerrero(type='checkbox', name="chk_herrero")
+                    .control__indicator
+            .col-lg-3
+                label.control.control--checkbox
+                    | Mecánico
+                    input#chkMecanico(type='checkbox', name="chk_mecanico")
+                    .control__indicator
+            .col-lg-3
+                label.control.control--checkbox
+                    | Plomero
+                    input#chkPlomero(type='checkbox', name="chk_plomero")
+                    .control__indicator
+        .row
+            .col-lg-3
+                label.control.control--checkbox
+                    | Soldador
+                    input#chkSoldador(type='checkbox', name="chk_soldador")
+                    .control__indicator
+            .col-lg-3
+                label.control.control--checkbox
+                    | Velador
+                    input#chkVelador(type='checkbox', name="chk_velador")
+                    .control__indicator
+            .col-lg-1
+                label.control.control--checkbox
+                    | Otro
+                    input#chkOtro(type='checkbox', name="chk_otro")
+                    .control__indicator
+            .col-lg-5.hidden#inputOtro
+                input.form-control2(type="text" name="otro_habilidad" tabindex="25" value="#{empleado.otro_habilidad}")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-exclamation-triangle(style="margin-right: 10px;")
+                    | En caso de emergencia contactar a...
+        .row
+            .col-lg-6
+                .form-group
+                    label | Nombre
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user
+                        input.form-control(type="text" name="nombre_emergencia" tabindex="25" value="#{empleado.nombre_emergencia}")
+            .col-lg-3
+                .form-group
+                    label | Parentesco
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        select.form-control(type="text" name="parentesco_emergencia" tabindex="25" value="#{empleado.parentesco_emergencia}")
+                            option(value="") << Seleccione >>
+                            option(value="Padre", selected=('Padre'== empleado.parentesco_emergencia))  Padre
+                            option(value="Madre", selected=('Madre'== empleado.parentesco_emergencia))  Madre
+                            option(value="Esposo(a)", selected=('Esposo(a)'== empleado.parentesco_emergencia))  Esposo(a)
+                            option(value="Hijo(a)", selected=('Hijo(a)'== empleado.parentesco_emergencia))  Hijo(a)
+                            option(value="Hermano(a)", selected=('Hermano(a)'== empleado.parentesco_emergencia))  Hermano(a)
+
+            .col-lg-3
+                .form-group
+                    label | Teléfono o celular
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-phone
+                        input.form-control(type="text" name="telefono_emergencia" tabindex="25" value="#{empleado.telefono_emergencia}")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-map-marked-alt(style="margin-right: 10px;")
+                    | Domicilio
+            .col-lg-8
+                .form-group
+                    label | Dirección
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-location-arrow
+                        input.form-control(required type="text" name="direccion" tabindex="25" value="#{empleado.direccion}")
+            .col-lg-4
+                .form-group
+                    label | Colonia
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-map-marker-alt
+                        input.form-control(required type="text" name="colonia" tabindex="26" value="#{empleado.colonia}")
+        .row
+            .col-lg-4
+                .form-group
+                    label | Estado
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-map-marker-alt
+                        input.form-control(required type="text" name="estado" tabindex="27" value="#{empleado.estado}")
+            .col-lg-4
+                .form-group
+                    label | Delegación/Municipio
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-map-marker-alt
+                        input.form-control(required type="text" name="del_mun" tabindex="28" value="#{empleado.del_mun}")
+            .col-lg-4
+                .form-group
+                    label | Código Postal
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(type="text" name="cp" tabindex="29" value="#{empleado.cp}")
+        .row    
+            .col-lg-3
+                .form-group
+                    label | Teléfono de casa
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-phone
+                        input.form-control(type="text" name="telefono" tabindex="30" value="#{empleado.telefono}")
+            .col-lg-3
+                .form-group
+                    label | Teléfono celular
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-mobile-alt
+                        input.form-control(type="text" name="celular" tabindex="31" value="#{empleado.celular}")
+            .col-lg-6
+                .form-group
+                    label | Correo electrónico
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-at
+                        input.form-control(required type="text" name="correo" tabindex="32" value="#{empleado.correo}")
+        .row
+            label#chk.hidden #{empleado.tiene_infonavit}
+            .col-lg-7(style="margin-bot: 25px;")
+                .form-check
+                    label(style="margin-right: 10px;") |   ¿El solicitante tiene crédito INFONAVIT?
+                    input#chkInfonavit(type="checkbox" name="tiene_infonavit" tabindex="33")
+        .row#tituloInfonavit.hidden
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-home(style="margin-right: 10px;")
+                    | Datos de INFONAVIT
+        .row#numeroCredito.hidden
+            .col-lg-3
+                .form-group
+                    label | Número de Crédito
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control#ncredito(type="text" name="numero_credito" tabindex="34" value="#{empleado.numero_credito}")
+            .col-lg-3#factorDescuento.hidden
+                .form-group
+                    label | Factor de descuento
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        select.form-control#fdescuento(name="factor_descuento" tabindex="35" value="#{empleado.factor_descuento}")
+                            option(value="", selected=(''== empleado.factor_descuento)) << Seleccione >>
+                            option(value="VSSM", selected=('VSSM'== empleado.factor_descuento)) VSSM
+                            option(value="Cuota fija", selected=('Cuota fija'== empleado.factor_descuento)) Cuota fija
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-ellipsis-h(style="margin-right: 10px;")
+                    | Otros        
+        .row
+            .col-lg-12
+                .form-group
+                    label | Observaciones y/o comentarios
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-comment-dots
+                        input.form-control(type="text" name="observaciones" tabindex="36" value="#{empleado.observaciones}")
+        .divider
+        .row
+            .col-lg-2.btn-group.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-save.text-success
+                        input(type="submit" value="Continuar" tabindex="37").btn.btn-success.form-control

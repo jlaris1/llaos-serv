@@ -1,0 +1,288 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .error {
+            border: 2px red solid;
+            border-radius: 5px;
+        }
+    script.
+        $(document).ready( function(){
+            cambioBanco();
+            obtenerfecha();
+            obtenerhora();
+            cambioTipoEmpresa();
+
+            $('#subMenuCompras').removeClass('hidden');
+            $('#subMenuProveedores').removeClass('hidden');
+            $('#spanMenuProveedores').removeClass('fa-angle-left');
+            $('#spanMenuProveedores').addClass('fa-angle-down');
+
+            if( $('#menuProductos').hasClase('hidden')){
+                $('#subMenuProductos').addClass('hidden');
+                $('#spanMenuProductos').removeClass('fa-angle-down');
+                $('#spanMenuProductos').addClass('fa-angle-left');
+            }
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth() + 1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+
+        function cambioTipoEmpresa(){
+            if ($('#cmbTipoEmpresa').val() == "Persona Física"){
+                $('#curp').removeClass('hidden');
+            } else {
+                $('#curp').addClass('hidden');
+            } 
+        }
+
+        function validaciones(){
+            $('#form').validate({
+                    // some stuff here
+                errorPlacement: function(error, element) {
+                    $(element).addClass('error');
+                }
+                    // some more stuff here
+            });
+        }
+
+        function cambioBanco(){
+            if ($('#cmbBanco').val() == "Santander"){
+                $('#clabe').addClass('hidden');
+                $('#cbe').prop('required', false);
+                $('#cuenta').removeClass('hidden');
+                $('#cta').prop('required', true);
+            } else {
+                $('#clabe').removeClass('hidden');
+                $('#cbe').prop('required', true);
+                $('#cuenta').addClass('hidden');
+                $('#cta').prop('required', false);
+            } 
+        }
+        
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-shipping-fast(style="margin-right: 10px;")
+                |   Editar proveedor
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    form#form(role="form" method="post" action="/proveedores/proveedor/#{proveedor.id}?_method=put")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-address-card(style="margin-right: 10px;")
+                    | Datos del proveedor
+        .row    
+            .col-lg-3
+                .form-group
+                    label | Codigo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(required type="text" name="codigo" placeholder="Código" tabindex="1" value="#{proveedor.codigo}")
+        .row
+            .col-lg-6
+                .form-group
+                    label | Tipo de empresa
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        select.form-control(required id="cmbTipoEmpresa" name="tipoEmpresa" tabindex="2")
+                            option(value="") << Seleccione >>
+                            option(value="Persona Física", selected=(proveedor.tipoEmpresa == "Persona Física")) Persona Física
+                            option(value="Persona Moral", selected=(proveedor.tipoEmpresa == "Persona Moral")) Persona Moral
+            .col-lg-6
+                .form-group
+                    label | RFC
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-barcode
+                        input.form-control(required type="text" name="rfc" placeholder="RFC" tabindex="3" value="#{proveedor.rfc}")
+        .row#curp.hidden
+            .col-lg-6
+                .form-group
+                    label | CURP
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-id-card
+                        input.form-control(type="text" name="curp" placeholder="CURP" tabindex="4" value="#{proveedor.curp}")
+        .row
+            .col-lg-6
+                .form-group
+                    label | Nombre Empresa
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-building
+                        input.form-control(required type="text" name="nombreEmpresa" placeholder="Nombre empresa" tabindex="5" value="#{proveedor.nombreEmpresa}")
+            .col-lg-6
+                .form-group
+                    label | Razón Social
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-briefcase
+                        input.form-control(required type="text" name="razonSocial" placeholder="Razón social" tabindex="6" value="#{proveedor.razonSocial}")
+        .row
+            .col-lg-12
+                .form-group
+                    label | Dirección completa
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-location-arrow
+                        input.form-control(required type="text" name="direccion" placeholder="Dirección" tabindex="7" value="#{proveedor.direccion}")
+        .row
+            .col-lg-6
+                .form-group
+                    label | Tipo de pago
+                    .input-group
+                        span.input-group-addon
+                            i.far.fa-money-bill-alt
+                        select.form-control.fuente-contenido(required id="cmbTipoPago" name="tipoPago" tabindex="8")
+                            option(value="") << Seleccione >>
+                            option(value="Crédito", selected=(proveedor.tipoPago == "Crédito")) Crédito
+                            option(value="Contado", selected=(proveedor.tipoPago == "Contado")) Contado
+            .col-lg-6
+                .form-group
+                    label | Teléfono
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-phone
+                        input.form-control(required type="text" name="telefono" placeholder="Teléfono" tabindex="9" value="#{proveedor.telefono}")
+        .row
+            .col-lg-6
+                .form-group
+                    label | Correo Empresa / Pedidos / Ordenes de Compra
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-at
+                        input.form-control(required type="mail" name="correo_empresa" placeholder="Correo" tabindex="10" value="#{proveedor.correo_empresa}") 
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-university(style="margin-right: 10px;")
+                    | Datos bancarios
+        .row
+            .col-lg-4
+                .form-group
+                    label | Banco
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-university
+                        select.form-control(required id="cmbBanco" name="banco" tabindex="11" onchange="cambioBanco()")
+                            option(value="") << Seleccione >>
+                            option(value="Santander" , selected=(proveedor.banco == "Santander")) Santander
+                            option(value="CitiBanamex" , selected=(proveedor.banco == "CitiBanamex")) CitiBanamex
+                            option(value="BBVA Bancomer" , selected=(proveedor.banco == "BBVA Bancomer")) BBVA Bancomer
+                            option(value="Banco Azteca" , selected=(proveedor.banco == "Banco Azteca")) Banco Azteca
+                            option(value="Inbursa" , selected=(proveedor.banco == "Inbursa")) Inbursa
+                            option(value="Banorte" , selected=(proveedor.banco == "Banorte")) Banorte
+                            option(value="HSBC" , selected=(proveedor.banco == "HSBC")) HSBC
+                            option(value="BanBajio" , selected=(proveedor.banco == "BanBajio")) BanBajio
+                            option(value="Scotiabank" , selected=(proveedor.banco == "Scotiabank")) Scotiabank
+                            option(value="BanRegio" , selected=(proveedor.banco == "BanRegio")) BanRegio
+                            option(value="BanCoppel" , selected=(proveedor.banco == "BanCoppel")) BanCoppel
+                            option(value="CiBanco" , selected=(proveedor.banco == "CiBanco")) CiBanco
+                            option(value="STP" , selected=(proveedor.banco == "STP")) STP
+            .col-lg-4#cuenta
+                .form-group
+                    label | Cuenta
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#cta.form-control(required type="text" name="cuenta" placeholder="Cuenta" value="#{proveedor.cuenta}" tabindex="12")
+            .col-lg-4#clabe
+                .form-group
+                    label | Clabe Interbancaria
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-money-check
+                        input#cbe.form-control(type="text" name="clabe" placeholder="Clabe" value="#{proveedor.clabe}" tabindex="13")
+        .row
+            .col-lg-12
+                h4.page-header 
+                    i.fas.fa-address-book(style="margin-right: 10px;")
+                    | Vendedor Asignado
+        .row
+            .col-lg-6
+                .form-group
+                    label | Nombre
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user
+                        input.form-control(type="text" name="nombreVendedor" placeholder="Nombre" tabindex="14" value="#{proveedor.nombreVendedor}")
+            .col-lg-6
+                .form-group
+                    label | Celular
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-mobile
+                        input.form-control(type="text" name="celular" placeholder="Celular" tabindex="15" value="#{proveedor.celular}")
+        .row
+            .col-lg-6
+                .form-group
+                    label | Correo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-at
+                        input.form-control( type="text" name="correo" placeholder="Correo" tabindex="16" value="#{proveedor.correo}") 
+        .row
+            .col-lg-12
+                .divider 
+        .row.pull-right(style="margin-bottom: 30px;")
+            .col-lg-2.btn-group.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-save.text-success
+                        input(type="submit" value="Guardar" tabindex="17").btn.btn-success.form-control
+
+

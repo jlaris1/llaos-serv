@@ -1,0 +1,102 @@
+extends ../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function() { 
+            obtenerfecha();
+            obtenerhora(); 
+
+            $('#subMenuLaboratorio').removeClass('hidden');
+            $('#spanMenuLaboratorio').removeClass('fa-angle-left');
+            $('#spanMenuLaboratorio').addClass('fa-angle-down');
+            $('#subMenuBacteriologia').removeClass('hidden');
+            $('#spanMenuBacteriologia').removeClass('fa-angle-left');
+            $('#spanMenuBacteriologia').addClass('fa-angle-down');
+            $('#mediciones').dataTable();
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+        //Termina Javascript
+
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-vials(style="margin-right: 10px;")
+                |   Registro de Bacteriología
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
+            a.btn.btn-special(href="/bacteriologia/new", style="margin-right: 5px;")
+                i.fas.fa-plus-circle
+                |   Nuevo
+            if user.permisos != "usuario"
+                a.btn.btn-special(href="#")
+                    i.fas.fa-file-pdf
+                    |   Reportes
+    .divider
+    .row
+        .table-responsive   
+            table#mediciones.table.table-striped.table-hover
+                thead
+                    th Est.
+                    th Fecha
+                    th Agua CA
+                    th Agua CV
+                    th Macerado.Larva CA
+                    th Macerado.Larva CV
+                    th Hepatopáncreas CA
+                    th Hepatopáncreas CV
+                    th Fecha Siembra
+                    th Laboratorio de Origen
+                tbody
+                    each med in mediciones
+                        tr
+                            td #{ med.estanque.codigo }
+                            td.text-center #{ new Date(med.fecha).getDate()+ '/' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
+                            td #{ med.agua_ca }
+                            td #{ med.agua_cv }
+                            td #{ med.mac_larva_ca }
+                            td #{ med.mac_larva_cv }
+                            td #{ med.hepato_ca }
+                            td #{ med.hepato_cv }
+                            td #{ new Date(med.fecha_siembra).getDate()+ '/' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha_siembra).getFullYear()}
+                            td #{ med.lab_origen.nombre }

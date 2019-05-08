@@ -1,0 +1,231 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora();
+            
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuEvaluacion').removeClass('hidden');
+            $('#spanMenuEvaluacion').removeClass('fa-angle-left');
+            $('#spanMenuEvaluacion').addClass('fa-angle-down');
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        function total(){
+            var peso1 = parseFloat($("#peso1").val());
+            var peso2 = parseFloat($("#peso2").val());
+            var peso3 = parseFloat($("#peso3").val());
+            var peso4 = parseFloat($("#peso4").val());
+            var peso5 = parseFloat($("#peso5").val());
+            var peso6 = parseFloat($("#peso6").val());
+
+            if(isNaN(peso1))
+                peso1=0;
+            $("#peso1").val(peso1);
+            if(isNaN(peso2))
+                peso2=0;
+            $("#peso2").val(peso2);
+            if(isNaN(peso3))
+                peso3=0;
+            $("#peso3").val(peso3);
+            if(isNaN(peso4))
+                peso4=0;
+            $("#peso4").val(peso4);
+            if(isNaN(peso5))
+                peso5=0;
+            $("#peso5").val(peso5);
+            if(isNaN(peso6))
+                peso6=0;
+            $("#peso6").val(peso6);
+
+            var total = peso1+peso2+peso3+peso4+peso5+peso6;
+            
+            if(total==100)
+                $('#subm').removeClass('disabled'); //makes it disabled
+            else
+                $('#subm').addClass('disabled'); //makes it enabled
+
+
+            if(isNaN(total))
+                $("#total").text(0);
+            else
+                $("#total").text(total);
+        }
+        
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-list-alt(style="margin-right: 10px;")
+                |  Objetivos para el puesto #{puesto.posicion} del año #{anio}
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    // FORM DE Evaluacion
+    form(role="form" method="post" action="/evaluaciones/objetivos/guardar/#{puesto.id}/#{anio}")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-list-ul(style="margin-right: 10px;")
+                    | ¿Qué?
+        .row
+            .col-lg-9
+                .form-group
+                    label | Responsabilidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        input.form-control(required type="text" name="objetivo1")
+            .col-lg-3
+                .form-group
+                    label | Peso
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-clipboard
+                        input.form-control#peso1(required type="text" name="peso1" onkeyup="total()")
+        .row
+            .col-lg-9
+                .form-group
+                    label | Responsabilidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        input.form-control(required type="text" name="objetivo2")
+            .col-lg-3
+                .form-group
+                    label | Peso
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-clipboard
+                        input.form-control#peso2(required type="text" name="peso2" onkeyup="total()")
+        .row
+            .col-lg-9
+                .form-group
+                    label | Responsabilidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        input.form-control(required type="text" name="objetivo3")
+            .col-lg-3
+                .form-group
+                    label | Peso
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-clipboard
+                        input.form-control#peso3(required type="text" name="peso3" onkeyup="total()")
+        .row
+            .col-lg-9
+                .form-group
+                    label | Responsabilidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        input.form-control(required type="text" name="objetivo4")
+            .col-lg-3
+                .form-group
+                    label | Peso
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-clipboard
+                        input.form-control#peso4(required type="text" name="peso4" onkeyup="total()")
+        .row
+            .col-lg-9
+                .form-group
+                    label | Responsabilidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        input.form-control(required type="text" name="objetivo5")
+            .col-lg-3
+                .form-group
+                    label | Peso
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-clipboard
+                        input.form-control#peso5(required type="text" name="peso5" onkeyup="total()")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-list-ul(style="margin-right: 10px;")
+                    | ¿Cómo?
+        .row
+            .col-lg-9
+                .form-group
+                    label | Responsabilidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle
+                        input.form-control(required type="text" name="objetivo6")
+            .col-lg-3
+                .form-group
+                    label | Peso
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-clipboard
+                        input.form-control#peso6(required type="text" name="peso6" onkeyup="total()")
+        .row
+            .col-lg-9
+            .col-lg-3
+                .form-group
+                    label | Total
+                    span.form-control#total
+        .divider
+        .row
+            .col-lg-2.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-save.text-success
+                        input.btn.btn-success.form-control.disabled#subm(type="submit" value="Guardar")

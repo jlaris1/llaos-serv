@@ -1,0 +1,268 @@
+extends ../../layouts/layout.jade
+block contenido
+    style.
+        .labelSer {
+            font-size: 2em; 
+            background-color: black; 
+            color: white; 
+            border-radius: 8px;
+        }
+
+        .labelSta {
+            color: white;
+            font-size: 2em; 
+            border-radius: 0 8px 8px 0;
+        } 
+
+        @media (max-width: 1366px) and (min-width: 1366px){
+            .right-padding {
+                margin-right: -100px;
+            }
+        }
+
+        @media (max-width: 1600px) and (min-width: 1600px){
+            .right-padding {
+                margin-right: -170px;
+            }
+        }
+
+        @media (min-width: 1900px){
+            .right-padding {
+                margin-right: -255px;
+            }
+        }
+    script.
+        $(document).ready( function(){
+            $('#subMenuCompras').removeClass('hidden');
+            $('#spanMenuCompras').removeClass('fa-angle-left');
+            $('#spanMenuCompras').addClass('fa-angle-down');
+            $('#subMenuOrdenes').removeClass('hidden');
+            $('#spanMenuOrdenes').removeClass('fa-angle-left');
+            $('#spanMenuOrdenes').addClass('fa-angle-down');
+    
+            obtenerfecha();
+            obtenerhora();
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        window.onload = function () { 
+            var sub = parseFloat($('#sub').text());
+            var iva = parseFloat($('#iva').text());
+            var total = parseFloat($('#total').text());
+            var nArt = parseFloat($('#numArt').text());
+            var id = $('#prov').val();
+            
+            for(var i = 0; i < nArt; i++){
+               $('#pArtC'+ i).text(parseFloat($('#pArtC'+ i).text()).toFixed(3));
+               var precio = parseFloat($('#pArt'+ i).text());
+               //precio 
+               $('#pArt'+ i).text(FormatMoney(true,precio)); 
+            }
+
+            $('#sub').text(FormatMoney(true,sub));
+            $('#iva').text(FormatMoney(true,iva)); 
+            $('#total').text(FormatMoney(true,total));
+        }
+
+        function FormatMoney(bol, valor){
+            var total = 0;
+
+            if (bol) {
+                total += valor;
+            } else {
+                total-=valor;
+            }
+            
+            var entero = '';
+            
+            Entero_Decimal = total.toString().split('.');
+            
+            cadena = Entero_Decimal[0].split('').reverse().join('');
+            
+            for (var z = cadena.length; z >=0; z--) {
+                numero = cadena.charAt(z)
+                
+                if ((cadena.length >= 4 && z ==3 ) || (cadena.length >= 7 && z ==6 ) || (cadena.length >= 10 && z == 9 ) || (cadena.length >= 13 && z ==12 ) || (cadena.length >= 16 && z ==15 )) {
+                    numero +=  ",";
+                }
+
+                entero += numero;
+            }
+            
+            if(Entero_Decimal[1]) {
+                if( Entero_Decimal[1].length == 1){
+                    decimales = '.'+ Entero_Decimal[1]+'00';
+                } else {
+                    decimales = '.'+ Entero_Decimal[1];
+                }
+                
+            } else {
+                decimales = '.000';
+            }
+            
+            return "$ " + entero + decimales;
+        }
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-shopping-cart(style="margin-right: 10px;")
+                |   Ver orden
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Realiza: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-cart-arrow-down(style="margin-right: 10px;")
+                | Datos Orden
+    form#frm(role="form")
+        .row
+            .col-lg-3.pull-left.right-padding
+                label.labelSer
+                    |    &nbsp;&nbsp;&nbsp;  #{serie} &nbsp;&nbsp;&nbsp;&nbsp;
+            .col-lg-3.pull-left
+                if estatus == "Nueva"
+                    label.labelSta.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                else if estatus == "Generada"
+                    label.labelSta.label-success &nbsp;&nbsp;&nbsp;&nbsp; #{estatus} &nbsp;&nbsp;&nbsp;&nbsp;
+                else if estatus == "Cancelada" 
+                    label.labelSta.label-danger &nbsp;&nbsp;&nbsp;&nbsp;#{estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                else if estatus == "Enviada"
+                    label.labelSta.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                else if estatus == "Cerrada"
+                    label.labelSta.label-default &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            
+            .col-lg-4.pull-right
+                .form-group
+                    label | Código Orden
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#codigo.form-control(readonly type="text" name="codigo" placeholder="Código" value="#{orden}")
+        .row
+            .col-lg-8
+                .form-group
+                    label | Proveedor
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-search-plus
+                        select#prov.form-control(readonly name="proveedor")
+                            each p in proveedores
+                                option(value=p.id, selected=(p.id == proveedor)) #{p.nombreEmpresa}
+             .col-lg-4
+                .form-group
+                    label | Tipo de Cambio
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hand-holding-usd
+                        input#tipoCambio.form-control(type="text" name="tipoCambio" value="#{tipoCambio}" placeholder="00.00" tabindex="5")
+        .row
+            .col-lg-12
+                .form-group
+                    label |  Comentario / Observación / Condición
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-comment-dots
+                        input#coment.form-control(required type="text" name="comentario" placeholder="Comentario / Observación / Condición" value="#{comentario}") 
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-boxes(style="margin-right: 10px;")
+                    | Artículos en orden 
+        .row
+            .responsive
+                table.table.table-striped.table-hover
+                    thead
+                        tr
+                            th Cantidad
+                            th Unidad
+                            th Código
+                            th Nombre
+                            th Descripción
+                            th Requisicion
+                            th Precio Neto
+                    tbody
+                        label.hidden#numArt #{ Object.keys(articulos).length }
+                        each art, index in articulos
+                            tr
+                                td(id="pArtC#{index}") #{art.cantidad}
+                                td #{art.unidad}
+                                td #{art.codigo}
+                                td #{art.producto}
+                                td #{art.descripcion}
+                                td #{art.requisicion}
+                                td(id="pArt#{index}") #{art.importe}
+        .divider
+        .row.pull-right
+            .table-responsive
+                table.table.table-striped
+                    thead
+                    tbody
+                        tr
+                            td.text-right
+                                label
+                                    | Subtotal
+                            td.text-right 
+                            td.text-right#sub #{subtotal}
+                        tr
+                            td.text-right
+                                label
+                                    | I.V.A
+                            td.text-right 
+                            td.text-right#iva #{iva}
+                        tr
+                            td.text-right
+                                label
+                                    | Total
+                            td.text-right 
+                            td.text-right#total #{total}

@@ -1,0 +1,212 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready(function(){
+            obtenerfecha();
+            obtenerhora();
+            obtenerConocimientos();
+            obtenerActividades();
+            obtenerExperiencia();
+            obtenerCompetencias();
+
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuPuestos').removeClass('hidden');
+            $('#spanMenuPuestos').removeClass('fa-angle-left');
+            $('#spanMenuPuestos').addClass('fa-angle-down');
+        });
+
+        var index=0;
+        var iCon=0;
+        var iExp=0;
+        var iCom=0;
+        var datos = [];
+        var datosCono = [];
+        var datosExp = [];
+        var datosComp = [];
+
+        var conosInicio = [];
+        var actsInicio = [];
+        var expsInicio = [];
+        var compsInicio = [];
+
+        //Conocimientos inicio
+        function obtenerConocimientos(){
+            conosInicio = document.getElementById("conos").value.split(",");
+            datosCono = conosInicio;
+            iCon = conosInicio.length-1;
+            cargarConocimientos();
+        }
+        function cargarConocimientos(){
+            for(i=0; i < conosInicio.length; i++){
+                var ul = document.getElementById("listaConocimientos");
+                var li = document.createElement("li");
+                li.setAttribute("id", "conocimiento_"+i);
+                li.innerHTML = "<span>"+conosInicio[i]+"</span>";
+                ul.appendChild(li);
+            }
+        }
+        //Experiencia inicio
+        function obtenerExperiencia(){
+            expsInicio = document.getElementById("exps").value.split(",");
+            datosExp = expsInicio;
+            iExp = expsInicio.length-1;
+            cargarExperiencia();
+        }
+        function cargarExperiencia(){
+            for(i=0; i < expsInicio.length; i++){
+                var ul = document.getElementById("listaExperiencia");
+                var li = document.createElement("li");
+                li.setAttribute("id", "experiencia_"+i);
+                li.innerHTML = "<span>"+expsInicio[i]+"</span>";
+                ul.appendChild(li);
+            }
+        }
+        //Competencias inicio
+        function obtenerCompetencias(){
+            compsInicio = document.getElementById("comps").value.split(",");
+            datosComp = compsInicio;
+            iCom = compsInicio.length-1;
+            cargarCompetencias();
+        }
+        function cargarCompetencias(){
+            for(i=0; i < compsInicio.length; i++){
+                var ul = document.getElementById("listaCompetencias");
+                var li = document.createElement("li");
+                li.setAttribute("id", "competencia_"+i);
+                li.innerHTML = "<span>"+compsInicio[i]+"</span>";
+                ul.appendChild(li);
+            }
+        }
+        //Actividades inicio
+        function obtenerActividades(){
+            actsInicio = document.getElementById("acts").value.split(",");
+            datos = actsInicio;
+            index = actsInicio.length-1;
+            cargarActividades();
+        }
+        function cargarActividades(){
+            for(i=0; i < actsInicio.length; i++){
+                var ul = document.getElementById("listaActividades");
+                var li = document.createElement("li");
+                li.setAttribute("id", "actividad_"+i);
+                li.innerHTML = "<span>"+actsInicio[i]+"</span>";
+                ul.appendChild(li);
+            }
+        }
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+        
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-user-tag(style="margin-right: 10px;")
+                |   Descripción de Puesto
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    //
+    .row
+        .col-lg-12
+            h3.page-header
+                i.fas.fa-id-badge(style="margin-right: 10px;")
+                | #{puesto.posicion}
+    .row
+        .col-lg-12
+            .form-group
+                label(style="font-size:16px") Objetivo General
+                p(style="" align="justify") #{puesto.objetivo}
+    .divider
+    .row
+        .col-lg-3(style="padding-top: 5px;border-left: 1px solid; border-right: 1px solid;" align="center")
+            .form-group
+                label(style="font-size:16px") Reporta a:
+                p #{puesto.reporta}
+        .col-lg-3(style="padding-top: 5px;border-right: 1px solid;" align="center")
+            .form-group
+                label(style="font-size:16px") Supervisa a:
+                p #{puesto.supervisa}
+        .col-lg-3(style="padding-top: 5px;border-right: 1px solid;" align="center")
+            .form-group
+                label(style="font-size:16px") Formación académica:
+                p #{puesto.formacion}
+        .col-lg-3(style="padding-top: 5px;border-right: 1px solid;" align="center")
+            .form-group
+                label(style="font-size:16px") Idiomas:
+                p #{puesto.idiomas}
+    .divider(style="margin-bottom:25px")
+    .row(style="margin-bottom:25px")
+        .col-lg-6
+            .form-group
+                label(style="font-size:16px") | Conocimientos
+                ul(id="listaConocimientos" name="conocimientos")
+        .col-lg-6
+            .form-group
+                label(style="font-size:16px") | Experiencia requerida
+                ul(id="listaExperiencia" name="experiencia")
+    .row(style="margin-bottom:25px")
+        .col-lg-6
+            .form-group
+                label(style="font-size:16px") | Competencias
+                ul(id="listaCompetencias" name="competencias")
+        .col-lg-6
+            .form-group
+                label(style="font-size:16px") | Responsabilidades
+                ul(id="listaActividades" name="actividades")
+    .row.hidden
+        input#conos(type="text" name="listaConos" value="#{puesto.conocimientos}")
+    .row.hidden
+        input#exps(type="text" name="listaExps" value="#{puesto.experiencia}")
+    .row.hidden
+        input#comps(type="text" name="listaComps" value="#{puesto.competencias}")
+    .row.hidden
+        input#acts(type="text" name="listaActs" value="#{puesto.actividades}")

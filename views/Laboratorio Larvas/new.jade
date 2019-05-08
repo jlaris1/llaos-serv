@@ -1,0 +1,97 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora(); 
+
+            $('#subMenuLaboratorioLarvas').removeClass('hidden');
+            $('#spanMenuLaboratorioLarvas').removeClass('fa-angle-left');
+            $('#spanMenuLaboratorioLarvas').addClass('fa-angle-down');
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+    .row(style="margin-bottom: -5px;")
+        .col-lg-12.col-md-12.col-xs-12
+            h2
+                i.fas.fa-fill-drip(style="margin-right: 10px;")
+                |  Nuevo Lavoratorio
+    .divider
+    .row
+        .col-lg-6.col-md-6.col-xs-6.pull-right.text-right
+            span
+                | Usuario: 
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.col-md-6.col-xs-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .divider
+    form#frm(role="form" method="post" action="/laboratoriolarvas/add")
+        .row
+            .col-lg-6.col-md-6.col-sm-6.col-xs-12
+                .form-group
+                    label | Código
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(required type="text" name="codigo" placeholder="Código" tabindex="1")
+            .col-lg-6.col-md-6.col-sm-6.col-xs-12
+                .form-group
+                    label | Nombre
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(required type="text" name="nombre" placeholder="Nombre" tabindex="2")
+            
+        .divider
+        .row
+            .col-lg-2.col-md-4.col-xs-6.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-plus-circle.text-success
+                        input(type="submit" value="Agregar" tabindex="3").btn.btn-success.form-control    

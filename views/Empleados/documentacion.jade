@@ -1,0 +1,227 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .fileContainer {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .fileContainer [type=file] {
+            display: block;
+            font-size: 999px;
+            filter: alpha(opacity=0);
+            min-height: 100%;
+            min-width: 100%;
+            opacity: 0;
+            position: absolute;
+            right: 0;
+            text-align: right;
+            top: 0;
+        }
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora();
+
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuEmpleados').removeClass('hidden');
+            $('#spanMenuEmpleados').removeClass('fa-angle-left');
+            $('#spanMenuEmpleados').addClass('fa-angle-down');
+
+            $('#rfc_doc').change(function(e){
+                var fileName = e.target.files[0].name;
+                $('#rfc_nombre').val(fileName);
+            });
+
+            $('#actanaci_doc').change(function(e){
+                var fileName = e.target.files[0].name;
+                $('#actanaci_nombre').val(fileName);
+            });
+
+            $('#crede_doc').change(function(e){
+                var fileName = e.target.files[0].name;
+                $('#crede_nombre').val(fileName);
+            });
+
+            $('#curp_doc').change(function(e){
+                var fileName = e.target.files[0].name;
+                $('#curp_nombre').val(fileName);
+            });
+
+            $('#nss_doc').change(function(e){
+                var fileName = e.target.files[0].name;
+                $('#nss_nombre').val(fileName);
+            });
+
+            $('#cdom_doc').change(function(e){
+                var fileName = e.target.files[0].name;
+                $('#cdom_nombre').val(fileName);
+            });
+
+            $('#solicitud_doc').change(function(e){
+                var fileName = e.target.files[0].name;
+                $('#solicitud_nombre').val(fileName);
+            });
+        });
+        
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+    
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-file(style="margin-right: 10px;")
+                |   #{titulo}
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    form(method="post", action="/empleados/upload", enctype='multipart/form-data')
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-file-alt(style="margin-right: 10px;")
+                    | Documentación
+        input.hidden(name="idempleado" value="#{empleado.id}")
+        .row
+            .col-lg-2
+                .form-group
+                    label | No. Empleado
+                    .input-group
+                        label.input-group-btn
+                            label.form-control #{empleado.numero}
+            .col-lg-6
+                .form-group
+                    label | Nombre
+                    .input-group
+                        label.input-group-btn
+                            input(style="cursor: default; background: white;" readonly name="nomEmpleado" value="#{empleado.nombre}").form-control
+            .col-lg-4
+                .form-group
+                    label | Puesto
+                    .input-group
+                        label.input-group-btn
+                            label.form-control #{empleado.puesto}
+        .row
+            .col-lg-5
+                .form-group
+                    label | Comprobante de RFC
+                    .input-group
+                        label.input-group-btn
+                            input.form-control(style="min-width: 400px" name="rfc_nombre"  id="rfc_nombre" type="text" placeholder="Selecciona un archivo" readonly)
+                        label.btn.form-control.btn-primary.upload-btn.credencialElector.fileContainer Buscar...
+                            input(required type="file", name="rfc_doc", id="rfc_doc" accept="application/pdf, image/jpeg, image/png, image/tif, image/gif, image/bmp")
+        .row
+            .col-lg-5
+                .form-group
+                    label | Acta de nacimiento
+                    .input-group                
+                        label.input-group-btn
+                            input.form-control(style="min-width: 400px" name="actanaci_nombre" id="actanaci_nombre" type="text" placeholder="Selecciona un archivo" readonly)
+                        label.btn.form-control.btn-primary.upload-btn.credencialElector Buscar...
+                            input(type="file", name="actanaci_doc", accept="application/pdf, image/jpeg, image/png, image/tif, image/gif" id="actanaci_doc" style="display: none;, image/bmp")
+        .row
+            .col-lg-5
+                .form-group
+                    label | Credencial de Elector
+                    .input-group
+                        label.input-group-btn
+                            input.form-control(style="min-width: 400px" name="crede_nombre" id="crede_nombre" type="text" placeholder="Selecciona un archivo" readonly)
+                        label.btn.form-control.btn-primary.upload-btn.credencialElector Buscar...
+                            input(type="file", name="crede_doc", accept="application/pdf, image/jpeg, image/png, image/tif, image/gif" id="crede_doc" style="display: none;, image/bmp")
+        .row
+            .col-lg-5
+                .form-group
+                    label | CURP
+                    .input-group
+                        label.input-group-btn
+                            input.form-control(style="min-width: 400px" name="curp_nombre" id="curp_nombre" type="text" placeholder="Selecciona un archivo" readonly)
+                        label.btn.form-control.btn-primary.fileContainer Buscar...
+                            input(required type="file", name="curp_doc",accept="application/pdf, image/jpeg, image/png, image/tif, image/gif" id="curp_doc, image/bmp")
+        .row
+            .col-lg-5
+                .form-group
+                    label | No. de Seguro Social
+                    .input-group
+                        label.input-group-btn
+                            input.form-control(style="min-width: 400px" name="nss_nombre" id="nss_nombre" type="text" placeholder="Selecciona un archivo" readonly)
+                        label.btn.form-control.btn-primary.fileContainer Buscar...
+                            input(required type="file", accept="application/pdf, image/jpeg, image/png, image/tif, image/gif" name="nss_doc", id="nss_doc, image/bmp")
+            .col-lg-5.hidden
+                .panel.panel-danger
+                    .panel-heading
+                        label(style="min-height:28px") Error: Campo obligatorio. Agregue documento.
+        .row
+            .col-lg-5
+                .form-group
+                    label | Comprobante de domicilio
+                    .input-group
+                        label.input-group-btn
+                            input.form-control(style="min-width: 400px" name="cdom_nombre" id="cdom_nombre" type="text" placeholder="Selecciona un archivo" readonly)
+                        label.btn.form-control.btn-primary Buscar...
+                            input( type="file", name="cdom_doc",accept="application/pdf, image/jpeg, image/png, image/tif, image/gif" id="cdom_doc" style="display: none;, image/bmp")
+        .row
+            .col-lg-5
+                .form-group
+                    label | Solicitud de empleo
+                    .input-group
+                        label.input-group-btn
+                            input.form-control(style="min-width: 400px" name="solicitud_nombre" id="solicitud_nombre" type="text" placeholder="Selecciona un archivo" readonly)
+                        label.btn.form-control.btn-primary Buscar...
+                            input( type="file",accept="application/pdf, image/jpeg, image/png, image/tif, image/gif" name="solicitud_doc", id="solicitud_doc" style="display: none;, image/bmp")
+        .divider
+        .row
+            .col-lg-2.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-save.text-success
+                        input(type="submit", value="Finalizar", class="button-style").btn.btn-success.form-control

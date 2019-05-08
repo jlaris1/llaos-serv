@@ -1,0 +1,271 @@
+extends ../../layouts/layout.jade
+block contenido
+    style.
+        .round {
+            border-radius: 5px !important;
+            -moz-border-radius: 5px !important;
+            -webkit-border-radius: 5px !important;
+        }
+        thead {
+            background-color: black;
+            color: #fff;
+        }
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora(); 
+
+            $('#subMenuLaboratorio').removeClass('hidden');
+            $('#spanMenuLaboratorio').removeClass('fa-angle-left');
+            $('#spanMenuLaboratorio').addClass('fa-angle-down');
+            $('#subMenuBacterioloia').removeClass('hidden');
+            $('#spanMenuBacterioloia').removeClass('fa-angle-left');
+            $('#spanMenuBacterioloia').addClass('fa-angle-down');
+
+            $('#modulo').on('change', function(){
+                document.frm2.submit();
+            });
+
+            $('#estanque').on('change', function(){ $('#est').val(this.value); });
+            $('#laboratorio').on('change', function(){ $('#lab').val(this.value); });
+            $('#fechaI').on('change', function(){ $('#fec').val(this.value); });
+            $('#fechaS').on('change', function(){ $('#fecsem').val(this.value); });
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+
+        function calcularScore(){
+            var hepato_I = parseInt($('#hepato_I').val());
+            var hepato_nhp = parseInt($('#hepato_nhp').val());
+            var hepato_vib = parseInt($('#hepato_vib').val());
+            var hepato_IIInhp = parseInt($('#hepato_IIInhp').val());
+            var hepato_IIIvib = parseInt($('#hepato_IIIvib').val());
+            var hepato_IIIbnhp = parseInt($('#hepato_IIIbnhp').val());
+            var hepato_IIIbvib = parseInt($('#hepato_IIIbvib').val());
+            var hepato_IIIcnhp = parseInt($('#hepato_IIIcnhp').val());
+            var hepato_IIIcvib = parseInt($('#hepato_IIIcvib').val());
+
+            var no_org = hepato_I + hepato_nhp + hepato_vib + hepato_IIInhp + hepato_IIIvib + hepato_IIIbnhp +
+                         hepato_IIIbvib + hepato_IIIcnhp + hepato_IIIcvib;
+
+            var score_nhp = ((hepato_I + hepato_nhp + hepato_vib + hepato_IIIvib + hepato_IIIbvib + hepato_IIIcvib) + (hepato_IIInhp * 2) + 
+                            (hepato_IIIbnhp * 3) + (hepato_IIIcnhp * 4)) / parseInt(no_org) ;
+            var score_vib = ((hepato_I + hepato_nhp + hepato_vib + hepato_IIInhp + hepato_IIIbnhp + hepato_IIIcnhp) + (hepato_IIIvib * 2) + 
+                            (hepato_IIIbvib * 3) + (hepato_IIIcvib * 4)) / parseInt(no_org) ;
+
+
+            $('#no_org').val(no_org);
+            $('#score_nhp').val(score_nhp.toFixed(2));
+            $('#score_vib').val(score_vib.toFixed(2));
+        }
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2 
+                i.fas.fa-vials(style="margin-right: 10px;")
+                |   Registro de Bacteriología
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
+                a.btn.btn-special(href="#especificaciones" data-toggle="modal" data-target="#especificaciones")
+                    i.fas.fa-glasses.fa-lg
+    .divider
+    .row
+        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-right.text-right
+            span
+                | Usuario: 
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .divider
+    form(role="form" name="frm2" method="post" action="/bacteriologia/find")
+        .row
+            .col-lg-2
+                .form-group
+                    label | Módulo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-water
+                        select#modulo.form-control(required name="modulo" tabindex="1")
+                            option(value="") << Seleccione >>
+                            each mod in modulos
+                                option(value="#{mod.id}",selected=(mod.id == modulo)) #{ mod.nombre }
+            .col-lg-2
+                .form-group
+                    label | Piscina
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-water
+                        select#estanque.form-control(tabindex="2")
+                            option(value="") << Seleccione >>
+                            each est in estanques
+                                option(value="#{est.id}") #{ est.codigo}
+            .col-lg-2
+                .form-group
+                    label | Laboratorio
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-flask
+                        select#laboratorio.form-control(tabindex="3")
+                            option(value="") << Seleccione >>
+                            each l in laboratorios
+                                option(value="#{l.id}") #{ l.nombre}
+            .col-lg-3
+                .form-group
+                    label | Fecha
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar-alt
+                        input#fechaI.form-control(type="date" tabindex="4")
+            .col-lg-3
+                .form-group
+                    label | Fecha de Siembra
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar-alt
+                        input#fechaS.form-control(type="date" tabindex="5")        
+    form#frm(role="form" method="post" action="/bacteriologia/add")
+        input.hidden#est(required name="estanque")
+        input.hidden#lab(required name="laboratorio")
+        input.hidden#fec(required type="date" name="fecha")
+        input.hidden#fecsem(required type="date" name="fecha_siembra")
+        .row
+            .col-lg-4
+                .panel.panel-primary
+                    .panel-heading
+                        |   Agua
+                    .panel-body
+                        .row.text-center
+                            |   UFC/ml 
+                        .row
+                            .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                                .form-group
+                                    label | CA
+                                    input.round.form-control(type="text" value="0" name="agua_ca" placeholder="# CA" tabindex="5")
+                            .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                                .form-group
+                                    label | CV
+                                    input.round.form-control(type="text" value="0" name="agua_cv" placeholder="# CV" tabindex="6")
+            .col-lg-4
+                .panel.panel-primary
+                    .panel-heading
+                        |   Macerado.Larva
+                    .panel-body
+                        .row.text-center
+                            |   UFC/gr
+                        .row
+                            .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                                .form-group
+                                    label | CA
+                                    input.round.form-control(type="text" value="0" name="mac_larva_ca" placeholder="# CA" tabindex="7")
+                            .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                                .form-group
+                                    label | CV
+                                    input.round.form-control(type="text" value="0" name="mac_larva_cv" placeholder="# CV" tabindex="8")
+            .col-lg-4
+                .panel.panel-primary
+                    .panel-heading
+                        |   Hepatopáncreas
+                    .panel-body
+                        .row.text-center
+                            |   UFC/gr
+                        .row
+                            .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                                .form-group
+                                    label | CA
+                                    input.round.form-control(type="text" value="0" name="hepato_ca" placeholder="# CA" tabindex="9")
+                            .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                                .form-group
+                                    label | CV
+                                    input.round.form-control(type="text" value="0" name="hepato_cv" placeholder="# CV" tabindex="10")
+        .divider
+        .row
+            .col-lg-2.col-md-4.col-xs-6.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-plus-circle.text-success
+                        input(type="submit" value="Agregar" tabindex="11").btn.btn-success.form-control    
+        
+    // MODAL ESPECIFICACIONES
+    #especificaciones.modal(tabindex='-1', role='dialog')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h3.modal-title Especificaciones
+                    button.close(type='button', data-dismiss='modal', aria-label='Close' style="margin-top: -40px;")
+                        span(aria-hidden='true') ×
+                .modal-body
+                    .container-fluid
+                        .row
+                            .col-lg-12
+                                h4
+                                    |   Rangos de Referencia
+                                table.table
+                                    thead
+                                        th
+                                        th Macerado
+                                        th Hepatopáncreas
+                                        th Agua 
+                                    tbody
+                                        tr
+                                            td
+                                            td UFC/gr
+                                            td UFC/gr
+                                            td UFC/ml
+                                        tr
+                                            td 
+                                                strong CA
+                                            td < 130,000
+                                            td < 100,000
+                                            td < 10,000
+                                        tr
+                                            td 
+                                                strong CV
+                                            td < 10,000
+                                            td < 10,000
+                                            td    1,000
+
+                                               

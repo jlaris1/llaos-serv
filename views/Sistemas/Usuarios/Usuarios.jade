@@ -1,0 +1,56 @@
+extends ../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function() {
+            $('#products').dataTable();
+
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#spanMenuSistemas').removeClass('fa-angle-left');
+            $('#spanMenuSistemas').addClass('fa-angle-down');
+            $('#subMenuSistemas').removeClass('hidden');
+            $('#subMenuUsuarios').removeClass('hidden');
+            $('#spanMenuUsuarios').removeClass('fa-angle-left');
+            $('#spanMenuUsuarios').addClass('fa-angle-down');    
+        })
+    //Termina Javascript
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-clipboard-list(style="margin-right: 10px;")
+                |   Usuarios
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;") 
+            a.btn.btn-special(href="/usuarios/new/usuario")
+                i.fas.fa-plus-circle
+                |   Nuevo
+    .divider
+    .row
+        table#products.table.table-striped.table-hover
+            thead
+                th.hidden
+                    |   Código
+                th(scope="col")
+                    |   Nombre
+                th(scope="col")
+                    |   Correo
+                th(scope="col")
+                    |   Usuario
+                th(scope="col")
+                    |   Empresa
+                th(scope="col")
+                    |   Permisos
+                th.text-center(scope="col")
+                    |   Acciones
+            tbody
+                each usr in usuarios
+                    tr(scope="row")
+                        td.hidden #{ usr._id }
+                        td #{ usr.nombre }
+                        td #{ usr.correo }
+                        td #{ usr.usuario }
+                        td #{ usr.empresa }
+                        td #{ usr.permisos }
+                        td.text-center
+                            a(href="/usuarios/editar/usuario/#{usr.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 15px;")
+                                i.fas.fa-pencil-alt.text-info.fa-lg
+                            a(data-toggle="tooltip" href="usuarios/eliminar/usaurio/#{usr.id}" title="Eliminar")
+                                i.fas.fa-minus-circle.text-danger.fa-lg

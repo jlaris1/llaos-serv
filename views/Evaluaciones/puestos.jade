@@ -1,0 +1,41 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function() {
+            $('#puestos').dataTable();
+
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuEvaluacion').removeClass('hidden');
+            $('#spanMenuEvaluacion').removeClass('fa-angle-left');
+            $('#spanMenuEvaluacion').addClass('fa-angle-down');
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-address-card(style="margin-right: 10px;")
+                |   Objetivos - Puestos
+    table#puestos.table.table-hover
+            thead
+                th.hidden
+                th Posición
+                th Vacante
+                th Estado
+                th Acciones
+            tbody
+                each p in puestos
+                    tr(scope="row")
+                        td.hidden #{ p._id } 
+                        td #{ p.posicion }
+                        td #{ p.vacante }
+                        td 
+                            if p.estado == "Activo"
+                                label.label.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{p.estado}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if p.estado == "Baja"
+                                label.label.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{p.estado}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        td  
+                            a(href="/evaluaciones/puestos/objetivos/#{p.id}", title="Definir Objetivos", style="margin-right: 15px;" data-toggle="tooltip" data-placement="bottom")
+                                i.fas.fa-list-alt.text-primary.fa-lg

@@ -1,0 +1,141 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){ 
+            obtenerfecha();
+            obtenerhora();
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $('#subMenuProvExt').removeClass('hidden');
+            $('#spanMenuProvExt').removeClass('fa-angle-left');
+            $('#spanMenuProvExt').addClass('fa-angle-down');         
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+        
+        window.onload = function () { 
+            var nProd = parseFloat($('#numProc').text());
+            
+            for(var i = 0; i < nProd; i++){
+               $('#pNeto'+ i).text("$ " + parseFloat($('#pNeto'+ i).text()).toFixed(2));
+            }
+        }
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-box(style="margin-right: 10px;")
+                |   Nuevo Artículo
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Realiza: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .row
+        .col-lg-12
+            h4.page-header
+                | Búsqueda
+    form(role="form" method="post" action="/inventarios/busqueda/producto")
+        .row
+            .col-lg-6
+                .form-group
+                    label | Búscar
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-search
+                        input.form-control(required type="text" name="buscar" placeholder="Buscar.." value="#{busca}" tabindex="1")                           
+            .col-lg-4
+                .form-group
+                    label | Criterio de búsqueda
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-search-plus
+                        select.form-control(required name="criterio" tabindex="2")
+                            option(value="codigo", selected=("codigo"== criterio)) Código
+                            option(value="nombre",  selected=("nombre"== criterio)) Nombre
+            .col-lg-2
+                .form-group
+                    label &nbsp;
+                    .input-group
+                        span.input-group-addon
+                        button.form-control.btn.btn-success(type="submit" tabindex="3")
+                            i.fa.fa-search
+                            |   Buscar
+        .row
+            if Object.keys(products).length > 0
+                .row
+                    .col-lg-12
+                        h4.page-header
+                            | Productos encontrados 
+                .row
+                    .col-lg.12
+                        table.table
+                            thead
+                                tr
+                                    th Código
+                                    th Unidad
+                                    th Nombre
+                                    th Proveedor
+                                    th Precio Neto
+                                    th Acciones
+                            tbody
+                                label.hidden#numProc #{ Object.keys(products).length }
+                                each p, index in products
+                                    tr
+                                        td #{p.codigo}
+                                        td #{p.unidad}
+                                        td #{p.nombre}
+                                        each prov in proveedores
+                                            if prov.id == p.proveedor
+                                                td #{prov.nombreEmpresa}
+                                        td(id="pNeto#{index}") #{p.precioNeto}
+                                        td
+                                            a(id="link#{index}" href="/inventarios/agregar/producto/#{p.id}/#{orden}", data-toggle="tooltip", data-placement="top",title="Agregar")
+                                                i.fas.fa-plus-circle.text-success.fa-lg
+                    

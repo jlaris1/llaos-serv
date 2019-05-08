@@ -1,0 +1,16 @@
+extends ../layouts/layout.jade
+block contenido
+    h1= title
+    p Welcome to #{title}
+    form(method="post", action="/upload", enctype='multipart/form-data')
+        input(type="file", name="image", id="image")
+        input(type="file", name="doc", id="doc")
+        input(type="submit", value="Upload", class="button-style")
+    br
+    span#message
+        
+
+
+
+
+        

@@ -1,0 +1,85 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function() {
+            $('#tickets').dataTable();
+
+            $('#subMenuSistemas').removeClass('hidden');
+            $('#spanMenuSistemas').removeClass('fa-angle-left');
+            $('#spanMenuSistemas').addClass('fa-angle-down');
+            $('#subMenuTickets').removeClass('hidden');
+            $('#spanMenuTickets').removeClass('fa-angle-left');
+            $('#spanMenuTickets').addClass('fa-angle-down');
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    //Termina Javascript
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-ticket-alt(style="margin-right: 10px;")
+                |   Tickets
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;") 
+            a.btn.btn-special(href="/tickets/new/ticket")
+                i.fas.fa-plus-circle
+                |   Nuevo
+    .divider
+    .row
+        table#tickets.table.table-striped.table-hover
+            thead
+                th.hidden
+                th Folio
+                th Usuario
+                th Encargado
+                th Prioridad
+                th Categoría
+                th Adjunto
+                th Estado
+                th Acciones
+            tbody
+                each t in tickets
+                    tr(scote="row")
+                        td.hidden #{ t._id } 
+                        td #{ t.folio }
+                        td #{ t.usuario.nombre }
+                        td #{ t.encargado }
+                        td 
+                            if t.prioridad == "Alta"
+                                label.label.label-danger  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{t.prioridad}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if t.prioridad == "Media"
+                                label.label.label-warning  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{t.prioridad}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if t.prioridad == "Baja"
+                                label.label.label-primary  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{t.prioridad}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        td #{ t.categoria }
+                        td 
+                            if t.imagen
+                                a(href="../../../Tickets/#{ t.imagen }" title="Imagen adjunto" target="_blank") Imagen Adjunta
+                            else
+                                span No se adjuntó imagen
+                        td
+                            if t.estatus == "Nuevo"
+                                label.label.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{t.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if t.estatus == "Asignado"
+                                label.label.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{t.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if t.estatus == "En proceso"
+                                label.label.label-success &nbsp;&nbsp;&nbsp;&nbsp;#{t.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if t.estatus == "Cancelado"
+                                label.label.label-danger &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{t.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if t.estatus == "Cerrado"
+                                label.label.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{t.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        td  
+                            a(href="/tickets/ver/#{t.id}", title="Ver detalles", style="margin-right: 15px; " data-toggle="tooltip" data-placement="top")
+                                i.fas.fa-eye.text-primary.fa-lg
+                            if t.usuario.nombre == user.nombre
+                                if t.estatus == 'Nuevo'
+                                    a(href="/tickets/cancelar/#{t.id}", title="Cancelar", style="margin-right: 15px; " data-toggle="tooltip" data-placement="top")
+                                        i.fas.fa-chevron-circle-down.text-danger.fa-lg    
+                                else
+                                    a.disabled(href="/tickets/cancelar/#{t.id}", title="Cancelar", style="margin-right: 15px; " data-toggle="tooltip" data-placement="top")
+                                        i.fas.fa-chevron-circle-down.text-default.fa-lg
+                            if user.permisos == 'developer'
+                                if t.estatus == 'En proceso'
+                                    a(href="/tickets/finalizar/#{t.id}", title="Finalizar", style="margin-right: 15px; " data-toggle="tooltip" data-placement="top")
+                                        i.fas.fa-check-circle.text-success.fa-lg    
+                                else
+                                    a.disabled(href="/tickets/finalizar/#{t.id}", title="Finalizar", style="margin-right: 15px; " data-toggle="tooltip" data-placement="top")
+                                        i.fas.fa-check-circle.text-default.fa-lg

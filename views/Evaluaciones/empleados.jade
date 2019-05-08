@@ -1,0 +1,61 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function() {
+            $('#emple').dataTable();
+
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuEvaluacion').removeClass('hidden');
+            $('#spanMenuEvaluacion').removeClass('fa-angle-left');
+            $('#spanMenuEvaluacion').addClass('fa-angle-down');
+            $('[data-toggle="tooltip"]').tooltip();
+
+            let texto = $("#msg").text();
+            if(texto==""){
+                $("#error").addClass('hidden');
+            }else{
+                $("#error").removeClass('hidden');
+            }
+        })
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-clipboard-check(style="margin-right: 10px;")
+                |   Evaluaciones - Colaboradores
+    .row.hidden#error
+        .col-lg-12
+            .panel.panel-danger
+                .panel-heading.panel-danger
+                    span#msg #{msg}
+    table.table-hover#emple.table
+            thead
+                th.hidden
+                th.text-center No. Colaborador
+                th Nombre
+                th Puesto
+                th Fecha de ingreso
+                th Estatus
+                th Acciones
+            tbody
+                each e in empleados
+                    tr(scope="row")
+                        td.hidden #{ e._id } 
+                        td.text-center #{ e.numero }
+                        td #{ e.nombre }
+                        td #{ e.puesto.posicion }
+                        td #{ e.fingreso  }
+                        td 
+                            if e.estatus == "Nuevo"
+                                label.label.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{e.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if e.estatus == "Autorizado"
+                                label.label.label-success &nbsp;&nbsp;&nbsp;&nbsp;#{e.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if e.estatus == "Baja"
+                                label.label.label-danger &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{e.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            else if e.estatus == "Eliminado"
+                                label.label.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{e.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                        td
+                            a(href="/evaluaciones/calendario/#{e.id}/#{e.puesto.id}", title="Evaluaciones", style="margin-right: 15px;")
+                                i.fas.fa-list-alt.text-primary.fa-lg

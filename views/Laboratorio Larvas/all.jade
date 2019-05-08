@@ -1,0 +1,41 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function() { 
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#subMenuLaboratorioLarvas').removeClass('hidden');
+            $('#spanMenuLaboratorioLarvas').removeClass('fa-angle-left');
+            $('#spanMenuLaboratorioLarvas').addClass('fa-angle-down');
+            $('#mediciones').dataTable();
+        });
+        //Termina Javascript
+
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-fill-drip(style="margin-right: 10px;")
+                |   Laboratorios
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
+            a.btn.btn-special(href="/laboratoriolarvas/new", style="margin-right: 5px;")
+                i.fas.fa-plus-circle
+                |   Nuevo
+            if user.permisos != "usuario"
+                a.btn.btn-special(href="#")
+                    i.fas.fa-file-pdf
+                    |   Reportes
+    .divider
+    .row
+        .table-responsive   
+            table#mediciones.table.table-striped.table-hover
+                thead
+                    th Código
+                    th Nombre
+                    th
+                tbody
+                    each l in laboratorios
+                        tr
+                            td.text-center #{ l.codigo }
+                            td.text-center #{ l.nombre }
+                            td
+                                a(href="/laboratoriolarvas/edit/#{l.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px; color: #057e95;")
+                                    i.fas.fa-pencil-alt.fa-lg

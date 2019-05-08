@@ -1,0 +1,598 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .mes{
+            margin:0;
+            padding:0;
+            height: 15vh;
+            display: block;
+            border: 2px solid #626a77;
+        }
+        .enlace{
+            padding-top:6vh;
+            padding-bottom:6vh;
+            padding-right:8vh;
+            padding-left:8vh;
+            display:block;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .btn{
+            border-radius: 0px 0px 0px 0px;
+        }
+    script.
+        $(document).ready( function() {
+            obtenerfecha();
+            obtenerhora();
+            
+            $('#subMenuDesarrollo').removeClass('hidden');
+            $('#spanMenuDesarrollo').removeClass('fa-angle-left');
+            $('#spanMenuDesarrollo').addClass('fa-angle-down');
+            $('#subMenuEvaluacion').removeClass('hidden');
+            $('#spanMenuEvaluacion').removeClass('fa-angle-left');
+            $('#spanMenuEvaluacion').addClass('fa-angle-down');
+            $('[data-toggle="tooltip"]').tooltip();
+
+            llenarCombo();
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        function llenarCombo(){
+            let fechaActual = new Date();
+            let opcion = fechaActual.getFullYear();
+
+            $('#año').append('<option value="pasadas">' + (opcion-1) + '</option>');
+            $('#año').append('<option value="actuales">' + opcion + '</option>');
+            $('#año').append('<option value="futuras">' + (opcion+1) + '</option>');
+            
+            $("#año").val("actuales");
+        }
+
+        function cambioAnio(){
+            let op = $("#año").val();
+
+            switch(op){
+                case 'pasadas':
+                    $('#pasadas').removeClass('hidden');
+                    $('#actuales').addClass('hidden');
+                    $('#futuras').addClass('hidden');
+                    break;
+                case 'actuales':
+                    $('#pasadas').addClass('hidden');
+                    $('#actuales').removeClass('hidden');
+                    $('#futuras').addClass('hidden');
+                    break;
+                case 'futuras':
+                    $('#pasadas').addClass('hidden');
+                    $('#actuales').addClass('hidden');
+                    $('#futuras').removeClass('hidden');
+                    break;
+                default:
+                    $('#pasadas').addClass('hidden');
+                    $('#actuales').addClass('hidden');
+                    $('#futuras').addClass('hidden');
+                    break;
+            };
+        }
+
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-clipboard-check(style="margin-right: 10px;")
+                |   Evaluaciones
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Usuario: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    //
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-id-badge(style="margin-right: 10px;")
+                | Evaluaciones - 
+                b#nombre #{empleado.nombre}
+    center(style="padding: 0 10vh 0 10vh")
+        .row(style="margin-top:15px; margin-bottom:15px;")
+            .col-lg-4
+                label 
+            .col-lg-1
+                label(style="padding-top: 8px; padding-left: 7vh;")
+                    | Año:
+            .col-lg-3
+                select.form-control(id="año" name="año" onchange="cambioAnio()")
+                    option(value="") << Seleccione año >>
+            .col-lg-4
+                label
+        div#pasadas.hidden
+            .row(style="margin:0; padding:0;") 
+                .col-lg-3.mes(style="border-radius: 15px 0px 0px 0px;")
+                    if(evalPasadas.enero.id)
+                        if (evalPasadas.enero.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalPasadas.enero.id}/#{objetivos[0].id}") Enero - Calificación: #{evalPasadas.enero.final}%
+                        else if (evalPasadas.enero.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalPasadas.enero.id}/#{objetivos[0].id}") Enero - Calificación: #{evalPasadas.enero.final}%
+                            else if (evalPasadas.enero.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalPasadas.enero.id}/#{objetivos[0].id}") Enero - Calificación: #{evalPasadas.enero.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalPasadas.enero.id}/#{objetivos[0].id}") Enero - Calificación: #{evalPasadas.enero.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/enero/#{objetivos[0].id}") Enero
+                .col-lg-3.mes(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalPasadas.febrero.id)
+                        if (evalPasadas.febrero.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalPasadas.febrero.id}/#{objetivos[0].id}") Febrero - Calificación: #{evalPasadas.febrero.final}%
+                        else if (evalPasadas.febrero.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalPasadas.febrero.id}/#{objetivos[0].id}") Febrero - Calificación: #{evalPasadas.febrero.final}%
+                            else if (evalPasadas.febrero.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalPasadas.febrero.id}/#{objetivos[0].id}") Febrero - Calificación: #{evalPasadas.febrero.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalPasadas.febrero.id}/#{objetivos[0].id}") Febrero - Calificación: #{evalPasadas.febrero.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/febrero/#{objetivos[0].id}") Febrero
+                .col-lg-3.mes(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalPasadas.marzo.id)
+                        if (evalPasadas.marzo.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalPasadas.marzo.id}/#{objetivos[0].id}") Marzo - Calificación: #{evalPasadas.marzo.final}%
+                        else if (evalPasadas.marzo.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalPasadas.marzo.id}/#{objetivos[0].id}") Marzo - Calificación: #{evalPasadas.marzo.final}%
+                            else if (evalPasadas.marzo.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalPasadas.marzo.id}/#{objetivos[0].id}") Marzo - Calificación: #{evalPasadas.marzo.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalPasadas.marzo.id}/#{objetivos[0].id}") Marzo - Calificación: #{evalPasadas.marzo.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/marzo/#{objetivos[0].id}") Marzo
+                .col-lg-3.mes(style="border-radius: 0px 15px 0px 0px;")
+                    if(evalPasadas.abril.id)
+                        if (evalPasadas.abril.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalPasadas.abril.id}/#{objetivos[0].id}") Abril - Calificación: #{evalPasadas.abril.final}%
+                        else if (evalPasadas.abril.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalPasadas.abril.id}/#{objetivos[0].id}") Abril - Calificación: #{evalPasadas.abril.final}%
+                            else if (evalPasadas.abril.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalPasadas.abril.id}/#{objetivos[0].id}") Abril - Calificación: #{evalPasadas.abril.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalPasadas.abril.id}/#{objetivos[0].id}") Abril - Calificación: #{evalPasadas.abril.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/abril/#{objetivos[0].id}") Abril
+            .row(style="margin:0; padding:0;")
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalPasadas.mayo.id)
+                        if (evalPasadas.mayo.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalPasadas.mayo.id}/#{objetivos[0].id}") Mayo - Calificación: #{evalPasadas.mayo.final}%
+                        else if (evalPasadas.mayo.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalPasadas.mayo.id}/#{objetivos[0].id}") Mayo - Calificación: #{evalPasadas.mayo.final}%
+                            else if (evalPasadas.mayo.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalPasadas.mayo.id}/#{objetivos[0].id}") Mayo - Calificación: #{evalPasadas.mayo.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalPasadas.mayo.id}/#{objetivos[0].id}") Mayo - Calificación: #{evalPasadas.mayo.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/mayo/#{objetivos[0].id}") Mayo
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalPasadas.junio.id)
+                        if (evalPasadas.junio.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalPasadas.junio.id}/#{objetivos[0].id}") Junio - Calificación: #{evalPasadas.junio.final}%
+                        else if (evalPasadas.junio.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalPasadas.junio.id}/#{objetivos[0].id}") Junio - Calificación: #{evalPasadas.junio.final}%
+                            else if (evalPasadas.junio.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalPasadas.junio.id}/#{objetivos[0].id}") Junio - Calificación: #{evalPasadas.junio.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalPasadas.junio.id}/#{objetivos[0].id}") Junio - Calificación: #{evalPasadas.junio.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/junio/#{objetivos[0].id}") Junio
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalPasadas.julio.id)
+                        if (evalPasadas.julio.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalPasadas.julio.id}/#{objetivos[0].id}") Julio - Calificación: #{evalPasadas.julio.final}%
+                        else if (evalPasadas.julio.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalPasadas.julio.id}/#{objetivos[0].id}") Julio - Calificación: #{evalPasadas.julio.final}%
+                            else if (evalPasadas.julio.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalPasadas.julio.id}/#{objetivos[0].id}") Julio - Calificación: #{evalPasadas.julio.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalPasadas.julio.id}/#{objetivos[0].id}") Julio - Calificación: #{evalPasadas.julio.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/julio/#{objetivos[0].id}") Julio
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalPasadas.agosto.id)
+                        if (evalPasadas.agosto.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalPasadas.agosto.id}/#{objetivos[0].id}") Agosto - Calificación: #{evalPasadas.agosto.final}%
+                        else if (evalPasadas.agosto.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalPasadas.agosto.id}/#{objetivos[0].id}") Agosto - Calificación: #{evalPasadas.agosto.final}%
+                            else if (evalPasadas.agosto.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalPasadas.agosto.id}/#{objetivos[0].id}") Agosto - Calificación: #{evalPasadas.agosto.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalPasadas.agosto.id}/#{objetivos[0].id}") Agosto - Calificación: #{evalPasadas.agosto.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/agosto/#{objetivos[0].id}") Agosto
+            .row(style="margin:0; padding:0;")
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 15px;")
+                    if(evalPasadas.septiembre.id)
+                        if (evalPasadas.septiembre.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalPasadas.septiembre.id}/#{objetivos[0].id}") Septiembre - Calificación: #{evalPasadas.septiembre.final}%
+                        else if (evalPasadas.septiembre.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalPasadas.septiembre.id}/#{objetivos[0].id}") Septiembre - Calificación: #{evalPasadas.septiembre.final}%
+                            else if (evalPasadas.septiembre.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalPasadas.septiembre.id}/#{objetivos[0].id}") Septiembre - Calificación: #{evalPasadas.septiembre.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalPasadas.septiembre.id}/#{objetivos[0].id}") Septiembre - Calificación: #{evalPasadas.septiembre.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/septiembre/#{objetivos[0].id}") Septiembre
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalPasadas.octubre.id)
+                        if (evalPasadas.octubre.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalPasadas.octubre.id}/#{objetivos[0].id}") Octubre - Calificación: #{evalPasadas.octubre.final}%
+                        else if (evalPasadas.octubre.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalPasadas.octubre.id}/#{objetivos[0].id}") Octubre - Calificación: #{evalPasadas.octubre.final}%
+                            else if (evalPasadas.octubre.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalPasadas.octubre.id}/#{objetivos[0].id}") Octubre - Calificación: #{evalPasadas.octubre.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalPasadas.octubre.id}/#{objetivos[0].id}") Octubre - Calificación: #{evalPasadas.octubre.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/octubre/#{objetivos[0].id}") Octubre
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalPasadas.noviembre.id)
+                        if (evalPasadas.noviembre.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalPasadas.noviembre.id}/#{objetivos[0].id}") Noviembre - Calificación: #{evalPasadas.noviembre.final}%
+                        else if (evalPasadas.noviembre.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalPasadas.noviembre.id}/#{objetivos[0].id}") Noviembre - Calificación: #{evalPasadas.noviembre.final}%
+                            else if (evalPasadas.noviembre.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalPasadas.noviembre.id}/#{objetivos[0].id}") Noviembre - Calificación: #{evalPasadas.noviembre.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalPasadas.noviembre.id}/#{objetivos[0].id}") Noviembre - Calificación: #{evalPasadas.noviembre.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/noviembre/#{objetivos[0].id}") Noviembre
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 15px 0px;")
+                    if(evalPasadas.diciembre.id)
+                        if (evalPasadas.diciembre.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalPasadas.diciembre.id}/#{objetivos[0].id}") Diciembre - Calificación: #{evalPasadas.diciembre.final}%
+                        else if (evalPasadas.diciembre.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalPasadas.diciembre.id}/#{objetivos[0].id}") Diciembre - Calificación: #{evalPasadas.diciembre.final}%
+                            else if (evalPasadas.diciembre.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalPasadas.diciembre.id}/#{objetivos[0].id}") Diciembre - Calificación: #{evalPasadas.diciembre.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalPasadas.diciembre.id}/#{objetivos[0].id}") Diciembre - Calificación: #{evalPasadas.diciembre.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/diciembre/#{objetivos[0].id}") Diciembre    
+        div#actuales
+            .row(style="margin:0; padding:0;") 
+                .col-lg-3.mes(style="border-radius: 15px 0px 0px 0px;")
+                    if(evalActuales.enero.id)
+                        if (evalActuales.enero.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalActuales.enero.id}/#{objetivos[0].id}") Enero - Calificación: #{evalActuales.enero.final}%
+                        else if (evalActuales.enero.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalActuales.enero.id}/#{objetivos[0].id}") Enero - Calificación: #{evalActuales.enero.final}%
+                            else if (evalActuales.enero.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalActuales.enero.id}/#{objetivos[0].id}") Enero - Calificación: #{evalActuales.enero.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalActuales.enero.id}/#{objetivos[0].id}") Enero - Calificación: #{evalActuales.enero.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/enero/#{objetivos[0].id}") Enero
+                .col-lg-3.mes(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalActuales.febrero.id)
+                        if (evalActuales.febrero.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalActuales.febrero.id}/#{objetivos[0].id}") Febrero - Calificación: #{evalActuales.febrero.final}%
+                        else if (evalActuales.febrero.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalActuales.febrero.id}/#{objetivos[0].id}") Febrero - Calificación: #{evalActuales.febrero.final}%
+                            else if (evalActuales.febrero.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalActuales.febrero.id}/#{objetivos[0].id}") Febrero - Calificación: #{evalActuales.febrero.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalActuales.febrero.id}/#{objetivos[0].id}") Febrero - Calificación: #{evalActuales.febrero.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/febrero/#{objetivos[0].id}") Febrero
+                .col-lg-3.mes(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalActuales.marzo.id)
+                        if (evalActuales.marzo.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalActuales.marzo.id}/#{objetivos[0].id}") Marzo - Calificación: #{evalActuales.marzo.final}%
+                        else if (evalActuales.marzo.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalActuales.marzo.id}/#{objetivos[0].id}") Marzo - Calificación: #{evalActuales.marzo.final}%
+                            else if (evalActuales.marzo.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalActuales.marzo.id}/#{objetivos[0].id}") Marzo - Calificación: #{evalActuales.marzo.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalActuales.marzo.id}/#{objetivos[0].id}") Marzo - Calificación: #{evalActuales.marzo.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/marzo/#{objetivos[0].id}") Marzo
+                .col-lg-3.mes(style="border-radius: 0px 15px 0px 0px;")
+                    if(evalActuales.abril.id)
+                        if (evalActuales.abril.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalActuales.abril.id}/#{objetivos[0].id}") Abril - Calificación: #{evalActuales.abril.final}%
+                        else if (evalActuales.abril.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalActuales.abril.id}/#{objetivos[0].id}") Abril - Calificación: #{evalActuales.abril.final}%
+                            else if (evalActuales.abril.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalActuales.abril.id}/#{objetivos[0].id}") Abril - Calificación: #{evalActuales.abril.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalActuales.abril.id}/#{objetivos[0].id}") Abril - Calificación: #{evalActuales.abril.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/abril/#{objetivos[0].id}") Abril
+            .row(style="margin:0; padding:0;")
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalActuales.mayo.id)
+                        if (evalActuales.mayo.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalActuales.mayo.id}/#{objetivos[0].id}") Mayo - Calificación: #{evalActuales.mayo.final}%
+                        else if (evalActuales.mayo.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalActuales.mayo.id}/#{objetivos[0].id}") Mayo - Calificación: #{evalActuales.mayo.final}%
+                            else if (evalActuales.mayo.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalActuales.mayo.id}/#{objetivos[0].id}") Mayo - Calificación: #{evalActuales.mayo.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalActuales.mayo.id}/#{objetivos[0].id}") Mayo - Calificación: #{evalActuales.mayo.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/mayo/#{objetivos[0].id}") Mayo
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalActuales.junio.id)
+                        if (evalActuales.junio.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalActuales.junio.id}/#{objetivos[0].id}") Junio - Calificación: #{evalActuales.junio.final}%
+                        else if (evalActuales.junio.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalActuales.junio.id}/#{objetivos[0].id}") Junio - Calificación: #{evalActuales.junio.final}%
+                            else if (evalActuales.junio.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalActuales.junio.id}/#{objetivos[0].id}") Junio - Calificación: #{evalActuales.junio.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalActuales.junio.id}/#{objetivos[0].id}") Junio - Calificación: #{evalActuales.junio.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/junio/#{objetivos[0].id}") Junio
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalActuales.julio.id)
+                        if (evalActuales.julio.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalActuales.julio.id}/#{objetivos[0].id}") Julio - Calificación: #{evalActuales.julio.final}%
+                        else if (evalActuales.julio.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalActuales.julio.id}/#{objetivos[0].id}") Julio - Calificación: #{evalActuales.julio.final}%
+                            else if (evalActuales.julio.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalActuales.julio.id}/#{objetivos[0].id}") Julio - Calificación: #{evalActuales.julio.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalActuales.julio.id}/#{objetivos[0].id}") Julio - Calificación: #{evalActuales.julio.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/julio/#{objetivos[0].id}") Julio
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalActuales.agosto.id)
+                        if (evalActuales.agosto.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalActuales.agosto.id}/#{objetivos[0].id}") Agosto - Calificación: #{evalActuales.agosto.final}%
+                        else if (evalActuales.agosto.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalActuales.agosto.id}/#{objetivos[0].id}") Agosto - Calificación: #{evalActuales.agosto.final}%
+                            else if (evalActuales.agosto.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalActuales.agosto.id}/#{objetivos[0].id}") Agosto - Calificación: #{evalActuales.agosto.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalActuales.agosto.id}/#{objetivos[0].id}") Agosto - Calificación: #{evalActuales.agosto.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/agosto/#{objetivos[0].id}") Agosto
+            .row(style="margin:0; padding:0;")
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 15px;")
+                    if(evalActuales.septiembre.id)
+                        if (evalActuales.septiembre.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalActuales.septiembre.id}/#{objetivos[0].id}") Septiembre - Calificación: #{evalActuales.septiembre.final}%
+                        else if (evalActuales.septiembre.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalActuales.septiembre.id}/#{objetivos[0].id}") Septiembre - Calificación: #{evalActuales.septiembre.final}%
+                            else if (evalActuales.septiembre.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalActuales.septiembre.id}/#{objetivos[0].id}") Septiembre - Calificación: #{evalActuales.septiembre.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalActuales.septiembre.id}/#{objetivos[0].id}") Septiembre - Calificación: #{evalActuales.septiembre.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/septiembre/#{objetivos[0].id}") Septiembre
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalActuales.octubre.id)
+                        if (evalActuales.octubre.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalActuales.octubre.id}/#{objetivos[0].id}") Octubre - Calificación: #{evalActuales.octubre.final}%
+                        else if (evalActuales.octubre.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalActuales.octubre.id}/#{objetivos[0].id}") Octubre - Calificación: #{evalActuales.octubre.final}%
+                            else if (evalActuales.octubre.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalActuales.octubre.id}/#{objetivos[0].id}") Octubre - Calificación: #{evalActuales.octubre.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalActuales.octubre.id}/#{objetivos[0].id}") Octubre - Calificación: #{evalActuales.octubre.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/octubre/#{objetivos[0].id}") Octubre
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalActuales.noviembre.id)
+                        if (evalActuales.noviembre.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalActuales.noviembre.id}/#{objetivos[0].id}") Noviembre - Calificación: #{evalActuales.noviembre.final}%
+                        else if (evalActuales.noviembre.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalActuales.noviembre.id}/#{objetivos[0].id}") Noviembre - Calificación: #{evalActuales.noviembre.final}%
+                            else if (evalActuales.noviembre.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalActuales.noviembre.id}/#{objetivos[0].id}") Noviembre - Calificación: #{evalActuales.noviembre.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalActuales.noviembre.id}/#{objetivos[0].id}") Noviembre - Calificación: #{evalActuales.noviembre.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/noviembre/#{objetivos[0].id}") Noviembre
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 15px 0px;")
+                    if(evalActuales.diciembre.id)
+                        if (evalActuales.diciembre.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalActuales.diciembre.id}/#{objetivos[0].id}") Diciembre - Calificación: #{evalActuales.diciembre.final}%
+                        else if (evalActuales.diciembre.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalActuales.diciembre.id}/#{objetivos[0].id}") Diciembre - Calificación: #{evalActuales.diciembre.final}%
+                            else if (evalActuales.diciembre.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalActuales.diciembre.id}/#{objetivos[0].id}") Diciembre - Calificación: #{evalActuales.diciembre.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalActuales.diciembre.id}/#{objetivos[0].id}") Diciembre - Calificación: #{evalActuales.diciembre.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/diciembre/#{objetivos[0].id}") Diciembre
+        div#futuras.hidden
+            .row(style="margin:0; padding:0;") 
+                .col-lg-3.mes(style="border-radius: 15px 0px 0px 0px;")
+                    if(evalFuturas.enero.id)
+                        if (evalFuturas.enero.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalFuturas.enero.id}/#{objetivos[0].id}") Enero - Calificación: #{evalFuturas.enero.final}%
+                        else if (evalFuturas.enero.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalFuturas.enero.id}/#{objetivos[0].id}") Enero - Calificación: #{evalFuturas.enero.final}%
+                            else if (evalFuturas.enero.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalFuturas.enero.id}/#{objetivos[0].id}") Enero - Calificación: #{evalFuturas.enero.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalFuturas.enero.id}/#{objetivos[0].id}") Enero - Calificación: #{evalFuturas.enero.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/enero/#{objetivos[0].id}") Enero
+                .col-lg-3.mes(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalFuturas.febrero.id)
+                        if (evalFuturas.febrero.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalFuturas.febrero.id}/#{objetivos[0].id}") Febrero - Calificación: #{evalFuturas.febrero.final}%
+                        else if (evalFuturas.febrero.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalFuturas.febrero.id}/#{objetivos[0].id}") Febrero - Calificación: #{evalFuturas.febrero.final}%
+                            else if (evalFuturas.febrero.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalFuturas.febrero.id}/#{objetivos[0].id}") Febrero - Calificación: #{evalFuturas.febrero.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalFuturas.febrero.id}/#{objetivos[0].id}") Febrero - Calificación: #{evalFuturas.febrero.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/febrero/#{objetivos[0].id}") Febrero
+                .col-lg-3.mes(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalFuturas.marzo.id)
+                        if (evalFuturas.marzo.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalFuturas.marzo.id}/#{objetivos[0].id}") Marzo - Calificación: #{evalFuturas.marzo.final}%
+                        else if (evalFuturas.marzo.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalFuturas.marzo.id}/#{objetivos[0].id}") Marzo - Calificación: #{evalFuturas.marzo.final}%
+                            else if (evalFuturas.marzo.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalFuturas.marzo.id}/#{objetivos[0].id}") Marzo - Calificación: #{evalFuturas.marzo.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalFuturas.marzo.id}/#{objetivos[0].id}") Marzo - Calificación: #{evalFuturas.marzo.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/marzo/#{objetivos[0].id}") Marzo
+                .col-lg-3.mes(style="border-radius: 0px 15px 0px 0px;")
+                    if(evalFuturas.abril.id)
+                        if (evalFuturas.abril.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalFuturas.abril.id}/#{objetivos[0].id}") Abril - Calificación: #{evalFuturas.abril.final}%
+                        else if (evalFuturas.abril.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalFuturas.abril.id}/#{objetivos[0].id}") Abril - Calificación: #{evalFuturas.abril.final}%
+                            else if (evalFuturas.abril.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalFuturas.abril.id}/#{objetivos[0].id}") Abril - Calificación: #{evalFuturas.abril.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalFuturas.abril.id}/#{objetivos[0].id}") Abril - Calificación: #{evalFuturas.abril.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/abril/#{objetivos[0].id}") Abril
+            .row(style="margin:0; padding:0;")
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalFuturas.mayo.id)
+                        if (evalFuturas.mayo.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalFuturas.mayo.id}/#{objetivos[0].id}") Mayo - Calificación: #{evalFuturas.mayo.final}%
+                        else if (evalFuturas.mayo.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalFuturas.mayo.id}/#{objetivos[0].id}") Mayo - Calificación: #{evalFuturas.mayo.final}%
+                            else if (evalFuturas.mayo.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalFuturas.mayo.id}/#{objetivos[0].id}") Mayo - Calificación: #{evalFuturas.mayo.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalFuturas.mayo.id}/#{objetivos[0].id}") Mayo - Calificación: #{evalFuturas.mayo.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/mayo/#{objetivos[0].id}") Mayo
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalFuturas.junio.id)
+                        if (evalFuturas.junio.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalFuturas.junio.id}/#{objetivos[0].id}") Junio - Calificación: #{evalFuturas.junio.final}%
+                        else if (evalFuturas.junio.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalFuturas.junio.id}/#{objetivos[0].id}") Junio - Calificación: #{evalFuturas.junio.final}%
+                            else if (evalFuturas.junio.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalFuturas.junio.id}/#{objetivos[0].id}") Junio - Calificación: #{evalFuturas.junio.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalFuturas.junio.id}/#{objetivos[0].id}") Junio - Calificación: #{evalFuturas.junio.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/junio/#{objetivos[0].id}") Junio
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalFuturas.julio.id)
+                        if (evalFuturas.julio.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalFuturas.julio.id}/#{objetivos[0].id}") Julio - Calificación: #{evalFuturas.julio.final}%
+                        else if (evalFuturas.julio.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalFuturas.julio.id}/#{objetivos[0].id}") Julio - Calificación: #{evalFuturas.julio.final}%
+                            else if (evalFuturas.julio.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalFuturas.julio.id}/#{objetivos[0].id}") Julio - Calificación: #{evalFuturas.julio.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalFuturas.julio.id}/#{objetivos[0].id}") Julio - Calificación: #{evalFuturas.julio.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/julio/#{objetivos[0].id}") Julio
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalFuturas.agosto.id)
+                        if (evalFuturas.agosto.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalFuturas.agosto.id}/#{objetivos[0].id}") Agosto - Calificación: #{evalFuturas.agosto.final}%
+                        else if (evalFuturas.agosto.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalFuturas.agosto.id}/#{objetivos[0].id}") Agosto - Calificación: #{evalFuturas.agosto.final}%
+                            else if (evalFuturas.agosto.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalFuturas.agosto.id}/#{objetivos[0].id}") Agosto - Calificación: #{evalFuturas.agosto.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalFuturas.agosto.id}/#{objetivos[0].id}") Agosto - Calificación: #{evalFuturas.agosto.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/agosto/#{objetivos[0].id}") Agosto
+            .row(style="margin:0; padding:0;")
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 15px;")
+                    if(evalFuturas.septiembre.id)
+                        if (evalFuturas.septiembre.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalFuturas.septiembre.id}/#{objetivos[0].id}") Septiembre - Calificación: #{evalFuturas.septiembre.final}%
+                        else if (evalFuturas.septiembre.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalFuturas.septiembre.id}/#{objetivos[0].id}") Septiembre - Calificación: #{evalFuturas.septiembre.final}%
+                            else if (evalFuturas.septiembre.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalFuturas.septiembre.id}/#{objetivos[0].id}") Septiembre - Calificación: #{evalFuturas.septiembre.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalFuturas.septiembre.id}/#{objetivos[0].id}") Septiembre - Calificación: #{evalFuturas.septiembre.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/septiembre/#{objetivos[0].id}") Septiembre
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalFuturas.octubre.id)
+                        if (evalFuturas.octubre.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalFuturas.octubre.id}/#{objetivos[0].id}") Octubre - Calificación: #{evalFuturas.octubre.final}%
+                        else if (evalFuturas.octubre.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalFuturas.octubre.id}/#{objetivos[0].id}") Octubre - Calificación: #{evalFuturas.octubre.final}%
+                            else if (evalFuturas.octubre.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalFuturas.octubre.id}/#{objetivos[0].id}") Octubre - Calificación: #{evalFuturas.octubre.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalFuturas.octubre.id}/#{objetivos[0].id}") Octubre - Calificación: #{evalFuturas.octubre.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/octubre/#{objetivos[0].id}") Octubre
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 0px 0px;")
+                    if(evalFuturas.noviembre.id)
+                        if (evalFuturas.noviembre.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalFuturas.noviembre.id}/#{objetivos[0].id}") Noviembre - Calificación: #{evalFuturas.noviembre.final}%
+                        else if (evalFuturas.noviembre.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalFuturas.noviembre.id}/#{objetivos[0].id}") Noviembre - Calificación: #{evalFuturas.noviembre.final}%
+                            else if (evalFuturas.noviembre.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalFuturas.noviembre.id}/#{objetivos[0].id}") Noviembre - Calificación: #{evalFuturas.noviembre.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalFuturas.noviembre.id}/#{objetivos[0].id}") Noviembre - Calificación: #{evalFuturas.noviembre.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/noviembre/#{objetivos[0].id}") Noviembre
+                .col-lg-3.mes.btn(style="border-radius: 0px 0px 15px 0px;")
+                    if(evalFuturas.diciembre.id)
+                        if (evalFuturas.diciembre.final < 70)
+                            a.enlace.btn.btn-danger(href="/evaluaciones/ver/#{evalFuturas.diciembre.id}/#{objetivos[0].id}") Diciembre - Calificación: #{evalFuturas.diciembre.final}%
+                        else if (evalFuturas.diciembre.final < 85)
+                                a.enlace.btn.btn-warning(href="/evaluaciones/ver/#{evalFuturas.diciembre.id}/#{objetivos[0].id}") Diciembre - Calificación: #{evalFuturas.diciembre.final}%
+                            else if (evalFuturas.diciembre.final < 99)
+                                    a.enlace.btn.btn-primary(href="/evaluaciones/ver/#{evalFuturas.diciembre.id}/#{objetivos[0].id}") Diciembre - Calificación: #{evalFuturas.diciembre.final}%
+                                else
+                                    a.enlace.btn.btn-success(href="/evaluaciones/ver/#{evalFuturas.diciembre.id}/#{objetivos[0].id}") Diciembre - Calificación: #{evalFuturas.diciembre.final}%
+                    else
+                        a.enlace(href="/evaluaciones/evaluar/#{empleado.id}/diciembre/#{objetivos[0].id}") Diciembre
+        

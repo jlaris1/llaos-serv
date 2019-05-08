@@ -1,0 +1,437 @@
+extends ../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){ 
+            $('#chkIVA').checkboxpicker({
+                offLabel: 'No',
+                onLabel: 'Si'
+            });
+
+            cambioBanco();
+            obtenerfecha();
+            obtenerhora();
+            hiddens();
+            cambiosMoneda();
+
+            $('#chkIVA').on('change', function() {
+                if($(this).is(":checked") == true){
+                    calcularMontos();
+                    $('#panelIVA').removeClass('hidden');
+                } else {
+                    calcularMontos();
+                    $('#panelIVA').addClass('hidden');
+                }
+            });
+
+            $('#cantidad').on('change',function(){
+               calcularMontos();
+            });
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $('#subMenuProvExt').removeClass('hidden');
+            $('#spanMenuProvExt').removeClass('fa-angle-left');
+            $('#spanMenuProvExt').addClass('fa-angle-down');
+
+            
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        function calcularMontos(){
+            var iva;
+            var importe;
+            var total;
+            var cantidad;
+
+            if($('#chkIVA').is(":checked")){
+                cantidad = parseFloat($('#cantidad').val());
+                importe = parseFloat($('#precioUnitario').val()) * cantidad;
+                iva = parseFloat($('#precioUnitario').val() *.16) * parseFloat($('#cantidad').val());
+                total = importe + iva;
+
+                $('#IVA').val(iva.toFixed(2));
+                $('#precioNeto').val(total.toFixed(2))
+            } else {
+                cantidad = parseFloat($('#cantidad').val());
+                importe = parseFloat($('#precioUnitario').val()) * cantidad;
+                $('#precioNeto').val(importe.toFixed(2))
+                $('#IVA').val(0);
+            }   
+        }
+
+        function hiddens(){
+            if($('#prov').val() != ''){
+                $('#prov').prop('readonly', true);
+            }
+
+            if($('#coti').val() != ''){
+                $('#coti').prop('readonly', true);
+            }
+
+            if($('#vig').val() != ''){
+                $('#vig').prop('readonly', true);
+            }
+
+            if($('#obs').val() != ''){
+                $('#obs').prop('readonly', true);
+            }
+
+            if($('#mon').val() != ''){
+                $('#mon').prop('disabled', true);
+            }
+
+            if($('#tip').val() != ''){
+                $('#tip').prop('readonly', true);
+            }
+        }
+
+        function cambiosMoneda(){
+            if($('#mon').val() == "MXN") {
+                $('#tipoC').addClass('hidden');
+                $("#tip").prop('required', false);
+            } else {
+                $('#tipoC').removeClass('hidden');
+                $("#tip").prop('required', );
+            }
+        }
+
+        window.onload = function () { 
+            var sub = parseFloat($('#sub').text());
+            var iva = parseFloat($('#iva').text());
+            var total = parseFloat($('#total').text());
+            var nArt = parseFloat($('#numArt').text());
+
+            for(var i = 0; i < nArt; i++){
+               $('#pCant'+ i).text(parseFloat($('#pCant'+ i).text()).toFixed(2)); 
+               $('#pArt'+ i).text("$ " + parseFloat($('#pArt'+ i).text()).toFixed(2)); 
+            }
+
+            $('#sub').text(sub.toFixed(2));
+            $('#iva').text(iva.toFixed(2)); 
+            $('#total').text(total.toFixed(2));
+        }
+
+        function cambioBanco(){
+            if ($('#cmbBanco').val() == "Santander"){
+                $('#clabe').addClass('hidden');
+                $('#cbe').prop('required', false);
+                $('#cuenta').removeClass('hidden');
+                $('#cta').prop('required', true);
+            } else {
+                $('#clabe').removeClass('hidden');
+                $('#cbe').prop('required', true);
+                $('#cuenta').addClass('hidden');
+                $('#cta').prop('required', false);
+            } 
+        }
+    //Termina Javascript
+    .row
+        .col-lg-12
+            h2.page-header 
+                i.fas.fa-money-check-alt(style="margin-right: 10px;")
+                |   Nueva cotización
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Realiza: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .row
+        .col-lg-12
+            h4.page-header
+                i.fas.fa-bars(style="margin-right: 10px;")
+                | Datos cotización
+    form(role="form" method="post" action="/externos/cotizacion/articulo/agregar")
+        
+        // Datos de la cotización
+        .row
+            .col-lg-4.hidden
+                .form-group
+                    label | Código
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input.form-control(type="text" name="codigo_id" value="#{cotizacion}")
+            .col-lg-12
+                .form-group
+                    label | Nombre Proveedor
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#prov.form-control(type="text" name="proveedor" value="#{proveedor}" placeholder="Nombre Proveedor" tabindex="1")
+        .row
+            .col-lg-3
+                .form-group
+                    label | No. Cotización
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#coti.form-control(required type="text" name="codigo_cotizacion" placeholder="No. Cotización" value="#{codigo_cot}" tabindex="2")
+            .col-lg-3
+                .form-group
+                    label | Vigencia Cotización
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar-o
+                        input#vig.form-control(type="text" name="vigencia" value="#{vigencia}" placeholder="Vigencia" tabindex="3")
+            .col-lg-3
+                .form-group
+                    label | Moneda
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        select#mon.form-control(required name="moneda" onchange="cambiosMoneda()" tabindex="4")
+                            option(value="MXN", selected=("MXN"== moneda)) Pesos - MXN
+                            option(value="USD",  selected=("USD"== moneda)) Dólares - USD
+            .col-lg-3#tipoC
+                .form-group
+                    label | Tipo de cambio 
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-chart-line
+                        input#tip.form-control(required type="text" name="tipoCambio" value="#{tipoCambio}" placeholder="Tipo de cambio" tabindex="5")      
+        .row 
+            .col-lg-12
+                .form-group
+                    label | Observaciones / Comentarios / Condiciones 
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-clipboard-check
+                        input#obs.form-control(required type="text" name="observaciones" value="#{observaciones}" placeholder="Observaciones / Comentarios / Condiciones" tabindex="6")
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-university(style="margin-right: 10px;")
+                    | Datos bancarios
+        .row
+            .col-lg-4
+                .form-group
+                    label | Banco
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-university
+                        select.form-control(required id="cmbBanco" name="banco" onchange="cambioBanco()" tabindex="7")
+                            option(value="Santander") Santander
+                            option(value="CitiBanamex") CitiBanamex
+                            option(value="BBVA Bancomer") BBVA Bancomer
+                            option(value="Banco Azteca") Banco Azteca
+                            option(value="Inbursa") Inbursa
+                            option(value="Banorte") Banorte
+                            option(value="HSBC") HSBC
+                            option(value="BanBajio") BanBajio
+                            option(value="Scotiabank") Scotiabank
+                            option(value="BanRegio") BanRegio
+                            option(value="BanCoppel") BanCoppel
+                            option(value="CiBanco") CiBanco
+                            option(value="STP") STP
+            .col-lg-4#cuenta
+                .form-group
+                    label | Cuenta
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#cta.form-control(required type="text" name="cuenta" placeholder="Cuenta" tabindex="8")
+            .col-lg-4#clabe
+                .form-group
+                    label | Clabe Interbancaria
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-money-check
+                        input#cbe.form-control(type="text" name="clabe" placeholder="Clabe" tabindex="9")
+        
+            
+        // Datos del artículo
+        .row
+            .col-lg-12
+                h4.page-header
+                    i.fas.fa-box(style="margin-right: 10px;")
+                    | Datos artículo
+        .row
+            .col-lg-3
+                .form-group
+                    label | Código Artículo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#codigo.form-control(required type="text" name="codigo" placeholder="Código" tabindex="10")
+            .col-lg-2
+                .form-group
+                    label | Unidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-asterisk
+                        input.form-control(required type="text" name="unidad" placeholder="Unidad" tabindex="11")
+            .col-lg-7
+                .form-group
+                    label | Nombre / Descripción
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-bars
+                        input.form-control(required type="text" name="descripcion" placeholder="Nombre / Descripción" tabindex="12")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Cantidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#cantidad.form-control(required type="number" name="cantidad" step="0.01" min=0.00 value="1.0" placeholder="Cantidad" onkeyup="calcularMontos()" tabindex="13")
+            .col-lg-3
+                .form-group
+                    label | Precio Unitario
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input#precioUnitario.form-control(required type="number" name="precioUnitario" min=0.00 placeholder="Precio Unitario" onkeyup="calcularMontos()" step=".01" tabindex="14")
+            #panelIVA.col-lg-3
+                .form-group
+                    label | IVA
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input#IVA.form-control(readonly type="text" min=0 name="iva")
+            .col-lg-3
+                .form-group
+                    label | Importe 
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-dollar-sign
+                        input#precioNeto.form-control(required readonly type="text" name="importe" placeholder="Importe")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Tiempo de Entrega 
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar
+                        input.form-control(required type="text" name="tiempoEntrega" placeholder="Tiempo de entrega" tabindex="15")
+            .col-lg-6(style="margin-top: 25px;")
+                .form-check
+                    input#chkIVA(type="checkbox" checked tabindex="16")
+                    label(style="margin-left: 15px;")
+                        |   ¿Incluye IVA?
+        .divider
+        .row(style="margin-bottom: 20px;")
+            .col-lg-2.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-plus-circle.text-success
+                        button.btn.btn-success.form-control(type="submit" tabindex="17")
+                            |   Agregar
+    if Object.keys(articulos).length > 0
+        .row
+            .col-lg-12(style="margin-top: -45px;")
+                h4.page-header
+                    i.fas.fa-boxes(style="margin-right: 10px;")
+                    | Artículos en cotización
+        .row
+            .col-lg-12
+                table.table
+                    thead
+                        tr
+                            th Cantidad
+                            th Código
+                            th Unidad
+                            th Nombre / Descripción
+                            th Precio Neto
+                            th Tiempo Entrega
+                            th Acciones
+                    tbody
+                        label.hidden#numArt #{ Object.keys(articulos).length }
+                        each art, index in articulos
+                            tr
+                                td(id="pCant#{index}") #{art.cantidad}
+                                td #{art.codigo}
+                                td #{art.unidad}
+                                td #{art.descripcion}
+                                td(id="pArt#{index}") #{art.precioUnitario}
+                                td #{art.tiempoEntrega}
+                                td
+                                    a(href="/externos/cotizacion/articulo/eliminar/#{art.id}/#{cotizacion}", data-toggle="tooltip", data-placement="top",title="Agregar")
+                                        i.fas.fa-minus-circle.text-danger.fa-lg
+        .divider
+        .row.pull-right
+            .col-lg-12
+                table.table
+                    thead
+                    tbody
+                        tr
+                            td.text-right
+                                label
+                                    | Subtotal
+                            td.text-right $
+                            td.text-right#sub #{subtotal}
+                        tr
+                            td.text-right
+                                label
+                                    | I.V.A
+                            td.text-right $
+                            td.text-right#iva #{iva}
+                        tr
+                            td.text-right
+                                label
+                                    | Total
+                            td.text-right $
+                            td.text-right#total #{total}
+        .divider
+        .row(style="margin-bottom: 20px;")
+            .col-lg-2.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fa.fa-envelope.text-primary
+                        a.btn.btn-primary.form-control(href="/externos/cotizacion/enviar/#{cotizacion}/1" tabindex="18")
+                            |   Enviar     
+            .col-lg-2.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-file-pdf.text-danger
+                        a.btn.btn-danger.form-control(href="/externos/cotizacion/generar/pdf/#{cotizacion}/2" style="margin-right: 15px;" tabindex="19") 
+                            |   PDF                      
