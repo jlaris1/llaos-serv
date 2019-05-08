@@ -29,11 +29,12 @@ require('mongoose-double')(mongoose);
 // Eliminar mensaje deprecation warning
 mongoose.Promise = global.Promise;
 
-const dbConCloud = "mongodb://llaos-bd:%40Llaos2019@llaos-serv-y0xgc.gcp.mongodb.net/llaosserv";
+const dbConCloud = "mongodb://llaos-bd:%40Llaos2019@llaos-serv-y0xgc.gcp.mongodb.net/llaosserv?retryWrites=true";
+const dbConCloudLarge = "mongodb://llaos-bd:%40Llaos2019@llaos-serv-shard-00-00-y0xgc.gcp.mongodb.net:27017,llaos-serv-shard-00-01-y0xgc.gcp.mongodb.net:27017,llaos-serv-shard-00-02-y0xgc.gcp.mongodb.net:27017/test?ssl=true&replicaSet=llaos-serv-shard-0&authSource=admin&retryWrites=true"
 const dbConLocal = "mongodb://localhost:27017/llaosserv";
 
 
-mongoose.connect(dbConCloud,  { useNewUrlParser: true });
+mongoose.connect(dbConCloudLarge,  { useNewUrlParser: true });
 
 // Indicar a express que el motor visual será JADE/PUG
 app.set("view engine","jade");
