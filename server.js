@@ -28,11 +28,11 @@ require('mongoose-double')(mongoose);
 // Eliminar mensaje deprecation warning
 mongoose.Promise = global.Promise;
 
-// conexión a base de datos local mongoDB 
-//mongoose.connect("mongodb://localhost:27017/llaosserv",  { useNewUrlParser: true });
+const dbConCloud = "mongodb+srv://llaos-bd:%40Llaos2019@llaos-serv-y0xgc.mongodb.net/llaosserv?retryWrites=true";
+const dbConLocal = "mongodb://localhost:27017/llaosserv";
 
-// conexión a mongodb Atlas
-mongoose.connect("mongodb+srv://llaos-bd:%40Llaos2019@llaos-serv-y0xgc.mongodb.net/llaosserv",  { useNewUrlParser: true });
+
+mongoose.connect(dbConCloud,  { useNewUrlParser: true });
 
 // Indicar a express que el motor visual será JADE/PUG
 app.set("view engine","jade");
