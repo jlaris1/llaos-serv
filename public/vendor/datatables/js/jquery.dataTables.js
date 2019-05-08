@@ -6821,7 +6821,7 @@
 	 *
 	 * @example
 	 *   // Direct initialisation during DataTables construction
-	 *   var api = $('#example').DataTable();
+	 *   var api = $('#example')..dataTable();
 	 *
 	 * @example
 	 *   // Initialisation using a DataTables jQuery object
