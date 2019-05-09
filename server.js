@@ -33,7 +33,7 @@ const dbConCloud = "mongodb://llaos-bd:%40Llaos2019@llaos-serv-shard-00-00-y0xgc
 const dbConLocal = "mongodb://localhost:27017/llaosserv";
 
 
-mongoose.connect(dbConLocal,  { useNewUrlParser: true });
+mongoose.connect(dbConCloud,  { useNewUrlParser: true });
 
 // Indicar a express que el motor visual será JADE/PUG
 app.set("view engine","jade");
