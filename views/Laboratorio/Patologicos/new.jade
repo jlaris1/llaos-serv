@@ -28,6 +28,12 @@ block contenido
             $('#hepato_IIIcnhp').keyup(function(){ calcularScore(); });
             $('#hepato_IIIcvib').keyup(function(){ calcularScore(); });
 
+            $('#modulo').on('change', function(){
+                document.frm2.submit();
+            });
+
+            $('#estanque').on('change', function(){ $('#est').val(this.value); });
+            $('#fechaI').on('change', function(){ $('#fec').val(this.value); });
         });
 
         function obtenerfecha(){
@@ -120,355 +126,366 @@ block contenido
             label#fecha(style="margin-right: 10px;")
             label#hora
     .divider
-    .row
-        .col-lg-12
-            form#frm(role="form" method="post" action="/patologicos/add")
-                .row
-                    .col-lg-3
-                        .form-group
-                            label | Estanque
-                            .input-group
-                                span.input-group-addon
-                                    i.fas.fa-water
-                                select.form-control(required name="estanque" tabindex="1")
-                                    option(value="") << Seleccione >>
-                                    each est in estanques
-                                        option(value="#{est.id}") #{ est.codigo}
-                    .col-lg-3
-                        .form-group
-                            label | Fecha
-                            .input-group
-                                span.input-group-addon
-                                    i.fas.fa-calendar-alt
-                                input.form-control(required type="date" name="fecha" tabindex="2")
-                .row
-                    .col-lg-6
-                        .panel.panel-primary
-                            .panel-heading
-                                |   Branquias
-                            .panel-body
+    form#frm(role="form" name="frm2" method="post" action="/patologicos/find")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Módulo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-water
+                        select#modulo.form-control(required name="modulo" tabindex="1")
+                            option(value="") << Seleccione >>
+                            each mod in modulos
+                                option(value="#{mod.id}", selected=(mod.id == modulo)) #{ mod.nombre}
+            .col-lg-3
+                .form-group
+                    label | Estanque
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-water
+                        select#estanque.form-control(name="estanque" tabindex="2")
+                            option(value="") << Seleccione >>
+                            each est in estanques
+                                option(value="#{est.id}") #{ est.codigo}
+            .col-lg-3
+                .form-group
+                    label | Fecha
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar-alt
+                        input#fechaI.form-control(type="date" value="#{patologico.fecha}" name="fecha" tabindex="3")
+    form#frm(role="form" method="post" action="/patologicos/add")
+        input#fec.hidden(type="date" name="fecha")
+        input#est.hidden(type="text" name="estanque")
+        .row
+            .col-lg-6
+                .panel.panel-primary
+                    .panel-heading
+                        |   Branquias
+                    .panel-body
+                        .col-lg-4.col-md-4.col-xs-4
+                            .form-group
+                                label | Necro
+                                input.form-control(type="text" value="#{patologico.branquias_necro}" name="branquias_necro" placeholder="# Necro" tabindex="4")
+                        .col-lg-4.col-md-4.col-xs-4
+                            .form-group
+                                label | Mat. Org.
+                                input.form-control(type="text" value="#{patologico.branquias_mo}" name="branquias_mo" placeholder="# Necro" tabindex="5")
+                        .col-lg-4.col-md-4.col-xs-4
+                            .form-group
+                                label | Epic.
+                                input.form-control(type="text" value="#{patologico.branquias_epic}" name="branquias_epic" placeholder="# Necro" tabindex="6")
+            .col-lg-3
+                .panel.panel-primary
+                    .panel-heading
+                        |   Protozoarios Epicomensales
+                    .panel-body
+                        .col-lg-6.col-md-6.col-xs-6
+                            .form-group
+                                label | P. Labial
+                                input.form-control(type="text" value="#{patologico.plabial}" name="plabial" placeholder="# Necro" tabindex="7")
+                        .col-lg-6.col-md-6.col-xs-6
+                            .form-group
+                                label | Epip
+                                input.form-control(type="text" value="#{patologico.proto_epip}" name="proto_epip" placeholder="# Necro" tabindex="8")
+            .col-lg-3
+                .panel.panel-primary
+                    .panel-heading
+                        |   Intestino Gametocitos
+                    .panel-body
+                        .col-lg-12.col-md-12.col-xs-12
+                            .form-group
+                                label | Grado.
+                                input.form-control(type="text" value="#{patologico.intes_grad}" name="intes_grad" placeholder="# Necro" tabindex="9")
+        .row
+            .col-lg-12
+                .panel.panel-primary
+                    .panel-heading
+                        |   Hepatopáncreas
+                    .panel-body
+                        .col-lg-3
+                            .row.text-center
+                                |   Grado 1
+                            .row
                                 .col-lg-4.col-md-4.col-xs-4
                                     .form-group
-                                        label | Necro
-                                        input.form-control(type="text" value="0" name="branquias_necro" placeholder="# Necro" tabindex="3")
+                                        label | I
+                                        input#hepato_I.form-control(type="text" value="#{patologico.hepato_I}" name="hepato_I" placeholder="# Necro" tabindex="10")
                                 .col-lg-4.col-md-4.col-xs-4
                                     .form-group
-                                        label | Mat. Org.
-                                        input.form-control(type="text" value="0" name="branquias_mo" placeholder="# Necro" tabindex="4")
+                                        label | II NHP
+                                        input#hepato_nhp.form-control(type="text" value="#{patologico.hepato_nhp}" name="hepato_nhp" placeholder="# Necro" tabindex="11")
                                 .col-lg-4.col-md-4.col-xs-4
                                     .form-group
-                                        label | Epic.
-                                        input.form-control(type="text" value="0" name="branquias_epic" placeholder="# Necro" tabindex="5")
-                    .col-lg-3
-                        .panel.panel-primary
-                            .panel-heading
-                                |   Protozoarios Epicomensales
-                            .panel-body
+                                        label | II VIB
+                                        input#hepato_vib.form-control(type="text" value="#{patologico.hepato_vib}" name="hepato_vib" placeholder="# Necro" tabindex="12")
+                        .col-lg-3
+                            .row.text-center
+                                |   Grado 2
+                            .row
                                 .col-lg-6.col-md-6.col-xs-6
                                     .form-group
-                                        label | P. Labial
-                                        input.form-control(type="text" value="0" name="plabial" placeholder="# Necro" tabindex="6")
+                                        label | IIIa NHP
+                                        input#hepato_IIInhp.form-control(type="text" value="#{patologico.hepato_IIInhp}" name="hepato_IIInhp" placeholder="# Necro" tabindex="13")
                                 .col-lg-6.col-md-6.col-xs-6
                                     .form-group
-                                        label | Epip
-                                        input.form-control(type="text" value="0" name="proto_epip" placeholder="# Necro" tabindex="7")
-                    .col-lg-3
-                        .panel.panel-primary
-                            .panel-heading
-                                |   Intestino Gametocitos
-                            .panel-body
+                                        label | IIIa VIB
+                                        input#hepato_IIIvib.form-control(type="text" value="#{patologico.hepato_IIIvib}" name="hepato_IIIvib" placeholder="# Necro" tabindex="14")
+                        .col-lg-3
+                            .row.text-center
+                                |   Grado 3
+                            .row
+                                .col-lg-6.col-md-6.col-xs-6
+                                    .form-group
+                                        label | IIIb NHP
+                                        input#hepato_IIIbnhp.form-control(type="text" value="#{patologico.hepato_IIIbnhp}" name="hepato_IIIbnhp" placeholder="# Necro" tabindex="15")
+                                .col-lg-6.col-md-6.col-xs-6
+                                    .form-group
+                                        label | IIIb VIB
+                                        input#hepato_IIIbvib.form-control(type="text" value="#{patologico.hepato_IIIbvib}" name="hepato_IIIbvib" placeholder="# Necro" tabindex="16")
+                        .col-lg-3
+                            .row.text-center
+                                |   Grado 4
+                            .row
+                                
+                                .col-lg-6.col-md-6.col-xs-6
+                                    .form-group
+                                        label | IIIc NHP
+                                        input#hepato_IIIcnhp.form-control(type="text" value="#{patologico.hepato_IIIcnhp}" name="hepato_IIIcnhp" placeholder="# Necro" tabindex="17")
+                                .col-lg-6.col-md-6.col-xs-6
+                                    .form-group
+                                        label | IIIc VIB
+                                        input#hepato_IIIcvib.form-control(type="text" value="#{patologico.hepato_IIIcvib}" name="hepato_IIIcvib" placeholder="# Necro" tabindex="18")
+        .row
+            .col-lg-3
+                .panel.panel-primary
+                    .panel-heading
+                        |   Lipidos
+                    .panel-body
+                        .row
+                            | &nbsp;
+                        .row
+                            .col-lg-12.col-md-12.col-xs-12
+                                .form-group
+                                    label | Prom
+                                    input.form-control(type="text" value="#{patologico.lip_prom}" name="lip_prom" placeholder="# Necro" tabindex="19")
+            .col-lg-3
+                .panel.panel-primary
+                    .panel-heading
+                        |   No. Organismos
+                    .panel-body
+                        .row
+                            | &nbsp;
+                        .row
+                            .col-lg-12.col-md-12.col-xs-12
+                                .form-group
+                                    label | #
+                                    input#no_org.form-control(readonly type="text" value="#{patologico.no_org}" name="no_org" placeholder="# Necro" tabindex="20")
+            .col-lg-6
+                .panel.panel-primary
+                    .panel-heading
+                        |   Score
+                    .panel-body
+                        .col-lg-4
+                            .row.text-center
+                                |   NHP
+                            .row
                                 .col-lg-12.col-md-12.col-xs-12
                                     .form-group
-                                        label | Grado.
-                                        input.form-control(type="text" value="0" name="intes_grad" placeholder="# Necro" tabindex="8")
-                .row
-                    .col-lg-12
-                        .panel.panel-primary
-                            .panel-heading
-                                |   Hepatopáncreas
-                            .panel-body
-                                .col-lg-3
-                                    .row.text-center
-                                        |   Grado 1
-                                    .row
-                                        .col-lg-4.col-md-4.col-xs-4
-                                            .form-group
-                                                label | I
-                                                input#hepato_I.form-control(type="text" value="0" name="hepato_I" placeholder="# Necro" tabindex="0")
-                                        .col-lg-4.col-md-4.col-xs-4
-                                            .form-group
-                                                label | II NHP
-                                                input#hepato_nhp.form-control(type="text" value="0" name="hepato_nhp" placeholder="# Necro" tabindex="10")
-                                        .col-lg-4.col-md-4.col-xs-4
-                                            .form-group
-                                                label | II VIB
-                                                input#hepato_vib.form-control(type="text" value="0" name="hepato_vib" placeholder="# Necro" tabindex="11")
-                                .col-lg-3
-                                    .row.text-center
-                                        |   Grado 2
-                                    .row
-                                        .col-lg-6.col-md-6.col-xs-6
-                                            .form-group
-                                                label | IIIa NHP
-                                                input#hepato_IIInhp.form-control(type="text" value="0" name="hepato_IIInhp" placeholder="# Necro" tabindex="12")
-                                        .col-lg-6.col-md-6.col-xs-6
-                                            .form-group
-                                                label | IIIa VIB
-                                                input#hepato_IIIvib.form-control(type="text" value="0" name="hepato_IIIvib" placeholder="# Necro" tabindex="13")
-                                .col-lg-3
-                                    .row.text-center
-                                        |   Grado 3
-                                    .row
-                                        .col-lg-6.col-md-6.col-xs-6
-                                            .form-group
-                                                label | IIIb NHP
-                                                input#hepato_IIIbnhp.form-control(type="text" value="0" name="hepato_IIIbnhp" placeholder="# Necro" tabindex="14")
-                                        .col-lg-6.col-md-6.col-xs-6
-                                            .form-group
-                                                label | IIIb VIB
-                                                input#hepato_IIIbvib.form-control(type="text" value="0" name="hepato_IIIbvib" placeholder="# Necro" tabindex="15")
-                                .col-lg-3
-                                    .row.text-center
-                                        |   Grado 4
-                                    .row
-                                        
-                                        .col-lg-6.col-md-6.col-xs-6
-                                            .form-group
-                                                label | IIIc NHP
-                                                input#hepato_IIIcnhp.form-control(type="text" value="0" name="hepato_IIIcnhp" placeholder="# Necro" tabindex="16")
-                                        .col-lg-6.col-md-6.col-xs-6
-                                            .form-group
-                                                label | IIIc VIB
-                                                input#hepato_IIIcvib.form-control(type="text" value="0" name="hepato_IIIcvib" placeholder="# Necro" tabindex="17")
-                .row
-                    .col-lg-3
-                        .panel.panel-primary
-                            .panel-heading
-                                |   Lipidos
-                            .panel-body
-                                .row
-                                    | &nbsp;
-                                .row
-                                    .col-lg-12.col-md-12.col-xs-12
-                                        .form-group
-                                            label | Prom
-                                            input.form-control(type="text" value="0" name="lip_prom" placeholder="# Necro" tabindex="18")
-                    .col-lg-3
-                        .panel.panel-primary
-                            .panel-heading
-                                |   No. Organismos
-                            .panel-body
-                                .row
-                                    | &nbsp;
-                                .row
-                                    .col-lg-12.col-md-12.col-xs-12
-                                        .form-group
-                                            label | #
-                                            input#no_org.form-control(readonly type="text" value="0" name="no_org" placeholder="# Necro" tabindex="19")
-                    .col-lg-6
-                        .panel.panel-primary
-                            .panel-heading
-                                |   Score
-                            .panel-body
-                                .col-lg-4
-                                    .row.text-center
-                                        |   NHP
-                                    .row
-                                        .col-lg-12.col-md-12.col-xs-12
-                                            .form-group
-                                                label 
-                                                input#score_nhp.form-control(readonly type="text" value="0" name="score_nhp" placeholder="# Necro" tabindex="20")
-                                .col-lg-4
-                                    .row.text-center
-                                        |   Vibrio
-                                    .row
-                                        .col-lg-12.col-md-12.col-xs-12
-                                            .form-group
-                                                label 
-                                                input#score_vib.form-control(readonly type="text" value="0" name="score_vib" placeholder="# Necro" tabindex="21")
-                                .col-lg-4
-                                    .row.text-center
-                                        |   IIIc Tubulos Afectados
-                                    .row
-                                        .col-lg-12.col-md-12.col-xs-12
-                                            .form-group
-                                                label 
-                                                input.form-control(type="text" value="0" name="tub_afec" placeholder="# Necro" tabindex="22")
-                .row
-                    .col-lg-12
-                        .panel.panel-primary
-                            .panel-heading
-                                |   Características Externas
-                            .panel-body
-                                .col-lg-6
-                                    .row.text-center
-                                        | &nbsp;
-                                    .row
-                                        .col-lg-4.col-md-4.col-xs-4
-                                            .form-group
-                                                label | Necro. Grado
-                                                input.form-control(type="text" value="0" name="ext_necro" placeholder="# Necro" tabindex="23")
-                                        .col-lg-4.col-md-4.col-xs-4
-                                            .form-group
-                                                label | Pigmen Grado
-                                                input.form-control(type="text" value="0" name="ext_pig" placeholder="# Necro" tabindex="24")
-                                        .col-lg-4.col-md-4.col-xs-4
-                                            .form-group
-                                                label | Flaci Grado
-                                                input.form-control(type="text" value="0" name="ext_flaci" placeholder="# Necro" tabindex="25")
-                                .col-lg-6
-                                    .row.text-center
-                                        |   Uropodos
-                                    .row
-                                        .col-lg-4.col-md-4.col-xs-4
-                                            .form-group
-                                                label | UR
-                                                input.form-control(type="text" value="0" name="ur_ur" placeholder="# Necro" tabindex="26")
-                                        .col-lg-4.col-md-4.col-xs-4
-                                            .form-group
-                                                label | UV
-                                                input.form-control(type="text" value="0" name="ur_uv" placeholder="# Necro" tabindex="27")
-                                        .col-lg-4.col-md-4.col-xs-4
-                                            .form-group
-                                                label | AMP
-                                                input.form-control(type="text" value="0" name="ur_amp" placeholder="# Necro" tabindex="28")
-                .row
-                    .col-lg-6
-                        .panel.panel-primary
-                            .panel-heading
-                                |   Tiempo de Coagulación
-                            .panel-body
-                                .row.text-center
-                                    |   Hemolinfa (min:seg)
-                                .row
-                                    .col-lg-4.col-md-4.col-xs-4
-                                        .form-group
-                                            label | Prom
-                                            input.form-control(type="text" value="0" name="tiem_prom" placeholder="# Prom" tabindex="29")
-                                    .col-lg-4.col-md-4.col-xs-4
-                                        .form-group
-                                            label | Min
-                                            input.form-control(type="text" value="0" name="tiem_min" placeholder="# Min" tabindex="30")
-                                    .col-lg-4.col-md-4.col-xs-4
-                                        .form-group
-                                            label | Max
-                                            input.form-control(type="text" value="0" name="tiem_max" placeholder="# Max" tabindex="31")
-                    .col-lg-3
-                        .panel.panel-primary
-                            .panel-heading
-                                |   Consumo de Camarón
-                            .panel-body
-                                .row
-                                    |   &nbsp;
-                                .row
-                                    .col-lg-6.col-md-6.col-xs-6
-                                        .form-group
-                                            label | Ant
-                                            input.form-control(type="text" value="0" name="cons_ant" placeholder="# Ant" tabindex="32")
-                                    .col-lg-6.col-md-6.col-xs-6
-                                        .form-group
-                                            label | Musc
-                                            input.form-control(type="text" value="0" name="cons_musc" placeholder="# Musc" tabindex="33")
-                    .col-lg-3
-                        .panel.panel-primary
-                            .panel-heading
-                                |   Peso Promedio (gr).
-                            .panel-body
-                                .row
-                                    |   &nbsp;
-                                .row
-                                    .col-lg-12.col-md-12.col-xs-12
-                                        .form-group
-                                            label | #
-                                            input.form-control(type="text" value="0" name="peso_prom" placeholder="# Necro" tabindex="29")
-                .divider
-                .row
-                    .col-lg-2.col-md-4.col-xs-6.pull-right
-                        .form-group
-                            .input-group
-                                span.input-group-addon
-                                    i.fas.fa-plus-circle.text-success
-                                input(type="submit" value="Agregar" tabindex="34").btn.btn-success.form-control                                                                                                                                                                             
-                
-// MODAL ESPECIFICACIONES
-#especificaciones.modal(tabindex='-1', role='dialog')
-    .modal-dialog(role='document')
-        .modal-content
-            .modal-header
-                h3.modal-title Especificaciones
-                button.close(type='button', data-dismiss='modal', aria-label='Close' style="margin-top: -40px;")
-                    span(aria-hidden='true') ×
-            .modal-body
-                .container-fluid
-                    .row
+                                        label 
+                                        input#score_nhp.form-control(readonly type="text" value="#{patologico.score_nhp}" name="score_nhp" placeholder="# Necro")
                         .col-lg-4
-                            .panel.panel-primary
-                                .panel-heading
-                                    |   Gregarinas
-                                .panel-body
-                                    .row.text-center
-                                        |   Grado de Infestación
-                                    .row
-                                        table.table
-                                            thead
-                                            tbody
-                                                tr
-                                                    td 0-5
-                                                    td 0.5
-                                                tr
-                                                    td 6-20
-                                                    td 1
-                                                tr
-                                                    td 21-30
-                                                    td 2
-                                                tr
-                                                    td 31-40
-                                                    td 3
-                                                tr
-                                                    td 41-50
-                                                    td 4
+                            .row.text-center
+                                |   Vibrio
+                            .row
+                                .col-lg-12.col-md-12.col-xs-12
+                                    .form-group
+                                        label 
+                                        input#score_vib.form-control(readonly type="text" value="#{patologico.score_vib}" name="score_vib" placeholder="# Necro")
                         .col-lg-4
-                            .panel.panel-primary
-                                .panel-heading
-                                    |   Protozoarios
-                                .panel-body
-                                    .row.text-center
-                                        |   Grado de Infestación
-                                    .row
-                                        table.table
-                                            thead
-                                            tbody
-                                                tr
-                                                    td Presencia
-                                                    td 0.5
-                                                tr
-                                                    td 25%
-                                                    td 1
-                                                tr
-                                                    td 26-50%
-                                                    td 2
-                                                tr
-                                                    td 51-75%
-                                                    td 3
-                                                tr
-                                                    td >75%
-                                                    td 4
-                        .col-lg-4
-                            .panel.panel-success
-                                .panel-heading
-                                    |   Lipidos
-                                .panel-body
-                                    .row
-                                        table.table
-                                            tbody
-                                                tr
-                                                    td Normal
-                                                    td 3.8 +/- 0.2
-                                                tr
-                                                    td Sobrealimentado
-                                                    td 4.0 Constantes
-                                                tr
-                                                    td Sub-alimentado
-                                                    td 3.5 +/- 0.2
+                            .row.text-center
+                                |   IIIc Tubulos Afectados
+                            .row
+                                .col-lg-12.col-md-12.col-xs-12
+                                    .form-group
+                                        label 
+                                        input.form-control(type="text" value="#{patologico.tub_afec}" name="tub_afec" placeholder="# Necro" tabindex="21")
+        .row
+            .col-lg-12
+                .panel.panel-primary
+                    .panel-heading
+                        |   Características Externas
+                    .panel-body
+                        .col-lg-6
+                            .row.text-center
+                                | &nbsp;
+                            .row
+                                .col-lg-4.col-md-4.col-xs-4
+                                    .form-group
+                                        label | Necro. Grado
+                                        input.form-control(type="text" value="#{patologico.ext_necro}" name="ext_necro" placeholder="# Necro" tabindex="22")
+                                .col-lg-4.col-md-4.col-xs-4
+                                    .form-group
+                                        label | Pigmen Grado
+                                        input.form-control(type="text" value="#{patologico.ext_pig}" name="ext_pig" placeholder="# Necro" tabindex="23")
+                                .col-lg-4.col-md-4.col-xs-4
+                                    .form-group
+                                        label | Flaci Grado
+                                        input.form-control(type="text" value="#{patologico.ext_flaci}" name="ext_flaci" placeholder="# Necro" tabindex="24")
+                        .col-lg-6
+                            .row.text-center
+                                |   Uropodos
+                            .row
+                                .col-lg-4.col-md-4.col-xs-4
+                                    .form-group
+                                        label | UR
+                                        input.form-control(type="text" value="#{patologico.ur_ur}" name="ur_ur" placeholder="# Necro" tabindex="25")
+                                .col-lg-4.col-md-4.col-xs-4
+                                    .form-group
+                                        label | UV
+                                        input.form-control(type="text" value="#{patologico.ur_uv}" name="ur_uv" placeholder="# Necro" tabindex="26")
+                                .col-lg-4.col-md-4.col-xs-4
+                                    .form-group
+                                        label | AMP
+                                        input.form-control(type="text" value="#{patologico.ur_amp}" name="ur_amp" placeholder="# Necro" tabindex="27")
+        .row
+            .col-lg-6
+                .panel.panel-primary
+                    .panel-heading
+                        |   Tiempo de Coagulación
+                    .panel-body
+                        .row.text-center
+                            |   Hemolinfa (min:seg)
+                        .row
+                            .col-lg-4.col-md-4.col-xs-4
+                                .form-group
+                                    label | Prom
+                                    input.form-control(type="text" value="#{patologico.tiem_prom}" name="tiem_prom" placeholder="# Prom" tabindex="28")
+                            .col-lg-4.col-md-4.col-xs-4
+                                .form-group
+                                    label | Min
+                                    input.form-control(type="text" value="#{patologico.tiem_min}" name="tiem_min" placeholder="# Min" tabindex="29")
+                            .col-lg-4.col-md-4.col-xs-4
+                                .form-group
+                                    label | Max
+                                    input.form-control(type="text" value="#{patologico.tiem_max}" name="tiem_max" placeholder="# Max" tabindex="30")
+            .col-lg-3
+                .panel.panel-primary
+                    .panel-heading
+                        |   Consumo de Camarón
+                    .panel-body
+                        .row
+                            |   &nbsp;
+                        .row
+                            .col-lg-6.col-md-6.col-xs-6
+                                .form-group
+                                    label | Ant
+                                    input.form-control(type="text" value="#{patologico.cons_ant}" name="cons_ant" placeholder="# Ant" tabindex="31")
+                            .col-lg-6.col-md-6.col-xs-6
+                                .form-group
+                                    label | Musc
+                                    input.form-control(type="text" value="#{patologico.cons_musc}" name="cons_musc" placeholder="# Musc" tabindex="32")
+            .col-lg-3
+                .panel.panel-primary
+                    .panel-heading
+                        |   Peso Promedio (gr).
+                    .panel-body
+                        .row
+                            |   &nbsp;
+                        .row
+                            .col-lg-12.col-md-12.col-xs-12
+                                .form-group
+                                    label | #
+                                    input.form-control(type="text" value="#{patologico.peso_prom}" name="peso_prom" placeholder="# Necro" tabindex="33")
+        .divider
+        .row
+            .col-lg-2.col-md-4.col-xs-6.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-plus-circle.text-success
+                        input(type="submit" value="Agregar" tabindex="34").btn.btn-success.form-control                                                                                                                                                                             
+        
+    // MODAL ESPECIFICACIONES
+    #especificaciones.modal(tabindex='-1', role='dialog')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h3.modal-title Especificaciones
+                    button.close(type='button', data-dismiss='modal', aria-label='Close' style="margin-top: -40px;")
+                        span(aria-hidden='true') ×
+                .modal-body
+                    .container-fluid
+                        .row
+                            .col-lg-4
+                                .panel.panel-primary
+                                    .panel-heading
+                                        |   Gregarinas
+                                    .panel-body
+                                        .row.text-center
+                                            |   Grado de Infestación
+                                        .row
+                                            table.table
+                                                thead
+                                                tbody
+                                                    tr
+                                                        td 0-5
+                                                        td 0.5
+                                                    tr
+                                                        td 6-20
+                                                        td 1
+                                                    tr
+                                                        td 21-30
+                                                        td 2
+                                                    tr
+                                                        td 31-40
+                                                        td 3
+                                                    tr
+                                                        td 41-50
+                                                        td 4
+                            .col-lg-4
+                                .panel.panel-primary
+                                    .panel-heading
+                                        |   Protozoarios
+                                    .panel-body
+                                        .row.text-center
+                                            |   Grado de Infestación
+                                        .row
+                                            table.table
+                                                thead
+                                                tbody
+                                                    tr
+                                                        td Presencia
+                                                        td 0.5
+                                                    tr
+                                                        td 25%
+                                                        td 1
+                                                    tr
+                                                        td 26-50%
+                                                        td 2
+                                                    tr
+                                                        td 51-75%
+                                                        td 3
+                                                    tr
+                                                        td >75%
+                                                        td 4
+                            .col-lg-4
+                                .panel.panel-success
+                                    .panel-heading
+                                        |   Lipidos
+                                    .panel-body
+                                        .row
+                                            table.table
+                                                tbody
+                                                    tr
+                                                        td Normal
+                                                        td 3.8 +/- 0.2
+                                                    tr
+                                                        td Sobrealimentado
+                                                        td 4.0 Constantes
+                                                    tr
+                                                        td Sub-alimentado
+                                                        td 3.5 +/- 0.2
 
 

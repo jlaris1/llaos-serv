@@ -39,7 +39,7 @@ block contenido
                 tbody
                     each an in analisis
                         tr
-                            td #{ an.estanque.nombre}
+                            td #{ an.estanque.codigo}
                             td.text-center #{ new Date(an.fecha).getDate()+ '/' + (new Date(an.fecha).getMonth() + 1)+ '/' + new Date(an.fecha).getFullYear()}
                             td #{ an.biologo }
                             td 

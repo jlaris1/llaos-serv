@@ -50,7 +50,7 @@ block contenido
                 tbody
                     each med in mediciones
                         tr
-                            td.text-center #{ med.estanque }
+                            td.text-center #{ med.estanque.codigo }
                             td.text-center #{ new Date(med.fecha).getDate()+ '/' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
                             td.text-center #{ med.amonia }
                             td.text-center #{ med.alcalinidad_CaCO3 }

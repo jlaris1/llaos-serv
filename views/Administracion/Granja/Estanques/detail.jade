@@ -38,11 +38,18 @@ block contenido
             var marker = L.marker([$('#markerx').val(),$('#markery').val()]).addTo(mymap);
 
             var locations = [];
-            var prb = $('#locations').val();
-            locations = prb.slice(1, -1);
-            alert(prb.slice(1, -1));
+            var points = [];
+            var p = $('#locations').val().split(",");
 
-            var location = [
+            alert("Tamaño: " + p.length);
+
+            for(var i = 0; i < p.length; i ++){
+                locations.push([p[i], p[i+1]]);
+            }
+
+            alert(locations);
+
+            /*var location = [
                 [27.308601, -110.423742],
                 [27.308641, -110.423117],
                 [27.308630, -110.422525],
@@ -53,7 +60,7 @@ block contenido
                 [27.304552, -110.422973],
                 [27.307053, -110.423906],
                 [27.308455, -110.423958]
-            ];
+            ];*/
 
             //var location = locations;
 
@@ -63,18 +70,33 @@ block contenido
             // Creación de gráficos
             var ctx = document.getElementById('myChart');
 
+            var datos = [];
+            var fechas = [];
+            var f = $('#fechas').val().split(",");
+            var d = ($('#data').val()).split(",");
+
+            $.each( d, function( key, e ) {
+                datos.push(e);
+            });
+            
+            $.each( f, function( key, e ) {
+                fechas.push(e);
+            });
+            
+
             var chart = new Chart(ctx, {
                 // The type of chart we want to create
                 type: 'line',
 
                 // The data for our dataset
                 data: {
-                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                    //labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                    labels: fechas,
                     datasets: [{
                         label: 'pH',
-                        backgroundColor: 'rgb(255, 99, 132)',
-                        borderColor: 'rgb(255, 99, 132)',
-                        data: [0, 10, 5, 2, 20, 30, 45]
+                        borderColor: 'rgb(66,133,244)',
+                        //data: [0, 10, 5, 2, 20, 30, 45]
+                        data: datos
                     }]
                 },
 
@@ -139,7 +161,7 @@ block contenido
                 |   Detalle del Estanque 
                 strong #{ estanque.codigo }
         .divider
-    input.hidden#locations(value="#{JSON.stringify(locations)}")
+    input.hidden#locations(value="#{locations}")
     input.hidden#markerx(value="#{estanque.marker_x}")
     input.hidden#markery(value="#{estanque.marker_y}")
     input.hidden#pointerx(value="#{estanque.pointer_x}")
@@ -179,19 +201,27 @@ block contenido
         .col-lg-4.col-sm-6
             #map(style="width: 100%; min-height: 300px;")
         .col-lg-5
+            input#fechas.hidden(value="#{fechas}")
+            input#data.hidden(value="#{data}")
             .form-group
-                    label | Parámetro
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-vial
-                        select.form-control(name="parametro" tabindex="8")
-                            option(value="") << Seleccione >>
-                            option(value="ph") pH
-                            option(value="ocigeno") Oxigeno
-                            option(value="temperatura") Temperatura
-                            option(value="salinidad") Salinidad
-                            option(value="nivel") Nivel de Agua
+                label | Parámetro
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-vial
+                    select#parametro.form-control(name="parametro" tabindex="8")
+                        option(value="") << Seleccione >>
+                        option(value="ph") pH
+                        option(value="ocigeno") Oxigeno
+                        option(value="temperatura") Temperatura
+                        option(value="salinidad") Salinidad
+                        option(value="nivel") Nivel de Agua
 
             canvas#myChart
+    .row
+        .col-lg-12.col-md-12.col-xs-12
+            h4
+                i.fas.fa-fill-drip(style="margin-right: 10px;")
+                |   Laboratorio
+        .divider
 
 

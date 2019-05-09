@@ -34,15 +34,15 @@ block contenido
                     th Est
                     th Fecha
                     th Diatomeas
-                    th % 
+                    th.text-center % 
                     th Cianofitas
-                    th % 
+                    th.text-center % 
                     th Clorofitas
-                    th % 
+                    th.text-center % 
                     th Dinoflagelados
-                    th % 
+                    th.text-center % 
                     th Flagelados
-                    th % 
+                    th.text-center % 
                     th Total Org/Lt.
                     th
                 tbody
@@ -51,15 +51,20 @@ block contenido
                             td.text-center #{ med.estanque.codigo }
                             td.text-center #{ new Date(med.fecha).getDate() + "/" + (new Date(med.fecha).getMonth() + 1) + "/" + new Date(med.fecha).getFullYear() }
                             td.text-center #{ med.diatomeas }
-                            td.text-center #{ med.diatomeas_porcent }
+                            td.text-center 
+                                b #{ med.diatomeas_porcent } %
                             td.text-center #{ med.cianofitas }
-                            td.text-center #{ med.cianofitas_porcent }
+                            td.text-center 
+                                b #{ med.cianofitas_porcent } %
                             td.text-center #{ med.clorofitas }
-                            td.text-center #{ med.clorofitas_porcent }
+                            td.text-center 
+                                b #{ med.clorofitas_porcent } %
                             td.text-center #{ med.dinoflagelados }
-                            td.text-center #{ med.dinoflagelados_porcent }
+                            td.text-center 
+                                b #{ med.dinoflagelados_porcent } %
                             td.text-center #{ med.flagelados }
-                            td.text-center #{ med.flagelados_porcent }
+                            td.text-center 
+                                b #{ med.flagelados_porcent } %
                             td.text-center #{ med.total_cel_ml }
                             td
                                 a(href="/fitoplancton/edit/#{med.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px; color: #057e95;")

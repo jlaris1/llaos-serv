@@ -36,19 +36,24 @@ module.exports = {
                 if(error){
                     console.log(error);
                 } else {
-                    Estanques.find( function(error, estanques){
-                        if(error){
-                            console.log(error);
-                        } else {
-                            respuesta.render("Laboratorio/NutrientesTox/Diario/new",
-                                {
-                                    user: solicitud.session.user,
-                                    modulos: modulos,
-                                    estanques: estanques
-                                }
-                            );
+                    respuesta.render("Laboratorio/NutrientesTox/Diario/new",
+                        {
+                            user: solicitud.session.user,
+                            modulos: modulos,
+                            estanques: {},
+                            nutrientes: {
+                                amonia: 0,
+                                alcalinidad_CaCO3: 0,
+                                alcalinidad_HCO3: 0,
+                                alcalinidad_CO3: 0,
+                                nitrito_N: 0,
+                                nitrito_NO3: 0,
+                                TAN: 0,
+                                fecha: new Date,
+                                observaciones: ''
+                            },
                         }
-                    });
+                    );
                 }
             });
         };
@@ -89,6 +94,41 @@ module.exports = {
             }); 
         }
     },
+    findD: function(solicitud, respuesta){
+        if (solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else { 
+            Modulos.find( function(error, modulos){
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    Estanques.find({"modulo": solicitud.body.modulo}, function(error, estanques){
+                        if(error){
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            respuesta.render('Laboratorio/NutrientesTox/Diario/new', {
+                                user: solicitud.session.user,
+                                modulos: modulos,
+                                modulo: solicitud.body.modulo,
+                                nutrientes: {
+                                    amonia: 0,
+                                    alcalinidad_CaCO3: 0,
+                                    alcalinidad_HCO3: 0,
+                                    alcalinidad_CO3: 0,
+                                    nitrito_N: 0,
+                                    nitrito_NO3: 0,
+                                    TAN: 0,
+                                    fecha: new Date,
+                                    observaciones: ''
+                                },
+                                estanques: estanques,
+                            });
+                        }
+                    }).sort({ codigo : 1});
+                }
+            });
+        }
+    },
     allS: function(solicitud, respuesta){
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
@@ -117,19 +157,38 @@ module.exports = {
                 if(error){
                     console.log(error);
                 } else {
-                    Estanques.find( function(error, estanques){
-                        if(error){
-                            console.log(error);
-                        } else {
-                            respuesta.render("Laboratorio/NutrientesTox/Semanal/new",
-                                {
-                                    user: solicitud.session.user,
-                                    modulos: modulos,
-                                    estanques: estanques
-                                }
-                            );
+                    respuesta.render("Laboratorio/NutrientesTox/Semanal/new",
+                        {
+                            user: solicitud.session.user,
+                            modulos: modulos,
+                            estanques: {},
+                            nutrientes: {
+                                amonia: 0,
+                                nitrito_N: 0,
+                                nitrito_NO3: 0,
+                                alcalinidad_CaCO3: 0,
+                                alcalinidad_HCO3: 0,
+                                alcalinidad_CO3: 0,
+                                dureza: 0,
+                                dureza_CaCO3: 0,
+                                dureza_Ca: 0,
+                                silice_SiO2: 0,
+                                silice_Si: 0,
+                                nitrato_N: 0,
+                                nitrato_NO3: 0,
+                                fosfato_PO4: 0,
+                                fosfato_P: 0,
+                                potasio: 0,
+                                magnecio_Mg: 0,
+                                magnecio_CaCO3: 0,
+                                balance_Ca: 0,
+                                balance_Mg: 0,
+                                balance_K: 0,
+                                fecha: new Date,
+                                observaciones: ''
+                            },
                         }
-                    });
+                    );
                 }
             });
         }
@@ -182,6 +241,55 @@ module.exports = {
                             respuesta.redirect("/nutrientestox/semanal/all");
                         }
                     });	
+                }
+            });
+        }
+    },
+    findS: function(solicitud, respuesta){
+        if (solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else { 
+            Modulos.find( function(error, modulos){
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    Estanques.find({"modulo": solicitud.body.modulo}, function(error, estanques){
+                        if(error){
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            respuesta.render('Laboratorio/NutrientesTox/Semanal/new', {
+                                user: solicitud.session.user,
+                                modulos: modulos,
+                                modulo: solicitud.body.modulo,
+                                nutrientes: {
+                                    amonia: 0,
+                                    nitrito_N: 0,
+                                    nitrito_NO3: 0,
+                                    alcalinidad_CaCO3: 0,
+                                    alcalinidad_HCO3: 0,
+                                    alcalinidad_CO3: 0,
+                                    dureza: 0,
+                                    dureza_CaCO3: 0,
+                                    dureza_Ca: 0,
+                                    silice_SiO2: 0,
+                                    silice_Si: 0,
+                                    nitrato_N: 0,
+                                    nitrato_NO3: 0,
+                                    fosfato_PO4: 0,
+                                    fosfato_P: 0,
+                                    potasio: 0,
+                                    magnecio_Mg: 0,
+                                    magnecio_CaCO3: 0,
+                                    balance_Ca: 0,
+                                    balance_Mg: 0,
+                                    balance_K: 0,
+                                    fecha: new Date,
+                                    observaciones: ''
+                                },
+                                estanques: estanques,
+                            });
+                        }
+                    }).sort({ codigo : 1});
                 }
             });
         }

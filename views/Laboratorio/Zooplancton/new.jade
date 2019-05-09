@@ -29,12 +29,12 @@ block contenido
             $('#otros').keyup(function(){ obtenerPorcentajes(); });
 
 
-            $('#fechaI').datetimepicker(
-                {   
-                    format: 'dd-MM-yyyy'
-                }
-            );
+            $('#modulo').on('change', function(){
+                document.frm2.submit();
+            });
 
+            $('#estanque').on('change', function(){ $('#est').val(this.value); });
+            $('#fechaI').on('change', function(){ $('#fec').val(this.value); });
         });
 
         function obtenerfecha(){
@@ -123,15 +123,25 @@ block contenido
             label#fecha(style="margin-right: 10px;")
             label#hora
     .divider
-    form#frm(role="form" method="post" action="/zooplancton/add")
+    form#frm(role="form" name="frm2" method="post" action="/zooplancton/find")
         .row
+            .col-lg-3
+                .form-group
+                    label | Módulo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-water
+                        select#modulo.form-control(required name="modulo" tabindex="1")
+                            option(value="") << Seleccione >>
+                            each mod in modulos
+                                option(value="#{mod.id}", selected=(mod.id == modulo)) #{ mod.nombre}
             .col-lg-3
                 .form-group
                     label | Estanque
                     .input-group
                         span.input-group-addon
                             i.fas.fa-water
-                        select.form-control(required name="estanque" tabindex="1")
+                        select#estanque.form-control(name="estanque" tabindex="2")
                             option(value="") << Seleccione >>
                             each est in estanques
                                 option(value="#{est.id}") #{ est.codigo}
@@ -141,7 +151,10 @@ block contenido
                     .input-group
                         span.input-group-addon
                             i.fas.fa-calendar-alt
-                        input#fechaI.form-control(required type="date" name="fecha" tabindex="2")
+                        input#fechaI.form-control(type="date" value="#{zooplancton.fecha}" name="fecha" tabindex="3")
+    form#frm(role="form" method="post" action="/zooplancton/add")
+        input#fec.hidden(type="date" name="fecha")
+        input#est.hidden(type="text" name="estanque")
         .row
             .col-lg-12
                 .panel.panel-primary
@@ -152,48 +165,48 @@ block contenido
                         .col-lg-2.col-sm-2.col-md-2.col-xs-12
                             .form-group
                                 label | Nauplios
-                                input#nauplios.round.form-control(required type="text" value="0" name="nauplios" placeholder="# Nauplios" tabindex="3")
+                                input#nauplios.round.form-control(required type="text" value="#{zooplancton.nauplios}" name="nauplios" placeholder="# Nauplios" tabindex="4")
                             .center-label.text-center
-                                label#nauplios_porcent
+                                label#nauplios_porcent #{zooplancton.nauplios_porcent}
                                 label %
                                     .col-of
                         .col-lg-2.col-sm-2.col-md-2.col-xs-12
                             .form-group
                                 label | Copepodos
-                                input#copepodos.round.form-control(required type="text" value="0" name="copepodos" placeholder="# Copepodos" tabindex="4")
+                                input#copepodos.round.form-control(required type="text" value="#{zooplancton.copepodos}" name="copepodos" placeholder="# Copepodos" tabindex="5")
                             .center-label.text-center
-                                label#copepodos_porcent
+                                label#copepodos_porcent #{zooplancton.copepodos_porcent}
                                 label %
                                     .col-of
                         .col-lg-2.col-sm-2.col-md-2.col-xs-12
                             .form-group
                                 label | Rotiferos
-                                input#rotiferos.round.form-control(required type="text" value="0" name="rutiferos" placeholder="# Rotiferos" tabindex="5")
+                                input#rotiferos.round.form-control(required type="text" value="#{zooplancton.rutiferos}" name="rutiferos" placeholder="# Rotiferos" tabindex="6")
                             .center-label.text-center
-                                label#rotiferos_porcent
+                                label#rotiferos_porcent #{zooplancton.rotiferos_porcent}
                                 label %
                                     .col-of
                         .col-lg-2.col-sm-2.col-md-2.col-xs-12
                             .form-group
                                 label | Poliquetos
-                                input#poliquetos.round.form-control(required type="text" value="0" name="poliquetos" placeholder="# Poliquetos" tabindex="6")
+                                input#poliquetos.round.form-control(required type="text" value="#{zooplancton.poliquetos}" name="poliquetos" placeholder="# Poliquetos" tabindex="7")
                             .center-label.text-center
-                                label#poliquetos_porcent
+                                label#poliquetos_porcent #{zooplancton.poliquetos_porcent}
                                 label %
                                     .col-of
                         .col-lg-2.col-sm-2.col-md-2.col-xs-12
                             .form-group
                                 label | Otros
-                                input#otros.round.form-control(required type="text" value="0" name="otros" placeholder="# Otros" tabindex="7")
+                                input#otros.round.form-control(required type="text" value="#{zooplancton.otros}" name="otros" placeholder="# Otros" tabindex="8")
                             .center-label.text-center
-                                label#otros_porcent
+                                label#otros_porcent #{zooplancton.otros_porcent}
                                 label %
                     .panel-footer.text-right
                         input.hidden#totalI(type="text" name="total")
                         i.fas.fa-bug(style="margin-right: 5px;")
                         label
                             |   Total: 
-                            strong#total
+                            strong#total #{zooplancton.total_organismos}
                             |   cél/ml            
         .divider
         .row
@@ -202,4 +215,4 @@ block contenido
                     .input-group
                         span.input-group-addon
                             i.fas.fa-plus-circle.text-success
-                        input(type="submit" value="Agregar" tabindex="8").btn.btn-success.form-control
+                        input(type="submit" value="Agregar" tabindex="9").btn.btn-success.form-control

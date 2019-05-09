@@ -33,15 +33,15 @@ block contenido
                     th Estanque
                     th Fecha
                     th Nauplios
-                    th % 
+                    th.text-center % 
                     th Copepodos
-                    th % 
+                    th.text-center % 
                     th Rutiferos
-                    th % 
+                    th.text-center % 
                     th Poliquetos
-                    th % 
+                    t.text-centerh % 
                     th Otros
-                    th % Otros
+                    th.text-center % Otros
                     th Total Org/Lt.
                     th
                 tbody
@@ -50,15 +50,20 @@ block contenido
                             td.text-center #{ med.estanque.codigo }
                             td.text-center #{ new Date(med.fecha).getDate() + "/" + (new Date(med.fecha).getMonth() + 1) + "/" + new Date(med.fecha).getFullYear() }
                             td.text-center #{ med.nauplios }
-                            td.text-center #{ med.nauplios_porcent }
+                            td.text-center 
+                                b #{ med.nauplios_porcent } %
                             td.text-center #{ med.copepodos }
-                            td.text-center #{ med.copepodos_porcent }
+                            td.text-center 
+                                b #{ med.copepodos_porcent } %
                             td.text-center #{ med.rutiferos }
-                            td.text-center #{ med.rutiferos_porcent }
+                            td.text-center
+                                b  #{ med.rutiferos_porcent } %
                             td.text-center #{ med.poliquetos }
-                            td.text-center #{ med.poliquetos_porcent }
+                            td.text-center 
+                                b #{ med.poliquetos_porcent } %
                             td.text-center #{ med.otros }
-                            td.text-center #{ med.otros_porcent }
+                            td.text-center 
+                                b #{ med.otros_porcent } %
                             td.text-center #{ med.total_organismos }
                             td
                                 a(href="/zooplancton/edit/#{med.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px; color: #057e95;")

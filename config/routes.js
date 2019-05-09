@@ -285,26 +285,26 @@ module.exports = function(app){
     zooplactonRouter.get('/all', zooplacton.all);
     zooplactonRouter.get('/new', zooplacton.new);
     zooplactonRouter.get('/edit/:id', zooplacton.edit);
-    //zooplactonRouter.post('/find', zooplacton.findD;
+    zooplactonRouter.post('/find', zooplacton.find);
     zooplactonRouter.post('/add', zooplacton.add);
     zooplactonRouter.put('/update/:id', zooplacton.update);
 
-    app.use('/nutrientestox', nutrientesToxRouter);
     // DIARIOS
+    app.use('/nutrientestox', nutrientesToxRouter);
     nutrientesToxRouter.get('/diario/all', nutrientesTox.allD);
     nutrientesToxRouter.get('/diario/new', nutrientesTox.newD);
-    //nutrientesToxRouter.post('/find', nutrientesTox.findD);
+    nutrientesToxRouter.post('/diario/find', nutrientesTox.findD);
     nutrientesToxRouter.post('/diario/add', nutrientesTox.addD);
     // SEMANAL
     nutrientesToxRouter.get('/semanal/all', nutrientesTox.allS);
     nutrientesToxRouter.get('/semanal/new', nutrientesTox.newS);
-    //nutrientesToxRouter.post('/find', nutrientesTox.findS);
+    nutrientesToxRouter.post('/semanal/find', nutrientesTox.findS);
     nutrientesToxRouter.post('/semanal/add', nutrientesTox.addS);
 
     app.use('/patologicos', patologicosRouter);
     patologicosRouter.get('/all', patologicos.all);
     patologicosRouter.get('/new', patologicos.new);
-    //patologicosRouter.post('/find', patologicos.find);
+    patologicosRouter.post('/find', patologicos.find);
     patologicosRouter.post('/add', patologicos.add);
 
     app.use('/bacteriologia', bacteriologiaRouter);
@@ -317,7 +317,7 @@ module.exports = function(app){
     fitoplanctonRouter.get('/all', fitoplancton.all);
     fitoplanctonRouter.get('/new', fitoplancton.new);
     fitoplanctonRouter.get('/edit/:id', fitoplancton.edit);
-    //fitoplanctonRouter.post('/find', fitoplancton.find);
+    fitoplanctonRouter.post('/find', fitoplancton.find);
     fitoplanctonRouter.post('/add', fitoplancton.add);
     fitoplanctonRouter.put('/update/:id', fitoplancton.update);
 

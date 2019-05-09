@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
     Estanques = mongoose.model('Estanques');
     Modulos = mongoose.model('Modulos');
     TiposModulos = mongoose.model('TiposModulos');
+    Parametros = mongoose.model('Parametros');
     chalk = require('chalk');
 
 module.exports = {
@@ -128,14 +129,30 @@ module.exports = {
                                             Locations.push([p.x,p.y]);
                                         });
                                     });
+                                    
+                                    Parametros.find({"estanque": solicitud.params.id},{ fecha: 1, ph: 1 }, function(error, ph){
+                                        if(error) {
+                                            console.log(chalk.bgRed(error));
+                                        } else {
+                                            var fechas = [];
+                                            var data = [];
 
-                                    respuesta.render("Administracion/Granja/Estanques/detail",
-                                        {
-                                            user: solicitud.session.user,
-                                            estanque: estanque,
-                                            locations: Locations
+                                            ph.forEach(p => {
+                                                fechas.push(new Date(p.fecha).getDate()+ '/' + (new Date(p.fecha).getMonth() + 1)+ '/' + new Date(p.fecha).getFullYear())
+                                                data.push(p.ph);
+                                            });
+
+                                            respuesta.render("Administracion/Granja/Estanques/detail",
+                                                {
+                                                    user: solicitud.session.user,
+                                                    estanque: estanque,
+                                                    locations: Locations,
+                                                    fechas: fechas,
+                                                    data: data
+                                                }
+                                            );
                                         }
-                                    )
+                                    });
                                 }
                             });
                         }

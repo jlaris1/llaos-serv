@@ -36,14 +36,28 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		}else{ 
-            Estanques.find( function(error, estanques){
+            Modulos.find( function(error, modulos){
                 if(error){
                     console.log(error);
                 } else {
                     respuesta.render('Laboratorio/Fitoplancton/new', 
                         {
                             user: solicitud.session.user,
-                            estanques: estanques
+                            modulos: modulos,
+                            estanques: {},
+                            fitoplancton: {
+                                diatomeas: 0,
+                                cianofitas: 0,
+                                clorofitas: 0,
+                                dinoflagelados: 0,
+                                flagelados: 0,
+                                diatomeas_porcent: '',
+                                cianofitas_porcent: '',
+                                clorofitas_porcent: '',
+                                dinoflagelados_porcent: '',
+                                flagelados_porcent: '',
+                                total_cel_ml: 0
+                            }
                         }
                     );
                 }
@@ -141,6 +155,43 @@ module.exports = {
                     console.log(chalk.bgRed(error));
                 } else {
                     respuesta.redirect('/fitoplancton/all');
+                }
+            });
+        }
+    },
+    find: function(solicitud, respuesta){
+        if (solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else { 
+            Modulos.find( function(error, modulos){
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    Estanques.find({"modulo": solicitud.body.modulo}, function(error, estanques){
+                        if(error){
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            respuesta.render('Laboratorio/Fitoplancton/new', {
+                                user: solicitud.session.user,
+                                modulos: modulos,
+                                modulo: solicitud.body.modulo,
+                                fitoplancton: {
+                                    diatomeas: 0,
+                                    cianofitas: 0,
+                                    clorofitas: 0,
+                                    dinoflagelados: 0,
+                                    flagelados: 0,
+                                    diatomeas_porcent: '',
+                                    cianofitas_porcent: '',
+                                    clorofitas_porcent: '',
+                                    dinoflagelados_porcent: '',
+                                    flagelados_porcent: '',
+                                    total_cel_ml: 0
+                                },
+                                estanques: estanques,
+                            });
+                        }
+                    }).sort({ codigo : 1});
                 }
             });
         }

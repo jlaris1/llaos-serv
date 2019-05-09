@@ -54,7 +54,14 @@ module.exports = {
                             respuesta.render('Laboratorio/Bacteriologia/new', {
                                 user: solicitud.session.user,
                                 modulos: modulos,
-                                bacteriologia: {},
+                                bacteriologia: {
+                                    agua_ca: 0,
+                                    agua_cv: 0,
+                                    mac_larva_ca: 0,
+                                    mac_larva_cv: 0,
+                                    hepato_ca: 0,
+                                    hepato_cv: 0
+                                },
                                 estanques: {},
                                 laboratorios: laboratorios
                             });
@@ -131,7 +138,7 @@ module.exports = {
                                 }
                             });
                         }
-                    });
+                    }).sort({ codigo : 1});
                 }
             });
         }

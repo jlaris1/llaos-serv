@@ -29,13 +29,50 @@ module.exports = {
         if (solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else {
-            Estanques.find( function(error, estanques){
+            Modulos.find( function(error, modulos){
                 if(error){
                     console.log(error);
                 } else {
                     respuesta.render('Laboratorio/Patologicos/new', {
                         user: solicitud.session.user,
-                        estanques: estanques
+                        modulos: modulos,
+                        patologico: {
+                            branquias_necro: 0,
+                            branquias_mo: 0,
+                            branquias_epic: 0,
+                            plabial: 0,
+                            proto_epip: 0,
+                            intes_grad: 0,
+                            hepato_I: 0,
+                            hepato_nhp: 0,
+                            hepato_vib: 0,
+                            hepato_IIInhp: 0,
+                            hepato_IIIvib: 0,
+                            hepato_IIIbnhp: 0,
+                            hepato_IIIbvib: 0,
+                            hepato_IIIcnhp: 0,
+                            hepato_IIIcvib: 0,
+                            lip_prom: 0,
+                            no_org: 0,
+                            score_nhp: 0,
+                            score_vib: 0,
+                            tub_afec: 0,
+                            ext_necro: 0,
+                            ext_pig: 0,
+                            ext_flaci: 0,
+                            ur_ur: 0,
+                            ur_uv: 0,
+                            ur_amp: 0,
+                            peso_prom: 0,
+                            tiem_prom: 0,
+                            tiem_min: 0,
+                            tiem_max: 0,
+                            cons_ant: 0,
+                            cons_musc: 0,
+                            fecha: new Date,
+                            biologo: ''
+                        },
+                        estanques: {},
                     });
                 }
             });
@@ -92,6 +129,66 @@ module.exports = {
                     console.log(error);
                 } else {
                     respuesta.redirect('/patologicos/all');
+                }
+            });
+        }
+    },
+    find: function(solicitud, respuesta){
+        if (solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else { 
+            Modulos.find( function(error, modulos){
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    Estanques.find({"modulo": solicitud.body.modulo}, function(error, estanques){
+                        if(error){
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            respuesta.render('Laboratorio/Patologicos/new', {
+                                user: solicitud.session.user,
+                                modulos: modulos,
+                                modulo: solicitud.body.modulo,
+                                patologico: {
+                                    branquias_necro: 0,
+                                    branquias_mo: 0,
+                                    branquias_epic: 0,
+                                    plabial: 0,
+                                    proto_epip: 0,
+                                    intes_grad: 0,
+                                    hepato_I: 0,
+                                    hepato_nhp: 0,
+                                    hepato_vib: 0,
+                                    hepato_IIInhp: 0,
+                                    hepato_IIIvib: 0,
+                                    hepato_IIIbnhp: 0,
+                                    hepato_IIIbvib: 0,
+                                    hepato_IIIcnhp: 0,
+                                    hepato_IIIcvib: 0,
+                                    lip_prom: 0,
+                                    no_org: 0,
+                                    score_nhp: 0,
+                                    score_vib: 0,
+                                    tub_afec: 0,
+                                    ext_necro: 0,
+                                    ext_pig: 0,
+                                    ext_flaci: 0,
+                                    ur_ur: 0,
+                                    ur_uv: 0,
+                                    ur_amp: 0,
+                                    peso_prom: 0,
+                                    tiem_prom: 0,
+                                    tiem_min: 0,
+                                    tiem_max: 0,
+                                    cons_ant: 0,
+                                    cons_musc: 0,
+                                    fecha: new Date,
+                                    biologo: ''
+                                },
+                                estanques: estanques,
+                            });
+                        }
+                    }).sort({ codigo : 1});
                 }
             });
         }

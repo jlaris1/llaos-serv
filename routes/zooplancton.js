@@ -31,14 +31,31 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		}else{
-            Estanques.find( function(error, estanques){
+            Modulos.find( function(error, modulos){
                 if(error){
                     console.log(error);
                 } else {
                     respuesta.render("Laboratorio/Zooplancton/new",
                         {
                             user: solicitud.session.user,
-                            estanques: estanques
+                            modulos: modulos,
+                            modulo: solicitud.body.modulo,
+                            zooplancton: {
+                                nauplios: 0,
+                                nauplios_porcent: '',
+                                copepodos: 0,
+                                copepodos_porcent: '',
+                                rutiferos: 0,
+                                rutiferos_porcent: '',
+                                poliquetos: 0,
+                                poliquetos_porcent: '',
+                                otros: 0,
+                                otros_porcent: '',
+                                total_organismos: 0,
+                                fecha: new Date,
+                                biologo: ''
+                            },
+                            estanques: {}
                         }
                     );
                 }
@@ -146,6 +163,45 @@ module.exports = {
                     console.log(chalk.bgRed(error));
                 } else {
                     respuesta.redirect('/zooplancton/all');
+                }
+            });
+        }
+    },
+    find: function(solicitud, respuesta){
+        if (solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else { 
+            Modulos.find( function(error, modulos){
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    Estanques.find({"modulo": solicitud.body.modulo}, function(error, estanques){
+                        if(error){
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            respuesta.render('Laboratorio/Zooplancton/new', {
+                                user: solicitud.session.user,
+                                modulos: modulos,
+                                modulo: solicitud.body.modulo,
+                                zooplancton: {
+                                    nauplios: 0,
+                                    nauplios_porcent: '',
+                                    copepodos: 0,
+                                    copepodos_porcent: '',
+                                    rutiferos: 0,
+                                    rutiferos_porcent: '',
+                                    poliquetos: 0,
+                                    poliquetos_porcent: '',
+                                    otros: 0,
+                                    otros_porcent: '',
+                                    total_organismos: 0,
+                                    fecha: new Date,
+                                    biologo: ''
+                                },
+                                estanques: estanques,
+                            });
+                        }
+                    }).sort({ codigo : 1});
                 }
             });
         }
