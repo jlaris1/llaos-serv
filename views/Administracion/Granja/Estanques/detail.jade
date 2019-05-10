@@ -58,7 +58,7 @@ block contenido
                 [parseFloat(p[18]), parseFloat(p[19])]
             ];
 
-            alert(locations);
+            //alert(locations);
 
             /*var location = [
                 [27.308601, -110.423742],
@@ -80,46 +80,201 @@ block contenido
 
             // Creación de gráficos
             var ctx = document.getElementById('myChart');
+            var ctxPato = document.getElementById('patologicosChart');
 
             var datos = [];
             var fechas = [];
+
+            var fechasP = [];
+            var datosBranNecro = [];
+            var datosBranMO = [];
+             
+            var datosbranquias_epic = []
+            var datosplabial = []
+            var datosproto_epip = []
+            var datosintes_grad = []
+            var datoshepato_I = []
+            var datoshepato_nhp = []
+            var datoshepato_vib = []
+            var datoshepato_IIInhp = []
+            var datoshepato_IIIvib = []
+            var datoshepato_IIIbnhp = []
+            var datoshepato_IIIbvib = []
+            var datoshepato_IIIcnhp = []
+            var datoshepato_IIIcvib = []
+            var datoslip_prom = []
+            var datosno_org = []
+            var datosscore_nhp = []
+            var datosscore_vib = []
+            var datostub_afec = []
+            var datosext_necro = []
+            var datosext_pig = []
+            var datosext_flaci = []
+            var datosur_ur = []
+            var datosur_uv = []
+            var datosur_amp = []
+            var datospeso_prom = []
+            var datostiem_prom = []
+            var datostiem_min = []
+            var datostiem_max = []
+            var datoscons_ant = []
+            var datoscons_musc = []    
+            
             var f = $('#fechas').val().split(",");
             var d = ($('#data').val()).split(",");
 
-            $.each( d, function( key, e ) {
-                datos.push(e);
-            });
-            
-            $.each( f, function( key, e ) {
-                fechas.push(e);
-            });
-            
+            var fP = $('#fechasP').val().split(",");    
+            var dBn = ($('#dataBranquias_necro').val()).split(",");
+            var dBM = ($('#dataBranquias_mo').val()).split(",");
+            var oDatosbranquias_epic = ($('#datosbranquias_epic').val()).split(",");
+            var oDatosplabial = ($('#datosplabial').val()).split(",");
+            var oDatosproto_epip = ($('#datosproto_epip').val()).split(",");
+            var oDatosintes_grad = ($('#datosintes_grad').val()).split(",");
+            var oDatoshepato_I = ($('#datoshepato_I').val()).split(",");
+            var oDatoshepato_nhp = ($('#datoshepato_nhp').val()).split(",");
+            var oDatoshepato_vib = ($('#datoshepato_vib').val()).split(",");
+            var oDatoshepato_IIInhp = ($('#datoshepato_IIInhp').val()).split(",");
+            var oDatoshepato_IIIvib = ($('#datoshepato_IIIvib').val()).split(",");
+            var oDatoshepato_IIIbnhp = ($('#datoshepato_IIIbnhp').val()).split(",");
+            var oDatoshepato_IIIbvib = ($('#datoshepato_IIIbvib').val()).split(",");
+            var oDatoshepato_IIIcnhp = ($('#datoshepato_IIIcnhp').val()).split(",");
+            var oDatoshepato_IIIcvib = ($('#datoshepato_IIIcvib').val()).split(",");
+            var oDatoslip_prom = ($('#datoslip_prom').val()).split(",");
+            var oDatosno_org = ($('#datosno_org').val()).split(",");
+            var oDatosscore_nhp = ($('#datosscore_nhp').val()).split(",");
+            var oDatosscore_vib = ($('#datosscore_vib').val()).split(",");
+            var oDatostub_afec = ($('#datostub_afec').val()).split(",");
+            var oDatosext_necro = ($('#datosext_necro').val()).split(",");
+            var oDatosext_pig = ($('#datosext_pig').val()).split(",");
+            var oDatosext_flaci = ($('#datosext_flaci').val()).split(",");
+            var oDatosur_ur = ($('#datosur_ur').val()).split(",");
+            var oDatosur_uv = ($('#datosur_uv').val()).split(",");
+            var oDatosur_amp = ($('#datosur_amp').val()).split(",");
+            var oDatospeso_prom = ($('#datospeso_prom').val()).split(",");
+            var oDatostiem_prom = ($('#datostiem_prom').val()).split(",");
+            var oDatostiem_min = ($('#datostiem_min').val()).split(",");
+            var oDatostiem_max = ($('#datostiem_max').val()).split(",");
+            var oDatoscons_ant = ($('#datoscons_ant').val()).split(",");
+            var oDatoscons_musc = ($('#datoscons_musc').val()).split(",");
+        
+            $.each( d, function( key, e ) { datos.push(e);});
+            $.each( dBn, function( key, e ) { datosBranNecro.push(e); });
+            $.each( dBM, function( key, e ) { datosBranMO.push(e); });
+            $.each( f, function( key, e ) { fechas.push(e); });
+            $.each( fP, function( key, e ) { fechasP.push(e); });
 
+            $.each( datosbranquias_epic , function(key, e) { oDatosbranquias_epic.push(e) });
+            $.each( datosplabial , function(key, e) { oDatosplabial.push(e) });
+            $.each( datosproto_epip , function(key, e) { oDatosproto_epip.push(e) });
+            $.each( datosintes_grad , function(key, e) { oDatosintes_grad.push(e) });
+            $.each( datoshepato_I , function(key, e) { oDatoshepato_I.push(e) });
+            $.each( datoshepato_nhp , function(key, e) { oDatoshepato_nhp.push(e) });
+
+            $.each( datoshepato_vib , function(key, e) { oDatoshepato_vib.push(e) });
+            $.each( datoshepato_IIInhp , function(key, e) { oDatoshepato_IIInhp.push(e) });
+            $.each( datoshepato_IIIvib , function(key, e) { oDatoshepato_IIIvib.push(e) });
+            $.each( datoshepato_IIIbnhp , function(key, e) { oDatoshepato_IIIbnhp.push(e) });
+            $.each( datoshepato_IIIbvib , function(key, e) { oDatoshepato_IIIbvib.push(e) });
+            $.each( datoshepato_IIIcnhp , function(key, e) { oDatoshepato_IIIcnhp.push(e) });
+            $.each( datoshepato_IIIcvib , function(key, e) { oDatoshepato_IIIcvib.push(e) });
+            $.each( datoslip_prom , function(key, e) { oDatoslip_prom.push(e) });
+            $.each( datosno_org , function(key, e) { oDatosno_org.push(e) });
+            $.each( datosscore_nhp , function(key, e) { oDatosscore_nhp.push(e) });
+            $.each( datosscore_vib , function(key, e) { oDatosscore_vib.push(e) });
+            $.each( datostub_afec , function(key, e) { oDatostub_afec.push(e) });
+            $.each( datosext_necro , function(key, e) { oDatosext_necro.push(e) });
+            $.each( datosext_pig , function(key, e) { oDatosext_pig.push(e) });
+            $.each( datosext_flaci , function(key, e) { oDatosext_flaci.push(e) });
+            $.each( datosur_ur , function(key, e) { oDatosur_ur.push(e) });
+            $.each( datosur_uv , function(key, e) { oDatosur_uv.push(e) });
+            $.each( datosur_amp , function(key, e) { oDatosur_amp.push(e) });
+            $.each( datospeso_prom , function(key, e) { oDatospeso_prom.push(e) });
+            $.each( datostiem_prom , function(key, e) { oDatostiem_prom.push(e) });
+            $.each( datostiem_min , function(key, e) { oDatostiem_min.push(e) });
+            $.each( datostiem_max , function(key, e) { oDatostiem_max.push(e) });
+            $.each( datoscons_ant , function(key, e) { oDatoscons_ant.push(e) });
+            $.each( datoscons_musc , function(key, e) { oDatoscons_musc.push(e) });
+
+            
+            // Gráficas de Parámetros
             var chart = new Chart(ctx, {
                 // The type of chart we want to create
                 type: 'line',
 
                 // The data for our dataset
                 data: {
-                    //labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
                     labels: fechas,
                     datasets: [{
                         label: 'pH',
                         borderColor: 'rgb(66,133,244)',
-                        //data: [0, 10, 5, 2, 20, 30, 45]
+                        backgroundColor: 'rgb(66,133,244)',
                         data: datos
                     }]
-                },
-
-                // Configuration options go here
-                options: {
-                    /*animation: {
-                        onProgress: function(animation) {
-                            progress.value = animation.animationObject.currentStep / animation.animationObject.numSteps;
-                        }
-                    }*/
                 }
             });
+
+            // Gráficas de Laboratorio
+            /// Análisis Patológicos
+
+            var chartPatologicos = new Chart(ctxPato, {
+                // The type of chart we want to create
+                type: 'line',
+                // The data for our dataset
+                data: {
+                    labels: fechasP,
+                    datasets: [
+                        {
+                            label: 'Branc Necro',
+                            data: datosBranNecro,
+                            borderColor: "#E23838",
+                            backgroundColor: "#E23838",
+                            fill: false
+                        },
+                        {
+                            label: 'Branc Mo',
+                            data: datosBranMO,
+                            borderColor: "#009CDF",
+                            backgroundColor: "#009CDF",
+                            fill: false,
+                        },{
+                            label: 'Branc Epic',
+                            data: oDatosbranquias_epic,
+                            borderColor: "#5EBD3E",
+                            backgroundColor: "#5EBD3E",
+                            fill: false,
+                        },
+                        {
+                            label: 'Sintes Grad',
+                            data: oDatosintes_grad,
+                            borderColor: "#FFB900",
+                            backgroundColor: "#FFB900",
+                            fill: false,
+                        },
+                        {
+                            label: 'Hepato I',
+                            data: oDatoshepato_I,
+                            borderColor: "#F78200",
+                            backgroundColor: "#F78200",
+                            fill: false,
+                        },
+                        {
+                            label: 'Hepato nhp',
+                            data: oDatoshepato_nhp,
+                            borderColor: "#973999",
+                            backgroundColor: "#973999",
+                            fill: false,
+                        },  
+                    ]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Análisis Patológicos'
+                    }
+                }
+            });
+
+
         });
 
         function obtenerfecha(){
@@ -212,8 +367,11 @@ block contenido
             input#markery(type="text" value="#{estanque.marker_y}").hidden
             input#pointerx(type="text" value="#{estanque.pointer_x}").hidden
             input#pointery(type="text" value="#{estanque.pointer_y}").hidden
-            input#fechas.hidden(type="text" value="#{fechas}").hidden
-            input#data.hidden(type="text" value="#{data}").hidden
+
+            // Datos para gráficos parámetros
+            input#fechas.hidden(type="text" value="#{fechas}")
+            input#data.hidden(type="text" value="#{data}")
+
             .form-group
                 label | Parámetro
                 .input-group
@@ -229,10 +387,50 @@ block contenido
 
             canvas#myChart
     .row
+        // Datos para gráficos análisis patológicos
+        input#fechasP.hidden(type="text" value="#{fechasP}")
+
+        input#dataBranquias_necro.hidden(type="text" value="#{dataBranquias_necro}")
+        input#dataBranquias_mo.hidden(type="text" value="#{dataBranquias_mo}")
+        input#datosbranquias_epic.hidden(type="text" value="#{datosbranquias_epic}")
+        input#datosplabial.hidden(type="text" value="#{datosplabial}")
+        input#datosproto_epip.hidden(type="text" value="#{datosproto_epip}")
+        input#datosintes_grad.hidden(type="text" value="#{datosintes_grad}")
+        input#datoshepato_I.hidden(type="text" value="#{datoshepato_I}")
+        input#datoshepato_nhp.hidden(type="text" value="#{datoshepato_nhp}")
+        input#datoshepato_vib.hidden(type="text" value="#{datoshepato_vib}")
+        input#datoshepato_IIInhp.hidden(type="text" value="#{datoshepato_IIInhp}")
+        input#datoshepato_IIIvib.hidden(type="text" value="#{datoshepato_IIIvib}")
+        input#datoshepato_IIIbnhp.hidden(type="text" value="#{datoshepato_IIIbnhp}")
+        input#datoshepato_IIIbvib.hidden(type="text" value="#{datoshepato_IIIbvib}")
+        input#datoshepato_IIIcnhp.hidden(type="text" value="#{datoshepato_IIIcnhp}")
+        input#datoshepato_IIIcvib.hidden(type="text" value="#{datoshepato_IIIcvib}")
+        input#datoslip_prom.hidden(type="text" value="#{datoslip_prom}")
+        input#datosno_org.hidden(type="text" value="#{datosno_org}")
+        input#datosscore_nhp.hidden(type="text" value="#{datosscore_nhp}")
+        input#datosscore_vib.hidden(type="text" value="#{datosscore_vib}")
+        input#datostub_afec.hidden(type="text" value="#{datostub_afec}")
+        input#datosext_necro.hidden(type="text" value="#{datosext_necro}")
+        input#datosext_pig.hidden(type="text" value="#{datosext_pig}")
+        input#datosext_flaci.hidden(type="text" value="#{datosext_flaci}")
+        input#datosur_ur.hidden(type="text" value="#{datosur_ur}")
+        input#datosur_uv.hidden(type="text" value="#{datosur_uv}")
+        input#datosur_amp.hidden(type="text" value="#{datosur_amp}")
+        input#datospeso_prom.hidden(type="text" value="#{datospeso_prom}")
+        input#datostiem_prom.hidden(type="text" value="#{datostiem_prom}")
+        input#datostiem_min.hidden(type="text" value="#{datostiem_min}")
+        input#datostiem_max.hidden(type="text" value="#{datostiem_max}")
+        input#datoscons_ant.hidden(type="text" value="#{datoscons_ant}")
+        input#datoscons_musc.hidden(type="text" value="#{datoscons_musc }")
+        
         .col-lg-12.col-md-12.col-xs-12
             h4
                 i.fas.fa-flask(style="margin-right: 10px;")
                 |   Laboratorio
         .divider
+        .col-lg-4
+            canvas#patologicosChart
+            //.col-lg-4
+            //    canvas#fitoChar
 
 
