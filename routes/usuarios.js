@@ -11,7 +11,7 @@ module.exports = {//HAcen falta try-catch a los metodos
                 if(error){
                     //
                 } else {
-                    respuesta.render("Sistemas/Usuarios/usuarios",{ 
+                    respuesta.render("Sistemas/Usuarios/Usuarios",{ 
                         user: solicitud.session.user,
                         usuarios: usuarios
                     });
@@ -24,7 +24,7 @@ module.exports = {//HAcen falta try-catch a los metodos
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		}else{
-            respuesta.render("Sistemas/Usuarios/usuario",{
+            respuesta.render("Sistemas/Usuarios/Usuario",{
             user: solicitud.session.user
         });
         };

@@ -325,9 +325,11 @@ module.exports = function(app){
     app.use('/estanque', estanqueRouter);
     estanqueRouter.get('/all', estanque.all);
     estanqueRouter.get('/new', estanque.new);
-    //estanqueRouter.get('/edit', estanque.edit);
+    estanqueRouter.get('/edit/:id', estanque.edit);
     estanqueRouter.post('/add', estanque.add );
     estanqueRouter.get('/detail/:id', estanque.detail);
+    estanqueRouter.put('/update/:id', estanque.update);
+    estanqueRouter.get('/delete/:id', estanqueRouter.delete);
 
     // Parametros
     app.use('/parametros', parametrosRouter);

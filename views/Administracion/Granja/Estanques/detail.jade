@@ -37,15 +37,26 @@ block contenido
             //var marker = L.marker([27.307141, -110.423128]).addTo(mymap);
             var marker = L.marker([$('#markerx').val(),$('#markery').val()]).addTo(mymap);
 
-            var locations = [];
+            
             var points = [];
             var p = $('#locations').val().split(",");
 
-            alert("Tamaño: " + p.length);
+            if(p.lenght == 20){
 
-            for(var i = 0; i < p.length; i ++){
-                locations.push([p[i], p[i+1]]);
             }
+
+            var locations = [
+                [parseFloat(p[0]), parseFloat(p[1])],
+                [parseFloat(p[2]), parseFloat(p[3])],
+                [parseFloat(p[4]), parseFloat(p[5])],
+                [parseFloat(p[6]), parseFloat(p[7])],
+                [parseFloat(p[8]), parseFloat(p[9])],
+                [parseFloat(p[10]), parseFloat(p[11])],
+                [parseFloat(p[12]), parseFloat(p[13])],
+                [parseFloat(p[14]), parseFloat(p[15])],
+                [parseFloat(p[16]), parseFloat(p[17])],
+                [parseFloat(p[18]), parseFloat(p[19])]
+            ];
 
             alert(locations);
 
@@ -62,7 +73,7 @@ block contenido
                 [27.308455, -110.423958]
             ];*/
 
-            //var location = locations;
+            var location = locations;
 
             // Crear diujo del estanque
             var polygon = L.polygon(location).addTo(mymap);
@@ -161,11 +172,6 @@ block contenido
                 |   Detalle de la piscina 
                 strong #{ estanque.codigo }
         .divider
-    input.hidden#locations(value="#{locations}")
-    input.hidden#markerx(value="#{estanque.marker_x}")
-    input.hidden#markery(value="#{estanque.marker_y}")
-    input.hidden#pointerx(value="#{estanque.pointer_x}")
-    input.hidden#pointery(value="#{estanque.pointer_y}")
     .row
         .col-lg-3.col-sm-3
             .card.card-default
@@ -201,8 +207,13 @@ block contenido
         .col-lg-4.col-sm-6
             #map(style="width: 100%; min-height: 300px;")
         .col-lg-5
-            input#fechas.hidden(value="#{fechas}")
-            input#data.hidden(value="#{data}")
+            input#locations(type="text" value="#{locations}").hidden
+            input#markerx(type="text" value="#{estanque.marker_x}").hidden
+            input#markery(type="text" value="#{estanque.marker_y}").hidden
+            input#pointerx(type="text" value="#{estanque.pointer_x}").hidden
+            input#pointery(type="text" value="#{estanque.pointer_y}").hidden
+            input#fechas.hidden(type="text" value="#{fechas}").hidden
+            input#data.hidden(type="text" value="#{data}").hidden
             .form-group
                 label | Parámetro
                 .input-group

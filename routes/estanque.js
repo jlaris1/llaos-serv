@@ -65,14 +65,57 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{
-            
+            Estanques.findById({"_id": solicitud.params.id}, function(error, estanque){
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    Modulos.populate(estanque, {path: 'modulo'}, function(error, estanque){
+                        if(error){
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            TiposModulos.populate(estanque, {path: 'tipo'}, function(error, estanque){
+                                if(error){
+                                    console.log(chalk.bgRed(error));
+                                } else {
+                                    Modulos.find( function(error, modulos){
+                                        if(error){
+                                            console.log(error);
+                                        } else {
+                                            TiposModulos.find( function(error, tiposModulos){
+                                                if(error){
+                                                    console.log(error);
+                                                } else {
+                                                    respuesta.render('Administracion/Granja/Estanques/edit',
+                                                        {   
+                                                            user: solicitud.session.user,
+                                                            modulos: modulos,
+                                                            tiposModulos: tiposModulos,
+                                                            estanque: estanque
+                                                        }
+                                                    );
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
         }
     },
     delete: function(solicitud, respuesta){
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{
-            
+            Estanques.deleteOne({"_id": solicitud.params.id}, function(error){
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    respuesta.redirect('/estanque/all');
+                }
+            });
         }
     },
     add: function(solicitud, respuesta){
@@ -160,5 +203,30 @@ module.exports = {
                 }
             })
         }
+    },
+    update: function(solicitud,respuesta){
+        var locations = JSON.parse(solicitud.body.locations);
+
+        var data = {
+            codigo: solicitud.body.code,
+            nombre: solicitud.body.name,
+            modulo: solicitud.body.module,
+            tipo: solicitud.body.type_module,
+            pointer_x: solicitud.body.pointer_x,
+            pointer_y: solicitud.body.pointer_y,
+            marker_x: solicitud.body. marker_x,
+            marker_y: solicitud.body.marker_y,
+            locations: locations
+        }
+
+        console.log(chalk.bgGreen(data));
+
+        Estanques.updateOne({"_id": solicitud.params.id}, data, function(error){
+            if(error){
+                console.log(chalk.bgRed(error));
+            } else {
+                respuesta.redirect('/estanque/all');
+            }
+        });
     }
 }

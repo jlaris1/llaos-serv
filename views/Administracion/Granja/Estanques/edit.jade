@@ -1,0 +1,282 @@
+extends ../../../layouts/layout.jade
+block contenido
+    style.
+        
+    script.
+        var locations = [];
+        var pointers = [];
+        var markers = [];
+
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora(); 
+
+            $('#subMenuAdministracion').removeClass('hidden');
+            $('#spanMenuAdministracion').removeClass('fa-angle-left');
+            $('#spanMenuAdministracion').addClass('fa-angle-down'); 
+            $('#subMenuAdmGranja').removeClass('hidden');
+            $('#spanMenuAdmGranja').removeClass('fa-angle-left');
+            $('#spanMenuAdmGranja').addClass('fa-angle-down');
+            $('#subMenuEstanques').removeClass('hidden');
+            $('#spanMenuEstanques').removeClass('fa-angle-left');
+            $('#spanMenuEstanques').addClass('fa-angle-down');
+
+            $('#code').on('keyup', function(){
+                $('#name').val('Estanque '+ this.value);
+            });
+
+            $('#px').on('keyup', function(){ $('#pointer_x').val(this.value)});
+            $('#py').on('keyup', function(){ $('#pointer_y').val(this.value)});
+            $('#mx').on('keyup', function(){ $('#marker_x').val(this.value)});
+            $('#my').on('keyup', function(){ $('#marker_y').val(this.value)});
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+
+        function agregarPointer(){
+            listCount = $('#listPointer >li ').length;
+
+            var loc = new Object();
+            var point = new Object();
+
+            point.x = $('#x'+ listCount).val();
+            point.y = $('#y' + listCount).val();
+
+            listCount += 1;
+
+            $('#listPointer > li:last').append(
+                "<li id='list"+ listCount+"'>" + 
+                    "<div class='col-lg-4'>" +
+                        "<label>" +
+                            "<i class='fas fa-map-marker-alt'> X </i>" +
+                        "</label>" +
+                        "<div class='form-group'> " +
+                            "<input id='x"+listCount+"' class='form-control' required type='text'> " +
+                        "</div>" +
+                    "</div>" +
+                    "<div class='col-lg-4'>" +
+                        "<label>" +
+                            "<i class='fas fa-map-marker'> Y </i>" +
+                        "</label>" +
+                        "<div class='form-group'> " +
+                            "<input id='y"+listCount+"' class='form-control' required type='text'> " +
+                        "</div>" +
+                    "</div>" +
+                   "<div class='col-lg-4'>" +
+                        "<div class='col-lg-6'>" +
+                            "<label>&nbsp;</label>" +
+                            "<div class='form-group'>" +
+                                "<a class='btn btn-success' href='#' onclick='agregarPointer();''>" +
+                                    "<i class='fas fa-plus-circle'></i>" +
+                                "</a>" +
+                            "</div>" +
+                        "</div>" +
+                        "<div class='col-lg-6'>" +
+                            "<label>&nbsp;</label>" +
+                                "<div class='form-group'>" +
+                                    "<a class='btn btn-danger' href='#' onclick='eliminarPointer("+listCount+");' style='margin-left: 5px; color: white'>" +
+                                        "<i class='fas fa-minus-circle'></i>" +
+                                    "</a>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>" +
+                "</li>"
+            );
+
+            loc.pointer = point;
+
+            alert(loc);
+
+            locations.push(loc);
+
+            $('#locations').val(JSON.stringify(locations));
+        }
+
+        function eliminarPointer(id){
+            $("#list"+id).remove();
+            $("#listPointer").listview("refresh");
+            locations.splice(id, 1);
+            $("#locations").val(locations);
+        }
+
+        function submit(){
+            document.frm.submit();
+        }
+
+    .row
+        .col-lg-12.col-md-12.col-xs-12
+            h2.page-header 
+                i.fas.fa-water(style="margin-right: 10px;")
+                |   Actualización de Piscina
+    .row
+        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-right.text-right
+            span
+                | Usuario: 
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .divider
+    form#frm(role="form" name="frm" method="post" action="/estanque/update/#{estanque.id}?_method=put")
+        input#locations(name="locations").hidden
+        input#marker_x(type="text" value="#{estanque.marker_x}" name="marker_x").hidden
+        input#marker_y(type="text" value="#{estanque.marker_y}" name="marker_y").hidden
+        input#pointer_x(type="text" value="#{estanque.pointer_x}" name="pointer_x").hidden
+        input#pointer_y(type="text" value="#{estanque.pointer_y}" name="pointer_y").hidden
+        .row
+            .col-lg-3
+                .form-group
+                    label | Código
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-hashtag
+                        input#code.form-control(required type="text" value="#{estanque.codigo}" name="code" tabindex="1")
+            .col-lg-3
+                .form-group
+                    label | Nombre
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-bars
+                        input#name.form-control(required type="text" value="#{estanque.nombre}" name="name" tabindex="2")
+            .col-lg-3
+                .form-group
+                    label | Módulo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-water
+                        select.form-control(required name="module" tabindex="3")
+                            option(value="") << Seleccione >>
+                            each m in modulos
+                                option(value="#{m.id}", selected=(m.id == estanque.modulo.id)) #{ m.nombre}
+            .col-lg-3
+                .form-group
+                    label | Tipo Módulo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-water
+                        select.form-control(required name="type_module" tabindex="4")
+                            option(value="") << Seleccione >>
+                            each t in tiposModulos
+                                option(value="#{t.id}", selected=(t.id == estanque.tipo.id)) #{ t.nombre}
+    .row
+        .col-lg-12.col-md-12.col-sm-12.col-xs-12
+            .panel.panel-primary
+                .panel-heading(style="font-size: 18px;")
+                    i.fas.fa-map-marked-alt
+                    |   Datos del Mapa
+                .panel-body
+                    .col-lg-4.col-md-4.col-sm-4.col-xs-12
+                        .row.text-center
+                            label Pointer
+                        .row
+                            .col-lg-6
+                                label 
+                                    i.fas.fa-map-marker-alt
+                                    |  X
+                                .form-group
+                                    input#px.form-control(required type="text" name="pointer_x" value="#{estanque.pointer_x}")
+                            .col-lg-6
+                                label
+                                    i.fas.fa-map-marker 
+                                    |  Y
+                                .form-group
+                                    input#py.form-control(required type="text" name="pointer_y" value="#{estanque.pointer_y}")
+                    .col-lg-4.col-md-4.col-sm-4.col-xs-12
+                        .row.text-center
+                            label Marker
+                        .row
+                            .col-lg-6
+                                label 
+                                    i.fas.fa-map-marker-alt
+                                    |  X
+                                .form-group
+                                    input#mx.form-control(required type="text" name="marker_x" value="#{estanque.marker_x}")
+                            .col-lg-6
+                                label 
+                                    i.fas.fa-map-marker
+                                    |  Y
+                                .form-group
+                                    input#my.form-control(required type="text"  name="marker_y" value="#{estanque.marker_y}" )
+                    .col-lg-4.col-md-4.col-sm-4.col-xs-12
+                        .row.text-center
+                            label Location
+                        .row          
+                            ul.list-unstyled#listPointer
+                                li#list1
+                                    .col-lg-4
+                                        label 
+                                            i.fas.fa-map-marker-alt
+                                            |  X
+                                        .form-group
+                                            input#x1.form-control(required type="text")
+                                    .col-lg-4
+                                        label
+                                            i.fas.fa-map-marker 
+                                            |  Y
+                                        .form-group
+                                            input#y1.form-control(required type="text")
+                                    .col-lg-4
+                                        .col-lg-6
+                                            label &nbsp;
+                                            .form-group
+                                                a(href="#" onclick="agregarPointer();").btn.btn-success
+                                                    i.fas.fa-plus-circle
+                                        .col-lg-6
+                                            label &nbsp;
+                                            .form-group
+                                                a.disabled(href="#" style="margin-left: 5px; color: white;").btn.btn-danger
+                                                    i.fas.fa-minus-circle
+    
+    .divider
+    .row(style="margin-bottom: 30px;")
+        .col-lg-2.btn-group.pull-right
+            .form-group
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-save.text-success
+                    input(type="button" onclick="javascript: submit();" value="Guardar" tabindex="5").btn.btn-success.form-control
+                    
