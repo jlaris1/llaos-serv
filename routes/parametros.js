@@ -113,7 +113,7 @@ module.exports = {
                 if(error){
                     console.log(chalk.bgRed(error));
                 } else {
-                    respuesta.redirect('/parametros/all');
+                    respuesta.redirect('/parametros/new');
                 }
             });
         }

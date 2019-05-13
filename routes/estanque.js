@@ -147,7 +147,7 @@ module.exports = {
             if(error){
                 console.log(error);
             } else {
-                respuesta.redirect('/estanque/new')
+                respuesta.redirect('/estanque/all')
             }
         });
         
