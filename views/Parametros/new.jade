@@ -98,10 +98,10 @@ block contenido
                     .input-group
                         span.input-group-addon
                             i.fas.fa-water
-                        select#modulo.form-control(required value="#{modulo}" name="modulo" tabindex="1")
+                        select#modulo.form-control(required name="modulo" tabindex="1")
                             option(value="") << Seleccione >>
                             each mod in modulos
-                                option(value="#{mod.id}") #{ mod.nombre}
+                                option(value="#{mod.id}", selected=(mod.id == modulo)) #{ mod.nombre}
             .col-lg-3
                 .form-group
                     label | Estanque
