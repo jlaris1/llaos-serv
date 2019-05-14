@@ -81,199 +81,639 @@ block contenido
             // Creación de gráficos
             var ctx = document.getElementById('myChart');
             var ctxPato = document.getElementById('patologicosChart');
+            var ctxBactem = document.getElementById('bacteChart');
+            var ctxFito = document.getElementById('fitoChart');
+            var ctxZoo = document.getElementById('zooChart');
 
-            var datos = [];
-            var fechas = [];
+            /** PARAMETROS*/
+                var datos = [];
+                var fechas = [];
 
-            var fechasP = [];
-            var datosBranNecro = [];
-            var datosBranMO = [];
-             
-            var datosbranquias_epic = []
-            var datosplabial = []
-            var datosproto_epip = []
-            var datosintes_grad = []
-            var datoshepato_I = []
-            var datoshepato_nhp = []
-            var datoshepato_vib = []
-            var datoshepato_IIInhp = []
-            var datoshepato_IIIvib = []
-            var datoshepato_IIIbnhp = []
-            var datoshepato_IIIbvib = []
-            var datoshepato_IIIcnhp = []
-            var datoshepato_IIIcvib = []
-            var datoslip_prom = []
-            var datosno_org = []
-            var datosscore_nhp = []
-            var datosscore_vib = []
-            var datostub_afec = []
-            var datosext_necro = []
-            var datosext_pig = []
-            var datosext_flaci = []
-            var datosur_ur = []
-            var datosur_uv = []
-            var datosur_amp = []
-            var datospeso_prom = []
-            var datostiem_prom = []
-            var datostiem_min = []
-            var datostiem_max = []
-            var datoscons_ant = []
-            var datoscons_musc = []    
-            
-            var f = $('#fechas').val().split(",");
-            var d = ($('#data').val()).split(",");
+                var f = $('#fechas').val().split(",");
+                var d = ($('#data').val()).split(",");
 
-            var fP = $('#fechasP').val().split(",");    
-            var dBn = ($('#dataBranquias_necro').val()).split(",");
-            var dBM = ($('#dataBranquias_mo').val()).split(",");
-            var oDatosbranquias_epic = ($('#datosbranquias_epic').val()).split(",");
-            var oDatosplabial = ($('#datosplabial').val()).split(",");
-            var oDatosproto_epip = ($('#datosproto_epip').val()).split(",");
-            var oDatosintes_grad = ($('#datosintes_grad').val()).split(",");
-            var oDatoshepato_I = ($('#datoshepato_I').val()).split(",");
-            var oDatoshepato_nhp = ($('#datoshepato_nhp').val()).split(",");
-            var oDatoshepato_vib = ($('#datoshepato_vib').val()).split(",");
-            var oDatoshepato_IIInhp = ($('#datoshepato_IIInhp').val()).split(",");
-            var oDatoshepato_IIIvib = ($('#datoshepato_IIIvib').val()).split(",");
-            var oDatoshepato_IIIbnhp = ($('#datoshepato_IIIbnhp').val()).split(",");
-            var oDatoshepato_IIIbvib = ($('#datoshepato_IIIbvib').val()).split(",");
-            var oDatoshepato_IIIcnhp = ($('#datoshepato_IIIcnhp').val()).split(",");
-            var oDatoshepato_IIIcvib = ($('#datoshepato_IIIcvib').val()).split(",");
-            var oDatoslip_prom = ($('#datoslip_prom').val()).split(",");
-            var oDatosno_org = ($('#datosno_org').val()).split(",");
-            var oDatosscore_nhp = ($('#datosscore_nhp').val()).split(",");
-            var oDatosscore_vib = ($('#datosscore_vib').val()).split(",");
-            var oDatostub_afec = ($('#datostub_afec').val()).split(",");
-            var oDatosext_necro = ($('#datosext_necro').val()).split(",");
-            var oDatosext_pig = ($('#datosext_pig').val()).split(",");
-            var oDatosext_flaci = ($('#datosext_flaci').val()).split(",");
-            var oDatosur_ur = ($('#datosur_ur').val()).split(",");
-            var oDatosur_uv = ($('#datosur_uv').val()).split(",");
-            var oDatosur_amp = ($('#datosur_amp').val()).split(",");
-            var oDatospeso_prom = ($('#datospeso_prom').val()).split(",");
-            var oDatostiem_prom = ($('#datostiem_prom').val()).split(",");
-            var oDatostiem_min = ($('#datostiem_min').val()).split(",");
-            var oDatostiem_max = ($('#datostiem_max').val()).split(",");
-            var oDatoscons_ant = ($('#datoscons_ant').val()).split(",");
-            var oDatoscons_musc = ($('#datoscons_musc').val()).split(",");
+                $.each( d, function( key, e ) { datos.push(e);});
+                $.each( f, function( key, e ) { fechas.push(e); });
+
+            /** PATOLOGICOS */
+                var fechasP = [];
+                var datosBranNecro = [];
+                var datosBranMO = [];
+                var datosbranquias_epic = []
+                var datosplabial = []
+                var datosproto_epip = []
+                var datosintes_grad = []
+                var datoshepato_I = []
+                var datoshepato_nhp = []
+                var datoshepato_vib = []
+                var datoshepato_IIInhp = []
+                var datoshepato_IIIvib = []
+                var datoshepato_IIIbnhp = []
+                var datoshepato_IIIbvib = []
+                var datoshepato_IIIcnhp = []
+                var datoshepato_IIIcvib = []
+                var datoslip_prom = [];
+                var datosno_org = [];
+                var datosscore_nhp = [];
+                var datosscore_vib = [];
+                var datostub_afec = [];
+                var datosext_necro = [];
+                var datosext_pig = [];
+                var datosext_flaci = [];
+                var datosur_ur = [];
+                var datosur_uv = [];
+                var datosur_amp = [];
+                var datospeso_prom = [];
+                var datostiem_prom = [];
+                var datostiem_min = [];
+                var datostiem_max = [];
+                var datoscons_ant = [];
+                var datoscons_musc = [];
+
+                var fP = $('#fechasP').val().split(",");    
+                var dBn = ($('#dataBranquias_necro').val()).split(",");
+                var dBM = ($('#dataBranquias_mo').val()).split(",");
+                var oDatosbranquias_epic = ($('#datosbranquias_epic').val()).split(",");
+                var oDatosplabial = ($('#datosplabial').val()).split(",");
+                var oDatosproto_epip = ($('#datosproto_epip').val()).split(",");
+                var oDatosintes_grad = ($('#datosintes_grad').val()).split(",");
+                var oDatoshepato_I = ($('#datoshepato_I').val()).split(",");
+                var oDatoshepato_nhp = ($('#datoshepato_nhp').val()).split(",");
+                var oDatoshepato_vib = ($('#datoshepato_vib').val()).split(",");
+                var oDatoshepato_IIInhp = ($('#datoshepato_IIInhp').val()).split(",");
+                var oDatoshepato_IIIvib = ($('#datoshepato_IIIvib').val()).split(",");
+                var oDatoshepato_IIIbnhp = ($('#datoshepato_IIIbnhp').val()).split(",");
+                var oDatoshepato_IIIbvib = ($('#datoshepato_IIIbvib').val()).split(",");
+                var oDatoshepato_IIIcnhp = ($('#datoshepato_IIIcnhp').val()).split(",");
+                var oDatoshepato_IIIcvib = ($('#datoshepato_IIIcvib').val()).split(",");
+                var oDatoslip_prom = ($('#datoslip_prom').val()).split(",");
+                var oDatosno_org = ($('#datosno_org').val()).split(",");
+                var oDatosscore_nhp = ($('#datosscore_nhp').val()).split(",");
+                var oDatosscore_vib = ($('#datosscore_vib').val()).split(",");
+                var oDatostub_afec = ($('#datostub_afec').val()).split(",");
+                var oDatosext_necro = ($('#datosext_necro').val()).split(",");
+                var oDatosext_pig = ($('#datosext_pig').val()).split(",");
+                var oDatosext_flaci = ($('#datosext_flaci').val()).split(",");
+                var oDatosur_ur = ($('#datosur_ur').val()).split(",");
+                var oDatosur_uv = ($('#datosur_uv').val()).split(",");
+                var oDatosur_amp = ($('#datosur_amp').val()).split(",");
+                var oDatospeso_prom = ($('#datospeso_prom').val()).split(",");
+                var oDatostiem_prom = ($('#datostiem_prom').val()).split(",");
+                var oDatostiem_min = ($('#datostiem_min').val()).split(",");
+                var oDatostiem_max = ($('#datostiem_max').val()).split(",");
+                var oDatoscons_ant = ($('#datoscons_ant').val()).split(",");
+                var oDatoscons_musc = ($('#datoscons_musc').val()).split(",");
+
+                $.each( dBn, function( key, e ) { datosBranNecro.push(e); });
+                $.each( dBM, function( key, e ) { datosBranMO.push(e); });
+                $.each( fP, function( key, e ) { fechasP.push(e); });
+                $.each( datosbranquias_epic , function(key, e) { oDatosbranquias_epic.push(e) });
+                $.each( datosplabial , function(key, e) { oDatosplabial.push(e) });
+                $.each( datosproto_epip , function(key, e) { oDatosproto_epip.push(e) });
+                $.each( datosintes_grad , function(key, e) { oDatosintes_grad.push(e) });
+                $.each( datoshepato_I , function(key, e) { oDatoshepato_I.push(e) });
+                $.each( datoshepato_nhp , function(key, e) { oDatoshepato_nhp.push(e) });
+                $.each( datoshepato_vib , function(key, e) { oDatoshepato_vib.push(e) });
+                $.each( datoshepato_IIInhp , function(key, e) { oDatoshepato_IIInhp.push(e) });
+                $.each( datoshepato_IIIvib , function(key, e) { oDatoshepato_IIIvib.push(e) });
+                $.each( datoshepato_IIIbnhp , function(key, e) { oDatoshepato_IIIbnhp.push(e) });
+                $.each( datoshepato_IIIbvib , function(key, e) { oDatoshepato_IIIbvib.push(e) });
+                $.each( datoshepato_IIIcnhp , function(key, e) { oDatoshepato_IIIcnhp.push(e) });
+                $.each( datoshepato_IIIcvib , function(key, e) { oDatoshepato_IIIcvib.push(e) });
+                $.each( datoslip_prom , function(key, e) { oDatoslip_prom.push(e) });
+                $.each( datosno_org , function(key, e) { oDatosno_org.push(e) });
+                $.each( datosscore_nhp , function(key, e) { oDatosscore_nhp.push(e) });
+                $.each( datosscore_vib , function(key, e) { oDatosscore_vib.push(e) });
+                $.each( datostub_afec , function(key, e) { oDatostub_afec.push(e) });
+                $.each( datosext_necro , function(key, e) { oDatosext_necro.push(e) });
+                $.each( datosext_pig , function(key, e) { oDatosext_pig.push(e) });
+                $.each( datosext_flaci , function(key, e) { oDatosext_flaci.push(e) });
+                $.each( datosur_ur , function(key, e) { oDatosur_ur.push(e) });
+                $.each( datosur_uv , function(key, e) { oDatosur_uv.push(e) });
+                $.each( datosur_amp , function(key, e) { oDatosur_amp.push(e) });
+                $.each( datospeso_prom , function(key, e) { oDatospeso_prom.push(e) });
+                $.each( datostiem_prom , function(key, e) { oDatostiem_prom.push(e) });
+                $.each( datostiem_min , function(key, e) { oDatostiem_min.push(e) });
+                $.each( datostiem_max , function(key, e) { oDatostiem_max.push(e) });
+                $.each( datoscons_ant , function(key, e) { oDatoscons_ant.push(e) });
+                $.each( datoscons_musc , function(key, e) { oDatoscons_musc.push(e) });
+
+            /** BACTERIOLOGIA */
+                var datosagua_ca = [];
+                var datosagua_cv = [];
+                var datosmac_larva_ca = [];
+                var datosmac_larva_cv = [];
+                var datoshepato_ca = [];
+                var datoshepato_cv = [];
+                var fechasB = [];
+
+                var oDatosagua_ca = ($('#datosagua_ca').val()).split(",");
+                var oDatosagua_cv = ($('#datosagua_cv').val()).split(",");
+                var oDatosmac_larva_ca = ($('#datosmac_larva_ca').val()).split(",");
+                var oDatosmac_larva_cv = ($('#datosmac_larva_cv').val()).split(",");
+                var oDatoshepato_ca = ($('#datoshepato_ca').val()).split(",");
+                var oDatoshepato_cv = ($('#datoshepato_cv').val()).split(",");
+                var fB = $('#fechasB').val().split(",");
+
+                $.each( datosagua_ca, function(key,e) { oDatosagua_ca.push(e) }); 
+                $.each( datosagua_cv, function(key,e) { oDatosagua_cv.push(e) }); 
+                $.each( datosmac_larva_ca, function(key,e) { oDatosmac_larva_ca.push(e) }); 
+                $.each( datosmac_larva_cv, function(key,e) { oDatosmac_larva_cv.push(e) }); 
+                $.each( datoshepato_ca, function(key,e) { oDatoshepato_ca.push(e) }); 
+                $.each( datoshepato_cv, function(key,e) { oDatoshepato_cv.push(e) });
+                $.each( fechasB, function(key,e) { fB.push(e) });
         
-            $.each( d, function( key, e ) { datos.push(e);});
-            $.each( dBn, function( key, e ) { datosBranNecro.push(e); });
-            $.each( dBM, function( key, e ) { datosBranMO.push(e); });
-            $.each( f, function( key, e ) { fechas.push(e); });
-            $.each( fP, function( key, e ) { fechasP.push(e); });
+            /** FITOPLANCTON */
+                var datosdiatomeas = [];
+                var datoscianofitas = [];
+                var datosclorofitas = [];
+                var datosdinoflagelados = [];
+                var datosflagelados = [];
+                var datostotal_cel_ml = [];
+                var fechasF = [];
 
-            $.each( datosbranquias_epic , function(key, e) { oDatosbranquias_epic.push(e) });
-            $.each( datosplabial , function(key, e) { oDatosplabial.push(e) });
-            $.each( datosproto_epip , function(key, e) { oDatosproto_epip.push(e) });
-            $.each( datosintes_grad , function(key, e) { oDatosintes_grad.push(e) });
-            $.each( datoshepato_I , function(key, e) { oDatoshepato_I.push(e) });
-            $.each( datoshepato_nhp , function(key, e) { oDatoshepato_nhp.push(e) });
+                var fF = $('#fechasF').val().split(",");
+                var oDatosdiatomeas = ($('#datosdiatomeas').val()).split(",");
+                var oDatoscianofitas = ($('#datoscianofitas').val()).split(",");
+                var oDatosclorofitas = ($('#datosclorofitas').val()).split(",");
+                var oDatosdinoflagelados = ($('#datosdinoflagelados').val()).split(",");
+                var oDatosflagelados = ($('#datosflagelados').val()).split(",");
+                var oDatostotal_cel_ml = ($('#datostotal_cel_ml').val()).split(",");
 
-            $.each( datoshepato_vib , function(key, e) { oDatoshepato_vib.push(e) });
-            $.each( datoshepato_IIInhp , function(key, e) { oDatoshepato_IIInhp.push(e) });
-            $.each( datoshepato_IIIvib , function(key, e) { oDatoshepato_IIIvib.push(e) });
-            $.each( datoshepato_IIIbnhp , function(key, e) { oDatoshepato_IIIbnhp.push(e) });
-            $.each( datoshepato_IIIbvib , function(key, e) { oDatoshepato_IIIbvib.push(e) });
-            $.each( datoshepato_IIIcnhp , function(key, e) { oDatoshepato_IIIcnhp.push(e) });
-            $.each( datoshepato_IIIcvib , function(key, e) { oDatoshepato_IIIcvib.push(e) });
-            $.each( datoslip_prom , function(key, e) { oDatoslip_prom.push(e) });
-            $.each( datosno_org , function(key, e) { oDatosno_org.push(e) });
-            $.each( datosscore_nhp , function(key, e) { oDatosscore_nhp.push(e) });
-            $.each( datosscore_vib , function(key, e) { oDatosscore_vib.push(e) });
-            $.each( datostub_afec , function(key, e) { oDatostub_afec.push(e) });
-            $.each( datosext_necro , function(key, e) { oDatosext_necro.push(e) });
-            $.each( datosext_pig , function(key, e) { oDatosext_pig.push(e) });
-            $.each( datosext_flaci , function(key, e) { oDatosext_flaci.push(e) });
-            $.each( datosur_ur , function(key, e) { oDatosur_ur.push(e) });
-            $.each( datosur_uv , function(key, e) { oDatosur_uv.push(e) });
-            $.each( datosur_amp , function(key, e) { oDatosur_amp.push(e) });
-            $.each( datospeso_prom , function(key, e) { oDatospeso_prom.push(e) });
-            $.each( datostiem_prom , function(key, e) { oDatostiem_prom.push(e) });
-            $.each( datostiem_min , function(key, e) { oDatostiem_min.push(e) });
-            $.each( datostiem_max , function(key, e) { oDatostiem_max.push(e) });
-            $.each( datoscons_ant , function(key, e) { oDatoscons_ant.push(e) });
-            $.each( datoscons_musc , function(key, e) { oDatoscons_musc.push(e) });
+                $.each( fF, function( key, e) { fechasF.push(e) });
+                $.each( datosdiatomeas, function( key, e) { oDatosdiatomeas.push(e) });
+                $.each( datoscianofitas, function( key, e) { oDatoscianofitas.push(e) });
+                $.each( datosclorofitas, function( key, e) { oDatosclorofitas.push(e) });
+                $.each( datosdinoflagelados, function( key, e) { oDatosdinoflagelados.push(e) });
+                $.each( datosflagelados, function( key, e) { oDatosflagelados.push(e) });
+                $.each( datostotal_cel_ml, function( key, e) { oDatostotal_cel_ml.push(e) });
 
-            
+            /** ZOOPLANCTON */
+                var fechasZ = [];
+                var datosnauplios = [];
+                var datoscopepodos = [];
+                var datosrutiferos = [];
+                var datospoliquetos = [];
+                var datosotros = [];
+                var datostotal_organismos = [];
+
+                fZ = $('#fechasZ').val().split(",");
+                oDatosnauplios = ($('#datosnauplios').val()).split(",");
+                oDatoscopepodos = ($('#datoscopepodos').val()).split(",");
+                oDatosrutiferos = ($('#datosrutiferos').val()).split(",");
+                oDatospoliquetos = ($('#datospoliquetos').val()).split(",");
+                oDatosotros = ($('#datosotros').val()).split(",");
+                oDatostotal_organismos = ($('#datostotal_organismos').val()).split(",");
+
+                $.each( fZ, function( key, e) { fechasZ.push(e) });
+                $.each( oDatosnauplios, function( key, e) { datosnauplios.push(e) });
+                $.each( oDatoscopepodos, function( key, e) { datoscopepodos.push(e) });
+                $.each( oDatosrutiferos, function( key, e) { datosrutiferos.push(e) });
+                $.each( oDatospoliquetos, function( key, e) { datospoliquetos.push(e) });
+                $.each( oDatosotros, function( key, e) { datosotros.push(e) });
+                $.each( oDatostotal_organismos, function( key, e) { datostotal_organismos.push(e) });
+
             // Gráficas de Parámetros
-            var chart = new Chart(ctx, {
-                // The type of chart we want to create
-                type: 'line',
+                var chart = new Chart(ctx, {
+                    // The type of chart we want to create
+                    type: 'line',
 
-                // The data for our dataset
-                data: {
-                    labels: fechas,
-                    datasets: [{
-                        label: 'pH',
-                        borderColor: 'rgb(66,133,244)',
-                        backgroundColor: 'rgb(66,133,244)',
-                        data: datos
-                    }]
-                }
-            });
+                    // The data for our dataset
+                    data: {
+                        labels: fechas,
+                        datasets: [{
+                            label: 'pH',
+                            borderColor: 'rgb(66,133,244)',
+                            backgroundColor: 'rgb(66,133,244)',
+                            fill: false,
+                            data: datos
+                        }],
+                        options: {
+                            title: 'pH',
+                            gridLines: {
+                                display: true,
+                                drowBorder: true,
+                                drawOnChartArea: false
+                            }
+                        }
+                    }
+                });
 
             // Gráficas de Laboratorio
             /// Análisis Patológicos
-
-            var chartPatologicos = new Chart(ctxPato, {
-                // The type of chart we want to create
-                type: 'line',
-                // The data for our dataset
-                data: {
-                    labels: fechasP,
-                    datasets: [
-                        {
-                            label: 'Branc Necro',
-                            data: datosBranNecro,
-                            borderColor: "#E23838",
-                            backgroundColor: "#E23838",
-                            fill: false
+                var chartPatologicos = new Chart(ctxPato, {
+                    // The type of chart we want to create
+                    type: 'line',
+                    // The data for our dataset
+                    data: {
+                        labels: fechasP,
+                        datasets: [
+                            {
+                                label: 'Branc Necro',
+                                data: datosBranNecro,
+                                borderColor: "#E23838",
+                                backgroundColor: "#E23838",
+                                fill: false
+                            },
+                            {
+                                label: 'Branc Mo',
+                                data: datosBranMO,
+                                borderColor: "#009CDF",
+                                backgroundColor: "#009CDF",
+                                fill: false,
+                            },
+                            {
+                                label: 'Branc Epic',
+                                data: oDatosbranquias_epic,
+                                borderColor: "#5EBD3E",
+                                backgroundColor: "#5EBD3E",
+                                fill: false,
+                            },
+                            {
+                                label: 'Sintes Grad',
+                                data: oDatosintes_grad,
+                                borderColor: "#FFB900",
+                                backgroundColor: "#FFB900",
+                                fill: false,
+                            },
+                            {
+                                label: 'Hepato I',
+                                data: oDatoshepato_I,
+                                borderColor: "#F78200",
+                                backgroundColor: "#F78200",
+                                fill: false,
+                            },
+                            {
+                                label: 'Hepato nhp',
+                                data: oDatoshepato_nhp,
+                                borderColor: "#973999",
+                                backgroundColor: "#973999",
+                                fill: false,
+                            },                  
+                            {
+                                label: 'Hepato Vib',
+                                data: oDatoshepato_vib,
+                                borderColor: "#FF0099",
+                                backgroundColor: "#FF0099",
+                                fill: false,
+                            },
+                            {
+                                label: 'Hepato III nhp',
+                                data: oDatoshepato_IIInhp,
+                                borderColor: "#f3f315",
+                                backgroundColor: "#f3f315",
+                                fill: false,
+                            },
+                            {
+                                label: 'Hepato III vib',
+                                data: oDatoshepato_IIIvib,
+                                borderColor: "#83f52c",
+                                backgroundColor: "#83f52c",
+                                fill: false,
+                            },
+                            {
+                                label: 'Hepato IIIb nhp',
+                                data: oDatoshepato_IIIbnhp,
+                                borderColor: "#ff6600",
+                                backgroundColor: "#ff6600",
+                                fill: false,
+                            },
+                            {
+                                label: 'Hepato IIIb vib',
+                                data: oDatoshepato_IIIbvib,
+                                borderColor: "#630dd0",
+                                backgroundColor: "#630dd0",
+                                fill: false,
+                            },
+                            {
+                                label: 'Hepato IIIc nhp',
+                                data: oDatoshepato_IIIcnhp,
+                                borderColor: "#bd361b",
+                                backgroundColor: "#bd361b",
+                                fill: false,
+                            },
+                            {
+                                label: 'Hepato IIIc vib',
+                                data: oDatoshepato_IIIcvib,
+                                borderColor: "#dba800",
+                                backgroundColor: "#dba800",
+                                fill: false,
+                            },
+                            {
+                                label: 'Lipidos Prom',
+                                data: oDatoslip_prom,
+                                borderColor: "#b9d670",
+                                backgroundColor: "#b9d670",
+                                fill: false,
+                            },
+                            {
+                                label: '# Organismos',
+                                data: oDatosno_org,
+                                borderColor: "#b6c61a",
+                                backgroundColor: "#b6c61a",
+                                fill: false,
+                            },
+                            {
+                                label: 'Score nhp',
+                                data: oDatosscore_nhp,
+                                borderColor: "#006344",
+                                backgroundColor: "#006344",
+                                fill: false,
+                            },
+                            {
+                                label: 'Score vib',
+                                data: oDatosscore_vib,
+                                borderColor: "#607D88",
+                                backgroundColor: "#607D88",
+                                fill: false,
+                            },
+                            {
+                                label: 'Tubulos Afec',
+                                data: oDatostub_afec,
+                                borderColor: "#9e9e9e",
+                                backgroundColor: "#9e9e9e",
+                                fill: false,
+                            },
+                            {
+                                label: 'Necro grado',
+                                data: oDatosext_necro,
+                                borderColor: "#795548",
+                                backgroundColor: "#795548",
+                                fill: false,
+                            },
+                            {
+                                label: 'Pidmen grado',
+                                data: oDatosext_pig,
+                                borderColor: "#009688",
+                                backgroundColor: "#009688",
+                                fill: false,
+                            },
+                            {
+                                label: 'Flaci grado',
+                                data: oDatosext_flaci,
+                                borderColor: "#3f51b5",
+                                backgroundColor: "#3f51b5",
+                                fill: false,
+                            },
+                            {
+                                label: 'Uropo UR',
+                                data: oDatosur_ur,
+                                borderColor: "#e91e63",
+                                backgroundColor: "#e91e63",
+                                fill: false,
+                            },
+                            {
+                                label: 'Uropo UV',
+                                data: oDatosur_uv,
+                                borderColor: "#000000",
+                                backgroundColor: "#000000",
+                                fill: false,
+                            },
+                            {
+                                label: 'Uropo AMP',
+                                data: oDatosur_amp,
+                                borderColor: "#da4453",
+                                backgroundColor: "#da4453",
+                                fill: false,
+                            },
+                            {
+                                label: 'Peso prom',
+                                data: oDatospeso_prom,
+                                borderColor: "#03a9f4",
+                                backgroundColor: "#03a9f4",
+                                fill: false,
+                            },
+                            {
+                                label: 'Tiempo prom',
+                                data: oDatostiem_prom,
+                                borderColor: "#004c97",
+                                backgroundColor: "#004c97",
+                                fill: false,
+                            },
+                            {
+                                label: 'Tiempo min',
+                                data: oDatostiem_min,
+                                borderColor: "#007a33",
+                                backgroundColor: "#007a33",
+                                fill: false,
+                            },
+                            {
+                                label: 'Tiempo max',
+                                data: oDatostiem_max,
+                                borderColor: "#009cde",
+                                backgroundColor: "#009cde",
+                                fill: false,
+                            },
+                            {
+                                label: 'Consum ant',
+                                data: oDatoscons_ant,
+                                borderColor: "#f3d54e",
+                                backgroundColor: "#f3d54e",
+                                fill: false,
+                            },
+                            {
+                                label: 'Consum musc',
+                                data: oDatoscons_musc,
+                                borderColor: "#808080",
+                                backgroundColor: "#808080",
+                                fill: false,
+                            },  
+                        ]
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Análisis Patológicos'
                         },
-                        {
-                            label: 'Branc Mo',
-                            data: datosBranMO,
-                            borderColor: "#009CDF",
-                            backgroundColor: "#009CDF",
-                            fill: false,
-                        },{
-                            label: 'Branc Epic',
-                            data: oDatosbranquias_epic,
-                            borderColor: "#5EBD3E",
-                            backgroundColor: "#5EBD3E",
-                            fill: false,
-                        },
-                        {
-                            label: 'Sintes Grad',
-                            data: oDatosintes_grad,
-                            borderColor: "#FFB900",
-                            backgroundColor: "#FFB900",
-                            fill: false,
-                        },
-                        {
-                            label: 'Hepato I',
-                            data: oDatoshepato_I,
-                            borderColor: "#F78200",
-                            backgroundColor: "#F78200",
-                            fill: false,
-                        },
-                        {
-                            label: 'Hepato nhp',
-                            data: oDatoshepato_nhp,
-                            borderColor: "#973999",
-                            backgroundColor: "#973999",
-                            fill: false,
-                        },  
-                    ]
-                },
-                options: {
-                    title: {
-                        display: true,
-                        text: 'Análisis Patológicos'
+                        legend: {
+                            display: false,
+                            position: 'bottom'
+                        }
                     }
-                }
-            });
+                });
 
+            /// Bacteriología
+                var chartBacter = new Chart(ctxBactem,{
+                    // The type of chart we want to create
+                    type: 'line',
+
+                    // The data for our dataset
+                    data: {
+                        labels: fB,
+                        datasets: [
+                            {
+                                label: 'Agua CA',
+                                borderColor: '#E23838',
+                                backgroundColor: '#E23838',
+                                fill: false,
+                                data: oDatosagua_ca
+                            },
+                            {
+                                label: 'Agua CV',
+                                borderColor: '#009CDF',
+                                backgroundColor: '#009CDF',
+                                fill: false,
+                                data: oDatosagua_cv
+                            },
+                            {
+                                label: 'Larva CA',
+                                borderColor: '#5EBD3E',
+                                backgroundColor: '#5EBD3E',
+                                fill: false,
+                                data: oDatosmac_larva_ca
+                            },
+                            {
+                                label: 'Larva CV',
+                                borderColor: '#FFB900',
+                                backgroundColor: '#FFB900',
+                                fill: false,
+                                data: oDatosmac_larva_cv
+                            },
+                            {
+                                label: 'Hepato CA',
+                                borderColor: '#F78200',
+                                backgroundColor: '#F78200',
+                                fill: false,
+                                data: oDatoshepato_ca
+                            },
+                            {
+                                label: 'Hepato CV',
+                                borderColor: '#973999',
+                                backgroundColor: '#973999',
+                                fill: false,
+                                data: oDatoshepato_cv
+                            },
+                        ]
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Bacteriología'
+                        }
+                    }
+                });
+
+            /// Fitoplancton
+                var chartFito = new Chart(ctxFito,{
+                    // The type of chart we want to create
+                    type: 'line',
+
+                    // The data for our dataset
+                    data: {
+                        labels: fechasF,
+                        datasets: [
+                            {
+                                label: 'Diatomeas',
+                                borderColor: '#E23838',
+                                backgroundColor: '#E23838',
+                                fill: false,
+                                data: oDatosdiatomeas
+                            },
+                            {
+                                label: 'Cianofitas',
+                                borderColor: '#009CDF',
+                                backgroundColor: '#009CDF',
+                                fill: false,
+                                data: oDatoscianofitas
+                            },
+                            {
+                                label: 'Clorofitas',
+                                borderColor: '#5EBD3E',
+                                backgroundColor: '#5EBD3E',
+                                fill: false,
+                                data: oDatosclorofitas
+                            },
+                            {
+                                label: 'Dinoflagelados',
+                                borderColor: '#FFB900',
+                                backgroundColor: '#FFB900',
+                                fill: false,
+                                data: oDatosdinoflagelados
+                            },
+                            {
+                                label: 'Flagelados',
+                                borderColor: '#F78200',
+                                backgroundColor: '#F78200',
+                                fill: false,
+                                data: oDatosflagelados
+                            },
+                            {
+                                label: 'Total Cel.',
+                                borderColor: '#973999',
+                                backgroundColor: '#973999',
+                                fill: false,
+                                data: oDatostotal_cel_ml
+                            },
+                        ]
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Fitoplancton'
+                        }
+                    }
+                });
+
+            /// Zooplancton
+                var chartZoo = new Chart(ctxZoo,{
+                    // The type of chart we want to create
+                    type: 'line',
+
+                    // The data for our dataset
+                    data: {
+                        labels: fechasZ,
+                        datasets: [
+                            {
+                                label: 'Nauplios',
+                                borderColor: '#E23838',
+                                backgroundColor: '#E23838',
+                                fill: false,
+                                data: datosnauplios
+                            },
+                            {
+                                label: 'Copepodos',
+                                borderColor: '#009CDF',
+                                backgroundColor: '#009CDF',
+                                fill: false,
+                                data: datoscopepodos
+                            },
+                            {
+                                label: 'Rutiferos',
+                                borderColor: '#5EBD3E',
+                                backgroundColor: '#5EBD3E',
+                                fill: false,
+                                data: datosrutiferos
+                            },
+                            {
+                                label: 'Poliquetos',
+                                borderColor: '#FFB900',
+                                backgroundColor: '#FFB900',
+                                fill: false,
+                                data: datospoliquetos
+                            },
+                            {
+                                label: 'Otros',
+                                borderColor: '#F78200',
+                                backgroundColor: '#F78200',
+                                fill: false,
+                                data: datosotros
+                            },
+                            {
+                                label: 'Total Org.',
+                                borderColor: '#973999',
+                                backgroundColor: '#973999',
+                                fill: false,
+                                data: datostotal_organismos
+                            },
+                        ]
+                    },
+                    options: {
+                        /*title: {
+                            display: true,
+                            text: 'Zooplancton'
+                        }*/
+                    }
+                });
 
         });
 
@@ -345,23 +785,43 @@ block contenido
             .card.card-default
                 .card-body.card-5-7
                     h4  Parametros del Día
-                    span 
-                        b pH: 
-                        |   7
-                    br
-                    span 
-                        b °C: 
-                        |   25
-                    br
-                    span 
-                        b 0
-                        sub
-                            b 2
-                        b : 
-                        |   3ppm
+                    .col-lg-6
+                        h5.text-center 
+                            b AM
+                        span 
+                            b pH: 
+                            |   7
+                        br
+                        span 
+                            b °C: 
+                            |   25
+                        br
+                        span 
+                            b 0
+                            sub
+                                b 2
+                            b : 
+                            |   3ppm
+                    .col-lg-6
+                        h5.text-center
+                            b PM
+                        span 
+                            b pH: 
+                            |   7
+                        br
+                        span 
+                            b °C: 
+                            |   25
+                        br
+                        span 
+                            b 0
+                            sub
+                                b 2
+                            b : 
+                            |   3ppm
         .col-lg-4.col-sm-6
-            #map(style="width: 100%; min-height: 300px;")
-        .col-lg-5
+            #map(style="width: 100%; min-height: 350px;")
+        .col-lg-5.chart-container
             input#locations(type="text" value="#{locations}").hidden
             input#markerx(type="text" value="#{estanque.marker_x}").hidden
             input#markery(type="text" value="#{estanque.marker_y}").hidden
@@ -386,51 +846,83 @@ block contenido
                         option(value="nivel") Nivel de Agua
 
             canvas#myChart
-    .row
-        // Datos para gráficos análisis patológicos
-        input#fechasP.hidden(type="text" value="#{fechasP}")
-
-        input#dataBranquias_necro.hidden(type="text" value="#{dataBranquias_necro}")
-        input#dataBranquias_mo.hidden(type="text" value="#{dataBranquias_mo}")
-        input#datosbranquias_epic.hidden(type="text" value="#{datosbranquias_epic}")
-        input#datosplabial.hidden(type="text" value="#{datosplabial}")
-        input#datosproto_epip.hidden(type="text" value="#{datosproto_epip}")
-        input#datosintes_grad.hidden(type="text" value="#{datosintes_grad}")
-        input#datoshepato_I.hidden(type="text" value="#{datoshepato_I}")
-        input#datoshepato_nhp.hidden(type="text" value="#{datoshepato_nhp}")
-        input#datoshepato_vib.hidden(type="text" value="#{datoshepato_vib}")
-        input#datoshepato_IIInhp.hidden(type="text" value="#{datoshepato_IIInhp}")
-        input#datoshepato_IIIvib.hidden(type="text" value="#{datoshepato_IIIvib}")
-        input#datoshepato_IIIbnhp.hidden(type="text" value="#{datoshepato_IIIbnhp}")
-        input#datoshepato_IIIbvib.hidden(type="text" value="#{datoshepato_IIIbvib}")
-        input#datoshepato_IIIcnhp.hidden(type="text" value="#{datoshepato_IIIcnhp}")
-        input#datoshepato_IIIcvib.hidden(type="text" value="#{datoshepato_IIIcvib}")
-        input#datoslip_prom.hidden(type="text" value="#{datoslip_prom}")
-        input#datosno_org.hidden(type="text" value="#{datosno_org}")
-        input#datosscore_nhp.hidden(type="text" value="#{datosscore_nhp}")
-        input#datosscore_vib.hidden(type="text" value="#{datosscore_vib}")
-        input#datostub_afec.hidden(type="text" value="#{datostub_afec}")
-        input#datosext_necro.hidden(type="text" value="#{datosext_necro}")
-        input#datosext_pig.hidden(type="text" value="#{datosext_pig}")
-        input#datosext_flaci.hidden(type="text" value="#{datosext_flaci}")
-        input#datosur_ur.hidden(type="text" value="#{datosur_ur}")
-        input#datosur_uv.hidden(type="text" value="#{datosur_uv}")
-        input#datosur_amp.hidden(type="text" value="#{datosur_amp}")
-        input#datospeso_prom.hidden(type="text" value="#{datospeso_prom}")
-        input#datostiem_prom.hidden(type="text" value="#{datostiem_prom}")
-        input#datostiem_min.hidden(type="text" value="#{datostiem_min}")
-        input#datostiem_max.hidden(type="text" value="#{datostiem_max}")
-        input#datoscons_ant.hidden(type="text" value="#{datoscons_ant}")
-        input#datoscons_musc.hidden(type="text" value="#{datoscons_musc }")
-        
+    .row 
         .col-lg-12.col-md-12.col-xs-12
             h4
                 i.fas.fa-flask(style="margin-right: 10px;")
                 |   Laboratorio
-        .divider
-        .col-lg-4
+    .divider
+    .row
+        // Datos para gráficos análisis patológicos
+        .col-lg-6.chart-container(style="position: relative; min-height:300px; min-width:600px;")
+            input#fechasP.hidden(type="text" value="#{fechasP}")
+            input#dataBranquias_necro.hidden(type="text" value="#{dataBranquias_necro}")
+            input#dataBranquias_mo.hidden(type="text" value="#{dataBranquias_mo}")
+            input#datosbranquias_epic.hidden(type="text" value="#{datosbranquias_epic}")
+            input#datosplabial.hidden(type="text" value="#{datosplabial}")
+            input#datosproto_epip.hidden(type="text" value="#{datosproto_epip}")
+            input#datosintes_grad.hidden(type="text" value="#{datosintes_grad}")
+            input#datoshepato_I.hidden(type="text" value="#{datoshepato_I}")
+            input#datoshepato_nhp.hidden(type="text" value="#{datoshepato_nhp}")
+            input#datoshepato_vib.hidden(type="text" value="#{datoshepato_vib}")
+            input#datoshepato_IIInhp.hidden(type="text" value="#{datoshepato_IIInhp}")
+            input#datoshepato_IIIvib.hidden(type="text" value="#{datoshepato_IIIvib}")
+            input#datoshepato_IIIbnhp.hidden(type="text" value="#{datoshepato_IIIbnhp}")
+            input#datoshepato_IIIbvib.hidden(type="text" value="#{datoshepato_IIIbvib}")
+            input#datoshepato_IIIcnhp.hidden(type="text" value="#{datoshepato_IIIcnhp}")
+            input#datoshepato_IIIcvib.hidden(type="text" value="#{datoshepato_IIIcvib}")
+            input#datoslip_prom.hidden(type="text" value="#{datoslip_prom}")
+            input#datosno_org.hidden(type="text" value="#{datosno_org}")
+            input#datosscore_nhp.hidden(type="text" value="#{datosscore_nhp}")
+            input#datosscore_vib.hidden(type="text" value="#{datosscore_vib}")
+            input#datostub_afec.hidden(type="text" value="#{datostub_afec}")
+            input#datosext_necro.hidden(type="text" value="#{datosext_necro}")
+            input#datosext_pig.hidden(type="text" value="#{datosext_pig}")
+            input#datosext_flaci.hidden(type="text" value="#{datosext_flaci}")
+            input#datosur_ur.hidden(type="text" value="#{datosur_ur}")
+            input#datosur_uv.hidden(type="text" value="#{datosur_uv}")
+            input#datosur_amp.hidden(type="text" value="#{datosur_amp}")
+            input#datospeso_prom.hidden(type="text" value="#{datospeso_prom}")
+            input#datostiem_prom.hidden(type="text" value="#{datostiem_prom}")
+            input#datostiem_min.hidden(type="text" value="#{datostiem_min}")
+            input#datostiem_max.hidden(type="text" value="#{datostiem_max}")
+            input#datoscons_ant.hidden(type="text" value="#{datoscons_ant}")
+            input#datoscons_musc.hidden(type="text" value="#{datoscons_musc }")
             canvas#patologicosChart
-            //.col-lg-4
-            //    canvas#fitoChar
-
+            
+        // Datos bacteriología
+        .col-lg-6.chart-container(style="position: relative; min-height:300px; min-width:600px;")
+                input#fechasB.hidden(type="text" value="#{ fechasB }")
+                input#datosagua_ca.hidden(type="text" value="#{ datosagua_ca }")
+                input#datosagua_cv.hidden(type="text" value="#{ datosagua_cv }")
+                input#datosmac_larva_ca.hidden(type="text" value="#{ datosmac_larva_ca }")
+                input#datosmac_larva_cv.hidden(type="text" value="#{ datosmac_larva_cv }")
+                input#datoshepato_ca.hidden(type="text" value="#{ datoshepato_ca }")
+                input#datoshepato_cv.hidden(type="text" value="#{ datoshepato_cv }")
+                canvas#bacteChart
+    .row
+        .col-lg-12.col-md-12.col-xs-12
+            // Datos Fitoplancton
+            .col-lg-6.chart-container(style="position: relative; min-height:300px; min-width:600px;")
+                input#fechasF.hidden(type="text" value="#{ fechasF }")
+                input#datosdiatomeas.hidden(type="text" value="#{ datosdiatomeas }")
+                input#datoscianofitas.hidden(type="text" value="#{ datoscianofitas }")
+                input#datosclorofitas.hidden(type="text" value="#{ datosclorofitas }")
+                input#datosdinoflagelados.hidden(type="text" value="#{ datosdinoflagelados }")
+                input#datosflagelados.hidden(type="text" value="#{ datosflagelados }")
+                input#datostotal_cel_ml.hidden(type="text" value="#{ datostotal_cel_ml }")
+                canvas#fitoChart
+            // Datos Zooplancton
+            .col-lg-6.chart-container(style="position: relative; min-height:300px; min-width:600px;")
+                h
+                input#fechasZ.hidden(type="text" value="#{ fechasZ }")
+                input#datosnauplios.hidden(type="text" value="#{ datosnauplios }")
+                input#datoscopepodos.hidden(type="text" value="#{ datoscopepodos }")
+                input#datosrutiferos.hidden(type="text" value="#{ datosrutiferos }")
+                input#datospoliquetos.hidden(type="text" value="#{ datospoliquetos }")
+                input#datosotros.hidden(type="text" value="#{ datosotros }")
+                input#datostotal_organismos.hidden(type="text" value="#{ datostotal_organismos }")
+                canvas#zooChart
+                
+                
 

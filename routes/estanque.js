@@ -302,50 +302,168 @@ module.exports = {
                                                             listcons_musc.push(p.cons_musc);
                                                         })
 
-                                                        respuesta.render("Administracion/Granja/Estanques/detail",
-                                                            {
-                                                                user: solicitud.session.user,
-                                                                estanque: estanque,
-                                                                locations: Locations,
-                                                                fechas: fechas,
-                                                                data: data,
-                                                                fechasP : fechasP,
-                                                                dataBranquias_necro: listbranquias_necro,
-                                                                dataBranquias_mo: listbranquias_mo,
-                                                                datosbranquias_epic : listbranquias_epic,
-                                                                datosplabial : listplabial,
-                                                                datosproto_epip : listproto_epip,
-                                                                datosintes_grad : listintes_grad,
-                                                                datoshepato_I : listhepato_I,
-                                                                datoshepato_nhp : listhepato_nhp,
-                                                                datoshepato_vib : listhepato_vib,
-                                                                datoshepato_IIInhp : listhepato_IIInhp,
-                                                                datoshepato_IIIvib : listhepato_IIIvib,
-                                                                datoshepato_IIIbnhp : listhepato_IIIbnhp,
-                                                                datoshepato_IIIbvib : listhepato_IIIbvib,
-                                                                datoshepato_IIIcnhp : listhepato_IIIcnhp,
-                                                                datoshepato_IIIcvib : listhepato_IIIcvib,
-                                                                datoslip_prom : listlip_prom,
-                                                                datosno_org : listno_org,
-                                                                datosscore_nhp : listscore_nhp,
-                                                                datosscore_vib : listscore_vib,
-                                                                datostub_afec : listtub_afec,
-                                                                datosext_necro : listext_necro,
-                                                                datosext_pig : listext_pig,
-                                                                datosext_flaci : listext_flaci,
-                                                                datosur_ur : listur_ur,
-                                                                datosur_uv : listur_uv,
-                                                                datosur_amp : listur_amp,
-                                                                datospeso_prom : listpeso_prom,
-                                                                datostiem_prom : listtiem_prom,
-                                                                datostiem_min : listtiem_min,
-                                                                datostiem_max : listtiem_max,
-                                                                datoscons_ant : listcons_ant,
-                                                                datoscons_musc : listcons_musc
+                                                        Bacteriologias.find({"estanque": solicitud.params.id},{
+                                                            agua_ca: 1,
+                                                            agua_cv: 1,
+                                                            mac_larva_ca: 1,
+                                                            mac_larva_cv: 1,
+                                                            hepato_ca: 1,
+                                                            hepato_cv: 1,
+                                                            facha: 1,
+                                                        }, function(error, bacteriologia){
+                                                            if(error){
+                                                                console.log(chalk.bgRed(error));
+                                                            } else {
+                                                                var listagua_ca = [];
+                                                                var listagua_cv = [];
+                                                                var listmac_larva_ca = [];
+                                                                var listmac_larva_cv = [];
+                                                                var listhepato_ca = [];
+                                                                var listhepato_cv = [];
+                                                                var fechasB = [];
+
+                                                                bacteriologia.forEach(bac => {
+                                                                    listagua_ca.push(bac.listagua_ca);
+                                                                    listagua_cv.push(bac.listagua_cv);
+                                                                    listmac_larva_ca.push(bac.listmac_larva_ca);
+                                                                    listmac_larva_cv.push(bac.listmac_larva_cv);
+                                                                    listhepato_ca.push(bac.listhepato_ca);
+                                                                    listhepato_cv.push(bac.listhepato_cv);
+                                                                    fechasB.push(new Date(bac.fecha).getDate()+ '/' + (new Date(bac.fecha).getMonth() + 1)+ '/' + new Date(bac.fecha).getFullYear());
+                                                                });
+
+                                                                Fitoplancton.find({"estanque": solicitud.params.id}, {
+                                                                    fecha: 1,
+                                                                    diatomeas: 1,
+                                                                    cianofitas: 1,
+                                                                    clorofitas: 1,
+                                                                    dinoflagelados: 1,
+                                                                    flagelados: 1,
+                                                                    total_cel_ml: 1
+                                                                }, function(error,fitoplancton){
+                                                                    if(error){
+                                                                        console.log(chalk.bgRed(error));
+                                                                    } else {
+
+                                                                        var fechasF = []
+                                                                        var diatomeas = [];
+                                                                        var cianofitas = [];
+                                                                        var clorofitas = [];
+                                                                        var dinoflagelados = [];
+                                                                        var flagelados = [];
+                                                                        var total_cel_ml = [];
+
+                                                                        fitoplancton.forEach( fito => {
+                                                                            diatomeas.push(fito.diatomeas);
+                                                                            cianofitas.push(fito.cianofitas);
+                                                                            clorofitas.push(fito.clorofitas);
+                                                                            dinoflagelados.push(fito.dinoflagelados);
+                                                                            flagelados.push(fito.flagelados);
+                                                                            total_cel_ml.push(fito.total_cel_ml);
+                                                                            fechasF.push(new Date(fito.fecha).getDate()+ '/' + (new Date(fito.fecha).getMonth() + 1)+ '/' + new Date(fito.fecha).getFullYear());
+                                                                        });
+
+                                                                        Zooplancton.find({"estanque": solicitud.params.id}, {
+                                                                            nauplios: 1,
+                                                                            copepodos: 1,
+                                                                            rutiferos: 1,
+                                                                            poliquetos: 1,
+                                                                            otros: 1,
+                                                                            total_organismos: 1,
+                                                                            fecha: 1,
+                                                                        }, function(error, zooplancton){
+                                                                            if(error){
+                                                                                console.log(chalk.bgRed(error));
+                                                                            } else {
+
+                                                                                var nauplios = [];
+                                                                                var copepodos = [];
+                                                                                var rutiferos = [];
+                                                                                var poliquetos = [];
+                                                                                var otros = [];
+                                                                                var total_organismos = [];
+                                                                                var fechasZ = [];
+
+                                                                                zooplancton.forEach( zoo => {
+                                                                                    nauplios.push(zoo.nauplios);
+                                                                                    copepodos.push(zoo.copepodos);
+                                                                                    rutiferos.push(zoo.rutiferos);
+                                                                                    poliquetos.push(zoo.poliquetos);
+                                                                                    otros.push(zoo.otros);
+                                                                                    total_organismos.push(zoo.total_organismos);
+                                                                                    fechasZ.push(new Date(zoo.fecha).getDate()+ '/' + (new Date(zoo.fecha).getMonth() + 1)+ '/' + new Date(zoo.fecha).getFullYear());
+                                                                                });
+
+                                                                                respuesta.render("Administracion/Granja/Estanques/detail",
+                                                                                    {
+                                                                                        user: solicitud.session.user,
+                                                                                        estanque: estanque,
+                                                                                        locations: Locations,
+                                                                                        fechas: fechas,
+                                                                                        data: data,
+                                                                                        fechasP : fechasP,
+                                                                                        dataBranquias_necro: listbranquias_necro,
+                                                                                        dataBranquias_mo: listbranquias_mo,
+                                                                                        datosbranquias_epic : listbranquias_epic,
+                                                                                        datosplabial : listplabial,
+                                                                                        datosproto_epip : listproto_epip,
+                                                                                        datosintes_grad : listintes_grad,
+                                                                                        datoshepato_I : listhepato_I,
+                                                                                        datoshepato_nhp : listhepato_nhp,
+                                                                                        datoshepato_vib : listhepato_vib,
+                                                                                        datoshepato_IIInhp : listhepato_IIInhp,
+                                                                                        datoshepato_IIIvib : listhepato_IIIvib,
+                                                                                        datoshepato_IIIbnhp : listhepato_IIIbnhp,
+                                                                                        datoshepato_IIIbvib : listhepato_IIIbvib,
+                                                                                        datoshepato_IIIcnhp : listhepato_IIIcnhp,
+                                                                                        datoshepato_IIIcvib : listhepato_IIIcvib,
+                                                                                        datoslip_prom : listlip_prom,
+                                                                                        datosno_org : listno_org,
+                                                                                        datosscore_nhp : listscore_nhp,
+                                                                                        datosscore_vib : listscore_vib,
+                                                                                        datostub_afec : listtub_afec,
+                                                                                        datosext_necro : listext_necro,
+                                                                                        datosext_pig : listext_pig,
+                                                                                        datosext_flaci : listext_flaci,
+                                                                                        datosur_ur : listur_ur,
+                                                                                        datosur_uv : listur_uv,
+                                                                                        datosur_amp : listur_amp,
+                                                                                        datospeso_prom : listpeso_prom,
+                                                                                        datostiem_prom : listtiem_prom,
+                                                                                        datostiem_min : listtiem_min,
+                                                                                        datostiem_max : listtiem_max,
+                                                                                        datoscons_ant : listcons_ant,
+                                                                                        datoscons_musc : listcons_musc,
+                                                                                        datosagua_ca : listagua_ca,
+                                                                                        datosagua_cv : listagua_cv,
+                                                                                        datosmac_larva_ca : listmac_larva_ca,
+                                                                                        datosmac_larva_cv : listmac_larva_cv,
+                                                                                        datoshepato_ca : listhepato_ca,
+                                                                                        datoshepato_cv : listhepato_cv,
+                                                                                        fechasB : fechasB,
+                                                                                        fechasF : fechasF,
+                                                                                        datosdiatomeas : diatomeas,
+                                                                                        datoscianofitas : cianofitas,
+                                                                                        datosclorofitas : clorofitas,
+                                                                                        datosdinoflagelados : dinoflagelados,
+                                                                                        datosflagelados : flagelados,
+                                                                                        datostotal_cel_ml : total_cel_ml,
+                                                                                        datosnauplios : nauplios,
+                                                                                        datoscopepodos : copepodos,
+                                                                                        datosrutiferos : rutiferos,
+                                                                                        datospoliquetos : poliquetos,
+                                                                                        datosotros : otros,
+                                                                                        datostotal_organismos : total_organismos,
+                                                                                        fechasZ : fechasZ,
+                                                                                    }
+                                                                                );
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                });
                                                             }
-                                                        );
+                                                        });
                                                     }
-                                            
                                             });
                                         }
                                     });
