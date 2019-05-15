@@ -1,0 +1,55 @@
+extends ../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function() { 
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $('#subMenuNutricion').removeClass('hidden');
+            $('#spanMenuNutricion').removeClass('fa-angle-left');
+            $('#spanMenuNutricion').addClass('fa-angle-down');
+
+            $('#nutricion').dataTable();
+        });
+        //Termina Javascript
+
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-seedling(style="margin-right: 10px;")
+                |   Nutrición
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
+            a.btn.btn-special(href="/laboratoriolarvas/new", style="margin-right: 5px;")
+                i.fas.fa-plus-circle
+                |   Nueva
+            if user.permisos != "usuario"
+                a.btn.btn-special(href="#")
+                    i.fas.fa-file-pdf
+                    |   Reportes
+    .divider
+    .row
+        .table-responsive   
+            table#nutricion.table.table-striped.table-hover
+                thead
+                    th Estanque
+                    th Charola 1
+                    th Charola 2
+                    th Charola 3
+                    th Charola 4
+                    th Charola 5
+                    th Charola 6
+                    th Suma
+                    th Código Ración
+                    th Charolero
+                tbody
+                    each nut in nutricion
+                        tr  
+                            td.text-center #{ nut.estanque.codigo }
+                            td.text-center #{ nut.charola_1 }
+                            td.text-center #{ nut.charola_2 }
+                            td.text-center #{ nut.charola_3 }
+                            td.text-center #{ nut.charola_4 }
+                            td.text-center #{ nut.charola_5 }
+                            td.text-center #{ nut.charola_6 }
+                            td.text-center #{ nut.suma }
+                            td.text-center #{ nut.codigo_racion }
+                            td.text-center #{ nut.charolero.nombre }

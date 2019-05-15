@@ -461,6 +461,19 @@ $(document).ready( function() {
                 $('#spanmenuLaboratorioLarvas').addClass('fa-angle-left');
             }        
         });
+
+        // Nutrición
+        $('#menuNutricion').click( function(){
+            if ($('#submenuNutricion').hasClass('hidden')) {
+                $('#submenuNutricion').removeClass('hidden');
+                $('#spanmenuNutricion').removeClass('fa-angle-left');
+                $('#spanmenuNutricion').addClass('fa-angle-down');
+            }else{
+                $('#submenuNutricion').addClass('hidden');
+                $('#spanmenuNutricion').removeClass('fa-angle-down');
+                $('#spanmenuNutricion').addClass('fa-angle-left');
+            }        
+        });
            
 
 

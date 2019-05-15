@@ -70,8 +70,8 @@ module.exports = function(app){
     var laboratorios = require('../routes/laboratoriolarvas.js');
     var laboratoriosRouter = express.Router();
 
-    //var nutricion = require('../routes/nutricion.js')
-    //var nutricionRouter = express.Router();
+    var nutricion = require('../routes/nutricion.js')
+    var nutricionRouter = express.Router();
 
     var recepcionLarvas = require('../routes/recepcionlarvas.js');
     var recepcionLarvasRouter = express.Router();
@@ -349,6 +349,13 @@ module.exports = function(app){
     //laboratoriosRouter.put('/update/:id', laboratorios.update);
 
     // Nutricion
+    app.use('/nutricion', nutricionRouter);
+    nutricionRouter.get('/all', nutricion.all);
+    nutricionRouter.get('/new', nutricion.new);
+    //nutricionRouter.get('/edit', nutricion.edit);
+    nutricionRouter.post('/add', nutricion.add );
+    //nutricionRouter.get('/detail/:id', nutricion.detail);
+    nutricionRouter.post('/find', nutricion.find);
 
     // Recepción Larva
 

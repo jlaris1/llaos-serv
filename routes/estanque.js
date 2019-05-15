@@ -179,15 +179,24 @@ module.exports = {
                                         });
                                     });
                                     
-                                    Parametros.find({"estanque": solicitud.params.id},{ fecha: 1, ph: 1 }, function(error, ph){
+                                    Parametros.find({"estanque": solicitud.params.id},{ 
+                                        fecha: 1,
+                                        oxigeno: 1,
+                                        temperatura: 1, 
+                                        ph: 1 
+                                    }, function(error, ph){
                                         if(error) {
                                             console.log(chalk.bgRed(error));
                                         } else {
                                             var fechas = [];
                                             var data = [];
+                                            var oxigeno = [];
+                                            var temperatura = [];
 
                                             ph.forEach(p => {
                                                 fechas.push(new Date(p.fecha).getDate()+ '/' + (new Date(p.fecha).getMonth() + 1)+ '/' + new Date(p.fecha).getFullYear())
+                                                oxigeno.push(p.oxigeno);
+                                                temperatura.push(p.temperatura);
                                                 data.push(p.ph);
                                             });
 
@@ -224,7 +233,6 @@ module.exports = {
                                             var listtiem_max = [];
                                             var listcons_ant = [];
                                             var listcons_musc = [];
-
                                             
                                             Patologicos.find({"estanque": solicitud.params.id},
                                                 { 
@@ -394,69 +402,217 @@ module.exports = {
                                                                                     fechasZ.push(new Date(zoo.fecha).getDate()+ '/' + (new Date(zoo.fecha).getMonth() + 1)+ '/' + new Date(zoo.fecha).getFullYear());
                                                                                 });
 
-                                                                                respuesta.render("Administracion/Granja/Estanques/detail",
-                                                                                    {
-                                                                                        user: solicitud.session.user,
-                                                                                        estanque: estanque,
-                                                                                        locations: Locations,
-                                                                                        fechas: fechas,
-                                                                                        data: data,
-                                                                                        fechasP : fechasP,
-                                                                                        dataBranquias_necro: listbranquias_necro,
-                                                                                        dataBranquias_mo: listbranquias_mo,
-                                                                                        datosbranquias_epic : listbranquias_epic,
-                                                                                        datosplabial : listplabial,
-                                                                                        datosproto_epip : listproto_epip,
-                                                                                        datosintes_grad : listintes_grad,
-                                                                                        datoshepato_I : listhepato_I,
-                                                                                        datoshepato_nhp : listhepato_nhp,
-                                                                                        datoshepato_vib : listhepato_vib,
-                                                                                        datoshepato_IIInhp : listhepato_IIInhp,
-                                                                                        datoshepato_IIIvib : listhepato_IIIvib,
-                                                                                        datoshepato_IIIbnhp : listhepato_IIIbnhp,
-                                                                                        datoshepato_IIIbvib : listhepato_IIIbvib,
-                                                                                        datoshepato_IIIcnhp : listhepato_IIIcnhp,
-                                                                                        datoshepato_IIIcvib : listhepato_IIIcvib,
-                                                                                        datoslip_prom : listlip_prom,
-                                                                                        datosno_org : listno_org,
-                                                                                        datosscore_nhp : listscore_nhp,
-                                                                                        datosscore_vib : listscore_vib,
-                                                                                        datostub_afec : listtub_afec,
-                                                                                        datosext_necro : listext_necro,
-                                                                                        datosext_pig : listext_pig,
-                                                                                        datosext_flaci : listext_flaci,
-                                                                                        datosur_ur : listur_ur,
-                                                                                        datosur_uv : listur_uv,
-                                                                                        datosur_amp : listur_amp,
-                                                                                        datospeso_prom : listpeso_prom,
-                                                                                        datostiem_prom : listtiem_prom,
-                                                                                        datostiem_min : listtiem_min,
-                                                                                        datostiem_max : listtiem_max,
-                                                                                        datoscons_ant : listcons_ant,
-                                                                                        datoscons_musc : listcons_musc,
-                                                                                        datosagua_ca : listagua_ca,
-                                                                                        datosagua_cv : listagua_cv,
-                                                                                        datosmac_larva_ca : listmac_larva_ca,
-                                                                                        datosmac_larva_cv : listmac_larva_cv,
-                                                                                        datoshepato_ca : listhepato_ca,
-                                                                                        datoshepato_cv : listhepato_cv,
-                                                                                        fechasB : fechasB,
-                                                                                        fechasF : fechasF,
-                                                                                        datosdiatomeas : diatomeas,
-                                                                                        datoscianofitas : cianofitas,
-                                                                                        datosclorofitas : clorofitas,
-                                                                                        datosdinoflagelados : dinoflagelados,
-                                                                                        datosflagelados : flagelados,
-                                                                                        datostotal_cel_ml : total_cel_ml,
-                                                                                        datosnauplios : nauplios,
-                                                                                        datoscopepodos : copepodos,
-                                                                                        datosrutiferos : rutiferos,
-                                                                                        datospoliquetos : poliquetos,
-                                                                                        datosotros : otros,
-                                                                                        datostotal_organismos : total_organismos,
-                                                                                        fechasZ : fechasZ,
+                                                                                NutrientesToxDiario.find({"estanque": solicitud.params.id}, {
+                                                                                    amonia: 1,
+                                                                                    alcalinidad_CaCO3: 1,
+                                                                                    alcalinidad_HCO3: 1,
+                                                                                    alcalinidad_CO3: 1,
+                                                                                    nitrito_N: 1,
+                                                                                    nitrito_NO3: 1,
+                                                                                    TAN: 1,
+                                                                                    fecha: 1
+                                                                                }, function(error, nutrientesdiario){
+                                                                                    if(error){
+                                                                                        console.log(chalk.bgRed(error));
+                                                                                    } else {
+                                                                                        
+                                                                                        var amoniaD = [];
+                                                                                        var alcalinidad_CaCO3 = [];
+                                                                                        var alcalinidad_HCO3 = [];
+                                                                                        var alcalinidad_CO3 = [];
+                                                                                        var nitrito_N = [];
+                                                                                        var nitrito_NO3 = [];
+                                                                                        var TAN = [];
+                                                                                        var fechasND = [];
+
+                                                                                        nutrientesdiario.forEach(nuD => {
+                                                                                            amoniaD.push(nuD.amonia);
+                                                                                            alcalinidad_CaCO3.push(nuD.alcalinidad_CaCO3);
+                                                                                            alcalinidad_HCO3.push(nuD.alcalinidad_HCO3);
+                                                                                            alcalinidad_CO3.push(nuD.alcalinidad_CO3);
+                                                                                            nitrito_N.push(nuD.nitrito_N);
+                                                                                            nitrito_NO3.push(nuD.nitrito_NO3);
+                                                                                            TAN.push(nuD.TAN);
+                                                                                            fechasND.push(new Date(nuD.fecha).getDate()+ '/' + (new Date(nuD.fecha).getMonth() + 1)+ '/' + new Date(nuD.fecha).getFullYear());
+                                                                                            console.log(nuD.fecha);
+                                                                                        });     
+                                                                                        
+                                                                                        console.log(fechasND);
+
+                                                                                        NutrientesToxSemanal.find({"estanque": solicitud.params.id}, {
+                                                                                            amonia: 1,
+                                                                                            nitrito_N: 1,
+                                                                                            nitrito_NO3: 1,
+                                                                                            alcalinidad_CaCO3: 1,
+                                                                                            alcalinidad_HCO3: 1,
+                                                                                            alcalinidad_CO3: 1,
+                                                                                            dureza: 1,
+                                                                                            dureza_CaCO3: 1,
+                                                                                            dureza_Ca: 1,
+                                                                                            silice_SiO2: 1,
+                                                                                            silice_Si: 1,
+                                                                                            nitrato_N: 1,
+                                                                                            nitrato_NO3: 1,
+                                                                                            fosfato_PO4: 1,
+                                                                                            fosfato_P: 1,
+                                                                                            potasio: 1,
+                                                                                            magnecio_Mg: 1,
+                                                                                            magnecio_CaCO3: 1,
+                                                                                            balance_Ca: 1,
+                                                                                            balance_Mg: 1,
+                                                                                            balance_K: 1,
+                                                                                            fecha: 1
+                                                                                        }, function(error, nutrientessemanal){
+                                                                                            if(error){
+                                                                                                console.log(chalk.bgRed(error));
+                                                                                            } else {
+                                                                                                 var amonia = [];                                                                                          
+                                                                                                 var nitrito_N = [];
+                                                                                                 var nitrito_NO3 = [];
+                                                                                                 var alcalinidad_CaCO3 = [];
+                                                                                                 var alcalinidad_HCO3 = [];
+                                                                                                 var alcalinidad_CO3 = [];
+                                                                                                 var dureza = [];
+                                                                                                 var dureza_CaCO3 = [];
+                                                                                                 var dureza_Ca = [];
+                                                                                                 var silice_SiO2 = [];
+                                                                                                 var silice_Si = [];
+                                                                                                 var nitrato_N = [];
+                                                                                                 var nitrato_NO3 = [];
+                                                                                                 var fosfato_PO4 = [];
+                                                                                                 var fosfato_P = [];
+                                                                                                 var potasio = [];
+                                                                                                 var magnecio_Mg = [];
+                                                                                                 var magnecio_CaCO3 = [];
+                                                                                                 var balance_Ca = [];
+                                                                                                 var balance_Mg = [];
+                                                                                                 var balance_K = [];
+                                                                                                 var fechasNS = [];
+
+                                                                                                 nutrientessemanal.forEach( nuS => {
+                                                                                                    amonia.push(nuS.amonia);
+                                                                                                    nitrito_N.push(nuS.nitrito_N);
+                                                                                                    nitrito_NO3.push(nuS.nitrito_NO3);
+                                                                                                    alcalinidad_CaCO3.push(nuS.alcalinidad_CaCO3);
+                                                                                                    alcalinidad_HCO3.push(nuS.alcalinidad_HCO3);
+                                                                                                    alcalinidad_CO3.push(nuS.alcalinidad_CO3);
+                                                                                                    dureza.push(nuS.dureza);
+                                                                                                    dureza_CaCO3.push(nuS.dureza_CaCO3);
+                                                                                                    dureza_Ca.push(nuS.dureza_Ca);
+                                                                                                    silice_SiO2.push(nuS.silice_SiO2);
+                                                                                                    silice_Si.push(nuS.silice_Si);
+                                                                                                    nitrato_N.push(nuS.nitrato_N);
+                                                                                                    nitrato_NO3.push(nuS.nitrato_NO3);
+                                                                                                    fosfato_PO4.push(nuS.fosfato_PO4);
+                                                                                                    fosfato_P.push(nuS.fosfato_P);
+                                                                                                    potasio.push(nuS.potasio);
+                                                                                                    magnecio_Mg.push(nuS.magnecio_Mg);
+                                                                                                    magnecio_CaCO3.push(nuS.magnecio_CaCO3);
+                                                                                                    balance_Ca.push(nuS.balance_Ca);
+                                                                                                    balance_Mg.push(nuS.balance_Mg);
+                                                                                                    balance_K.push(nuS.balance_K);
+                                                                                                    fechasNS.push(new Date(nuS.fecha).getDate()+ '/' + (new Date(nuS.fecha).getMonth() + 1)+ '/' + new Date(nuS.fecha).getFullYear());
+                                                                                                 });
+
+                                                                                                 respuesta.render("Administracion/Granja/Estanques/detail",
+                                                                                                    {
+                                                                                                        user: solicitud.session.user,
+                                                                                                        estanque: estanque,
+                                                                                                        locations: Locations,
+                                                                                                        fechas: fechas,
+                                                                                                        data: data,
+                                                                                                        datosoxigeno: oxigeno,
+                                                                                                        datostemperatura: temperatura,
+                                                                                                        fechasP : fechasP,
+                                                                                                        dataBranquias_necro: listbranquias_necro,
+                                                                                                        dataBranquias_mo: listbranquias_mo,
+                                                                                                        datosbranquias_epic : listbranquias_epic,
+                                                                                                        datosplabial : listplabial,
+                                                                                                        datosproto_epip : listproto_epip,
+                                                                                                        datosintes_grad : listintes_grad,
+                                                                                                        datoshepato_I : listhepato_I,
+                                                                                                        datoshepato_nhp : listhepato_nhp,
+                                                                                                        datoshepato_vib : listhepato_vib,
+                                                                                                        datoshepato_IIInhp : listhepato_IIInhp,
+                                                                                                        datoshepato_IIIvib : listhepato_IIIvib,
+                                                                                                        datoshepato_IIIbnhp : listhepato_IIIbnhp,
+                                                                                                        datoshepato_IIIbvib : listhepato_IIIbvib,
+                                                                                                        datoshepato_IIIcnhp : listhepato_IIIcnhp,
+                                                                                                        datoshepato_IIIcvib : listhepato_IIIcvib,
+                                                                                                        datoslip_prom : listlip_prom,
+                                                                                                        datosno_org : listno_org,
+                                                                                                        datosscore_nhp : listscore_nhp,
+                                                                                                        datosscore_vib : listscore_vib,
+                                                                                                        datostub_afec : listtub_afec,
+                                                                                                        datosext_necro : listext_necro,
+                                                                                                        datosext_pig : listext_pig,
+                                                                                                        datosext_flaci : listext_flaci,
+                                                                                                        datosur_ur : listur_ur,
+                                                                                                        datosur_uv : listur_uv,
+                                                                                                        datosur_amp : listur_amp,
+                                                                                                        datospeso_prom : listpeso_prom,
+                                                                                                        datostiem_prom : listtiem_prom,
+                                                                                                        datostiem_min : listtiem_min,
+                                                                                                        datostiem_max : listtiem_max,
+                                                                                                        datoscons_ant : listcons_ant,
+                                                                                                        datoscons_musc : listcons_musc,
+                                                                                                        datosagua_ca : listagua_ca,
+                                                                                                        datosagua_cv : listagua_cv,
+                                                                                                        datosmac_larva_ca : listmac_larva_ca,
+                                                                                                        datosmac_larva_cv : listmac_larva_cv,
+                                                                                                        datoshepato_ca : listhepato_ca,
+                                                                                                        datoshepato_cv : listhepato_cv,
+                                                                                                        fechasB : fechasB,
+                                                                                                        fechasF : fechasF,
+                                                                                                        datosdiatomeas : diatomeas,
+                                                                                                        datoscianofitas : cianofitas,
+                                                                                                        datosclorofitas : clorofitas,
+                                                                                                        datosdinoflagelados : dinoflagelados,
+                                                                                                        datosflagelados : flagelados,
+                                                                                                        datostotal_cel_ml : total_cel_ml,
+                                                                                                        datosnauplios : nauplios,
+                                                                                                        datoscopepodos : copepodos,
+                                                                                                        datosrutiferos : rutiferos,
+                                                                                                        datospoliquetos : poliquetos,
+                                                                                                        datosotros : otros,
+                                                                                                        datostotal_organismos : total_organismos,
+                                                                                                        fechasZ : fechasZ,
+                                                                                                        datosamoniaD: amoniaD,
+                                                                                                        datosalcalinidad_CaCO3: alcalinidad_CaCO3,
+                                                                                                        datosalcalinidad_HCO3: alcalinidad_HCO3,
+                                                                                                        datosalcalinidad_CO3: alcalinidad_CO3,
+                                                                                                        datosnitrito_N: nitrito_N,
+                                                                                                        datosnitrito_NO3: nitrito_NO3,
+                                                                                                        datosTAN: TAN,
+                                                                                                        fechasND: fechasND,
+                                                                                                        datosamonia: amonia,
+                                                                                                        datosnitrito_N: nitrito_N,
+                                                                                                        datosnitrito_NO3: nitrito_NO3,
+                                                                                                        datosalcalinidad_CaCO3: alcalinidad_CaCO3,
+                                                                                                        datosalcalinidad_HCO3: alcalinidad_HCO3,
+                                                                                                        datosalcalinidad_CO3: alcalinidad_CO3,
+                                                                                                        datosdureza: dureza,
+                                                                                                        datosdureza_CaCO3: dureza_CaCO3,
+                                                                                                        datosdureza_Ca: dureza_Ca,
+                                                                                                        datossilice_SiO2: silice_SiO2,
+                                                                                                        datossilice_Si: silice_Si,
+                                                                                                        datosnitrato_N: nitrato_N,
+                                                                                                        datosnitrato_NO3: nitrato_NO3,
+                                                                                                        datosfosfato_PO4: fosfato_PO4,
+                                                                                                        datosfosfato_P: fosfato_P,
+                                                                                                        datospotasio: potasio,
+                                                                                                        datosmagnecio_Mg: magnecio_Mg,
+                                                                                                        datosmagnecio_CaCO3: magnecio_CaCO3,
+                                                                                                        datosbalance_Ca: balance_Ca,
+                                                                                                        datosbalance_Mg: balance_Mg,
+                                                                                                        datosbalance_K: balance_K,
+                                                                                                        fechasNS: fechasNS,
+                                                                                                    }
+                                                                                                );
+                                                                                            }
+                                                                                        });
                                                                                     }
-                                                                                );
+                                                                                });
                                                                             }
                                                                         });
                                                                     }

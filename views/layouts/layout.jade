@@ -326,7 +326,7 @@ html(lang="es")
                                 // MENÚ LABORATORIO
                                 li
                                     a(href='#')#menuLaboratorio
-                                        i.fas.fa-flask.fa-fw
+                                        i.fas.fa-microscope.fa-fw
                                         |  Laboratorio
                                         span#spanMenuLaboratorio.fas.fa-angle-left
                                     ul#subMenuLaboratorio.nav.nav-second-level.hidden
@@ -423,7 +423,7 @@ html(lang="es")
                                 // MENÚ LABORATORIO LARVAS
                                 li
                                     a(href='#')#menuLaboratorioLarvas
-                                        i.fas.fa-fill-drip.fa-fw 
+                                        i.fas.fa-flask.fa-fw 
                                         |   Laboratorio Larvas
                                         span#spanMenuLaboratorioLarvas.fas.fa-angle-left
                                     ul#submenuLaboratorioLarvas.nav.nav-third-level.hidden
@@ -433,6 +433,21 @@ html(lang="es")
                                                 |   Bandeja
                                         li
                                             a(href='/laboratoriolarvas/new')
+                                                i.fas.fa-plus-circle.fa-fw 
+                                                |   Nuevo
+                                // MENÚ NUTRICIÓN
+                                li
+                                    a(href='#')#menuNutricion
+                                        i.fas.fa-seedling.fa-fw 
+                                        |   Nutrición
+                                        span#spanMenuNutricion.fas.fa-angle-left
+                                    ul#subMenuNutricion.nav.nav-second-level.hidden
+                                        li
+                                            a(href='/nutricion/all') 
+                                                i.fas.fa-table.fa-fw 
+                                                |   Bandeja
+                                        li
+                                            a(href='/nutricion/new')
                                                 i.fas.fa-plus-circle.fa-fw 
                                                 |   Nuevo
                                 // MENÚ PARAMETROS

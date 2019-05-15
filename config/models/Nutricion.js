@@ -2,7 +2,7 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 // USUARIOS
-var charolasSchemaJSON = {
+var nutricionSchemaJSON = {
     charola_1: String,
     charola_2: String,
     charola_3: String,
@@ -14,9 +14,9 @@ var charolasSchemaJSON = {
     estanque: { type: Schema.ObjectId, ref: "Estanques" },
     fecha: Date,
     hora: String,
-    charolero: String
+    charolero: { type: Schema.ObjectId, ref: "Usuarios" }
 }
 
-var charolasSchema = new Schema(charolasSchemaJSON);
+var nutricionSchema = new Schema(nutricionSchemaJSON);
 
-mongoose.model("Charolas", charolasSchema);
+mongoose.model("Nutricion", nutricionSchema);

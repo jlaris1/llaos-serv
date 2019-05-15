@@ -84,16 +84,24 @@ block contenido
             var ctxBactem = document.getElementById('bacteChart');
             var ctxFito = document.getElementById('fitoChart');
             var ctxZoo = document.getElementById('zooChart');
+            var ctxNutD = document.getElementById('NutDChart');
+            var ctxNutS = document.getElementById('NutSChart');
 
             /** PARAMETROS*/
                 var datos = [];
                 var fechas = [];
+                var datosoxigeno = [];
+                var datostemperatura = [];
 
                 var f = $('#fechas').val().split(",");
                 var d = ($('#data').val()).split(",");
+                var dO = ($('#datosoxigeno').val()).split(",");
+                var dT = ($('#datostemperatura').val()).split(",");
 
                 $.each( d, function( key, e ) { datos.push(e);});
                 $.each( f, function( key, e ) { fechas.push(e); });
+                $.each( dO, function( key, e ) { datosoxigeno.push(e); });
+                $.each( dT, function( key, e ) { datostemperatura.push(e); });
 
             /** PATOLOGICOS */
                 var fechasP = [];
@@ -257,13 +265,13 @@ block contenido
                 var datosotros = [];
                 var datostotal_organismos = [];
 
-                fZ = $('#fechasZ').val().split(",");
-                oDatosnauplios = ($('#datosnauplios').val()).split(",");
-                oDatoscopepodos = ($('#datoscopepodos').val()).split(",");
-                oDatosrutiferos = ($('#datosrutiferos').val()).split(",");
-                oDatospoliquetos = ($('#datospoliquetos').val()).split(",");
-                oDatosotros = ($('#datosotros').val()).split(",");
-                oDatostotal_organismos = ($('#datostotal_organismos').val()).split(",");
+                var fZ = $('#fechasZ').val().split(",");
+                var oDatosnauplios = ($('#datosnauplios').val()).split(",");
+                var oDatoscopepodos = ($('#datoscopepodos').val()).split(",");
+                var oDatosrutiferos = ($('#datosrutiferos').val()).split(",");
+                var oDatospoliquetos = ($('#datospoliquetos').val()).split(",");
+                var oDatosotros = ($('#datosotros').val()).split(",");
+                var oDatostotal_organismos = ($('#datostotal_organismos').val()).split(",");
 
                 $.each( fZ, function( key, e) { fechasZ.push(e) });
                 $.each( oDatosnauplios, function( key, e) { datosnauplios.push(e) });
@@ -273,6 +281,104 @@ block contenido
                 $.each( oDatosotros, function( key, e) { datosotros.push(e) });
                 $.each( oDatostotal_organismos, function( key, e) { datostotal_organismos.push(e) });
 
+            /** NUTRIENTES DIARIO */
+                var fechasND = [];
+                var datosamoniaD = [];
+                var datosalcalinidad_CaCO3 = [];
+                var datosalcalinidad_HCO3 = [];
+                var datosalcalinidad_CO3 = [];
+                var datosnitrito_N = [];
+                var datosnitrito_NO3 = [];
+                var datosTAN = [];
+
+                var fND = ($('#fechasND').val()).split(",");
+                var oDatosamoniaD = ($('#datosamoniaD').val()).split(",");
+                var oDatosalcalinidad_CaCO3 = ($('#datosalcalinidad_CaCO3').val()).split(",");
+                var oDatosalcalinidad_HCO3 = ($('#datosalcalinidad_HCO3').val()).split(",");
+                var oDatosalcalinidad_CO3 = ($('#datosalcalinidad_CO3').val()).split(",");
+                var oDatosnitrito_N = ($('#datosnitrito_N').val()).split(",");
+                var oDatosnitrito_NO3 = ($('#datosnitrito_NO3').val()).split(",");
+                var oDatosTAN = ($('#datosTAN').val()).split(",");
+
+                $.each(fND, function(key, e){ fechasND.push(e)});
+                $.each(oDatosamoniaD, function(key, e){ datosamoniaD.push(e)});
+                $.each(oDatosalcalinidad_CaCO3, function(key, e){ datosalcalinidad_CaCO3.push(e)});
+                $.each(oDatosalcalinidad_HCO3, function(key, e){ datosalcalinidad_HCO3.push(e)});
+                $.each(oDatosalcalinidad_CO3, function(key, e){ datosalcalinidad_CO3.push(e)});
+                $.each(oDatosnitrito_N, function(key, e){ datosnitrito_N.push(e)});
+                $.each(oDatosnitrito_NO3, function(key, e){ datosnitrito_NO3.push(e)});
+                $.each(oDatosTAN, function(key, e){ datosTAN.push(e)});
+
+            /** NUTRIENTES SEMANAL */
+                var datosamonia = [];                                                                                          
+                var datosnitrito_N = [];
+                var datosnitrito_NO3 = [];
+                var datosalcalinidad_CaCO3 = [];
+                var datosalcalinidad_HCO3 = [];
+                var datosalcalinidad_CO3 = [];
+                var datosdureza = [];
+                var datosdureza_CaCO3 = [];
+                var datosdureza_Ca = [];
+                var datossilice_SiO2 = [];
+                var datossilice_Si = [];
+                var datosnitrato_N = [];
+                var datosnitrato_NO3 = [];
+                var datosfosfato_PO4 = [];
+                var datosfosfato_P = [];
+                var datospotasio = [];
+                var datosmagnecio_Mg = [];
+                var datosmagnecio_CaCO3 = [];
+                var datosbalance_Ca = [];
+                var datosbalance_Mg = [];
+                var datosbalance_K = [];
+                var fechasNS = [];
+
+                var oDatosamonia = ($('#datosamonia').val()).split(",");                                                                                          
+                var oDatosnitrito_N = ($('#datosnitrito_N').val()).split(",");
+                var oDatosnitrito_NO3 = ($('#datosnitrito_NO3').val()).split(",");
+                var oDatosalcalinidad_CaCO3 = ($('#datosalcalinidad_CaCO3').val()).split(",");
+                var oDatosalcalinidad_HCO3 = ($('#datosalcalinidad_HCO3').val()).split(",");
+                var oDatosalcalinidad_CO3 = ($('#datosalcalinidad_CO3').val()).split(",");
+                var oDatosdureza = ($('#datosdureza').val()).split(",");
+                var oDatosdureza_CaCO3 = ($('#datosdureza_CaCO3').val()).split(",");
+                var oDatosdureza_Ca = ($('#datosdureza_Ca').val()).split(",");
+                var oDatossilice_SiO2 = ($('#datossilice_SiO2').val()).split(",");
+                var oDatossilice_Si = ($('#datossilice_Si').val()).split(",");
+                var oDatosnitrato_N = ($('#datosnitrato_N').val()).split(",");
+                var oDatosnitrato_NO3 = ($('#datosnitrato_NO3').val()).split(",");
+                var oDatosfosfato_PO4 = ($('#datosfosfato_PO4').val()).split(",");
+                var oDatosfosfato_P = ($('#datosfosfato_P').val()).split(",");
+                var oDatospotasio = ($('#datospotasio').val()).split(",");
+                var oDatosmagnecio_Mg = ($('#datosmagnecio_Mg').val()).split(",");
+                var oDatosmagnecio_CaCO3 = ($('#datosmagnecio_CaCO3').val()).split(",");
+                var oDatosbalance_Ca = ($('#datosbalance_Ca').val()).split(",");
+                var oDatosbalance_Mg = ($('#datosbalance_Mg').val()).split(",");
+                var oDatosbalance_K = ($('#datosbalance_K').val()).split(",");
+                var fNS = ($('#fechasNS').val()).split(",");
+
+                $.each( oDatosamonia, function(key, e){  datosamonia.push(e) });
+                $.each( oDatosnitrito_N, function(key, e){  datosnitrito_N.push(e) });
+                $.each( oDatosnitrito_NO3, function(key, e){  datosnitrito_NO3.push(e) });
+                $.each( oDatosalcalinidad_CaCO3, function(key, e){  datosalcalinidad_CaCO3.push(e) });
+                $.each( oDatosalcalinidad_HCO3, function(key, e){  datosalcalinidad_HCO3.push(e) });
+                $.each( oDatosalcalinidad_CO3, function(key, e){  datosalcalinidad_CO3.push(e) });
+                $.each( oDatosdureza, function(key, e){  datosdureza.push(e) });
+                $.each( oDatosdureza_CaCO3, function(key, e){  datosdureza_CaCO3.push(e) });
+                $.each( oDatosdureza_Ca, function(key, e){  datosdureza_Ca.push(e) });
+                $.each( oDatossilice_SiO2, function(key, e){  datossilice_SiO2.push(e) });
+                $.each( oDatossilice_Si, function(key, e){  datossilice_Si.push(e) });
+                $.each( oDatosnitrato_N, function(key, e){  datosnitrato_N.push(e) });
+                $.each( oDatosnitrato_NO3, function(key, e){  datosnitrato_NO3.push(e) });
+                $.each( oDatosfosfato_PO4, function(key, e){  datosfosfato_PO4.push(e) });
+                $.each( oDatosfosfato_P, function(key, e){  datosfosfato_P.push(e) });
+                $.each( oDatospotasio, function(key, e){  datospotasio.push(e) });
+                $.each( oDatosmagnecio_Mg, function(key, e){  datosmagnecio_Mg.push(e) });
+                $.each( oDatosmagnecio_CaCO3, function(key, e){  datosmagnecio_CaCO3.push(e) });
+                $.each( oDatosbalance_Ca, function(key, e){  datosbalance_Ca.push(e) });
+                $.each( oDatosbalance_Mg, function(key, e){  datosbalance_Mg.push(e) });
+                $.each( oDatosbalance_K, function(key, e){  datosbalance_K.push(e) });
+                $.each( fNS, function(key, e){  fechasNS.push(e) });
+
             // Gráficas de Parámetros
                 var chart = new Chart(ctx, {
                     // The type of chart we want to create
@@ -281,15 +387,33 @@ block contenido
                     // The data for our dataset
                     data: {
                         labels: fechas,
-                        datasets: [{
-                            label: 'pH',
-                            borderColor: 'rgb(66,133,244)',
-                            backgroundColor: 'rgb(66,133,244)',
-                            fill: false,
-                            data: datos
-                        }],
+                        datasets: [
+                            {
+                                label: 'pH',
+                                borderColor: 'rgb(66,133,244)',
+                                backgroundColor: 'rgb(66,133,244)',
+                                fill: false,
+                                data: datos
+                            },
+                            {
+                                label: 'Oxigeno',
+                                data: datosoxigeno,
+                                borderColor: "#E23838",
+                                backgroundColor: "#E23838",
+                                fill: false,
+                            },
+                            {
+                                label: 'Temperatura',
+                                data: datostemperatura,
+                                borderColor: "#5EBD3E",
+                                backgroundColor: "#5EBD3E",
+                                fill: false,
+                            }
+                        ],
                         options: {
-                            title: 'pH',
+                            title: {
+                                display: false
+                            },
                             gridLines: {
                                 display: true,
                                 drowBorder: true,
@@ -522,7 +646,7 @@ block contenido
                     },
                     options: {
                         title: {
-                            display: true,
+                            display: false,
                             text: 'Análisis Patológicos'
                         },
                         legend: {
@@ -586,10 +710,6 @@ block contenido
                         ]
                     },
                     options: {
-                        title: {
-                            display: true,
-                            text: 'Bacteriología'
-                        }
                     }
                 });
 
@@ -647,10 +767,6 @@ block contenido
                         ]
                     },
                     options: {
-                        title: {
-                            display: true,
-                            text: 'Fitoplancton'
-                        }
                     }
                 });
 
@@ -708,13 +824,238 @@ block contenido
                         ]
                     },
                     options: {
-                        /*title: {
-                            display: true,
-                            text: 'Zooplancton'
-                        }*/
                     }
                 });
 
+            /// Nutrientes y Metabolitos Diarios
+                var chartNutD = new Chart(ctxNutD,{
+                    // The type of chart we want to create
+                    type: 'line',
+
+                    // The data for our dataset
+                    data: {
+                        labels: fechasND,
+                        datasets: [
+                            {
+                                label: 'Nauplios',
+                                borderColor: '#E23838',
+                                backgroundColor: '#E23838',
+                                fill: false,
+                                data: datosamoniaD
+                            },
+                            {
+                                label: 'Alcalinida CaCO3',
+                                borderColor: '#009CDF',
+                                backgroundColor: '#009CDF',
+                                fill: false,
+                                data: datosalcalinidad_CaCO3
+                            },
+                            {
+                                label: 'Alcalinidad HCO3',
+                                borderColor: '#5EBD3E',
+                                backgroundColor: '#5EBD3E',
+                                fill: false,
+                                data: datosalcalinidad_HCO3
+                            },
+                            {
+                                label: 'Alcalinidad CO3',
+                                borderColor: '#FFB900',
+                                backgroundColor: '#FFB900',
+                                fill: false,
+                                data: datosalcalinidad_CO3
+                            },
+                            {
+                                label: 'Nitritos',
+                                borderColor: '#F78200',
+                                backgroundColor: '#F78200',
+                                fill: false,
+                                data: datosnitrito_N
+                            },
+                            {
+                                label: 'Nitrato',
+                                borderColor: '#973999',
+                                backgroundColor: '#973999',
+                                fill: false,
+                                data: datosnitrito_NO3
+                            },
+                            {
+                                label: 'TAN',
+                                borderColor: '#FF0099',
+                                backgroundColor: '#FF0099',
+                                fill: false,
+                                data: datosTAN
+                            }
+                        ]
+                    },
+                    options: {
+                    }
+                });
+            
+            /// Nutrientes y Metabolitos Semanales
+                var chartNutS = new Chart(ctxNutS,{
+                    // The type of chart we want to create
+                    type: 'line',
+
+                    // The data for our dataset
+                    data: {
+                        labels: fechasNS,
+                        datasets: [
+                            {
+                                label: 'Amonia',
+                                data: oDatosamonia,
+                                borderColor: "#E23838",
+                                backgroundColor: "#E23838",
+                                fill: false
+                            },
+                            {
+                                label: 'Nitrito N',
+                                data: oDatosnitrito_N,
+                                borderColor: "#009CDF",
+                                backgroundColor: "#009CDF",
+                                fill: false,
+                            },
+                            {
+                                label: 'Nitrito N03',
+                                data: oDatosnitrito_NO3,
+                                borderColor: "#5EBD3E",
+                                backgroundColor: "#5EBD3E",
+                                fill: false,
+                            },
+                            {
+                                label: 'Alcalinidad CaCO3',
+                                data: oDatosalcalinidad_CaCO3,
+                                borderColor: "#FFB900",
+                                backgroundColor: "#FFB900",
+                                fill: false,
+                            },
+                            {
+                                label: 'Alcalinidad HCO3',
+                                data: oDatosalcalinidad_HCO3,
+                                borderColor: "#F78200",
+                                backgroundColor: "#F78200",
+                                fill: false,
+                            },
+                            {
+                                label: 'Alcalinidad CO3',
+                                data: oDatosalcalinidad_CO3,
+                                borderColor: "#973999",
+                                backgroundColor: "#973999",
+                                fill: false,
+                            },                  
+                            {
+                                label: 'Dureza',
+                                data: oDatosdureza,
+                                borderColor: "#FF0099",
+                                backgroundColor: "#FF0099",
+                                fill: false,
+                            },
+                            {
+                                label: 'Dureza CaCO3',
+                                data: oDatosdureza_CaCO3,
+                                borderColor: "#f3f315",
+                                backgroundColor: "#f3f315",
+                                fill: false,
+                            },
+                            {
+                                label: 'Dureza Ca',
+                                data: oDatosdureza_Ca,
+                                borderColor: "#83f52c",
+                                backgroundColor: "#83f52c",
+                                fill: false,
+                            },
+                            {
+                                label: 'Silice SiO2',
+                                data: oDatossilice_SiO2,
+                                borderColor: "#ff6600",
+                                backgroundColor: "#ff6600",
+                                fill: false,
+                            },
+                            {
+                                label: 'Silice Si',
+                                data: oDatossilice_Si,
+                                borderColor: "#630dd0",
+                                backgroundColor: "#630dd0",
+                                fill: false,
+                            },
+                            {
+                                label: 'Nitrato N',
+                                data: oDatosnitrato_N,
+                                borderColor: "#bd361b",
+                                backgroundColor: "#bd361b",
+                                fill: false,
+                            },
+                            {
+                                label: 'Nitrato NO3',
+                                data: oDatosnitrato_NO3,
+                                borderColor: "#dba800",
+                                backgroundColor: "#dba800",
+                                fill: false,
+                            },
+                            {
+                                label: 'Fosfato PO4',
+                                data: oDatosfosfato_PO4,
+                                borderColor: "#b9d670",
+                                backgroundColor: "#b9d670",
+                                fill: false,
+                            },
+                            {
+                                label: 'Fosfato P',
+                                data: oDatosfosfato_P,
+                                borderColor: "#b6c61a",
+                                backgroundColor: "#b6c61a",
+                                fill: false,
+                            },
+                            {
+                                label: 'Potasio',
+                                data: oDatospotasio,
+                                borderColor: "#006344",
+                                backgroundColor: "#006344",
+                                fill: false,
+                            },
+                            {
+                                label: 'Magnecio Mg',
+                                data: oDatosmagnecio_Mg,
+                                borderColor: "#607D88",
+                                backgroundColor: "#607D88",
+                                fill: false,
+                            },
+                            {
+                                label: 'Magnecio CaCO3',
+                                data: oDatosmagnecio_CaCO3,
+                                borderColor: "#9e9e9e",
+                                backgroundColor: "#9e9e9e",
+                                fill: false,
+                            },
+                            {
+                                label: 'Balance Ca',
+                                data: oDatosbalance_Ca,
+                                borderColor: "#795548",
+                                backgroundColor: "#795548",
+                                fill: false,
+                            },
+                            {
+                                label: 'Balance Mg',
+                                data: oDatosbalance_Mg,
+                                borderColor: "#009688",
+                                backgroundColor: "#009688",
+                                fill: false,
+                            },
+                            {
+                                label: 'Balance K',
+                                data: oDatosbalance_K,
+                                borderColor: "#3f51b5",
+                                backgroundColor: "#3f51b5",
+                                fill: false,
+                            },
+                        ]
+                    },
+                    options: {
+                        legend: {
+                            display: false,
+                            position: 'bottom'
+                        }
+                    }
+                });
         });
 
         function obtenerfecha(){
@@ -820,31 +1161,20 @@ block contenido
                             b : 
                             |   3ppm
         .col-lg-4.col-sm-6
-            #map(style="width: 100%; min-height: 350px;")
-        .col-lg-5.chart-container
             input#locations(type="text" value="#{locations}").hidden
             input#markerx(type="text" value="#{estanque.marker_x}").hidden
             input#markery(type="text" value="#{estanque.marker_y}").hidden
             input#pointerx(type="text" value="#{estanque.pointer_x}").hidden
             input#pointery(type="text" value="#{estanque.pointer_y}").hidden
-
+            #map(style="width: 100%; min-height: 350px;")
+        .col-lg-5.chart-container(style="position: relative; height: 100%;")
             // Datos para gráficos parámetros
+            h5.text-center 
+                    b Parámetros
             input#fechas.hidden(type="text" value="#{fechas}")
             input#data.hidden(type="text" value="#{data}")
-
-            .form-group
-                label | Parámetro
-                .input-group
-                    span.input-group-addon
-                        i.fas.fa-vial
-                    select#parametro.form-control(name="parametro" tabindex="8")
-                        option(value="") << Seleccione >>
-                        option(value="ph") pH
-                        option(value="ocigeno") Oxigeno
-                        option(value="temperatura") Temperatura
-                        option(value="salinidad") Salinidad
-                        option(value="nivel") Nivel de Agua
-
+            input#datosoxigeno.hidden(type="text" value="#{datosoxigeno}")
+            input#datostemperatura.hidden(type="text" value="#{datostemperatura}")
             canvas#myChart
     .row 
         .col-lg-12.col-md-12.col-xs-12
@@ -854,7 +1184,9 @@ block contenido
     .divider
     .row
         // Datos para gráficos análisis patológicos
-        .col-lg-6.chart-container(style="position: relative; min-height:300px; min-width:600px;")
+        .col-lg-6.chart-container(style="position: relative; height: 100%;")
+            h5.text-center 
+                b Análisis Patológicos
             input#fechasP.hidden(type="text" value="#{fechasP}")
             input#dataBranquias_necro.hidden(type="text" value="#{dataBranquias_necro}")
             input#dataBranquias_mo.hidden(type="text" value="#{dataBranquias_mo}")
@@ -891,19 +1223,23 @@ block contenido
             canvas#patologicosChart
             
         // Datos bacteriología
-        .col-lg-6.chart-container(style="position: relative; min-height:300px; min-width:600px;")
-                input#fechasB.hidden(type="text" value="#{ fechasB }")
-                input#datosagua_ca.hidden(type="text" value="#{ datosagua_ca }")
-                input#datosagua_cv.hidden(type="text" value="#{ datosagua_cv }")
-                input#datosmac_larva_ca.hidden(type="text" value="#{ datosmac_larva_ca }")
-                input#datosmac_larva_cv.hidden(type="text" value="#{ datosmac_larva_cv }")
-                input#datoshepato_ca.hidden(type="text" value="#{ datoshepato_ca }")
-                input#datoshepato_cv.hidden(type="text" value="#{ datoshepato_cv }")
-                canvas#bacteChart
+        .col-lg-6.chart-container(style="position: relative; height:100%;")
+            h5.text-center 
+                b Bacteriología
+            input#fechasB.hidden(type="text" value="#{ fechasB }")
+            input#datosagua_ca.hidden(type="text" value="#{ datosagua_ca }")
+            input#datosagua_cv.hidden(type="text" value="#{ datosagua_cv }")
+            input#datosmac_larva_ca.hidden(type="text" value="#{ datosmac_larva_ca }")
+            input#datosmac_larva_cv.hidden(type="text" value="#{ datosmac_larva_cv }")
+            input#datoshepato_ca.hidden(type="text" value="#{ datoshepato_ca }")
+            input#datoshepato_cv.hidden(type="text" value="#{ datoshepato_cv }")
+            canvas#bacteChart
     .row
         .col-lg-12.col-md-12.col-xs-12
             // Datos Fitoplancton
-            .col-lg-6.chart-container(style="position: relative; min-height:300px; min-width:600px;")
+            .col-lg-6.chart-container(style="position: relative; height: 100%;")
+                h5.text-center 
+                    b Fitoplancton
                 input#fechasF.hidden(type="text" value="#{ fechasF }")
                 input#datosdiatomeas.hidden(type="text" value="#{ datosdiatomeas }")
                 input#datoscianofitas.hidden(type="text" value="#{ datoscianofitas }")
@@ -913,8 +1249,9 @@ block contenido
                 input#datostotal_cel_ml.hidden(type="text" value="#{ datostotal_cel_ml }")
                 canvas#fitoChart
             // Datos Zooplancton
-            .col-lg-6.chart-container(style="position: relative; min-height:300px; min-width:600px;")
-                h
+            .col-lg-6.chart-container(style="position: relative; height: 100%;")
+                h5.text-center 
+                    b Zooplancton
                 input#fechasZ.hidden(type="text" value="#{ fechasZ }")
                 input#datosnauplios.hidden(type="text" value="#{ datosnauplios }")
                 input#datoscopepodos.hidden(type="text" value="#{ datoscopepodos }")
@@ -923,6 +1260,43 @@ block contenido
                 input#datosotros.hidden(type="text" value="#{ datosotros }")
                 input#datostotal_organismos.hidden(type="text" value="#{ datostotal_organismos }")
                 canvas#zooChart
-                
-                
+    .row
+        .col-lg-6.chart-container(style="position: relative; height: 100%;")
+            h5.text-center 
+                    b Nutrientes y Metabolitos Diario
+            input#fechasND.hidden(type="text" value="#{ fechasND }")
+            input#datosamoniaD.hidden(type="text" value="#{ datosamoniaD }")
+            input#datosalcalinidad_CaCO3.hidden(type="text" value="#{ datosalcalinidad_CaCO3 }")
+            input#datosalcalinidad_HCO3.hidden(type="text" value="#{ datosalcalinidad_HCO3 }")
+            input#datosalcalinidad_CO3.hidden(type="text" value="#{ datosalcalinidad_CO3 }")
+            input#datosnitrito_N.hidden(type="text" value="#{ datosnitrito_N }")
+            input#datosnitrito_NO3.hidden(type="text" value="#{ datosnitrito_NO3 }")
+            input#datosTAN.hidden(type="text" value="#{ datosTAN }")
+            canvas#NutDChart
+        .col-lg-6.chart-container(style="position: relative; height: 100%;")
+            h5.text-center 
+                    b Nutrientes y Metabolitos Semanal
+            input.hidden#fechasNS(type="text" value="#{fechasNS}")
+            input.hidden#datosamonia(type="text" value="#{datosamonia}")
+            input.hidden#datosnitrito_N(type="text" value="#{datosnitrito_N}")
+            input.hidden#datosnitrito_NO3(type="text" value="#{datosnitrito_NO3}")
+            input.hidden#datosalcalinidad_CaCO3(type="text" value="#{datosalcalinidad_CaCO3}")
+            input.hidden#datosalcalinidad_HCO3(type="text" value="#{datosalcalinidad_HCO3}")
+            input.hidden#datosalcalinidad_CO3(type="text" value="#{datosalcalinidad_CO3}")
+            input.hidden#datosdureza(type="text" value="#{datosdureza}")
+            input.hidden#datosdureza_CaCO3(type="text" value="#{datosdureza_CaCO3}")
+            input.hidden#datosdureza_Ca(type="text" value="#{datosdureza_Ca}")
+            input.hidden#datossilice_SiO2(type="text" value="#{datossilice_SiO2}")
+            input.hidden#datossilice_Si(type="text" value="#{datossilice_Si}")
+            input.hidden#datosnitrato_N(type="text" value="#{datosnitrato_N}")
+            input.hidden#datosnitrato_NO3(type="text" value="#{datosnitrato_NO3}")
+            input.hidden#datosfosfato_PO4(type="text" value="#{datosfosfato_PO4}")
+            input.hidden#datosfosfato_P(type="text" value="#{datosfosfato_P}")
+            input.hidden#datospotasio(type="text" value="#{datospotasio}")
+            input.hidden#datosmagnecio_Mg(type="text" value="#{datosmagnecio_Mg}")
+            input.hidden#datosmagnecio_CaCO3(type="text" value="#{datosmagnecio_CaCO3}")
+            input.hidden#datosbalance_Ca(type="text" value="#{datosbalance_Ca}")
+            input.hidden#datosbalance_Mg(type="text" value="#{datosbalance_Mg}")
+            input.hidden#datosbalance_K(type="text" value="#{datosbalance_K}")
+            canvas#NutSChart
 
