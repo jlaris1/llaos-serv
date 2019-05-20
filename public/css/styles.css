@@ -2,6 +2,15 @@
 
 @import url('https://fonts.googleapis.com/css?family=Numans');
 
+
+@media (min-width: 544px) { 
+    #card {
+        height: 95%;
+        width: 100%;
+    }
+
+}
+
 html,body{
     background-image: url('../imgs/back.jpg');
     background-size: cover;
