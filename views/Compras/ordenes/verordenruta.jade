@@ -13,6 +13,24 @@ block contenido
             font-size: 2em; 
             border-radius: 8px;
         }
+
+        @media (max-width: 1366px) and (min-width: 1366px){
+            .right-padding {
+                margin-right: -100px;
+            }
+        }
+
+        @media (max-width: 1600px) and (min-width: 1600px){
+            .right-padding {
+                margin-right: -170px;
+            }
+        }
+
+        @media (min-width: 1900px){
+            .right-padding {
+                margin-right: -255px;
+            }
+        }
     script.
         $(document).ready( function(){
             $('#subMenuCompras').removeClass('hidden');
