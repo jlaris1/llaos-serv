@@ -1226,13 +1226,13 @@ block contenido
         .col-lg-6.chart-container(style="position: relative; height:100%;")
             h5.text-center 
                 b Bacteriología
-            input#fechasB.hidden(type="text" value="#{ fechasB }")
-            input#datosagua_ca.hidden(type="text" value="#{ datosagua_ca }")
-            input#datosagua_cv.hidden(type="text" value="#{ datosagua_cv }")
-            input#datosmac_larva_ca.hidden(type="text" value="#{ datosmac_larva_ca }")
-            input#datosmac_larva_cv.hidden(type="text" value="#{ datosmac_larva_cv }")
-            input#datoshepato_ca.hidden(type="text" value="#{ datoshepato_ca }")
-            input#datoshepato_cv.hidden(type="text" value="#{ datoshepato_cv }")
+            input.hidden#fechasB(type="text" value="#{ fechasB }")
+            input.hidden#datosagua_ca(type="text" value="#{ datosagua_ca }")
+            input.hidden#datosagua_cv(type="text" value="#{ datosagua_cv }")
+            input.hidden#datosmac_larva_ca(type="text" value="#{ datosmac_larva_ca }")
+            input.hidden#datosmac_larva_cv(type="text" value="#{ datosmac_larva_cv }")
+            input.hidden#datoshepato_ca(type="text" value="#{ datoshepato_ca }")
+            input.hidden#datoshepato_cv(type="text" value="#{ datoshepato_cv }")
             canvas#bacteChart
     .row
         .col-lg-12.col-md-12.col-xs-12

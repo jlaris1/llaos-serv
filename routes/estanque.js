@@ -317,7 +317,7 @@ module.exports = {
                                                             mac_larva_cv: 1,
                                                             hepato_ca: 1,
                                                             hepato_cv: 1,
-                                                            facha: 1,
+                                                            fecha: 1
                                                         }, function(error, bacteriologia){
                                                             if(error){
                                                                 console.log(chalk.bgRed(error));
@@ -331,12 +331,12 @@ module.exports = {
                                                                 var fechasB = [];
 
                                                                 bacteriologia.forEach(bac => {
-                                                                    listagua_ca.push(bac.listagua_ca);
-                                                                    listagua_cv.push(bac.listagua_cv);
-                                                                    listmac_larva_ca.push(bac.listmac_larva_ca);
-                                                                    listmac_larva_cv.push(bac.listmac_larva_cv);
-                                                                    listhepato_ca.push(bac.listhepato_ca);
-                                                                    listhepato_cv.push(bac.listhepato_cv);
+                                                                    listagua_ca.push(bac.agua_ca);
+                                                                    listagua_cv.push(bac.agua_cv);
+                                                                    listmac_larva_ca.push(bac.mac_larva_ca);
+                                                                    listmac_larva_cv.push(bac.mac_larva_cv);
+                                                                    listhepato_ca.push(bac.hepato_ca);
+                                                                    listhepato_cv.push(bac.hepato_cv);
                                                                     fechasB.push(new Date(bac.fecha).getDate()+ '/' + (new Date(bac.fecha).getMonth() + 1)+ '/' + new Date(bac.fecha).getFullYear());
                                                                 });
 
@@ -434,11 +434,8 @@ module.exports = {
                                                                                             nitrito_NO3.push(nuD.nitrito_NO3);
                                                                                             TAN.push(nuD.TAN);
                                                                                             fechasND.push(new Date(nuD.fecha).getDate()+ '/' + (new Date(nuD.fecha).getMonth() + 1)+ '/' + new Date(nuD.fecha).getFullYear());
-                                                                                            console.log(nuD.fecha);
                                                                                         });     
                                                                                         
-                                                                                        console.log(fechasND);
-
                                                                                         NutrientesToxSemanal.find({"estanque": solicitud.params.id}, {
                                                                                             amonia: 1,
                                                                                             nitrito_N: 1,
@@ -645,8 +642,6 @@ module.exports = {
             marker_y: solicitud.body.marker_y,
             locations: locations
         }
-
-        console.log(chalk.bgGreen(data));
 
         Estanques.updateOne({"_id": solicitud.params.id}, data, function(error){
             if(error){

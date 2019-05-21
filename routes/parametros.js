@@ -50,6 +50,8 @@ module.exports = {
                             user: solicitud.session.user,
                             modulos: modulos,
                             modulo: solicitud.body.modulo, 
+                            estanque: estanques[0],
+                            siguiente_estanque: estanques[1],
                             estanques: estanques,
                             parametro: {
                                 oxigeno: 0,
@@ -60,7 +62,7 @@ module.exports = {
                             }
                         });
                     }
-                })
+                }).sort({ codigo : 1});
             }
         });
     },
@@ -83,6 +85,9 @@ module.exports = {
                             salinidad: 0,
                             temperatura: 0,
                             nivel_agua: 0,
+                        },
+                        siguiente_estanque: {
+                            id: 0
                         }
                     });
                 }
@@ -113,7 +118,94 @@ module.exports = {
                 if(error){
                     console.log(chalk.bgRed(error));
                 } else {
-                    respuesta.redirect('/parametros/new');
+                    Modulos.find( function(error, modulos){
+                        if(error){
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            Estanques.find({'modulo': solicitud.body.modu}, function(error, estanques){
+                                if(error){
+                                    console.log(chalk.bgRed(error));
+                                } else {
+        
+                                    var estanque = {};
+                                    var siguiente_estanque  = {};
+        
+                                    for (let i = 0; i < estanques.length; i++) {
+                                        if(estanques[i].id == solicitud.body.estanque ){
+                                            estanque = estanques[i+1];
+                                            siguiente_estanque = estanques[i+2];
+                                        }
+                                    }
+        
+                                    console.log(estanque);
+                                    console.log(siguiente_estanque);
+        
+                                    respuesta.render('Parametros/new', {
+                                        user: solicitud.session.user,
+                                        modulos: modulos,
+                                        modulo: solicitud.body.modu, 
+                                        estanques: estanques,
+                                        estanque: estanque,
+                                        siguiente_estanque: siguiente_estanque,
+                                        parametro: {
+                                            oxigeno: 0,
+                                            ph: 0,
+                                            salinidad: 0,
+                                            temperatura: 0,
+                                            nivel_agua: 0,
+                                        }
+                                    });
+                                }
+                            }).sort({ codigo : 1});
+                        }
+                    });
+                }
+            });
+        }
+    },
+    next: function(solicitud, respuesta){
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else { 
+            Modulos.find( function(error, modulos){
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    Estanques.find({'modulo': solicitud.body.mod}, function(error, estanques){
+                        if(error){
+                            console.log(chalk.bgRed(error));
+                        } else {
+
+                            var estanque = {};
+                            var siguiente_estanque  = {};
+
+                            for (let i = 0; i < estanques.length; i++) {
+                                if(estanques[i].id == solicitud.body.estanque_siguiente ){
+                                    estanque = estanques[i];
+                                    siguiente_estanque = estanques[i+1];
+                                }
+                            }
+
+                            console.log(estanque);
+                            console.log(siguiente_estanque);
+
+                            respuesta.render('Parametros/new', {
+                                user: solicitud.session.user,
+                                modulos: modulos,
+                                modulo: solicitud.body.mod, 
+                                estanques: estanques,
+                                estanque: estanque,
+                                siguiente_estanque: siguiente_estanque,
+                                parametro: {
+                                    oxigeno: 0,
+                                    ph: 0,
+                                    salinidad: 0,
+                                    temperatura: 0,
+                                    nivel_agua: 0,
+                                }
+                            });
+                        }
+                    }).sort({ codigo : 1});
                 }
             });
         }

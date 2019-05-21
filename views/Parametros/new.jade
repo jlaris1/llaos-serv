@@ -25,9 +25,18 @@ block contenido
 
             $('#estanques').on('change', function(){
                 $('#est').val(this.value);
+
+                var select=document.getElementById("estanques");
+ 
+                // recorremos todos los valores del select
+                for(var i=1; i<select.length; i++){
+                    if(select.options[i].value == this.value){
+                        // seleccionamos el valor que coincide
+                        $("#sig_est").val(select.options[i+1].value);
+                    }
+                }
+
             });
-
-
         });
 
         function obtenerfecha(){
@@ -73,6 +82,10 @@ block contenido
             setTimeout('obtenerhora()',1000);
             //console.log("un segundo mas...");
         }
+
+        function submit() {
+            document.frm3.submit();
+        }
     .row(style="margin-bottom: -5px;")
         .col-lg-6.col-md-6.col-sm-6.col-xs-12
             h2 
@@ -111,9 +124,10 @@ block contenido
                         select#estanques.form-control(name="estanque" tabindex="2")
                             option(value="") << Seleccione >>
                             each est in estanques
-                                option(value="#{est.id}") #{ est.codigo}
+                                option(value="#{est.id}", selected=(est.id == estanque.id)) #{ est.codigo}
     form#frm(role="form" method="post" action="/parametros/add")
-        input#est.hidden(required name="estanque")
+        input.hidden(name="modu" value="#{modulo}")
+        input#est.hidden(required name="estanque" value="#{estanque}")
         .row
             .col-lg-12
                 .panel.panel-primary
@@ -123,7 +137,7 @@ block contenido
                         .col-lg-1.col-md-1.col-sm-1.col-sm-offset-0.col-md-offset-0.col-lg-offset-0
                         .col-lg-2.col-md-2.col-xs-12
                             .form-group
-                                label | Oxigeno Disuelto (mg/L)
+                                label | Oxigeno (mg/L)
                                 input.form-control(type="text" value="#{parametro.oxigeno}" name="oxigeno" placeholder="# Necro" tabindex="3")
                         .col-lg-2.col-md-2.col-xs-12
                             .form-group
@@ -143,16 +157,19 @@ block contenido
                                 input.form-control(type="text" value="#{parametro.nivel_agua}" name="nivel_agua" placeholder="# Necro" tabindex="7")
         .divider
         .row  
-            .col-lg-2.col-md-4.col-xs-6.pull-right
+            .col-lg-2.col-md-4.col-xs-6.pull-right( style="margin-left: 5px;")
                 .form-group
                     .input-group
                         span.input-group-addon
                             i.fas.fa-plus-circle.text-success
-                        input(type="submit" value="Agregar" tabindex="8").btn.btn-success.form-control     
-            .col-lg-2.col-md-4.col-xs-6.pull-right
-                .form-group
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-arrow-circle-right.text-primary
-                        a(tabindex="9" style="color: white;" onclick="").btn.btn-primary.form-control
-                            | Siguiente Piscina 
+                        input(type="submit" value="Agregar" tabindex="8").btn.btn-success.form-control
+    form(action="/parametros/next" method="post" name="frm3")
+        input.hidden(name="mod" value="#{modulo}")
+        input#sig_est.hidden(name="estanque_siguiente" value="#{siguiente_estanque.id}")  
+        .col-lg-2.col-md-4.col-xs-6.pull-right(style="margin-top: -49px; margin-right: 170px;")
+            .form-group
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-arrow-circle-right.text-primary
+                    a(tabindex="9" style="color: white;" onclick="submit()").btn.btn-primary.form-control
+                        | Siguiente Piscina 

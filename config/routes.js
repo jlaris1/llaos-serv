@@ -339,6 +339,7 @@ module.exports = function(app){
     parametrosRouter.post('/add', parametros.add );
     //parametrosRouter.get('/detail/:id', parametros.detail);
     parametrosRouter.post('/find', parametros.find);
+    parametrosRouter.post('/next', parametros.next);
     
     // Laboratorios
     app.use('/laboratoriolarvas', laboratoriosRouter);
