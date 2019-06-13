@@ -35,8 +35,13 @@ module.exports = {
                                             var charoleros = Array();
 
                                             nutricion.forEach(function(n){
-                                                piscinas.push(n.estanque);
-                                                charoleros.push(n.charolero);
+                                                if(piscinas.includes(n.estanque) == false){
+                                                    piscinas.push(n.estanque);
+                                                }
+
+                                                if(charoleros.includes(n.charolero) == false){
+                                                    charoleros.push(n.charolero);
+                                                }
                                             })
 
                                             respuesta.render('Nutricion/all',
@@ -238,10 +243,8 @@ module.exports = {
             var pdf_name = '';
             var title = '';
             var search = '';
-            var data = new Array();
 
             if (column == 'piscina'){
-                data = new Array();
                 title = 'Piscina: ';                
                 pdf_name = 'reporte_nutricion_piscina_' + solicitud.body.piscina + '.pdf';
                 Nutricion.find({"estanque": solicitud.body.piscina}, function(error, nutricion){
@@ -255,14 +258,10 @@ module.exports = {
                                 Usuarios.populate(nutricion, { path: 'charolero'}, function(error, nutricion){
                                     if(error){
                                         console.log(chalk.bgRed(error));
-                                    } else {                                      
-                                        console.log(chalk.bgGreen(nutricion));
-                                        
+                                    } else {                                                                            
                                         nutricion.forEach( function(n){
-                                            search = n.estanque.codigo;
+                                            search = n.estanque.nombre;
                                         });
-
-                                        console.log(search);
 
                                         generatePdf(nutricion, title, search, pdf_name);
                                     }
@@ -290,9 +289,6 @@ module.exports = {
                                         nutricion.forEach(function(n){
                                             search = n.charolero.nombre;
                                         });
-  
-                                        console.log(data);
-
                                         generatePdf(nutricion, title, search, pdf_name)
                                     }
                                 });
@@ -327,8 +323,6 @@ module.exports = {
                                     if(error){
                                         console.log(chalk.bgRed(error));
                                     } else { 
-                                        console.log(nutricion);
-
                                         generatePdf(nutricion, title, search, pdf_name)
                                     }
                                 });
@@ -350,7 +344,7 @@ module.exports = {
 
                 title = 'Fechas entre: ';
                 search = fechaInicio.replace(new RegExp('-','g'),'/') + '-' + fechaFin.replace(new RegExp('-','g'),'/');
-                pdf_name = 'reporte_nutricion_fecha_' + + '.pdf';
+                pdf_name = 'reporte_nutricion_fecha_' + solicitud.body.fechaInicio + '-' + solicitud.body.fechaFin +'.pdf';
 
                 Nutricion.find({
                     fecha: {
@@ -370,11 +364,6 @@ module.exports = {
                                     if(error){
                                         console.log(chalk.bgRed(error));
                                     } else {
-                                        nutricion.forEach(function(n){
-                                            search = n.charolero.nombre;
-                                        });
-  
-                                        console.log(data);
 
                                         generatePdf(nutricion, title, search, pdf_name)
                                     }
@@ -447,10 +436,21 @@ module.exports = {
                 }
             });
         }
-    }
+    },
+    xls: function(solicitud, respuesta){}
 }
 
 function generatePdf(data, title, search, pdf_name){
+    var prom_charola_1 = 0;
+    var prom_charola_2 = 0;
+    var prom_charola_3 = 0;
+    var prom_charola_4 = 0;
+    var prom_kg_racion = 0;
+    var prom_porcent_ajuste = 0;
+    var prom_suma = 0;
+    var prom_codigo_racion = 0;
+    var prom_siguiente_racion = 0;
+
     // CONSTRUIR PDF
     doc = new pdf({
         // Establecer tamaño de hoja
@@ -503,6 +503,7 @@ function generatePdf(data, title, search, pdf_name){
     if (y > 525){
         y = 15;
         doc.addPage()
+        .text("")
     }
 
     data.forEach( function(dat) {                                          
@@ -533,10 +534,40 @@ function generatePdf(data, title, search, pdf_name){
                 doc.text(new Date(dat.fecha).getDate()+ '/' + (new Date(dat.fecha).getMonth() + 1)+ '/' + new Date(dat.fecha).getFullYear(), 704, y, {align: 'center', width: 70 });
             }
         }
+
+        prom_charola_1 += dat.charola_1;
+        prom_charola_2 += dat.charola_2;
+        prom_charola_3 += dat.charola_3;
+        prom_charola_4 += dat.charola_4;
+        prom_kg_racion += dat.kg_racion;
+        prom_porcent_ajuste += dat.porcent_ajuste;
+        prom_suma += dat.suma;
+        prom_codigo_racion += dat.codigo_racion;
+        prom_siguiente_racion += dat.siguiente_racion;
         
     
     });
-                                                            
+    
+    // Promedios
+    doc.lineWidth(2)
+    doc.lineCap('butt')
+    .moveTo(15, y + 15)
+    .lineTo(780, y + 15)
+    .stroke()
+    
+    doc.font('fonts/Roboto-Black.ttf')
+    .text("Promedios: ", 15, y + 15, { align: 'left', width: 55 })
+    doc.font('fonts/Roboto-Regular.ttf')
+    .text((prom_charola_1 / data.length).toFixed(2), 67, y + 15, {align: 'center', width: 70})
+    .text((prom_charola_2 / data.length).toFixed(2), 137, y + 15, {align: 'center', width: 70})
+    .text((prom_charola_3 / data.length).toFixed(2), 207, y + 15, {align: 'center', width: 70})
+    .text((prom_charola_4 / data.length).toFixed(2), 277, y + 15, {align: 'center', width: 70})
+    .text((prom_kg_racion / data.length).toFixed(2), 347, y + 15, {align: 'center', width: 70})
+    .text((prom_porcent_ajuste / data.length).toFixed(2), 417, y + 15, {align: 'center', width: 70})
+    .text((prom_suma / data.length).toFixed(2), 494, y + 15, {align: 'center', width: 70})
+    .text((prom_codigo_racion / data.length).toFixed(2), 564, y + 15, {align: 'center', width: 70})
+    .text((prom_siguiente_racion / data.length).toFixed(2), 637, y + 15, {align: 'center', width: 70})
+
     console.log(file_path);
     
     doc.pipe(fs.createWriteStream(file_path+pdf_name)).on('finish', function (error){
@@ -552,3 +583,4 @@ function generatePdf(data, title, search, pdf_name){
 
     return pdf_name;
 }
+function generateXLS(){}

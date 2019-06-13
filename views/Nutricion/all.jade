@@ -11,7 +11,6 @@ block contenido
             $('#nutricion').dataTable();
 
             if($('#url').text() != ''){
-                alert("haber haber")
                 url = '../../reports/nutricion/'+ $('#url').text();
                 window.open(url, 'Download');
                 $('#url').text('');

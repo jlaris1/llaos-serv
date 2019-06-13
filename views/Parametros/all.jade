@@ -7,6 +7,12 @@ block contenido
             $('#spanMenuParametros').removeClass('fa-angle-left');
             $('#spanMenuParametros').addClass('fa-angle-down');
             $('#mediciones').dataTable();
+
+            if($('#url').text() != ''){
+                url = '../../reports/parametros/'+ $('#url').text();
+                window.open(url, 'Download');
+                $('#url').text('');
+            }
         });
         //Termina Javascript
 
@@ -24,6 +30,7 @@ block contenido
                     i.fas.fa-file-pdf
                     |   Reportes
     .divider
+    label#url.hidden #{url}
     .row
         .table-responsive   
             table#mediciones.table.table-striped.table-hover

@@ -380,8 +380,8 @@ module.exports = function(app){
     //parametrosRouter.get('/detail/:id', parametros.detail);
     parametrosRouter.post('/find', parametros.find);
     parametrosRouter.post('/next', parametros.next);
-    //fitoplanctonRouter.post('/report/pdf', fitoplancton.pdf);
-    //fitoplanctonRouter.post('/report/xls', fitoplancton.xls);
+    parametrosRouter.post('/report/pdf', parametros.pdf);
+    //parametrosRouter.post('/report/xls', fitoplancton.xls);
     
     // Laboratorios
     app.use('/laboratoriolarvas', laboratoriosRouter);
