@@ -25,9 +25,46 @@ module.exports = {
                                 if(error){
                                     console.log(chalk.bgRed(error));
                                 } else {
-                                    respuesta.render('Parametros/all', {
-                                        user: solicitud.session.user,
-                                        mediciones: mediciones
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(chalk.bgRed(error));
+                                        } else {
+                                            var piscinas = Array();
+                                            var parametristas = Array();
+
+                                            mediciones.forEach(function(m){
+                                                piscinas.push(m.estanque);
+                                                parametristas.push(m.parametrista);
+                                            })
+
+
+                                            respuesta.render('Parametros/all', {
+                                                user: solicitud.session.user,
+                                                mediciones: mediciones,
+                                                usuarios: usuarios,
+                                                titulo: "Parámetros",
+                                                criterios: [
+                                                    {
+                                                        val: "piscina",
+                                                        name: "Piscina"
+                                                    },
+                                                    {
+                                                        val: "parametrista",
+                                                        name: "Parametrista"
+                                                    },
+                                                    {
+                                                        val: "fecha",
+                                                        name: "Fecha"
+                                                    },
+                                                    {
+                                                        val: "fechas",
+                                                        name: "Fechas"
+                                                    }
+                                                ],
+                                                piscinas: piscinas,
+                                                charoleros: parametristas,
+                                            });
+                                        }
                                     });
                                 }
                             })
@@ -59,7 +96,26 @@ module.exports = {
                                 salinidad: 0,
                                 temperatura: 0,
                                 nivel_agua: 0,
-                            }
+                            },
+                            titulo: "",
+                            criterios: [
+                                {
+                                    val: "",
+                                    name: ""
+                                }
+                            ],
+                            piscinas: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }
+                            ],
+                            charoleros: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }   
+                            ],
                         });
                     }
                 }).sort({ codigo : 1});
@@ -88,7 +144,14 @@ module.exports = {
                         },
                         siguiente_estanque: {
                             id: 0
-                        }
+                        },
+                        titulo: "",
+                        criterios: [
+                            {
+                                val: "",
+                                name: ""
+                            },
+                        ],
                     });
                 }
             });
@@ -153,7 +216,14 @@ module.exports = {
                                             salinidad: 0,
                                             temperatura: 0,
                                             nivel_agua: 0,
-                                        }
+                                        },
+                                        titulo: "",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            },
+                                        ],
                                     });
                                 }
                             }).sort({ codigo : 1});
@@ -196,6 +266,25 @@ module.exports = {
                                 estanques: estanques,
                                 estanque: estanque,
                                 siguiente_estanque: siguiente_estanque,
+                                titulo: "",
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
                                 parametro: {
                                     oxigeno: 0,
                                     ph: 0,

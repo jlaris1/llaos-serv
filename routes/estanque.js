@@ -28,12 +28,39 @@ module.exports = {
                                 if(error){
                                     console.log(error);
                                 } else {
-                                    respuesta.render('Administracion/Granja/Estanques/all',
-                                        {
-                                            user: solicitud.session.user,
-                                            estanques: estanques
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(error);
+                                        } else {
+                                            respuesta.render('Administracion/Granja/Estanques/all',
+                                                {
+                                                    user: solicitud.session.user,
+                                                    estanques: estanques,
+                                                    titulo: "Piscinas",
+                                                    criterios: [
+                                                        {
+                                                            val: "modulos",
+                                                            name: "Módulo"
+                                                        },
+                                                    ],
+                                                    piscinas: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }
+                                                    ],
+                                                    charoleros: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }   
+                                                    ],
+                                                    usuarios: usuarios,
+                                                    ruta: "estanque"
+                                                }
+                                            );
                                         }
-                                    );
+                                    });
                                 }
                             });
                         }
@@ -54,13 +81,40 @@ module.exports = {
                         if(error){
                             console.log(error);
                         } else {
-                            respuesta.render('Administracion/Granja/Estanques/new',
-                                {   
-                                    user: solicitud.session.user,
-                                    modulos: modulos,
-                                    tiposModulos: tiposModulos
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    respuesta.render('Administracion/Granja/Estanques/new',
+                                        {   
+                                            user: solicitud.session.user,
+                                            modulos: modulos,
+                                            tiposModulos: tiposModulos,
+                                            titulo: "Piscinas",
+                                            criterios: [
+                                                {
+                                                    val: "",
+                                                    name: ""
+                                                },
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
+                                            usuarios: usuarios,
+                                            ruta: "estanque"
+                                        }
+                                    );
                                 }
-                            );
+                            });
                         }
                     });
                 }
@@ -91,14 +145,41 @@ module.exports = {
                                                 if(error){
                                                     console.log(error);
                                                 } else {
-                                                    respuesta.render('Administracion/Granja/Estanques/edit',
-                                                        {   
-                                                            user: solicitud.session.user,
-                                                            modulos: modulos,
-                                                            tiposModulos: tiposModulos,
-                                                            estanque: estanque
+                                                    Usuarios.find( function(error, usuarios){
+                                                        if(error){
+                                                            console.log(error);
+                                                        } else {
+                                                            respuesta.render('Administracion/Granja/Estanques/edit',
+                                                                {   
+                                                                    user: solicitud.session.user,
+                                                                    modulos: modulos,
+                                                                    tiposModulos: tiposModulos,
+                                                                    estanque: estanque,
+                                                                    titulo: "Piscinas",
+                                                                    criterios: [
+                                                                        {
+                                                                            val: "",
+                                                                            name: ""
+                                                                        },
+                                                                    ],
+                                                                    piscinas: [
+                                                                        {
+                                                                            id: 0,
+                                                                            nombre: ""
+                                                                        }
+                                                                    ],
+                                                                    charoleros: [
+                                                                        {
+                                                                            id: 0,
+                                                                            nombre: ""
+                                                                        }   
+                                                                    ],
+                                                                    usuarios: usuarios,
+                                                                    ruta: "estanque"
+                                                                }
+                                                            );
                                                         }
-                                                    );
+                                                    });
                                                 }
                                             });
                                         }
@@ -511,101 +592,127 @@ module.exports = {
                                                                                                     fechasNS.push(new Date(nuS.fecha).getDate()+ '/' + (new Date(nuS.fecha).getMonth() + 1)+ '/' + new Date(nuS.fecha).getFullYear());
                                                                                                  });
 
-                                                                                                 respuesta.render("Administracion/Granja/Estanques/detail",
-                                                                                                    {
-                                                                                                        user: solicitud.session.user,
-                                                                                                        estanque: estanque,
-                                                                                                        locations: Locations,
-                                                                                                        fechas: fechas,
-                                                                                                        data: data,
-                                                                                                        datosoxigeno: oxigeno,
-                                                                                                        datostemperatura: temperatura,
-                                                                                                        fechasP : fechasP,
-                                                                                                        dataBranquias_necro: listbranquias_necro,
-                                                                                                        dataBranquias_mo: listbranquias_mo,
-                                                                                                        datosbranquias_epic : listbranquias_epic,
-                                                                                                        datosplabial : listplabial,
-                                                                                                        datosproto_epip : listproto_epip,
-                                                                                                        datosintes_grad : listintes_grad,
-                                                                                                        datoshepato_I : listhepato_I,
-                                                                                                        datoshepato_nhp : listhepato_nhp,
-                                                                                                        datoshepato_vib : listhepato_vib,
-                                                                                                        datoshepato_IIInhp : listhepato_IIInhp,
-                                                                                                        datoshepato_IIIvib : listhepato_IIIvib,
-                                                                                                        datoshepato_IIIbnhp : listhepato_IIIbnhp,
-                                                                                                        datoshepato_IIIbvib : listhepato_IIIbvib,
-                                                                                                        datoshepato_IIIcnhp : listhepato_IIIcnhp,
-                                                                                                        datoshepato_IIIcvib : listhepato_IIIcvib,
-                                                                                                        datoslip_prom : listlip_prom,
-                                                                                                        datosno_org : listno_org,
-                                                                                                        datosscore_nhp : listscore_nhp,
-                                                                                                        datosscore_vib : listscore_vib,
-                                                                                                        datostub_afec : listtub_afec,
-                                                                                                        datosext_necro : listext_necro,
-                                                                                                        datosext_pig : listext_pig,
-                                                                                                        datosext_flaci : listext_flaci,
-                                                                                                        datosur_ur : listur_ur,
-                                                                                                        datosur_uv : listur_uv,
-                                                                                                        datosur_amp : listur_amp,
-                                                                                                        datospeso_prom : listpeso_prom,
-                                                                                                        datostiem_prom : listtiem_prom,
-                                                                                                        datostiem_min : listtiem_min,
-                                                                                                        datostiem_max : listtiem_max,
-                                                                                                        datoscons_ant : listcons_ant,
-                                                                                                        datoscons_musc : listcons_musc,
-                                                                                                        datosagua_ca : listagua_ca,
-                                                                                                        datosagua_cv : listagua_cv,
-                                                                                                        datosmac_larva_ca : listmac_larva_ca,
-                                                                                                        datosmac_larva_cv : listmac_larva_cv,
-                                                                                                        datoshepato_ca : listhepato_ca,
-                                                                                                        datoshepato_cv : listhepato_cv,
-                                                                                                        fechasB : fechasB,
-                                                                                                        fechasF : fechasF,
-                                                                                                        datosdiatomeas : diatomeas,
-                                                                                                        datoscianofitas : cianofitas,
-                                                                                                        datosclorofitas : clorofitas,
-                                                                                                        datosdinoflagelados : dinoflagelados,
-                                                                                                        datosflagelados : flagelados,
-                                                                                                        datostotal_cel_ml : total_cel_ml,
-                                                                                                        datosnauplios : nauplios,
-                                                                                                        datoscopepodos : copepodos,
-                                                                                                        datosrutiferos : rutiferos,
-                                                                                                        datospoliquetos : poliquetos,
-                                                                                                        datosotros : otros,
-                                                                                                        datostotal_organismos : total_organismos,
-                                                                                                        fechasZ : fechasZ,
-                                                                                                        datosamoniaD: amoniaD,
-                                                                                                        datosalcalinidad_CaCO3: alcalinidad_CaCO3,
-                                                                                                        datosalcalinidad_HCO3: alcalinidad_HCO3,
-                                                                                                        datosalcalinidad_CO3: alcalinidad_CO3,
-                                                                                                        datosnitrito_N: nitrito_N,
-                                                                                                        datosnitrito_NO3: nitrito_NO3,
-                                                                                                        datosTAN: TAN,
-                                                                                                        fechasND: fechasND,
-                                                                                                        datosamonia: amonia,
-                                                                                                        datosnitrito_N: nitrito_N,
-                                                                                                        datosnitrito_NO3: nitrito_NO3,
-                                                                                                        datosalcalinidad_CaCO3: alcalinidad_CaCO3,
-                                                                                                        datosalcalinidad_HCO3: alcalinidad_HCO3,
-                                                                                                        datosalcalinidad_CO3: alcalinidad_CO3,
-                                                                                                        datosdureza: dureza,
-                                                                                                        datosdureza_CaCO3: dureza_CaCO3,
-                                                                                                        datosdureza_Ca: dureza_Ca,
-                                                                                                        datossilice_SiO2: silice_SiO2,
-                                                                                                        datossilice_Si: silice_Si,
-                                                                                                        datosnitrato_N: nitrato_N,
-                                                                                                        datosnitrato_NO3: nitrato_NO3,
-                                                                                                        datosfosfato_PO4: fosfato_PO4,
-                                                                                                        datosfosfato_P: fosfato_P,
-                                                                                                        datospotasio: potasio,
-                                                                                                        datosmagnecio_Mg: magnecio_Mg,
-                                                                                                        datosmagnecio_CaCO3: magnecio_CaCO3,
-                                                                                                        datosbalance_Ca: balance_Ca,
-                                                                                                        datosbalance_Mg: balance_Mg,
-                                                                                                        datosbalance_K: balance_K,
-                                                                                                        fechasNS: fechasNS,
+                                                                                                Usuarios.find( function(error, usuarios){
+                                                                                                    if(error){
+                                                                                                        console.log(error);
+                                                                                                    } else {
+                                                                                                        respuesta.render("Administracion/Granja/Estanques/detail",
+                                                                                                            {
+                                                                                                                user: solicitud.session.user,
+                                                                                                                estanque: estanque,
+                                                                                                                locations: Locations,
+                                                                                                                fechas: fechas,
+                                                                                                                data: data,
+                                                                                                                datosoxigeno: oxigeno,
+                                                                                                                datostemperatura: temperatura,
+                                                                                                                fechasP : fechasP,
+                                                                                                                dataBranquias_necro: listbranquias_necro,
+                                                                                                                dataBranquias_mo: listbranquias_mo,
+                                                                                                                datosbranquias_epic : listbranquias_epic,
+                                                                                                                datosplabial : listplabial,
+                                                                                                                datosproto_epip : listproto_epip,
+                                                                                                                datosintes_grad : listintes_grad,
+                                                                                                                datoshepato_I : listhepato_I,
+                                                                                                                datoshepato_nhp : listhepato_nhp,
+                                                                                                                datoshepato_vib : listhepato_vib,
+                                                                                                                datoshepato_IIInhp : listhepato_IIInhp,
+                                                                                                                datoshepato_IIIvib : listhepato_IIIvib,
+                                                                                                                datoshepato_IIIbnhp : listhepato_IIIbnhp,
+                                                                                                                datoshepato_IIIbvib : listhepato_IIIbvib,
+                                                                                                                datoshepato_IIIcnhp : listhepato_IIIcnhp,
+                                                                                                                datoshepato_IIIcvib : listhepato_IIIcvib,
+                                                                                                                datoslip_prom : listlip_prom,
+                                                                                                                datosno_org : listno_org,
+                                                                                                                datosscore_nhp : listscore_nhp,
+                                                                                                                datosscore_vib : listscore_vib,
+                                                                                                                datostub_afec : listtub_afec,
+                                                                                                                datosext_necro : listext_necro,
+                                                                                                                datosext_pig : listext_pig,
+                                                                                                                datosext_flaci : listext_flaci,
+                                                                                                                datosur_ur : listur_ur,
+                                                                                                                datosur_uv : listur_uv,
+                                                                                                                datosur_amp : listur_amp,
+                                                                                                                datospeso_prom : listpeso_prom,
+                                                                                                                datostiem_prom : listtiem_prom,
+                                                                                                                datostiem_min : listtiem_min,
+                                                                                                                datostiem_max : listtiem_max,
+                                                                                                                datoscons_ant : listcons_ant,
+                                                                                                                datoscons_musc : listcons_musc,
+                                                                                                                datosagua_ca : listagua_ca,
+                                                                                                                datosagua_cv : listagua_cv,
+                                                                                                                datosmac_larva_ca : listmac_larva_ca,
+                                                                                                                datosmac_larva_cv : listmac_larva_cv,
+                                                                                                                datoshepato_ca : listhepato_ca,
+                                                                                                                datoshepato_cv : listhepato_cv,
+                                                                                                                fechasB : fechasB,
+                                                                                                                fechasF : fechasF,
+                                                                                                                datosdiatomeas : diatomeas,
+                                                                                                                datoscianofitas : cianofitas,
+                                                                                                                datosclorofitas : clorofitas,
+                                                                                                                datosdinoflagelados : dinoflagelados,
+                                                                                                                datosflagelados : flagelados,
+                                                                                                                datostotal_cel_ml : total_cel_ml,
+                                                                                                                datosnauplios : nauplios,
+                                                                                                                datoscopepodos : copepodos,
+                                                                                                                datosrutiferos : rutiferos,
+                                                                                                                datospoliquetos : poliquetos,
+                                                                                                                datosotros : otros,
+                                                                                                                datostotal_organismos : total_organismos,
+                                                                                                                fechasZ : fechasZ,
+                                                                                                                datosamoniaD: amoniaD,
+                                                                                                                datosalcalinidad_CaCO3: alcalinidad_CaCO3,
+                                                                                                                datosalcalinidad_HCO3: alcalinidad_HCO3,
+                                                                                                                datosalcalinidad_CO3: alcalinidad_CO3,
+                                                                                                                datosnitrito_N: nitrito_N,
+                                                                                                                datosnitrito_NO3: nitrito_NO3,
+                                                                                                                datosTAN: TAN,
+                                                                                                                fechasND: fechasND,
+                                                                                                                datosamonia: amonia,
+                                                                                                                datosnitrito_N: nitrito_N,
+                                                                                                                datosnitrito_NO3: nitrito_NO3,
+                                                                                                                datosalcalinidad_CaCO3: alcalinidad_CaCO3,
+                                                                                                                datosalcalinidad_HCO3: alcalinidad_HCO3,
+                                                                                                                datosalcalinidad_CO3: alcalinidad_CO3,
+                                                                                                                datosdureza: dureza,
+                                                                                                                datosdureza_CaCO3: dureza_CaCO3,
+                                                                                                                datosdureza_Ca: dureza_Ca,
+                                                                                                                datossilice_SiO2: silice_SiO2,
+                                                                                                                datossilice_Si: silice_Si,
+                                                                                                                datosnitrato_N: nitrato_N,
+                                                                                                                datosnitrato_NO3: nitrato_NO3,
+                                                                                                                datosfosfato_PO4: fosfato_PO4,
+                                                                                                                datosfosfato_P: fosfato_P,
+                                                                                                                datospotasio: potasio,
+                                                                                                                datosmagnecio_Mg: magnecio_Mg,
+                                                                                                                datosmagnecio_CaCO3: magnecio_CaCO3,
+                                                                                                                datosbalance_Ca: balance_Ca,
+                                                                                                                datosbalance_Mg: balance_Mg,
+                                                                                                                datosbalance_K: balance_K,
+                                                                                                                fechasNS: fechasNS,
+                                                                                                                titulo: "Piscinas",
+                                                                                                                criterios: [
+                                                                                                                    {
+                                                                                                                        val: "",
+                                                                                                                        name: ""
+                                                                                                                    },
+                                                                                                                ],
+                                                                                                                piscinas: [
+                                                                                                                    {
+                                                                                                                        id: 0,
+                                                                                                                        nombre: ""
+                                                                                                                    }
+                                                                                                                ],
+                                                                                                                charoleros: [
+                                                                                                                    {
+                                                                                                                        id: 0,
+                                                                                                                        nombre: ""
+                                                                                                                    }   
+                                                                                                                ],
+                                                                                                                usuarios: usuarios,
+                                                                                                                ruta: "estanque"
+                                                                                                            });
                                                                                                     }
-                                                                                                );
+                                                                                                });
                                                                                             }
                                                                                         });
                                                                                     }

@@ -8,9 +8,36 @@ module.exports = {
             respuesta.redirect("/sesion-expirada");
         }else{
             Puestos.find( function(error, puestos) {
-                respuesta.render("Puestos/puestos", {
-                    user: solicitud.session.user,
-                    puestos: puestos
+                Usuarios.find( function(error, usuarios){
+                    if(error){
+                        console.log(error);
+                    } else { 
+                        respuesta.render("Puestos/puestos", {
+                            user: solicitud.session.user,
+                            puestos: puestos,
+                            titulo: "Puestos",
+                            criterios: [
+                                {
+                                    val: "",
+                                    name: ""
+                                }
+                            ],
+                            piscinas: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }
+                            ],
+                            charoleros: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }   
+                            ],
+                            usuarios: usuarios,
+                            ruta: "puestos"
+                        });
+                    }
                 });
             });
         };
@@ -21,9 +48,36 @@ module.exports = {
             respuesta.redirect("/sesion-expirada");
         }else{
             Puestos.find( function(error, puestos) {
-                respuesta.render("Puestos/puesto", {
-                    user: solicitud.session.user,
-                    puestos: puestos
+                Usuarios.find( function(error, usuarios){
+                    if(error){
+                        console.log(error);
+                    } else { 
+                        respuesta.render("Puestos/puesto", {
+                            user: solicitud.session.user,
+                            puestos: puestos,
+                            titulo: "Puestos",
+                            criterios: [
+                                {
+                                    val: "",
+                                    name: ""
+                                }
+                            ],
+                            piscinas: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }
+                            ],
+                            charoleros: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }   
+                            ],
+                            usuarios: usuarios,
+                            ruta: "puestos"
+                        });
+                    }
                 });
             });
         };
@@ -108,9 +162,36 @@ module.exports = {
                 if(error){
                     console.log(error);
                 }else{
-                    respuesta.render("Puestos/editar",{
-                        user: solicitud.session.user,
-                        puesto: puesto
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else { 
+                            respuesta.render("Puestos/editar",{
+                                user: solicitud.session.user,
+                                puesto: puesto,
+                                titulo: "Puestos",
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
+                                usuarios: usuarios,
+                                ruta: "puestos"
+                            });
+                        }
                     });
                 };
             });
@@ -214,9 +295,36 @@ module.exports = {
                     if(solicitud.session.user === undefined){
                         respuesta.redirect("/");
                     }else{
-                        respuesta.render("Puestos/detalles",{
-                            user: solicitud.session.user,
-                            puesto: puesto
+                        Usuarios.find( function(error, usuarios){
+                            if(error){
+                                console.log(error);
+                            } else { 
+                                respuesta.render("Puestos/detalles",{
+                                    user: solicitud.session.user,
+                                    puesto: puesto,
+                                    titulo: "Puestos",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "puestos"
+                                });
+                            }
                         });
                     };
                 };

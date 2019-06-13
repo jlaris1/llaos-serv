@@ -85,7 +85,7 @@ html(lang="es")
                                                             span#spanMenuInventarioCam.fas.fa-angle-left
                                                         ul#subMenuInventarioCam.nav.nav-fourth-level.hidden
                                                             li
-                                                                a(href='/inventarioscamaron')
+                                                                a(href='/inventarioscamaron/all')
                                                                     i.fas.fa-box-open.fa-fw 
                                                                     |   Inventario
                                                             li
@@ -559,3 +559,164 @@ html(lang="es")
                 .container-fluid
                     //.loader.centrar
                     block contenido
+            #reports.modal(tabindex='-1', role='dialog')
+                .modal-dialog(role='document')
+                    .modal-content
+                        .modal-header.modal-header-style
+                            h3.modal-title Reportes #{titulo}
+                            button.close(type='button', data-dismiss='modal', aria-label='Close' style="margin-top: -40px;")
+                                span(aria-hidden='true') ×
+                        .modal-body
+                            form#frmReports(role="form" name="frmReports" method="post" action="/#{ruta}/report/")
+                                label#tallas.hidden #{tallas}
+                                label#presentaciones.hidden #{presentaciones}
+                                .row
+                                    .col-lg-6
+                                        .form-group
+                                            label | Criterio
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.fas.fa-search-plus
+                                                select#criterio.form-control(name="criterio" tabindex="2" value="")
+                                                    option(value="") << Seleccione >>
+                                                    each c in criterios
+                                                        option(value="#{c.val}") #{c.name}
+                                    
+                                    // ESTO CAMBIA DEPENDIENDO DEL MÓDULO
+                                    .col-lg-6#areas.hidden
+                                        .form-group
+                                            label | Áreas
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.fas.fa-map-signs
+                                                select#area.form-control(name="area" tabindex="3" value="")
+                                                    option(value="") << Seleccione >>
+                                                    option(value="Administración - Granja") Administración - Granja
+                                                        option(value="Intensivo") Intensivo
+                                                        option(value="Semi-intensivo") Semi-intensivo
+                                                        option(value="Laboratorio") Laboratorio
+                                                        option(value="Probioticos") Probioticos
+                                                        option(value="Taller Mecánico") Taller Mecánico
+                                                        option(value="Taller Eléctrico") Taller Eléctrico 
+                                                        option(value="Equipo Bombeo") Equipo Bombeo
+                                                        option(value="Administración - Matriz") Administración - Matriz
+                                                        option(value="Planta - Administración") Planta - Administración
+                                                        option(value="Planta - Mantenimiento") Planta - Mantenimiento
+                                                        option(value="Planta - Proceso") Planta - Proceso
+                                    .col-lg-6#modulos.hidden
+                                        .form-group
+                                            label | Modulo
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.fas.fa-map-pin
+                                                select#modulo.form-control(name="modulo" tabindex="3")
+                                                    option(value="") << Seleccione >>
+                                                    option(value="A") Módulo A
+                                                    option(value="B") Módulo B
+                                                    option(value="C") Módulo C
+                                                    option(value="D") Módulo D
+                                                    option(value="E") Módulo E
+                                                    option(value="Intensivos") Intensivos
+                                                    option(value="Reservorio") Reservorio
+                                    .col-lg-6#estatus.hidden
+                                        .form-group
+                                            label | Estatus
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.fas.fa-stamp
+                                                select#estatus.form-control(name="estatus" tabindex="3")
+                                                    option(value="") << Seleccione >>
+                                                    option(value="Autorizada") Autorizada
+                                                    option(value="Cancelada") Cancelada
+                                                    option(value="Compra parcial") Compra parcial
+                                                    option(value="Detenida") Detenida
+                                                    option(value="Cerrada") Cerrada
+                                    .col-lg-6#fechas.hidden
+                                        .form-group
+                                            label | Fecha 
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.fas.fa-calendar
+                                                input#fecha.form-control(type="date" name="fecha" tabindex="3")
+                                    .col-lg-6#responsables.hidden
+                                        .form-group
+                                            label | Responsables
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.fas.fa-users
+                                                select#responsable.form-control(name="responsable" tabindex="2" value="")
+                                                    option(value="") << Seleccione >>
+                                                    each usr in usuarios
+                                                        if usr.autorizador == true
+                                                            option(value=usr.id) #{ usr.nombre }
+                                    .col-lg-6#solicitantes.hidden
+                                        .form-group
+                                            label | Solicitantes
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.fas.fa-users
+                                                select#solicitante.form-control(name="solicitante" tabindex="2" value="")
+                                                    option(value="") << Seleccione >>
+                                                    each usr in usuarios
+                                                        option(value=usr.nombre) #{ usr.nombre }
+                                    .col-lg-6#combos.hidden
+                                        .form-group
+                                            label#labelCombos 
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.fab.fa-searchengin
+                                                select#combo.form-control(name="combo" tabindex="2")
+                                                    option(value="0") << Seleccione >>
+                                    .col-lg-6#inputs.hidden
+                                        .form-group
+                                            label#labelInputs 
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.fas.fa-asterisk
+                                                input#input.form-control(type="text" name="input" tabindex="2")
+                                    .col-lg-6#piscinas.hidden
+                                        .form-group
+                                            label | Piscinas
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.fas.fa-water
+                                                select#piscina.form-control(name="piscina" tabindex="3" value="")
+                                                    option(value="") << Seleccione >>
+                                                    each pis in piscinas
+                                                        option(value=pis.id) #{pis.nombre}
+                                    .col-lg-6#charoleros.hidden
+                                        .form-group
+                                            label | Charoleros
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.fas.fa-user-circle
+                                                select#charolero.form-control(name="charolero" tabindex="3" value="")
+                                                    option(value="") << Seleccione >>
+                                                    each cha in charoleros
+                                                        option(value=cha.id) #{cha.nombre}
+                                .row
+                                    .col-lg-6#fechaInicio.hidden
+                                        .form-group
+                                            label | Fecha Inicio
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.fas.fa-calendar
+                                                input#fInicio.form-control(type="date" name="fechaInicio" tabindex="3")
+                                    .col-lg-6#fechaFin.hidden
+                                        .form-group
+                                            label | Fecha Fin
+                                            .input-group
+                                                span.input-group-addon
+                                                    i.fas.fa-calendar
+                                                input#fFin.form-control(type="date" name="fechaFin" tabindex="4")                  
+                        .modal-footer
+                            input.hidden#ruta(value="#{ruta}")
+                            .row.pull-right
+                                .col-lg-6.col-md-3.col-sm-3.col-xs-3
+                                    a(href="javascript:reportePDF()").btn.btn-danger.form-control
+                                        i.fas.fa-file-pdf
+                                        |   Reporte PDF
+                                .col-lg-6.col-md-3.col-sm-3.col-xs-3
+                                    a(href="javascript:reporteXLS()").btn.btn-success.form-control
+                                        i.fas.fa-file-excel
+                                        |   Reporte XLS

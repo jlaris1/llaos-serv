@@ -8,6 +8,8 @@ var mongoose = require('mongoose');
     Usuarios = mongoose.model('Usuarios');
     chalk = require('chalk');
 
+var file_path = './files/reports/nutricion/';
+
 module.exports = {
     all: function(solicitud, respuesta){
         if (solicitud.session.user === undefined){
@@ -25,18 +27,55 @@ module.exports = {
                                 if(error){
                                     console.log(chalk.bgRed(error));
                                 } else {
-                                    respuesta.render('Nutricion/all',
-                                        {
-                                            user: solicitud.session.user,
-                                            nutricion: nutricion
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(error);
+                                        } else { 
+                                            var piscinas = Array();
+                                            var charoleros = Array();
+
+                                            nutricion.forEach(function(n){
+                                                piscinas.push(n.estanque);
+                                                charoleros.push(n.charolero);
+                                            })
+
+                                            respuesta.render('Nutricion/all',
+                                                {
+                                                    user: solicitud.session.user,
+                                                    nutricion: nutricion,
+                                                    titulo: "Nutrición",
+                                                    criterios: [
+                                                        {
+                                                            val: "piscina",
+                                                            name: "Piscina"
+                                                        },
+                                                        {
+                                                            val: "charolero",
+                                                            name: "Charolero"
+                                                        },
+                                                        {
+                                                            val: "fecha",
+                                                            name: "Fecha"
+                                                        },
+                                                        {
+                                                            val: "fechas",
+                                                            name: "Fechas"
+                                                        }
+                                                    ],
+                                                    usuarios: usuarios,
+                                                    piscinas: piscinas,
+                                                    charoleros: charoleros,
+                                                    ruta: "nutricion"
+                                                }
+                                            );
                                         }
-                                    );
+                                    });
                                 }
                             });
                         }
                     })
                 }
-            })
+            });
         } 
     },
     new: function(solicitud, respuesta){
@@ -47,25 +86,57 @@ module.exports = {
                 if(error){
                     console.log(chalk.bgRed(error));
                 } else {
-                    respuesta.render('Nutricion/new',
-                        {
-                            user: solicitud.session.user,
-                            modulos: modulos,
-                            estanques: {},
-                            nutricion: {
-                                charola_1: 0,
-                                charola_2: 0,
-                                charola_3: 0,
-                                charola_4: 0,
-                                charola_5: 0,
-                                charola_6: 0,
-                                suma: 0,
-                                codigo_racion: 0
-                            }
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else { 
+                            respuesta.render('Nutricion/new',
+                                {
+                                    user: solicitud.session.user,
+                                    modulos: modulos,
+                                    estanques: {},
+                                    nutricion: {
+                                        charola_1: 0,
+                                        charola_2: 0,
+                                        charola_3: 0,
+                                        charola_4: 0,
+                                        kg_racion: 0,
+                                        porcent_ajuste: 0,
+                                        suma: 0,
+                                        codigo_racion: 0,
+                                        siguiente_racion: 0
+                                    },
+                                    titulo: "Nutrición",
+                                    criterios: [
+                                        {
+                                            val: "piscina",
+                                            name: "Piscina"
+                                        },
+                                        {
+                                            val: "charolero",
+                                            name: "Charolero"
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "nutricion"
+                                }
+                            );
                         }
-                    );
+                    });
                 }
-            });
+            }).sort({codigo: 1});
         }
     },
     find: function(solicitud, respuesta){
@@ -77,28 +148,52 @@ module.exports = {
                     if(error){
                         console.log(chalk.bgRed(error));
                     } else {
-                        respuesta.render("Nutricion/new", 
-                            {
-                                user: solicitud.session.user,
-                                modulos: modulos,
-                                estanques: estanques,
-                                modulo: solicitud.body.modulo,
-                                nutricion: {
-                                    charola_1: 0,
-                                    charola_2: 0,
-                                    charola_3: 0,
-                                    charola_4: 0,
-                                    charola_5: 0,
-                                    charola_6: 0,
-                                    suma: 0,
-                                    codigo_racion: 0
-                                }
+                        Usuarios.find( function(error, usuarios){
+                            if(error){
+                                console.log(error);
+                            } else { 
+                                respuesta.render("Nutricion/new", 
+                                    {
+                                        user: solicitud.session.user,
+                                        modulos: modulos,
+                                        estanques: estanques,
+                                        modulo: solicitud.body.modulo,
+                                        nutricion: {
+                                            charola_1: 0,
+                                            charola_2: 0,
+                                            charola_3: 0,
+                                            charola_4: 0,
+                                            kg_racion: 0,
+                                            porcent_ajuste: 0,
+                                            suma: 0,
+                                            codigo_racion: 0,
+                                            siguiente_racion: 0
+                                        },
+                                        titulo: "Nutrición",
+                                        piscinas: [{
+                                            id: 0,
+                                            nombre: ""
+                                        }],
+                                        charoleros: [{
+                                            id: 0,
+                                            nombre: ""
+                                        }],
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            },
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "nutricion"
+                                    }
+                                );
                             }
-                        );
+                        });
                     }
-                });
+                }).sort({codigo: 1});
             }
-        });
+        }).sort({codigo: 1});
     },
     add: function(solicitud, respuesta){
         if(solicitud.session.user === undefined){
@@ -111,8 +206,9 @@ module.exports = {
                 charola_2: solicitud.body.charola_2,
                 charola_3: solicitud.body.charola_3,
                 charola_4: solicitud.body.charola_4,
-                charola_5: solicitud.body.charola_5,
-                charola_6: solicitud.body.charola_6,
+                kg_racion: solicitud.body.kg_racion,
+                porcent_ajuste: solicitud.body.porcent_ajuste,
+                siguiente_racion: solicitud.body.siguiente_racion,
                 suma: solicitud.body.suma,
                 codigo_racion: (parseFloat(solicitud.body.codigo_racion)).toFixed(2),
                 estanque: solicitud.body.estanque,
@@ -133,5 +229,326 @@ module.exports = {
                 }
             })
         }
+    },
+    pdf: function(solicitud, respuesta){
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else { 
+            var column = solicitud.body.criterio;
+            var pdf_name = '';
+            var title = '';
+            var search = '';
+            var data = new Array();
+
+            if (column == 'piscina'){
+                data = new Array();
+                title = 'Piscina: ';                
+                pdf_name = 'reporte_nutricion_piscina_' + solicitud.body.piscina + '.pdf';
+                Nutricion.find({"estanque": solicitud.body.piscina}, function(error, nutricion){
+                    if(error){
+                        console.log(chalk.bgRed(error));
+                    } else {
+                        Estanques.populate(nutricion, {path: 'estanque'}, function(error, nutricion){
+                            if(error){
+                                console.log(chalk.bgRed(error));
+                            } else {
+                                Usuarios.populate(nutricion, { path: 'charolero'}, function(error, nutricion){
+                                    if(error){
+                                        console.log(chalk.bgRed(error));
+                                    } else {                                      
+                                        console.log(chalk.bgGreen(nutricion));
+                                        
+                                        nutricion.forEach( function(n){
+                                            search = n.estanque.codigo;
+                                        });
+
+                                        console.log(search);
+
+                                        generatePdf(nutricion, title, search, pdf_name);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            } else if (column == 'charolero'){
+                title = 'Charolero: ';
+                pdf_name = 'reporte_nutricion_charolero_' + solicitud.body.charolero + '.pdf';
+
+                Nutricion.find({"charolero": solicitud.body.charolero}, function(error, nutricion){
+                    if(error){
+                        console.log(chalk.bgRed(error));
+                    } else {
+                        Estanques.populate(nutricion, {path: 'estanque'}, function(error, nutricion){
+                            if(error){
+                                console.log(chalk.bgRed(error));
+                            } else {
+                                Usuarios.populate(nutricion, { path: 'charolero'}, function(error, nutricion){
+                                    if(error){
+                                        console.log(chalk.bgRed(error));
+                                    } else {
+                                        nutricion.forEach(function(n){
+                                            search = n.charolero.nombre;
+                                        });
+  
+                                        console.log(data);
+
+                                        generatePdf(nutricion, title, search, pdf_name)
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            } else if (column == 'fecha'){
+                console.log(solicitud.body.fecha);
+
+                fecha = new Date(solicitud.body.fecha).getFullYear() + '-' +
+                        (new Date(solicitud.body.fecha).getMonth() + 1) + '-' +
+                        (new Date(solicitud.body.fecha).getDate() + 1);
+
+                f = new Date(fecha);
+
+                console.log(f);
+
+                title = 'Fecha: ';
+                search = solicitud.body.fecha;
+                pdf_name = 'reporte_nutricion_fecha_' + solicitud.body.fecha + '.pdf';
+            
+                Nutricion.find( { fecha : { $eq: f }}, function(error, nutricion){
+                    if(error){
+                        console.log(chalk.bgRed(error));
+                    } else {
+                        Estanques.populate(nutricion, {path: 'estanque'}, function(error, nutricion){
+                            if(error){
+                                console.log(chalk.bgRed(error));
+                            } else {
+                                Usuarios.populate(nutricion, { path: 'charolero'}, function(error, nutricion){
+                                    if(error){
+                                        console.log(chalk.bgRed(error));
+                                    } else { 
+                                        console.log(nutricion);
+
+                                        generatePdf(nutricion, title, search, pdf_name)
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            } else if (column == 'fechas'){
+                fechaInicio = new Date(solicitud.body.fechaInicio).getFullYear() + '-' +
+                            (new Date(solicitud.body.fechaInicio).getMonth() + 1) +  '-' +
+                            (new Date(solicitud.body.fechaInicio).getDate() + 1);
+                              
+                fechaFin = new Date(solicitud.body.fechaFin).getFullYear() + '-' +
+                        (new Date(solicitud.body.fechaFin).getMonth() + 1) +  '-' +
+                        (new Date(solicitud.body.fechaFin).getDate() + 1);
+
+                fI = new Date(fechaInicio).toISOString();
+                fF = new Date(fechaFin).toISOString()
+
+                title = 'Fechas entre: ';
+                search = fechaInicio.replace(new RegExp('-','g'),'/') + '-' + fechaFin.replace(new RegExp('-','g'),'/');
+                pdf_name = 'reporte_nutricion_fecha_' + + '.pdf';
+
+                Nutricion.find({
+                    fecha: {
+                        $gte: fI,
+                        $lte: fF
+                    }
+                }
+                , function(error, nutricion){
+                    if(error){
+                        console.log(chalk.bgRed(error));
+                    } else {
+                        Estanques.populate(nutricion, {path: 'estanque'}, function(error, nutricion){
+                            if(error){
+                                console.log(chalk.bgRed(error));
+                            } else {
+                                Usuarios.populate(nutricion, { path: 'charolero'}, function(error, nutricion){
+                                    if(error){
+                                        console.log(chalk.bgRed(error));
+                                    } else {
+                                        nutricion.forEach(function(n){
+                                            search = n.charolero.nombre;
+                                        });
+  
+                                        console.log(data);
+
+                                        generatePdf(nutricion, title, search, pdf_name)
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+
+            Nutricion.find( function(error, nutricion){
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    Estanques.populate(nutricion, {path: 'estanque'}, function(error, nutricion){
+                        if(error){
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            Usuarios.populate(nutricion, { path: 'charolero'}, function(error, nutricion){
+                                if(error){
+                                    console.log(chalk.bgRed(error));
+                                } else {
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(error);
+                                        } else { 
+                                            var piscinas = Array();
+                                            var charoleros = Array();
+
+                                            nutricion.forEach(function(n){
+                                                piscinas.push(n.estanque);
+                                                charoleros.push(n.charolero);
+                                            })
+
+                                            respuesta.render('Nutricion/all',
+                                                {
+                                                    user: solicitud.session.user,
+                                                    nutricion: nutricion,
+                                                    titulo: "Nutrición",
+                                                    criterios: [
+                                                        {
+                                                            val: "piscina",
+                                                            name: "Piscina"
+                                                        },
+                                                        {
+                                                            val: "charolero",
+                                                            name: "Charolero"
+                                                        },{
+                                                            val: "fecha",
+                                                            name: "Fecha"
+                                                        },
+                                                        {
+                                                            val: "fechas",
+                                                            name: "Fechas"
+                                                        }
+                                                    ],
+                                                    usuarios: usuarios,
+                                                    piscinas: piscinas,
+                                                    charoleros: charoleros,
+                                                    ruta: "nutricion",
+                                                    url: pdf_name
+                                                }
+                                            );
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    })
+                }
+            });
+        }
     }
+}
+
+function generatePdf(data, title, search, pdf_name){
+    // CONSTRUIR PDF
+    doc = new pdf({
+        // Establecer tamaño de hoja
+        size: 'letter',
+        layout: 'landscape'
+    });
+    
+    // Logo empresa
+    doc.image('./public/imgs/logo llaos.jpg', 5, 40,{width: 200})
+    
+    // Nombre empresa y rfc
+    doc.font('fonts/Roboto-Black.ttf')
+    .fontSize(14)
+    .text('LLAOS ACUACULTURA S.A. de C.V.', 480, 40, { align: 'right', width: 290 })
+    .text('REPORTE CHAROLAS', { align: 'right', width: 290 })
+    
+    // Nombre formato, fecha y hora de creación
+    doc.font('fonts/Roboto-Regular.ttf')
+    .fontSize(14)
+    .text(title + search,{ align: 'right' , width: 290})  
+    .text("Fecha: "+ FechaHora.obtenerfecha() + " " + FechaHora.obtenerhora(),{ align: 'right' , width: 290})
+                                                                                                    
+    // Encabezados tabla
+    doc.lineWidth(25)
+    doc.lineCap('butt')
+    .fillColor("blue")
+    .moveTo(15, 150)
+    .lineTo(780, 150)
+    .stroke()
+    
+    doc.fontSize(10)
+    .fill('white')
+    .text("Est.", 17, 143, {align: 'center', width: 45})
+    .text("Charola 1", 67, 143,  {align: 'center', width: 70})
+    .text("Charola 2", 137, 143, {align: 'center', width: 70})
+    .text("Charola 3", 207, 143, {align: 'center', width: 70})
+    .text("Charola 4", 277, 143, {align: 'center', width: 70})
+    .text("Kg Ración", 347, 143, {align: 'center', width: 70})
+    .text("% Ajuste", 417, 143, {align: 'center', width: 70})
+    .text("Suma", 494, 143, {align: 'center', width: 70})
+    .text("Código", 564, 143, {align: 'center', width: 70})
+    .text("Kg. Sig. Rac", 637, 143, {align: 'center', width: 70})
+    .text("Fecha", 704, 143, {align: 'center', width: 70})
+    
+    
+    // Llenado de tabla
+    var y = 155;
+    var total = 0;
+
+    if (y > 525){
+        y = 15;
+        doc.addPage()
+    }
+
+    data.forEach( function(dat) {                                          
+        total = total + 1;
+        y += 10;
+
+        doc.fillColor('black')
+        .text(dat.estanque.codigo, 10, y, {align: 'center', width: 45 })
+        .text(dat.charola_1, 67, y,  {align: 'center', width: 70 })
+        .text(dat.charola_2, 137, y, {align: 'center', width: 70 })
+        .text(dat.charola_3, 207, y, {align: 'center', width: 70 })
+        .text(dat.charola_4, 277, y, {align: 'center', width: 70 })
+        .text(dat.kg_racion, 347, y, {align: 'center', width: 70 })
+        .text(dat.porcent_ajuste, 417, y, {align: 'center', width: 70 })
+        .text(dat.suma, 494, y, {align: 'center', width: 70 })
+        .text(dat.codigo_racion, 564, y, {align: 'center', width: 70 })
+        .text(dat.siguiente_racion, 637, y, {align: 'center', width: 70 })
+        if ((new Date(dat.fecha).getMonth() + 1) < 10) {
+            if ((new Date(dat.fecha).getDate()) < 10) {
+                doc.text('0' + new Date(dat.fecha).getDate()+ '/0' + (new Date(dat.fecha).getMonth() + 1)+ '/' + new Date(dat.fecha).getFullYear(), 704, y, {align: 'center', width: 70 });
+            } else {
+                doc.text(new Date(dat.fecha).getDate()+ '/0' + (new Date(dat.fecha).getMonth() + 1)+ '/' + new Date(dat.fecha).getFullYear(), 704, y, {align: 'center', width: 70 });
+            }
+        } else {
+            if ((new Date(dat.fecha).getDate()) < 10) {
+                doc.text('0' + new Date(dat.fecha).getDate()+ '/' + (new Date(dat.fecha).getMonth() + 1)+ '/' + new Date(dat.fecha).getFullYear(), 704, y, {align: 'center', width: 70 });
+            } else {
+                doc.text(new Date(dat.fecha).getDate()+ '/' + (new Date(dat.fecha).getMonth() + 1)+ '/' + new Date(dat.fecha).getFullYear(), 704, y, {align: 'center', width: 70 });
+            }
+        }
+        
+    
+    });
+                                                            
+    console.log(file_path);
+    
+    doc.pipe(fs.createWriteStream(file_path+pdf_name)).on('finish', function (error){
+        if(error){
+            console.log(error);
+        } else {
+            console.log('PDF closed');
+        }
+    });     
+    
+    // Finalize PDF file
+    doc.end(); 
+
+    return pdf_name;
 }

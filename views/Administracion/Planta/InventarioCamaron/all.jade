@@ -1,0 +1,76 @@
+extends ../../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $('#subMenuAdministracion').removeClass('hidden');
+            $('#spanMenuAdministracion').removeClass('fa-angle-left');
+            $('#spanMenuAdministracion').addClass('fa-angle-down'); 
+            
+            $('#subMenuAdmPlanta').removeClass('hidden');
+            $('#spanMenuAdmPlanta').removeClass('fa-angle-left');
+            $('#spanMenuAdmPlanta').addClass('fa-angle-down');     
+
+            $('#subMenuInventarioCam').removeClass('hidden');
+            $('#spanMenuInventarioCam').removeClass('fa-angle-left');
+            $('#spanMenuInventarioCam').addClass('fa-angle-down');
+
+            $('#inventarios').dataTable();
+
+            if($('#url').text().lenght > 0){
+                url = '../../../../../'+ $('#url').text();
+                window.open(url, 'Download');
+                $('#url').text('');
+            }
+        });
+
+        function reportes(){
+            $('#headCriterios').removeClass('hidden');
+            $('#criterios').removeClass('hidden');
+            $('#dividerCriterios').removeClass('hidden');
+        }
+
+        
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-box-open(style="margin-right: 10px;")
+                |   Inventario de Camarón
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;") 
+            a.btn.btn-special(href="/inventarioscamaron/entrada", style="margin-right: 5px;")
+                i.fas.fa-sign-in-alt
+                |   Entrada
+            if user.permisos == "almacen_camaron" || user.permisos == "developer"
+                a.btn.btn-special(href="/inventarioscamaron/salida", style="margin-right: 5px;")
+                    i.fas.fa-sign-out-alt
+                    |   Salida 
+            a.btn.btn-special(href="#reports" data-toggle="modal" data-target="#reports" style="margin-right: 5px;")
+                    i.fas.fa-file-pdf
+                    |   Reportes
+    .divider
+    label#url.hidden #{url}                     
+    .row
+        table#inventarios.table.table-striped.table-hover
+            thead
+                th Talla
+                th Presentación
+                th Cantidad Master
+                th Almacén
+                th Total Kgs
+                th Total Lbs
+                th Acciones
+            tbody
+                each tp in tiposCamaron
+                    tr(scope="row")
+                        td #{ tp.talla }
+                        td #{ tp.presentacion }
+                        td #{ tp.cantidadMaster }
+                        td #{ tp.almacen }
+                        td #{ parseFloat(tp.totalKgs).toFixed(2) }
+                        td #{ (tp.totalKgs * 2.20462).toFixed(2) }
+                        td
+                            a.disabled(href="#", data-toggle="tooltip", data-placement="top", title="Ver detalles", style="margin-right: 10px;")
+                                i.fas.fa-eye.text-default.fa-lg
+                            if user.usuario == 'alabarrera' || user.permisos == 'developer'
+                                a(href="/tiposcamaron/editarInv/#{tp.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 10px; color: #057e95;")
+                                        i.fas.fa-pencil-alt.fa-lg

@@ -20,12 +20,39 @@ module.exports = {
                         if(error){
                             console.log(error);
                         } else {
-                            respuesta.render("Laboratorio/Fitoplancton/all",
-                                {
-                                    user: solicitud.session.user,
-                                    fitoplancton: fitoplancton
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render("Laboratorio/Fitoplancton/all",
+                                        {
+                                            user: solicitud.session.user,
+                                            fitoplancton: fitoplancton,
+                                            titulo: "Fitoplancton",
+                                            criterios: [
+                                                {
+                                                    val: "",
+                                                    name: ""
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
+                                            usuarios: usuarios,
+                                            ruta: "fitoplancton"
+                                        }
+                                    );
                                 }
-                            );
+                            });
                         }
                     });
                 }
@@ -40,26 +67,53 @@ module.exports = {
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.render('Laboratorio/Fitoplancton/new', 
-                        {
-                            user: solicitud.session.user,
-                            modulos: modulos,
-                            estanques: {},
-                            fitoplancton: {
-                                diatomeas: 0,
-                                cianofitas: 0,
-                                clorofitas: 0,
-                                dinoflagelados: 0,
-                                flagelados: 0,
-                                diatomeas_porcent: '',
-                                cianofitas_porcent: '',
-                                clorofitas_porcent: '',
-                                dinoflagelados_porcent: '',
-                                flagelados_porcent: '',
-                                total_cel_ml: 0
-                            }
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else { 
+                            respuesta.render('Laboratorio/Fitoplancton/new', 
+                                {
+                                    user: solicitud.session.user,
+                                    modulos: modulos,
+                                    estanques: {},
+                                    fitoplancton: {
+                                        diatomeas: 0,
+                                        cianofitas: 0,
+                                        clorofitas: 0,
+                                        dinoflagelados: 0,
+                                        flagelados: 0,
+                                        diatomeas_porcent: '',
+                                        cianofitas_porcent: '',
+                                        clorofitas_porcent: '',
+                                        dinoflagelados_porcent: '',
+                                        flagelados_porcent: '',
+                                        total_cel_ml: 0,
+                                    },
+                                    titulo: "Fitoplancton",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "fitoplancton"
+                                }
+                            );
                         }
-                    );
+                    });
                 }
             });
         }
@@ -82,12 +136,39 @@ module.exports = {
                                 } else {
                                     fitoplancton.estanque = estanque;
 
-                                    respuesta.render("Laboratorio/Fitoplancton/edit", 
-                                        {
-                                            user: solicitud.session.user,
-                                            fitoplancton: fitoplancton
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(error);
+                                        } else { 
+                                            respuesta.render("Laboratorio/Fitoplancton/edit", 
+                                                {
+                                                    user: solicitud.session.user,
+                                                    fitoplancton: fitoplancton,
+                                                    titulo: "Fitoplancton",
+                                                    criterios: [
+                                                        {
+                                                            val: "",
+                                                            name: ""
+                                                        }
+                                                    ],
+                                                    piscinas: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }
+                                                    ],
+                                                    charoleros: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }   
+                                                    ],
+                                                    usuarios: usuarios,
+                                                    ruta: "fitoplancton"
+                                                }
+                                            );
                                         }
-                                    );
+                                    });
                                 }
                             });
                         }
@@ -171,24 +252,51 @@ module.exports = {
                         if(error){
                             console.log(chalk.bgRed(error));
                         } else {
-                            respuesta.render('Laboratorio/Fitoplancton/new', {
-                                user: solicitud.session.user,
-                                modulos: modulos,
-                                modulo: solicitud.body.modulo,
-                                fitoplancton: {
-                                    diatomeas: 0,
-                                    cianofitas: 0,
-                                    clorofitas: 0,
-                                    dinoflagelados: 0,
-                                    flagelados: 0,
-                                    diatomeas_porcent: '',
-                                    cianofitas_porcent: '',
-                                    clorofitas_porcent: '',
-                                    dinoflagelados_porcent: '',
-                                    flagelados_porcent: '',
-                                    total_cel_ml: 0
-                                },
-                                estanques: estanques,
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render('Laboratorio/Fitoplancton/new', {
+                                        user: solicitud.session.user,
+                                        modulos: modulos,
+                                        modulo: solicitud.body.modulo,
+                                        fitoplancton: {
+                                            diatomeas: 0,
+                                            cianofitas: 0,
+                                            clorofitas: 0,
+                                            dinoflagelados: 0,
+                                            flagelados: 0,
+                                            diatomeas_porcent: '',
+                                            cianofitas_porcent: '',
+                                            clorofitas_porcent: '',
+                                            dinoflagelados_porcent: '',
+                                            flagelados_porcent: '',
+                                            total_cel_ml: 0,
+                                        },
+                                        estanques: estanques,
+                                        titulo: "Fitoplancton",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "fitoplancton"
+                                    });
+                                }
                             });
                         }
                     }).sort({ codigo : 1});

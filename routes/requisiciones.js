@@ -48,6 +48,24 @@ var mongoose = require('mongoose');
                                 user: solicitud.session.user,
                                 requisiciones: requisiciones,
                                 usuarios: usuarios,
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
                                 url: ''
                             });
                         }).sort({ nombre : 1});
@@ -63,6 +81,24 @@ var mongoose = require('mongoose');
                                 user: solicitud.session.user,
                                 requisiciones: requisiciones,
                                 usuarios: usuarios,
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
                                 url: ''
                             });
                         }).sort({ nombre : 1});
@@ -78,6 +114,24 @@ var mongoose = require('mongoose');
                                 user: solicitud.session.user,
                                 requisiciones: requisiciones,
                                 usuarios: usuarios,
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
                                 url: ''
                             });
                         }).sort({ nombre : 1});
@@ -93,6 +147,24 @@ var mongoose = require('mongoose');
                                 user: solicitud.session.user,
                                 requisiciones: requisiciones,
                                 usuarios: usuarios,
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
                                 url: ''
                             });
                         }).sort({ nombre : 1});
@@ -108,6 +180,24 @@ var mongoose = require('mongoose');
                                 user: solicitud.session.user,
                                 requisiciones: requisiciones,
                                 usuarios: usuarios,
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
                                 url: ''
                             });
                         }).sort({ nombre : 1});
@@ -130,8 +220,52 @@ var mongoose = require('mongoose');
                             respuesta.render("Requisiciones/requisiciones", {
                                 user: solicitud.session.user,
                                 requisiciones: requisiciones,
+                                titulo: "Requisiciones",
+                                criterios: [
+                                    {
+                                        val: "area",
+                                        name: "Área"
+                                    },
+                                    {
+                                        val: "modulo",
+                                        name: "Módulo"
+                                    },
+                                    {
+                                        val: "responsable",
+                                        name: "Responsable"
+                                    },
+                                    {
+                                        val: "solicita",
+                                        name: "Solicita"
+                                    },
+                                    {
+                                        val: "estatus",
+                                        name: "Estatus"
+                                    },
+                                    {
+                                        val: "fecha",
+                                        name: "Fecha"
+                                    },
+                                    {
+                                        val: "fechas",
+                                        name: "Fechas"
+                                    }
+                                ],
                                 usuarios: usuarios,
-                                url: ''
+                                ruta: "requisiciones",
+                                url: '',
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
                             });
                         }).sort({ nombre : 1});
                     }
@@ -146,7 +280,52 @@ var mongoose = require('mongoose');
                                 user: solicitud.session.user,
                                 requisiciones: requisiciones,
                                 usuarios: usuarios,
-                                url: ''
+                                titulo: "Requisiciones",
+                                criterios: [
+                                    {
+                                        val: "area",
+                                        name: "Área"
+                                    },
+                                    {
+                                        val: "modulo",
+                                        name: "Módulo"
+                                    },
+                                    {
+                                        val: "responsable",
+                                        name: "Responsable"
+                                    },
+                                    {
+                                        val: "solicita",
+                                        name: "Solicita"
+                                    },
+                                    {
+                                        val: "estatus",
+                                        name: "Estatus"
+                                    },
+                                    {
+                                        val: "fecha",
+                                        name: "Fecha"
+                                    },
+                                    {
+                                        val: "fechas",
+                                        name: "Fechas"
+                                    }
+                                ],
+                                usuarios: usuarios,
+                                ruta: "requisiciones",
+                                url: '',
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
                             });
                         }).sort({ nombre : 1});
                     }
@@ -161,7 +340,52 @@ var mongoose = require('mongoose');
                                 user: solicitud.session.user,
                                 requisiciones: requisiciones,
                                 usuarios: usuarios,
-                                url: ''
+                                titulo: "Requisiciones",
+                                criterios: [
+                                    {
+                                        val: "area",
+                                        name: "Área"
+                                    },
+                                    {
+                                        val: "modulo",
+                                        name: "Módulo"
+                                    },
+                                    {
+                                        val: "responsable",
+                                        name: "Responsable"
+                                    },
+                                    {
+                                        val: "solicita",
+                                        name: "Solicita"
+                                    },
+                                    {
+                                        val: "estatus",
+                                        name: "Estatus"
+                                    },
+                                    {
+                                        val: "fecha",
+                                        name: "Fecha"
+                                    },
+                                    {
+                                        val: "fechas",
+                                        name: "Fechas"
+                                    }
+                                ],
+                                usuarios: usuarios,
+                                ruta: "requisiciones",
+                                url: '',
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
                             });
                         }).sort({ nombre : 1});
                     }
@@ -176,7 +400,52 @@ var mongoose = require('mongoose');
                                 user: solicitud.session.user,
                                 requisiciones: requisiciones,
                                 usuarios: usuarios,
-                                url: ''
+                                titulo: "Requisiciones",
+                                criterios: [
+                                    {
+                                        val: "area",
+                                        name: "Área"
+                                    },
+                                    {
+                                        val: "modulo",
+                                        name: "Módulo"
+                                    },
+                                    {
+                                        val: "responsable",
+                                        name: "Responsable"
+                                    },
+                                    {
+                                        val: "solicita",
+                                        name: "Solicita"
+                                    },
+                                    {
+                                        val: "estatus",
+                                        name: "Estatus"
+                                    },
+                                    {
+                                        val: "fecha",
+                                        name: "Fecha"
+                                    },
+                                    {
+                                        val: "fechas",
+                                        name: "Fechas"
+                                    }
+                                ],
+                                usuarios: usuarios,
+                                ruta: "requisiciones",
+                                url: '',
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
                             });
                         }).sort({ nombre : 1});
                     }
@@ -191,7 +460,52 @@ var mongoose = require('mongoose');
                                 user: solicitud.session.user,
                                 requisiciones: requisiciones,
                                 usuarios: usuarios,
-                                url: ''
+                                titulo: "Requisiciones",
+                                criterios: [
+                                    {
+                                        val: "area",
+                                        name: "Área"
+                                    },
+                                    {
+                                        val: "modulo",
+                                        name: "Módulo"
+                                    },
+                                    {
+                                        val: "responsable",
+                                        name: "Responsable"
+                                    },
+                                    {
+                                        val: "solicita",
+                                        name: "Solicita"
+                                    },
+                                    {
+                                        val: "estatus",
+                                        name: "Estatus"
+                                    },
+                                    {
+                                        val: "fecha",
+                                        name: "Fecha"
+                                    },
+                                    {
+                                        val: "fechas",
+                                        name: "Fechas"
+                                    }
+                                ],
+                                usuarios: usuarios,
+                                ruta: "requisiciones",
+                                url: '',
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
                             });
                         }).sort({ nombre : 1});
                     }
@@ -212,6 +526,25 @@ var mongoose = require('mongoose');
                         respuesta.render("Requisiciones/requisiciones", {
                             user: solicitud.session.user,
                             requisiciones: canceladas,
+                            titulo: "",
+                            criterios: [
+                                {
+                                    val: "",
+                                    name: ""
+                                }
+                            ],
+                            piscinas: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }
+                            ],
+                            charoleros: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }   
+                            ],
                             usuarios: usuarios
                         });
                     });
@@ -235,7 +568,26 @@ var mongoose = require('mongoose');
                         req: {
                             codigoRequi: 'REQ00000',
                             uso: ''
-                        }
+                        },
+                        titulo: "",
+                        criterios: [
+                            {
+                                val: "",
+                                name: ""
+                            }
+                        ],
+                        piscinas: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }
+                        ],
+                        charoleros: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }   
+                        ],
                     });
                 } 
             });
@@ -321,7 +673,26 @@ var mongoose = require('mongoose');
                                                                     user: solicitud.session.user,
                                                                     req: req,
                                                                     listaRequisicion: listaRequisiciones,
-                                                                    usuarios: usuarios
+                                                                    usuarios: usuarios,
+                                                                    titulo: "",
+                                                                    criterios: [
+                                                                        {
+                                                                            val: "",
+                                                                            name: ""
+                                                                        }
+                                                                    ],
+                                                                    piscinas: [
+                                                                        {
+                                                                            id: 0,
+                                                                            nombre: ""
+                                                                        }
+                                                                    ],
+                                                                    charoleros: [
+                                                                        {
+                                                                            id: 0,
+                                                                            nombre: ""
+                                                                        }   
+                                                                    ],
                                                                 });
                                                             } 
                                                         });
@@ -380,7 +751,25 @@ var mongoose = require('mongoose');
                                                     req: req,
                                                     listaRequisicion: listaRequisiciones,
                                                     usuarios: usuarios,
-                                                    codReq: req.codigoRequi
+                                                    codReq: req.codigoRequi,
+                                                    criterios: [
+                                                        {
+                                                            val: "",
+                                                            name: ""
+                                                        }
+                                                    ],
+                                                    piscinas: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }
+                                                    ],
+                                                    charoleros: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }   
+                                                    ],
                                                 });
                                             } 
                                         });
@@ -594,7 +983,50 @@ var mongoose = require('mongoose');
                                                             respuesta.render("Requisiciones/requisiciones", {
                                                                 user: solicitud.session.user,
                                                                 requisiciones: requisiciones,
-                                                                usuarios: usuarios
+                                                                usuarios: usuarios,
+                                                                titulo: "Requisiciones",
+                                                                criterios: [
+                                                                    {
+                                                                        val: "area",
+                                                                        name: "Área"
+                                                                    },
+                                                                    {
+                                                                        val: "modulo",
+                                                                        name: "Módulo"
+                                                                    },
+                                                                    {
+                                                                        val: "responsable",
+                                                                        name: "Responsable"
+                                                                    },
+                                                                    {
+                                                                        val: "solicita",
+                                                                        name: "Solicita"
+                                                                    },
+                                                                    {
+                                                                        val: "estatus",
+                                                                        name: "Estatus"
+                                                                    },
+                                                                    {
+                                                                        val: "fecha",
+                                                                        name: "Fecha"
+                                                                    },
+                                                                    {
+                                                                        val: "fechas",
+                                                                        name: "Fechas"
+                                                                    }
+                                                                ],
+                                                                piscinas: [
+                                                                    {
+                                                                        id: 0,
+                                                                        nombre: ""
+                                                                    }
+                                                                ],
+                                                                charoleros: [
+                                                                    {
+                                                                        id: 0,
+                                                                        nombre: ""
+                                                                    }   
+                                                                ],
                                                             });
                                                         });
                                                     }
@@ -609,7 +1041,50 @@ var mongoose = require('mongoose');
                                                             respuesta.render("Requisiciones/requisiciones", {
                                                                 user: solicitud.session.user,
                                                                 requisiciones: requisiciones,
-                                                                usuarios: usuarios
+                                                                usuarios: usuarios,
+                                                                titulo: "Requisciones",
+                                                                criterios: [
+                                                                    {
+                                                                        val: "area",
+                                                                        name: "Área"
+                                                                    },
+                                                                    {
+                                                                        val: "modulo",
+                                                                        name: "Módulo"
+                                                                    },
+                                                                    {
+                                                                        val: "responsable",
+                                                                        name: "Responsable"
+                                                                    },
+                                                                    {
+                                                                        val: "solicita",
+                                                                        name: "Solicita"
+                                                                    },
+                                                                    {
+                                                                        val: "estatus",
+                                                                        name: "Estatus"
+                                                                    },
+                                                                    {
+                                                                        val: "fecha",
+                                                                        name: "Fecha"
+                                                                    },
+                                                                    {
+                                                                        val: "fechas",
+                                                                        name: "Fechas"
+                                                                    }
+                                                                ],
+                                                                piscinas: [
+                                                                    {
+                                                                        id: 0,
+                                                                        nombre: ""
+                                                                    }
+                                                                ],
+                                                                charoleros: [
+                                                                    {
+                                                                        id: 0,
+                                                                        nombre: ""
+                                                                    }   
+                                                                ],
                                                             });
                                                         });
                                                     }
@@ -653,7 +1128,50 @@ var mongoose = require('mongoose');
                                     respuesta.render("Requisiciones/requisiciones", {
                                         user: solicitud.session.user,
                                         requisiciones: requisiciones,
-                                        usuarios: usuarios
+                                        usuarios: usuarios,
+                                        titulo: "Requisiciones",
+                                        criterios: [
+                                            {
+                                                val: "area",
+                                                name: "Área"
+                                            },
+                                            {
+                                                val: "modulo",
+                                                name: "Módulo"
+                                            },
+                                            {
+                                                val: "responsable",
+                                                name: "Responsable"
+                                            },
+                                            {
+                                                val: "solicita",
+                                                name: "Solicita"
+                                            },
+                                            {
+                                                val: "estatus",
+                                                name: "Estatus"
+                                            },
+                                            {
+                                                val: "fecha",
+                                                name: "Fecha"
+                                            },
+                                            {
+                                                val: "fechas",
+                                                name: "Fechas"
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                     });
                                 });
                             }
@@ -668,7 +1186,50 @@ var mongoose = require('mongoose');
                                     respuesta.render("Requisiciones/requisiciones", {
                                         user: solicitud.session.user,
                                         requisiciones: requisiciones,
-                                        usuarios: usuarios
+                                        usuarios: usuarios,
+                                        titulo: "Requisiciones",
+                                        criterios: [
+                                            {
+                                                val: "area",
+                                                name: "Área"
+                                            },
+                                            {
+                                                val: "modulo",
+                                                name: "Módulo"
+                                            },
+                                            {
+                                                val: "responsable",
+                                                name: "Responsable"
+                                            },
+                                            {
+                                                val: "solicita",
+                                                name: "Solicita"
+                                            },
+                                            {
+                                                val: "estatus",
+                                                name: "Estatus"
+                                            },
+                                            {
+                                                val: "fecha",
+                                                name: "Fecha"
+                                            },
+                                            {
+                                                val: "fechas",
+                                                name: "Fechas"
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                     });
                                 });
                             }
@@ -701,6 +1262,49 @@ var mongoose = require('mongoose');
                                         user: solicitud.session.user,
                                         requisiciones: requisiciones,
                                         usuarios: usuarios,
+                                        titulo: "Requisiciones",
+                                        criterios: [
+                                            {
+                                                val: "area",
+                                                name: "Área"
+                                            },
+                                            {
+                                                val: "modulo",
+                                                name: "Módulo"
+                                            },
+                                            {
+                                                val: "responsable",
+                                                name: "Responsable"
+                                            },
+                                            {
+                                                val: "solicita",
+                                                name: "Solicita"
+                                            },
+                                            {
+                                                val: "estatus",
+                                                name: "Estatus"
+                                            },
+                                            {
+                                                val: "fecha",
+                                                name: "Fecha"
+                                            },
+                                            {
+                                                val: "fechas",
+                                                name: "Fechas"
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                         url: ''
                                     });
                                 });
@@ -716,6 +1320,49 @@ var mongoose = require('mongoose');
                                         user: solicitud.session.user,
                                         requisiciones: requisiciones,
                                         usuarios: usuarios,
+                                        titulo: "Requisiciones",
+                                        criterios: [
+                                            {
+                                                val: "area",
+                                                name: "Área"
+                                            },
+                                            {
+                                                val: "modulo",
+                                                name: "Módulo"
+                                            },
+                                            {
+                                                val: "responsable",
+                                                name: "Responsable"
+                                            },
+                                            {
+                                                val: "solicita",
+                                                name: "Solicita"
+                                            },
+                                            {
+                                                val: "estatus",
+                                                name: "Estatus"
+                                            },
+                                            {
+                                                val: "fecha",
+                                                name: "Fecha"
+                                            },
+                                            {
+                                                val: "fechas",
+                                                name: "Fechas"
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                         url: ''
                                     });
                                 });
@@ -731,6 +1378,49 @@ var mongoose = require('mongoose');
                                         user: solicitud.session.user,
                                         requisiciones: requisiciones,
                                         usuarios: usuarios,
+                                        titulo: "Requisiciones",
+                                        criterios: [
+                                            {
+                                                val: "area",
+                                                name: "Área"
+                                            },
+                                            {
+                                                val: "modulo",
+                                                name: "Módulo"
+                                            },
+                                            {
+                                                val: "responsable",
+                                                name: "Responsable"
+                                            },
+                                            {
+                                                val: "solicita",
+                                                name: "Solicita"
+                                            },
+                                            {
+                                                val: "estatus",
+                                                name: "Estatus"
+                                            },
+                                            {
+                                                val: "fecha",
+                                                name: "Fecha"
+                                            },
+                                            {
+                                                val: "fechas",
+                                                name: "Fechas"
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                         url: ''
                                     });
                                 });
@@ -746,6 +1436,49 @@ var mongoose = require('mongoose');
                                         user: solicitud.session.user,
                                         requisiciones: requisiciones,
                                         usuarios: usuarios,
+                                        titulo: "Requisiciones",
+                                        criterios: [
+                                            {
+                                                val: "area",
+                                                name: "Área"
+                                            },
+                                            {
+                                                val: "modulo",
+                                                name: "Módulo"
+                                            },
+                                            {
+                                                val: "responsable",
+                                                name: "Responsable"
+                                            },
+                                            {
+                                                val: "solicita",
+                                                name: "Solicita"
+                                            },
+                                            {
+                                                val: "estatus",
+                                                name: "Estatus"
+                                            },
+                                            {
+                                                val: "fecha",
+                                                name: "Fecha"
+                                            },
+                                            {
+                                                val: "fechas",
+                                                name: "Fechas"
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                         url: ''
                                     });
                                 });
@@ -761,6 +1494,49 @@ var mongoose = require('mongoose');
                                         user: solicitud.session.user,
                                         requisiciones: requisiciones,
                                         usuarios: usuarios,
+                                        titulo: "Requisiciones",
+                                        criterios: [
+                                            {
+                                                val: "area",
+                                                name: "Área"
+                                            },
+                                            {
+                                                val: "modulo",
+                                                name: "Módulo"
+                                            },
+                                            {
+                                                val: "responsable",
+                                                name: "Responsable"
+                                            },
+                                            {
+                                                val: "solicita",
+                                                name: "Solicita"
+                                            },
+                                            {
+                                                val: "estatus",
+                                                name: "Estatus"
+                                            },
+                                            {
+                                                val: "fecha",
+                                                name: "Fecha"
+                                            },
+                                            {
+                                                val: "fechas",
+                                                name: "Fechas"
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                         url: ''
                                     });
                                 });
@@ -793,7 +1569,26 @@ var mongoose = require('mongoose');
                                         user: solicitud.session.user,
                                         listaRequisicion: articulos,
                                         usuarios: usuarios,
-                                        codReq: requisicion.codigoRequi
+                                        codReq: requisicion.codigoRequi,
+                                        titulo: "",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                     });
                                 }
                             });
@@ -830,6 +1625,25 @@ var mongoose = require('mongoose');
                                             user: user,
                                             listaRequisicion: articulos,
                                             usuarios: usuarios,
+                                            titulo: "Requisiciones",
+                                            criterios: [
+                                                {
+                                                    val: "",
+                                                    name: ""
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
                                             codReq: requisicion.codigoRequi
                                         });
                                     }
@@ -864,7 +1678,26 @@ var mongoose = require('mongoose');
                                         listaRequisicion: articulos,
                                         articulo: {},
                                         usuarios: usuarios,
-                                        codReq: requisicion.codigoRequi
+                                        codReq: requisicion.codigoRequi,
+                                        titulo: "Requisiciones",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                     });
                                 }
                             });
@@ -901,6 +1734,25 @@ var mongoose = require('mongoose');
                                                 listaRequisicion: articulos,
                                                 articulo: articulo,
                                                 usuarios: usuarios,
+                                                titulo: "Requisiciones",
+                                                criterios: [
+                                                    {
+                                                        val: "",
+                                                        name: ""
+                                                    }
+                                                ],
+                                                piscinas: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }
+                                                ],
+                                                charoleros: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }   
+                                                ],
                                                 codReq: requisicion.codigoRequi,
                                                 updArt: true
                                             });
@@ -941,6 +1793,25 @@ var mongoose = require('mongoose');
                                         user: solicitud.session.user,
                                         requisiciones: requisiciones,
                                         usuarios: usuarios,
+                                        titulo: "Requisiciones",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                         url: ''
                                     });
                                 });
@@ -955,6 +1826,25 @@ var mongoose = require('mongoose');
                                     respuesta.render("Requisiciones/requisiciones", {
                                         user: solicitud.session.user,
                                         requisiciones: requisiciones,
+                                        titulo: "Requisiciones",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                         usuarios: usuarios,
                                         url: ''
                                     });
@@ -970,6 +1860,25 @@ var mongoose = require('mongoose');
                                     respuesta.render("Requisiciones/requisiciones", {
                                         user: solicitud.session.user,
                                         requisiciones: requisiciones,
+                                        titulo: "Requisiciones",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                         usuarios: usuarios,
                                         url: ''
                                     });
@@ -985,6 +1894,25 @@ var mongoose = require('mongoose');
                                     respuesta.render("Requisiciones/requisiciones", {
                                         user: solicitud.session.user,
                                         requisiciones: requisiciones,
+                                        titulo: "Requisiciones",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                         usuarios: usuarios,
                                         url: ''
                                     });
@@ -1000,6 +1928,25 @@ var mongoose = require('mongoose');
                                     respuesta.render("Requisiciones/requisiciones", {
                                         user: solicitud.session.user,
                                         requisiciones: requisiciones,
+                                        titulo: "Requisiciones",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                         usuarios: usuarios,
                                         url: ''
                                     });
@@ -1062,6 +2009,25 @@ var mongoose = require('mongoose');
                                                         listaRequisicion: listaRequisiciones,
                                                         articulo: {},
                                                         usuarios: usuarios,
+                                                        titulo: "Requisiciones",
+                                                        criterios: [
+                                                            {
+                                                                val: "",
+                                                                name: ""
+                                                            }
+                                                        ],
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ],
                                                         codReq: requisicion.codigoRequi
                                                     });
                                                 });
@@ -1090,6 +2056,25 @@ var mongoose = require('mongoose');
                                                         user: solicitud.session.user,
                                                         listaRequisicion: listaRequisiciones,
                                                         articulo: {},
+                                                        titulo: "Requisiciones",
+                                                        criterios: [
+                                                            {
+                                                                val: "",
+                                                                name: ""
+                                                            }
+                                                        ],
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ],
                                                         usuarios: usuarios,
                                                         codReq: requisicion.codigoRequi
                                                     });
@@ -1308,6 +2293,25 @@ var mongoose = require('mongoose');
                                                     respuesta.render("Requisiciones/requisiciones", {
                                                         user: solicitud.session.user,
                                                         requisiciones: requisiciones,
+                                                        titulo: "Requisiciones",
+                                                        criterios: [
+                                                            {
+                                                                val: "",
+                                                                name: ""
+                                                            }
+                                                        ],
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ],
                                                         usuarios: usuarios
                                                     });
                                                 });
@@ -1322,6 +2326,25 @@ var mongoose = require('mongoose');
                                                     respuesta.render("Requisiciones/requisiciones", {
                                                         user: solicitud.session.user,
                                                         requisiciones: requisiciones,
+                                                        titulo: "Requisiciones",
+                                                        criterios: [
+                                                            {
+                                                                val: "",
+                                                                name: ""
+                                                            }
+                                                        ],
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ],
                                                         usuarios: usuarios
                                                     });
                                                 });
@@ -1356,6 +2379,25 @@ var mongoose = require('mongoose');
                                     respuesta.render("Requisiciones/requisiciones", {
                                         user: solicitud.session.user,
                                         requisiciones: requisiciones,
+                                        titulo: "Requisiciones",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                         usuarios: usuarios
                                     });
                                 });
@@ -1371,6 +2413,25 @@ var mongoose = require('mongoose');
                                     respuesta.render("Requisiciones/requisiciones", {
                                         user: solicitud.session.user,
                                         requisiciones: requisiciones,
+                                        titulo: "Requisiciones",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
                                         usuarios: usuarios
                                     });
                                 });
@@ -1420,6 +2481,25 @@ var mongoose = require('mongoose');
                                                         articulo: {},
                                                         listaRequisicion: listaRequisiciones,
                                                         usuarios: usuarios,
+                                                        titulo: "Requisiciones",
+                                                        criterios: [
+                                                            {
+                                                                val: "",
+                                                                name: ""
+                                                            }
+                                                        ],
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ],
                                                         codReq: req.codigoRequi
                                                     });
                                                 } 
@@ -1448,7 +2528,25 @@ var mongoose = require('mongoose');
                             respuesta.render("Requisiciones/requisiciones", {
                                 user: solicitud.session.user,
                                 requisiciones: requisiciones,
-                                usuarios: usuarios
+                                usuarios: usuarios,
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
                             });
                         });
                     }
@@ -1462,6 +2560,25 @@ var mongoose = require('mongoose');
                             respuesta.render("Requisiciones/requisiciones", {
                                 user: solicitud.session.user,
                                 requisiciones: requisiciones,
+                                titulo: "Requisiciones",
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
                                 usuarios: usuarios
                             });
                         });
@@ -1516,21 +2633,22 @@ var mongoose = require('mongoose');
                               new Date(solicitud.body.fechaInicio).getFullYear();
                 fechaFin = (new Date(solicitud.body.fechaFin).getDate() + 1)+ '-' +
                            (new Date(solicitud.body.fechaFin).getMonth() + 1)+ '-' +
-                           new Date(solicitud.body.fechaFin).getFullYear()
+                           new Date(solicitud.body.fechaFin).getFullYear();
                 
-                fInicio = new Date(solicitud.body.fechaInicio).getFullYear()+ '-' +
-                           new Date(solicitud.body.fechaInicio).getDate() + '-' +
-                           new Date(solicitud.body.fechaInicio).getMonth();
+                fInicio = new Date(solicitud.body.fechaInicio).getFullYear() + '-' +
+                        (new Date(solicitud.body.fechaInicio).getMonth() + 1)  + '-' +
+                        (new Date(solicitud.body.fechaInicio).getDate() + 1 ); 
+                           
                 fFin = new Date(solicitud.body.fechaFin).getFullYear() + '-' +
-                        new Date(solicitud.body.fechaFin).getDate() + '-' +
-                        new Date(solicitud.body.fechaFin).getMonth()
+                        (new Date(solicitud.body.fechaFin).getMonth() + 1)  + '-' +
+                        (new Date(solicitud.body.fechaFin).getDate() + 1 ); 
 
                 fI = new Date(fInicio).toISOString();
                 fF = new Date(fFin).toISOString()
 
                 console.log(fI + " - " + fF);
 
-            nombre_pdf = 'requisicionesEntre' + fechaInicio + '_' + fechaFin + '.pdf';
+                nombre_pdf = 'requisiciones_Entre' + fechaInicio + '_' + fechaFin + '.pdf';
                 titulo = 'Fechas entre: '  + fechaInicio.replace(new RegExp('-','g'),'/') + '-' + fechaFin.replace(new RegExp('-','g'),'/');
             }
             
@@ -1699,6 +2817,49 @@ var mongoose = require('mongoose');
                                                         user: solicitud.session.user,
                                                         requisiciones: requisiciones,
                                                         usuarios: usuarios,
+                                                        titulo: "Requisiciones",
+                                                        criterios: [
+                                                            {
+                                                                val: "area",
+                                                                name: "Área"
+                                                            },
+                                                            {
+                                                                val: "modulo",
+                                                                name: "Módulo"
+                                                            },
+                                                            {
+                                                                val: "responsable",
+                                                                name: "Responsable"
+                                                            },
+                                                            {
+                                                                val: "solicita",
+                                                                name: "Solicita"
+                                                            },
+                                                            {
+                                                                val: "estatus",
+                                                                name: "Estatus"
+                                                            },
+                                                            {
+                                                                val: "fecha",
+                                                                name: "Fecha"
+                                                            },
+                                                            {
+                                                                val: "fechas",
+                                                                name: "Fechas"
+                                                            }
+                                                        ],
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ],
                                                         url: nombre_pdf
                                                     });
                                                 });
@@ -1714,6 +2875,49 @@ var mongoose = require('mongoose');
                                                         user: solicitud.session.user,
                                                         requisiciones: requisiciones,
                                                         usuarios: usuarios,
+                                                        titulo: "Requisiciones",
+                                                        criterios: [
+                                                            {
+                                                                val: "area",
+                                                                name: "Área"
+                                                            },
+                                                            {
+                                                                val: "modulo",
+                                                                name: "Módulo"
+                                                            },
+                                                            {
+                                                                val: "responsable",
+                                                                name: "Responsable"
+                                                            },
+                                                            {
+                                                                val: "solicita",
+                                                                name: "Solicita"
+                                                            },
+                                                            {
+                                                                val: "estatus",
+                                                                name: "Estatus"
+                                                            },
+                                                            {
+                                                                val: "fecha",
+                                                                name: "Fecha"
+                                                            },
+                                                            {
+                                                                val: "fechas",
+                                                                name: "Fechas"
+                                                            }
+                                                        ],
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ],
                                                         url: nombre_pdf
                                                     });
                                                 });
@@ -1729,6 +2933,49 @@ var mongoose = require('mongoose');
                                                         user: solicitud.session.user,
                                                         requisiciones: requisiciones,
                                                         usuarios: usuarios,
+                                                        titulo: "Requisiciones",
+                                                        criterios: [
+                                                            {
+                                                                val: "area",
+                                                                name: "Área"
+                                                            },
+                                                            {
+                                                                val: "modulo",
+                                                                name: "Módulo"
+                                                            },
+                                                            {
+                                                                val: "responsable",
+                                                                name: "Responsable"
+                                                            },
+                                                            {
+                                                                val: "solicita",
+                                                                name: "Solicita"
+                                                            },
+                                                            {
+                                                                val: "estatus",
+                                                                name: "Estatus"
+                                                            },
+                                                            {
+                                                                val: "fecha",
+                                                                name: "Fecha"
+                                                            },
+                                                            {
+                                                                val: "fechas",
+                                                                name: "Fechas"
+                                                            }
+                                                        ],
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ],
                                                         url: nombre_pdf
                                                     });
                                                 });
@@ -1744,6 +2991,49 @@ var mongoose = require('mongoose');
                                                         user: solicitud.session.user,
                                                         requisiciones: requisiciones,
                                                         usuarios: usuarios,
+                                                        titulo: "Requisiciones",
+                                                        criterios: [
+                                                            {
+                                                                val: "area",
+                                                                name: "Área"
+                                                            },
+                                                            {
+                                                                val: "modulo",
+                                                                name: "Módulo"
+                                                            },
+                                                            {
+                                                                val: "responsable",
+                                                                name: "Responsable"
+                                                            },
+                                                            {
+                                                                val: "solicita",
+                                                                name: "Solicita"
+                                                            },
+                                                            {
+                                                                val: "estatus",
+                                                                name: "Estatus"
+                                                            },
+                                                            {
+                                                                val: "fecha",
+                                                                name: "Fecha"
+                                                            },
+                                                            {
+                                                                val: "fechas",
+                                                                name: "Fechas"
+                                                            }
+                                                        ],
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ],
                                                         url: nombre_pdf
                                                     });
                                                 });
@@ -1759,6 +3049,49 @@ var mongoose = require('mongoose');
                                                         user: solicitud.session.user,
                                                         requisiciones: requisiciones,
                                                         usuarios: usuarios,
+                                                        titulo: "Requisiciones",
+                                                        criterios: [
+                                                            {
+                                                                val: "area",
+                                                                name: "Área"
+                                                            },
+                                                            {
+                                                                val: "modulo",
+                                                                name: "Módulo"
+                                                            },
+                                                            {
+                                                                val: "responsable",
+                                                                name: "Responsable"
+                                                            },
+                                                            {
+                                                                val: "solicita",
+                                                                name: "Solicita"
+                                                            },
+                                                            {
+                                                                val: "estatus",
+                                                                name: "Estatus"
+                                                            },
+                                                            {
+                                                                val: "fecha",
+                                                                name: "Fecha"
+                                                            },
+                                                            {
+                                                                val: "fechas",
+                                                                name: "Fechas"
+                                                            }
+                                                        ],
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ],
                                                         url: nombre_pdf
                                                     });
                                                 });
@@ -1933,7 +3266,20 @@ var mongoose = require('mongoose');
                                         .text(req.solicita, 424, y, {align: 'center', width: 150, height: 15})
                                         .text(art.estatus, 564, y, {align: 'center', width: 75})
                                         .text(req.codigoRequi, 634, y, {align: 'center', width: 80})
-                                        .text((new Date(req.fecha).getMonth()+1)+ '/' + new Date(req.fecha).getDate() + '/' + new Date(req.fecha).getFullYear(), 709, y, {align: 'center', width: 80})
+                                        
+                                        if ((new Date(req.fecha).getMonth() + 1) < 10) {
+                                            if ((new Date(req.fecha).getDate()) < 10) {
+                                                doc.text( '0' + new Date(req.fecha).getDate()+ '/0' + (new Date(req.fecha).getMonth() + 1)+ '/' + new Date(req.fecha).getFullYear(), 704, y, {align: 'center', width: 70 })
+                                            } else {
+                                                doc.text(new Date(req.fecha).getDate()+ '/0' + (new Date(req.fecha).getMonth() + 1)+ '/' + new Date(req.fecha).getFullYear(), 704, y, {align: 'center', width: 70 })
+                                            }
+                                        } else {
+                                            if ((new Date(req.fecha).getDate()) < 10) {
+                                                doc.text( '0' + new Date(req.fecha).getDate()+ '/' + (new Date(req.fecha).getMonth() + 1)+ '/' + new Date(req.fecha).getFullYear(), 704, y, {align: 'center', width: 70 })
+                                            } else {
+                                                doc.text(new Date(req.fecha).getDate()+ '/' + (new Date(req.fecha).getMonth() + 1)+ '/' + new Date(req.fecha).getFullYear(), 704, y, {align: 'center', width: 70 })
+                                            }
+                                        }
                                 
                                 }
                             });
@@ -1977,6 +3323,49 @@ var mongoose = require('mongoose');
                                             user: solicitud.session.user,
                                             requisiciones: requisiciones,
                                             usuarios: usuarios,
+                                            titulo: "Requisiciones",
+                                            criterios: [
+                                                {
+                                                    val: "area",
+                                                    name: "Área"
+                                                },
+                                                {
+                                                    val: "modulo",
+                                                    name: "Módulo"
+                                                },
+                                                {
+                                                    val: "responsable",
+                                                    name: "Responsable"
+                                                },
+                                                {
+                                                    val: "solicita",
+                                                    name: "Solicita"
+                                                },
+                                                {
+                                                    val: "estatus",
+                                                    name: "Estatus"
+                                                },
+                                                {
+                                                    val: "fecha",
+                                                    name: "Fecha"
+                                                },
+                                                {
+                                                    val: "fechas",
+                                                    name: "Fechas"
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
                                             url: nombre_pdf
                                         });
                                     });
@@ -1992,6 +3381,49 @@ var mongoose = require('mongoose');
                                             user: solicitud.session.user,
                                             requisiciones: requisiciones,
                                             usuarios: usuarios,
+                                            titulo: "Requisiciones",
+                                            criterios: [
+                                                {
+                                                    val: "area",
+                                                    name: "Área"
+                                                },
+                                                {
+                                                    val: "modulo",
+                                                    name: "Módulo"
+                                                },
+                                                {
+                                                    val: "responsable",
+                                                    name: "Responsable"
+                                                },
+                                                {
+                                                    val: "solicita",
+                                                    name: "Solicita"
+                                                },
+                                                {
+                                                    val: "estatus",
+                                                    name: "Estatus"
+                                                },
+                                                {
+                                                    val: "fecha",
+                                                    name: "Fecha"
+                                                },
+                                                {
+                                                    val: "fechas",
+                                                    name: "Fechas"
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
                                             url: nombre_pdf
                                         });
                                     });
@@ -2007,6 +3439,49 @@ var mongoose = require('mongoose');
                                             user: solicitud.session.user,
                                             requisiciones: requisiciones,
                                             usuarios: usuarios,
+                                            titulo: "Requisiciones",
+                                            criterios: [
+                                                {
+                                                    val: "area",
+                                                    name: "Área"
+                                                },
+                                                {
+                                                    val: "modulo",
+                                                    name: "Módulo"
+                                                },
+                                                {
+                                                    val: "responsable",
+                                                    name: "Responsable"
+                                                },
+                                                {
+                                                    val: "solicita",
+                                                    name: "Solicita"
+                                                },
+                                                {
+                                                    val: "estatus",
+                                                    name: "Estatus"
+                                                },
+                                                {
+                                                    val: "fecha",
+                                                    name: "Fecha"
+                                                },
+                                                {
+                                                    val: "fechas",
+                                                    name: "Fechas"
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
                                             url: nombre_pdf
                                         });
                                     });
@@ -2022,6 +3497,49 @@ var mongoose = require('mongoose');
                                             user: solicitud.session.user,
                                             requisiciones: requisiciones,
                                             usuarios: usuarios,
+                                            titulo: "Requisiciones",
+                                            criterios: [
+                                                {
+                                                    val: "area",
+                                                    name: "Área"
+                                                },
+                                                {
+                                                    val: "modulo",
+                                                    name: "Módulo"
+                                                },
+                                                {
+                                                    val: "responsable",
+                                                    name: "Responsable"
+                                                },
+                                                {
+                                                    val: "solicita",
+                                                    name: "Solicita"
+                                                },
+                                                {
+                                                    val: "estatus",
+                                                    name: "Estatus"
+                                                },
+                                                {
+                                                    val: "fecha",
+                                                    name: "Fecha"
+                                                },
+                                                {
+                                                    val: "fechas",
+                                                    name: "Fechas"
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
                                             url: nombre_pdf
                                         });
                                     });
@@ -2037,6 +3555,49 @@ var mongoose = require('mongoose');
                                             user: solicitud.session.user,
                                             requisiciones: requisiciones,
                                             usuarios: usuarios,
+                                            titulo: "Requisiciones",
+                                            criterios: [
+                                                {
+                                                    val: "area",
+                                                    name: "Área"
+                                                },
+                                                {
+                                                    val: "modulo",
+                                                    name: "Módulo"
+                                                },
+                                                {
+                                                    val: "responsable",
+                                                    name: "Responsable"
+                                                },
+                                                {
+                                                    val: "solicita",
+                                                    name: "Solicita"
+                                                },
+                                                {
+                                                    val: "estatus",
+                                                    name: "Estatus"
+                                                },
+                                                {
+                                                    val: "fecha",
+                                                    name: "Fecha"
+                                                },
+                                                {
+                                                    val: "fechas",
+                                                    name: "Fechas"
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
                                             url: nombre_pdf
                                         });
                                     });

@@ -60,7 +60,7 @@ block contenido
             $('#spanMenuRequisiciones').removeClass('fa-angle-left');
             $('#spanMenuRequisiciones').addClass('fa-angle-down');
 
-            if( $('#menuProductos').hasClase('hidden')){
+            if( $('#menuProductos').hasClass('hidden')){
                 $('#subMenuProductos').addClass('hidden');
                 $('#spanMenuProductos').removeClass('fa-angle-down');
                 $('#spanMenuProductos').addClass('fa-angle-left');
@@ -161,21 +161,23 @@ block contenido
         }
 
     //Termina Javascript
-    .row
-        .col-lg-12
-            h2.page-header 
+    .row(style="margin-bottom: -5px;")
+        .col-lg-12.col-md-12.col-xs-12
+            h2
                 i.fas.fa-clipboard-list(style="margin-right: 10px;")
-                |   Nueva requisición
+                |  Nueva requisición
+    .divider
     .row
-        .col-lg-6.pull-right.text-right
+        .col-lg-6.col-md-6.col-xs-6.pull-right.text-right
             span
-                | Usuario: &nbsp;&nbsp;&nbsp;
+                | Usuario: 
             label
                 i.fas.fa-user
                 |  #{user.nombre}
-        .col-lg-6.pull-left.text-left
+        .col-lg-6.col-md-6.col-xs-6.pull-left.text-left
             label#fecha(style="margin-right: 10px;")
             label#hora
+    .divider
     form(role="form" method="post" action="/requisiciones/requisicion")
         .row
             .col-lg-12
@@ -353,58 +355,55 @@ block contenido
                         input.form-control(type="text" name="correoProveedor" placeholder="Correo" tabindex="12")
         .divider
         .row.pull-right
-                .col-lg-2.btn-group.pull-right(style="margin-bottom: 20px;")
+                .col-lg-2.btn-group.pull-right
                     .form-group
                         .input-group
                             span.input-group-addon.text-success
                                 i.fas.fa-plus-circle.text-success
                             input.form-control(type="submit" value="Agregar" tabindex="13").btn.btn-success
-        if (Object.keys(listaRequisicion).length > 0)
-            .row    
-                .col-lg-12(style="margin-top: -65px;")
-                    h4.page-header
+        if Object.keys(listaRequisicion).length > 0
+            .row
+                .col-lg-12
+                    h4
                         i.fas.fa-boxes(style="margin-right: 10px;")
-                        | Artículos en Requisición  
-                .table-responsive
-                    table.table.table-striped.table-hover
-                        thead
-                            th(scope="col").text-center
-                                |   Cantidad
-                            th(scope="col")
-                                |   Unidad
-                            th(scope="col")
-                                |   Descripción
-                            th(scope="col")
-                                |   Estatus
-                            th(scope="col")
-                                |   Acciones
-                        tbody
-                            each lr in listaRequisicion
-                                tr(scope="row")
-                                    td.text-center #{ lr.cantidad }
-                                    td #{ lr.unidad }
-                                    td #{ lr.descripcion }
-                                    if lr.estatus == 'Bajo'
-                                        td 
-                                            label.label.label-default &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{lr.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    if lr.estatus == 'Normal'
-                                        td 
-                                            label.label.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{lr.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    if lr.estatus == 'Urgente'
-                                        td 
-                                            label.label.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{lr.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    if lr.estatus == 'Extemporaneo'
-                                        td 
-                                            label.label.label-danger &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{lr.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    if lr.estatus == 'No Autorizado'
-                                        td 
-                                            label.label.label-close &nbsp; #{lr.estatus}&nbsp;
-                                    td
-                                        a(href="/requisiciones/editar/articulo-requisicion/#{lr.id}/#{req.id}", title="Editar", style="margin-right: 15px;")
-                                            i.fas.fa-pencil-alt.text-info.fa-lg
-                                        a(href="/requisiciones/eliminar/articulo-requisicion/#{lr.id}", title="Eliminar")
-                                            i.fas.fa-minus-circle.text-danger.fa-lg
-            
+                        | Artículos en Requisición 
+                .col-lg-12
+                    .divider
+                    .table-responsive   
+                        table#articulos.table.table-striped.table-hover
+                            thead.table-head
+                                th.text-center Cantidad
+                                th Unidad
+                                th Descripción
+                                th Estatus
+                                th Acciones
+                            tbody
+                                each lr in listaRequisicion
+                                    tr(scope="row")
+                                        td.text-center #{ lr.cantidad }
+                                        td #{ lr.unidad }
+                                        td #{ lr.descripcion }
+                                        if lr.estatus == 'Bajo'
+                                            td 
+                                                label.label.label-default &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{lr.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        if lr.estatus == 'Normal'
+                                            td 
+                                                label.label.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{lr.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        if lr.estatus == 'Urgente'
+                                            td 
+                                                label.label.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{lr.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        if lr.estatus == 'Extemporaneo'
+                                            td 
+                                                label.label.label-danger &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{lr.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        if lr.estatus == 'No Autorizado'
+                                            td 
+                                                label.label.label-close &nbsp; #{lr.estatus}&nbsp;
+                                        td
+                                            a(href="/requisiciones/editar/articulo-requisicion/#{lr.id}/#{req.id}", title="Editar", style="margin-right: 15px;")
+                                                i.fas.fa-pencil-alt.text-info.fa-lg
+                                            a(href="/requisiciones/eliminar/articulo-requisicion/#{lr.id}", title="Eliminar")
+                                                i.fas.fa-minus-circle.text-danger.fa-lg
+                
         if Object.keys(listaRequisicion).length > 0
             .divider
             .row.pull-right(style="margin-bottom: 20px;")

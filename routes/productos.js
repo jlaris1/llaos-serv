@@ -47,10 +47,37 @@ module.exports = {
                                 }
                             });
 
-                            respuesta.render("Productos/productos",{
-                                user: solicitud.session.user,
-                                productos: productos,
-                                proveedores: proveedores
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render("Productos/productos",{
+                                        user: solicitud.session.user,
+                                        productos: productos,
+                                        proveedores: proveedores,
+                                        titulo: "Productos",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "productos"
+                                    });
+                                }
                             });
                         }
                     });
@@ -67,9 +94,36 @@ module.exports = {
                 if(error){
                     console.log(error);
                 }else{
-                    respuesta.render("Productos/producto", {
-                        user: solicitud.session.user,
-                        proveedores: proveedores
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else { 
+                            respuesta.render("Productos/producto", {
+                                user: solicitud.session.user,
+                                proveedores: proveedores,
+                                titulo: "Productos",
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
+                                usuarios: usuarios,
+                                ruta: "productos"
+                            });
+                        }
                     });
                 }
             });
@@ -91,10 +145,37 @@ module.exports = {
                             if(error){
                                 console.log(error);
                             } else {
-                                respuesta.render("Productos/editar",{
-                                    user: solicitud.session.user,
-                                    proveedores: proveedores, 
-                                    producto: producto
+                                Usuarios.find( function(error, usuarios){
+                                    if(error){
+                                        console.log(error);
+                                    } else { 
+                                        respuesta.render("Productos/editar",{
+                                            user: solicitud.session.user,
+                                            proveedores: proveedores, 
+                                            producto: producto,
+                                            titulo: "Productos",
+                                            criterios: [
+                                                {
+                                                    val: "",
+                                                    name: ""
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
+                                            usuarios: usuarios,
+                                            ruta: "productos"
+                                        });
+                                    }
                                 });
                             }
                         });

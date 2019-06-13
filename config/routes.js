@@ -98,6 +98,8 @@ module.exports = function(app){
     usuariosRouter.post('/usuario', usuarios.guardarUsuario);//////
     usuariosRouter.put('/editar/usuario/:id', usuarios.actualizar);
     usuariosRouter.get('/eliminar/usaurio/:id', usuarios.eliminar);
+    //usuariosRouter.post('/report/pdf', usuarios.pdf);
+    //usuariosRouter.post('/report/xls', usuarios.xls);
 
     //Proveedores
     app.use('/proveedores', proveedoresRouter);
@@ -107,6 +109,8 @@ module.exports = function(app){
     proveedoresRouter.post('/proveedor', proveedores.guardarProveedor);//////
     proveedoresRouter.put('/proveedor/:id', proveedores.actualizar);
     proveedoresRouter.get('/eliminar/proveedor/:id', proveedores.eliminar);
+    //proveedoresRouter.post('/report/pdf', proveedores.pdf);
+    //proveedoresRouter.post('/report/xls', proveedores.xls);
 
     //Productos
     app.use('/productos', productosRouter);
@@ -116,6 +120,8 @@ module.exports = function(app){
     productosRouter.post('/producto', productos.guardar);
     productosRouter.put('/actualizar/:id', productos.actualizar);
     productosRouter.get('/producto/eliminar/:id', productos.eliminar);
+    //productosRouter.post('/report/pdf', productos.pdf);
+    //productosRouter.post('/report/xls', productos.xls);
 
     //Requisiciones
     app.use('/requisiciones', requisicionesRouter);
@@ -136,7 +142,8 @@ module.exports = function(app){
     requisicionesRouter.get('/requisicion/eliminar/:id', requisiciones.eliminarRequisicion);
     requisicionesRouter.get('/eliminar/articulo-requisicion/:id', requisiciones.eliminarArticulo);
     requisicionesRouter.get('/requisiciones/nuevas', requisiciones.requisicionesNuevasAutorizadas);
-    requisicionesRouter.post('/pdf/requisiciones', requisiciones.pdfRequisiciones);
+    requisicionesRouter.post('/report/pdf', requisiciones.pdfRequisiciones);
+    //requisicionesRouter.post('/report/xls', requisiciones.pdfXls);
     requisicionesRouter.get('/requisicion/cerrar/:id', requisiciones.cerrar);
     requisicionesRouter.get('/requisicion/fechas', requisiciones.reqFechas);
 
@@ -168,6 +175,8 @@ module.exports = function(app){
     ordenesRouter.get('/articuloruta/eliminar/:id/:id_oRuta', ordenes.eliminarArticuloOrdenRuta);
     ordenesRouter.get('/ordenesruta', ordenes.ordenesEnRutaBandeja);
     ordenesRouter.get('/ordenruta/ver/:id', ordenes.ordenRutaDetalles);
+    //ordenesRouter.post('/report/pdf', ordenes.pdf);
+    //ordenesRouter.post('/report/xls', ordenes.xls);
 
     //Cotizaciones
     app.use('/externos',cotizacionesRouter);
@@ -182,6 +191,8 @@ module.exports = function(app){
     cotizacionesRouter.get('/cotizacion/cancelar/:id', cotizaciones.cancelar);
     cotizacionesRouter.get('/cotizacion/pagar/:id', cotizaciones.pagar);
     cotizacionesRouter.get('/cotizaciones/nuevas', cotizaciones.soloNuevas);
+    //cotizacionesRouter.post('/report/pdf', cotizaciones.pdf);
+    //cotizacionesRouter.post('/report/xls', cotizaciones.xls);
 
     //Inventarios
     app.use('/inventarios', inventariosRouter);
@@ -199,6 +210,8 @@ module.exports = function(app){
     inventariosRouter.post('/registrar/salida/:id_prod', inventarios.registrarSalida);
     inventariosRouter.get('/entradas', inventarios.abrirEntradas);
     inventariosRouter.get('/salidas', inventarios.abrirSalidas);
+    //inventariosRouter.post('/report/pdf', inventarios.pdf);
+    //inventariosRouter.post('/report/xls', inventarios.xls);
 
     //Empleados
     app.use('/empleados', empleadosRouter);
@@ -215,6 +228,8 @@ module.exports = function(app){
     empleadosRouter.post('/generarbaja', empleados.generarBaja)
     empleadosRouter.get('/correoalta/:id', empleados.enviarAltaCorreo);
     empleadosRouter.get('/empleado/ver/:id/:id_User', empleados.verEmpleadoCorreo);
+    //empleadosRouter.post('/report/pdf', empleados.pdf);
+    //empleadosRouter.post('/report/xls', empleados.xls);
 
     //Puestos
     app.use('/puestos', puestosRouter);
@@ -225,6 +240,8 @@ module.exports = function(app){
     puestosRouter.put('/puesto/:id', puestos.actualizar);
     puestosRouter.get('/baja/:id', puestos.baja);
     puestosRouter.get('/detalles-puesto/:id', puestos.ver);
+    //puestosRouter.post('/report/pdf', puestos.pdf);
+    //puestosRouter.post('/report/xls', puestos.xls);
 
     //Tickets
     app.use('/tickets', ticketsRouter);
@@ -236,6 +253,8 @@ module.exports = function(app){
     ticketsRouter.put('/comentar/:id', tickets.comentar);
     ticketsRouter.get('/cancelar/:id', tickets.cancelar);
     ticketsRouter.get('/finalizar/:id', tickets.finalizar);
+    //ticketsRouter.post('/report/pdf', tickets.pdf);
+    //ticketsRouter.post('/report/xls', tickets.xls);
 
     //Evaluaciones
     app.use('/evaluaciones', evaluacionesRouter);
@@ -244,6 +263,9 @@ module.exports = function(app){
     evaluacionesRouter.get('/ver/:ideval/:idobj', evaluaciones.verEvaluacion);
     evaluacionesRouter.get('/evaluar/:idempleado/:mes/:idobjetivos', evaluaciones.evaluar);
     evaluacionesRouter.post('/evaluar/registrar/:id/:mes/:anio', evaluaciones.registrarEvaluacion);
+    //evaluacionesRouter.post('/report/pdf', evaluaciones.pdf);
+    //evaluacionesRouter.post('/report/xls', evaluaciones.xls);
+
 
     //Objetivos
     evaluacionesRouter.get('/puestos', evaluaciones.puestos);
@@ -263,10 +285,12 @@ module.exports = function(app){
     tiposCamRouter.get('/eliminar/:id', tiposCamaron.eliminar);
     tiposCamRouter.put('/edicion/:id', tiposCamaron.actualizar);
     tiposCamRouter.put('/edicionInv/:id', tiposCamaron.actualizarInv);
+    //tiposCamRouter.post('/report/pdf', tiposCamaron.pdfD);
+    //tiposCamRouter.post('/report/xls', tiposCamaron.xlsD);
 
     //Inventario Camarón
     app.use('/inventarioscamaron', inventariosCamRouter);
-    inventariosCamRouter.get('/', inventariosCamaron.todos);
+    inventariosCamRouter.get('/all', inventariosCamaron.todos);
     inventariosCamRouter.get('/entradas', inventariosCamaron.entradas);
     inventariosCamRouter.get('/salidas', inventariosCamaron.salidas);
     inventariosCamRouter.get('/entrada', inventariosCamaron.entrada);
@@ -276,9 +300,10 @@ module.exports = function(app){
     inventariosCamRouter.post('/salida/agregar', inventariosCamaron.agregarSalida);
     inventariosCamRouter.get('/entrada/editar/:id', inventariosCamaron.editarEntrada);
     inventariosCamRouter.get('/salida/editar/:id', inventariosCamaron.editarSalida);
-    inventariosCamRouter.post('/reporte', inventariosCamaron.reporte);
     inventariosCamRouter.get('/entrada/terminar/:id', inventariosCamaron.generarPdfEntrada);
     inventariosCamRouter.get('/salida/terminar/:id', inventariosCamaron.generarPdfSalida);
+    inventariosCamRouter.post('/report/pdf', inventariosCamaron.pdf);
+    //inventariosCamRouter.post('/report/xls', inventariosCamaron.xls);
 
     //Laboratorio
     app.use('/zooplancton', zooplactonRouter);
@@ -288,6 +313,8 @@ module.exports = function(app){
     zooplactonRouter.post('/find', zooplacton.find);
     zooplactonRouter.post('/add', zooplacton.add);
     zooplactonRouter.put('/update/:id', zooplacton.update);
+    //zooplactonRouter.post('/report/pdf', zooplacton.pdfD);
+    //zooplactonRouter.post('/report/xls', zooplacton.xlsD);
 
     // DIARIOS
     app.use('/nutrientestox', nutrientesToxRouter);
@@ -295,23 +322,32 @@ module.exports = function(app){
     nutrientesToxRouter.get('/diario/new', nutrientesTox.newD);
     nutrientesToxRouter.post('/diario/find', nutrientesTox.findD);
     nutrientesToxRouter.post('/diario/add', nutrientesTox.addD);
+    //nutrientesToxRouter.post('/report/pdf', nutrientesTox.pdfD);
+    //nutrientesToxRouter.post('/report/xls', nutrientesTox.xlsD);
+
     // SEMANAL
     nutrientesToxRouter.get('/semanal/all', nutrientesTox.allS);
     nutrientesToxRouter.get('/semanal/new', nutrientesTox.newS);
     nutrientesToxRouter.post('/semanal/find', nutrientesTox.findS);
     nutrientesToxRouter.post('/semanal/add', nutrientesTox.addS);
+    //nutrientesToxRouter.post('/report/pdf', nutrientesTox.pdfS);
+    //nutrientesToxRouter.post('/report/xls', nutrientesTox.xlsS);
 
     app.use('/patologicos', patologicosRouter);
     patologicosRouter.get('/all', patologicos.all);
     patologicosRouter.get('/new', patologicos.new);
     patologicosRouter.post('/find', patologicos.find);
     patologicosRouter.post('/add', patologicos.add);
+    //patologicosRouter.post('/report/pdf', patologicos.pdf);
+    //patologicosRouter.post('/report/xls', patologicos.xls);
 
     app.use('/bacteriologia', bacteriologiaRouter);
     bacteriologiaRouter.get('/all', bacteriologia.all);
     bacteriologiaRouter.get('/new', bacteriologia.new);
     bacteriologiaRouter.post('/find', bacteriologia.find);
     bacteriologiaRouter.post('/add', bacteriologia.add);
+    //bacteriologiaRouter.post('/report/pdf', bacteriologia.pdf);
+    //bacteriologiaRouter.post('/report/xls', bacteriologia.xls);
 
     app.use('/fitoplancton', fitoplanctonRouter);
     fitoplanctonRouter.get('/all', fitoplancton.all);
@@ -320,6 +356,8 @@ module.exports = function(app){
     fitoplanctonRouter.post('/find', fitoplancton.find);
     fitoplanctonRouter.post('/add', fitoplancton.add);
     fitoplanctonRouter.put('/update/:id', fitoplancton.update);
+    //fitoplanctonRouter.post('/report/pdf', fitoplancton.pdf);
+    //fitoplanctonRouter.post('/report/xls', fitoplancton.xls);
 
     // Granja
     app.use('/estanque', estanqueRouter);
@@ -329,7 +367,9 @@ module.exports = function(app){
     estanqueRouter.post('/add', estanque.add );
     estanqueRouter.get('/detail/:id', estanque.detail);
     estanqueRouter.put('/update/:id', estanque.update);
-    estanqueRouter.get('/delete/:id', estanqueRouter.delete);
+    estanqueRouter.get('/delete/:id', estanque.delete);
+    //estanqueRouter.post('/report/pdf', estanque.pdf);
+    //estanqueRouter.post('/report/xls', estanque.xls);
 
     // Parametros
     app.use('/parametros', parametrosRouter);
@@ -340,6 +380,8 @@ module.exports = function(app){
     //parametrosRouter.get('/detail/:id', parametros.detail);
     parametrosRouter.post('/find', parametros.find);
     parametrosRouter.post('/next', parametros.next);
+    //fitoplanctonRouter.post('/report/pdf', fitoplancton.pdf);
+    //fitoplanctonRouter.post('/report/xls', fitoplancton.xls);
     
     // Laboratorios
     app.use('/laboratoriolarvas', laboratoriosRouter);
@@ -348,6 +390,8 @@ module.exports = function(app){
     //laboratoriosRouter.get('/edit/:id', laboratorios.edit);
     laboratoriosRouter.post('/add', laboratorios.add);
     //laboratoriosRouter.put('/update/:id', laboratorios.update);
+    //laboratoriosRouter.post('/report/pdf', laboratorios.pdf);
+    //laboratoriosRouter.post('/report/xls', laboratorios.xls);
 
     // Nutricion
     app.use('/nutricion', nutricionRouter);
@@ -357,6 +401,8 @@ module.exports = function(app){
     nutricionRouter.post('/add', nutricion.add );
     //nutricionRouter.get('/detail/:id', nutricion.detail);
     nutricionRouter.post('/find', nutricion.find);
+    nutricionRouter.post('/report/pdf', nutricion.pdf);
+    //nutricionRouter.post('/report/xls', nutricion.xls);
 
     // Recepción Larva
 

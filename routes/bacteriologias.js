@@ -21,15 +21,48 @@ module.exports = {
                         if(error){
                             console.log(chalk.bgRed(error));
                         } else {
-                            console.log(chalk.bgGreen(mediciones));
-
                             Laboratorios.populate(mediciones, {path: 'lab_origen'}, function(error, mediciones){
                                 if(error){
                                     console.log(chalk.bgRed);
                                 } else {
-                                    respuesta.render('Laboratorio/Bacteriologia/all', {
-                                        user: solicitud.session.user,
-                                        mediciones: mediciones
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(chalk.bgRed(error));
+                                        } else {
+                                            respuesta.render('Laboratorio/Bacteriologia/all', {
+                                                user: solicitud.session.user,
+                                                mediciones: mediciones,
+                                                titulo: "Bacteriología",
+                                                criterios: [
+                                                    {
+                                                        val: "modulo",
+                                                        name: "Módulo"
+                                                    },
+                                                    {
+                                                        val: "estanque",
+                                                        name: "Piscina"
+                                                    },
+                                                    {
+                                                        val: "fecha_reali",
+                                                        name: "Fecha Realizado"
+                                                    },
+                                                    {
+                                                        val: "fechas_reali",
+                                                        name: "Fechas Realizado"
+                                                    },
+                                                    {
+                                                        val: "fecha_siemb",
+                                                        name: "Fecha Siembra"
+                                                    },
+                                                    {
+                                                        val: "Fechas_siemb",
+                                                        name: "Fechas Siembra"
+                                                    },
+                                                ],
+                                                usuarios: usuarios,
+                                                ruta: "bacteriologia"
+                                            });
+                                        }
                                     });
                                 }
                             });
@@ -63,6 +96,26 @@ module.exports = {
                                     hepato_cv: 0
                                 },
                                 estanques: {},
+                                titulo: "",
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
+                                ruta: "bacteriologia",
                                 laboratorios: laboratorios
                             });
                         }
@@ -133,6 +186,26 @@ module.exports = {
                                             hepato_cv: 0
                                         },
                                         estanques: estanques,
+                                        titulo: "",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        ruta: "bacteriologia",
                                         laboratorios: laboratorios
                                     });
                                 }

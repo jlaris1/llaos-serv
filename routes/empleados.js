@@ -22,7 +22,7 @@ var mongoose = require('mongoose'),
     });
     
     //var pagina_sistema = 'http://llaos.ddns.net:3000/';
-    var pagina_sistema2 = 'http://201.107.5.12:3000/';
+    var pagina_sistema = 'https://https://35.236.72.196:3000/';
     var pagina_prueba = 'http://localhost:3000/'
 
 module.exports = {
@@ -37,9 +37,36 @@ module.exports = {
                     if(error){
                         console.log(error);
                     } else {
-                        respuesta.render("Empleados/empleados", {
-                            user: solicitud.session.user,
-                            empleados: empleados
+                        Usuarios.find( function(error, usuarios){
+                            if(error){
+                                console.log(error);
+                            } else { 
+                                respuesta.render("Empleados/empleados", {
+                                    user: solicitud.session.user,
+                                    empleados: empleados,
+                                    titulo: "Empleados",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "empleados"
+                                });
+                            } 
                         });
                     }
                 });
@@ -52,9 +79,36 @@ module.exports = {
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch
             Puestos.find( function(error, puestos) {
-                respuesta.render("Empleados/empleado", {
-                    user: solicitud.session.user,
-                    puestos: puestos
+                Usuarios.find( function(error, usuarios){
+                    if(error){
+                        console.log(error);
+                    } else { 
+                        respuesta.render("Empleados/empleado", {
+                            user: solicitud.session.user,
+                            puestos: puestos,
+                            titulo: "Empleados",
+                            criterios: [
+                                {
+                                    val: "",
+                                    name: ""
+                                }
+                            ],
+                            piscinas: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }
+                            ],
+                            charoleros: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }   
+                            ],
+                            usuarios: usuarios,
+                            ruta: "empleados"
+                        });
+                    } 
                 });
             });
         };
@@ -137,11 +191,38 @@ module.exports = {
                     if(error){
                         console.log(error);
                     }else{
-                        respuesta.render("Empleados/documentacion", {
-                            user: solicitud.session.user,
-                            empleado: empleado,
-                            puesto: puesto,
-                            titulo: "Alta de Personal - Documentación"
+                        Usuarios.find( function(error, usuarios){
+                            if(error){
+                                console.log(error);
+                            } else { 
+                                respuesta.render("Empleados/documentacion", {
+                                    user: solicitud.session.user,
+                                    empleado: empleado,
+                                    puesto: puesto,
+                                    titulo: "Alta de Personal - Documentación",
+                                    titulo: "Empleados",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "empleados"
+                                });
+                            } 
                         });
                     };
                 });
@@ -163,12 +244,39 @@ module.exports = {
                     } else {
                         if(solicitud.session.user === undefined){
                             respuesta.redirect("/");
-                        }else{           
-                            respuesta.render("Empleados/editar",{
-                                user: solicitud.session.user,
-                                empleado: empleado,
-                                puestos: puestos
-                            });
+                        }else{
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render("Empleados/editar",{
+                                        user: solicitud.session.user,
+                                        empleado: empleado,
+                                        puestos: puestos,
+                                        titulo: "Empleados",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "empleados"
+                                    });
+                                } 
+                            });           
                         };
                     };
                 });
@@ -256,13 +364,40 @@ module.exports = {
                             }else{
                                 if(solicitud.session.user === undefined){
                                     respuesta.redirect("/");
-                                }else{           
-                                    respuesta.render("Empleados/documentacion",{
-                                        user: solicitud.session.user,
-                                        empleado: empleado,
-                                        puesto: puesto,
-                                        titulo: "Editar personal - Documentación"
-                                    });
+                                }else{
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(error);
+                                        } else { 
+                                            respuesta.render("Empleados/documentacion",{
+                                                user: solicitud.session.user,
+                                                empleado: empleado,
+                                                puesto: puesto,
+                                                titulo: "Editar personal - Documentación",
+                                                titulo: "Empleados",
+                                                criterios: [
+                                                    {
+                                                        val: "",
+                                                        name: ""
+                                                    }
+                                                ],
+                                                piscinas: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }
+                                                ],
+                                                charoleros: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }   
+                                                ],
+                                                usuarios: usuarios,
+                                                ruta: "empleados"
+                                            });
+                                        } 
+                                    });           
                                 };
                             };
                         });
@@ -301,9 +436,36 @@ module.exports = {
                     if(solicitud.session.user === undefined){
                         respuesta.redirect("/");
                     }else{           
-                        respuesta.render("Empleados/baja",{
-                            user: solicitud.session.user,
-                            empleado: empleado
+                        Usuarios.find( function(error, usuarios){
+                            if(error){
+                                console.log(error);
+                            } else { 
+                                respuesta.render("Empleados/baja",{
+                                    user: solicitud.session.user,
+                                    empleado: empleado,
+                                    titulo: "Empleados",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "empleados"
+                                });
+                            } 
                         });
                     };
                 };
@@ -464,10 +626,25 @@ module.exports = {
                                     
                                     pdfContratoEspecial(empleado.id);
 
-                                    respuesta.render("Empleados/documentacion-resultado",{
-                                        user: solicitud.session.user,
-                                        empleado: empleado,
-                                        url: url
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(error);
+                                        } else { 
+                                            respuesta.render("Empleados/documentacion-resultado",{
+                                                user: solicitud.session.user,
+                                                empleado: empleado,
+                                                url: url,
+                                                titulo: "Empleados",
+                                                criterios: [
+                                                    {
+                                                        val: "",
+                                                        name: ""
+                                                    },
+                                                ],
+                                                usuarios: usuarios,
+                                                ruta: "empleados"
+                                            });
+                                        } 
                                     });
                                 };
                             });
@@ -753,9 +930,36 @@ module.exports = {
                         if(solicitud.session.user === undefined){
                             respuesta.redirect("/");
                         }else{
-                            respuesta.render("Empleados/detalles-empleado",{
-                                user: solicitud.session.user,
-                                empleado: empleado
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render("Empleados/detalles-empleado",{
+                                        user: solicitud.session.user,
+                                        empleado: empleado,
+                                        titulo: "Empleados",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "empleados"
+                                    });
+                                } 
                             });
                         };
                     });
@@ -779,9 +983,36 @@ module.exports = {
                             if(solicitud.session.user === undefined){
                                 respuesta.redirect("/");
                             }else{
-                                respuesta.render("Empleados/detalles-empleado",{
-                                    user: solicitud.session.user,
-                                    empleado: empleado
+                                Usuarios.find( function(error, usuarios){
+                                    if(error){
+                                        console.log(error);
+                                    } else { 
+                                        respuesta.render("Empleados/detalles-empleado",{
+                                            user: solicitud.session.user,
+                                            empleado: empleado,
+                                            titulo: "Empleados",
+                                            criterios: [
+                                                {
+                                                    val: "",
+                                                    name: ""
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
+                                            usuarios: usuarios,
+                                            ruta: "empleados"
+                                        });
+                                    } 
                                 });
                             };
                         });
@@ -1025,7 +1256,7 @@ module.exports = {
                                                                                             "<table class='buttonwrapper' bgcolor='#e05443' border='0' cellspacing='0' cellpadding='0'>" +
                                                                                                 "<tr>" +
                                                                                                     "<td class='button' height='45'>" +
-                                                                                                    "   <a href='" + pagina_prueba + "empleados/empleado/ver/" + empleado.id + "/5b3fc9ce2e6a322c5ce12c37'>Ver Colaborador</a>" +
+                                                                                                    "   <a href='" + pagina_sistema + "empleados/empleado/ver/" + empleado.id + "/5b3fc9ce2e6a322c5ce12c37'>Ver Colaborador</a>" +
                                                                                                     "</td>" +
                                                                                                 "</tr>" +
                                                                                             "</table>" +
@@ -1083,8 +1314,35 @@ module.exports = {
                         if(error){
                             console.log(error);
                         }else{
-                            respuesta.render("Empleados/enviado",{
-                                user: solicitud.session.user
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render("Empleados/enviado",{
+                                        user: solicitud.session.user,
+                                        titulo: "Empleados",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "empleados"
+                                    });
+                                } 
                             });                                    
                         }
                         smtpTransport.close();

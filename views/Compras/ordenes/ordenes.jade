@@ -70,8 +70,11 @@ block contenido
                             else if ord.estatus == "En Ruta"
                                 label.label(style="background-color: #ffa500;") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{ord.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             else if ord.estatus == "Cerrada"
-                                label.label.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{ord.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                        td #{ (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getDate() + '/' + new Date(ord.fecha).getFullYear()} - #{ord.hora} 
+                                label.label.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{ord.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        if (new Date(ord.fecha).getMonth() + 1) < 10
+                                td.text-center #{ new Date(ord.fecha).getDate()+ '/0' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()}- #{ord.hora}
+                        else
+                            td.text-center #{ new Date(ord.fecha).getDate()+ '/' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()} - #{ord.hora}         
                         td
                             if ord.estatus == "Cerrada"
                                 a.disabled(href="/ordenes/orden/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Ver detalles", style="margin-right: 5px;")

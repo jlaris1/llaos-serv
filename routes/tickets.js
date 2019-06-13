@@ -33,9 +33,36 @@ module.exports = {
                         if(error){
                             console.log(error);
                         }else{
-                            respuesta.render("Tickets/tickets", {
-                                user: solicitud.session.user,
-                                tickets: tickets
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render("Tickets/tickets", {
+                                        user: solicitud.session.user,
+                                        tickets: tickets,
+                                        titulo: "Tickets",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "tickets"
+                                    });
+                                }
                             });
                         };
                     });
@@ -46,9 +73,36 @@ module.exports = {
                         if(error){
                             console.log(error);
                         }else{
-                            respuesta.render("Tickets/tickets", {
-                                user: solicitud.session.user,
-                                tickets: tickets
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render("Tickets/tickets", {
+                                        user: solicitud.session.user,
+                                        tickets: tickets,
+                                        titulo: "Tickets",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "tickets"
+                                    });
+                                }
                             });
                         };
                     });
@@ -61,8 +115,35 @@ module.exports = {
         if(solicitud.session.user === undefined){
             respuesta.redirect("/sesion-expirada");
         }else{
-            respuesta.render("Tickets/ticket", {
-                user: solicitud.session.user
+            Usuarios.find( function(error, usuarios){
+                if(error){
+                    console.log(error);
+                } else { 
+                    respuesta.render("Tickets/ticket", {
+                        user: solicitud.session.user,
+                        titulo: "Tickets",
+                        criterios: [
+                            {
+                                val: "",
+                                name: ""
+                            }
+                        ],
+                        piscinas: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }
+                        ],
+                        charoleros: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }   
+                        ],
+                        usuarios: usuarios,
+                        ruta: "tickets"
+                    });
+                }
             });
         };
     },
@@ -344,9 +425,36 @@ module.exports = {
                         if(error){
                             console.log(error);
                         } else {
-                            respuesta.render("Tickets/detalles", {
-                                user: solicitud.session.user,
-                                ticket: ticket
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render("Tickets/detalles", {
+                                        user: solicitud.session.user,
+                                        ticket: ticket,
+                                        titulo: "Tickets",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "tickets"
+                                    });
+                                }
                             });
                         }
                     });

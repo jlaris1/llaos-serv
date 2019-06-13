@@ -20,7 +20,7 @@ block contenido
                 i.fas.fa-plus-circle
                 |   Nuevo
             if user.permisos != "usuario"
-                a.btn.btn-special(href="#")
+                a.btn.btn-special(href="#reports" data-toggle="modal" data-target="#reports" style="margin-right: 5px;")
                     i.fas.fa-file-pdf
                     |   Reportes
     .divider
@@ -56,6 +56,9 @@ block contenido
                             td #{ med.salinidad }
                             td #{ med.temperatura }
                             td #{ med.nivel_agua }
-                            td.text-center #{ new Date(med.fecha).getDate()+ '/' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
+                            if (new Date(med.fecha).getMonth() + 1) < 10
+                                td.text-center #{ new Date(med.fecha).getDate()+ '/0' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
+                            else
+                                td.text-center #{ new Date(med.fecha).getDate()+ '/' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
                             td #{ med.hora }
                             td #{ med.parametrista.nombre }

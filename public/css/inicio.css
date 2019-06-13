@@ -6,8 +6,23 @@
  body {
   background-color: #3b4652;
 }
+
 .margin-abajo{
   margin-bottom: 15px;
+}
+
+.modal-header-style {
+  color: #3b4652; 
+  border-radius: 6px 6px 0 0;
+  background-color: #fac07f;
+  /*background-color: #27c2a5;*/
+  border-bottom: 4px solid #fd7e14;
+}
+
+.table-head {
+  color: #3b4652; 
+  background-color: #fac07f;
+  border-bottom: 4px solid #fd7e14;
 }
 
 .loader {
@@ -53,7 +68,6 @@
 
 .btn-special {
   background-color: #fac07f;
-  /*background-color: #27c2a5;*/
   color: #fff;
   border-radius:  5px;
   border-bottom: 4px solid #fd7e14;

@@ -15,7 +15,7 @@ module.exports = {//HAcen falta try-catch a los metodos
         if(solicitud.session.user == 'undefined'){
             respuesta.redirect("/sesion-expirada");
         } else { 
-            TiposCamaron.find({"totalKgs": {$gte:1}}, function(error, tiposCamaron){
+            TiposCamaron.find({"totalKgs": {$gte:1}}, function(error, tipos){
                 if(error){
                     console.log(error);
                 } else {
@@ -44,14 +44,78 @@ module.exports = {//HAcen falta try-catch a los metodos
                                 { presentacion: "Top Open 40lbs" },
                                 { presentacion: "IQF 10 x 4" }
                             ]
-        
-                            respuesta.render("Administracion/planta/inventariocamaron/inventarios",
+                            
+                            respuesta.render("Administracion/Planta/InventarioCamaron/all",
                                 {   
                                     user: solicitud.session.user,
-                                    tiposCamaron: tiposCamaron,
+                                    tiposCamaron: tipos,
                                     tallas:  JSON.stringify(tallas),
                                     presentaciones:  JSON.stringify(presentaciones),
-                                    usuarios: usuarios
+                                    titulo: "Inventarios camarón",
+                                    criterios: [
+                                        {
+                                            val: 1,
+                                            name: "Remitente"
+                                        },
+                                        {
+                                            val: 2,
+                                            name: "Destinatario"
+                                        },
+                                        {
+                                            val: 3,
+                                            name: "Almacén"
+                                        },
+                                        {
+                                            val: 4,
+                                            name: "Bodega"
+                                        },
+                                        {
+                                            val: 5,
+                                            name: "Talla"
+                                        },
+                                        {
+                                            val: 6,
+                                            name: "Presentación"
+                                        },
+                                        {
+                                            val: 7,
+                                            name: "Tarima"
+                                        },
+                                        {
+                                            val: 8,
+                                            name: "Lote de Producción"
+                                        },
+                                        {
+                                            val: 9,
+                                            name: "Código Producto"
+                                        },
+                                        {
+                                            val: 10,
+                                            name: "Cantidad Master"
+                                        },
+                                        {
+                                            val: 11,
+                                            name: "Peso Master"
+                                        },
+                                        {
+                                            val: 12,
+                                            name: "Fecha"
+                                        },
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "inventarioscamaron"
                                 } 
                             );
                         }
@@ -68,28 +132,55 @@ module.exports = {//HAcen falta try-catch a los metodos
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.render("Administracion/planta/inventariocamaron/entradas/entrada", 
-                        {
-                            user: solicitud.session.user,
-                            tipos: tipos,
-                            entrada: {
-                                id: '',
-                                folio: 'ENT00000',
-                                remitente: '',
-                                referencia: '',
-                                destinatario: '',
-                                fecha: '',
-                                hora: '',
-                                total_master: '0.00',
-                                total_kgs: '0.00',
-                                total_lbs: '0.00',
-                                observaciones: '',
-                                almacenista: '',
-                                almacen: '',
-                                articulos: []
-                            }
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else {
+                            respuesta.render("Administracion/planta/inventariocamaron/entradas/entrada", 
+                                {
+                                    user: solicitud.session.user,
+                                    tipos: tipos,
+                                    entrada: {
+                                        id: '',
+                                        folio: 'ENT00000',
+                                        remitente: '',
+                                        referencia: '',
+                                        destinatario: '',
+                                        fecha: '',
+                                        hora: '',
+                                        total_master: '0.00',
+                                        total_kgs: '0.00',
+                                        total_lbs: '0.00',
+                                        observaciones: '',
+                                        almacenista: '',
+                                        almacen: '',
+                                        articulos: []
+                                    },
+                                    titulo: "Inventarios camarón",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "inventarioscamaron"
+                                }
+                            );
                         }
-                    );
+                    });
                 }
             });
         }
@@ -102,29 +193,56 @@ module.exports = {//HAcen falta try-catch a los metodos
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.render("Administracion/planta/inventariocamaron/salidas/salida", 
-                        {
-                            user: solicitud.session.user,
-                            tipos: tipos,
-                            salida: 
-                                {   
-                                    id: '',
-                                    folio: 'SAL00000',
-                                    remitente: '',
-                                    referencia: '',
-                                    destinatario: '',
-                                    fecha: '',
-                                    hora: '',
-                                    total_master: '0.00',
-                                    total_kgs: '0.00',
-                                    total_lbs: '0.00',
-                                    observaciones: '',
-                                    almacenista: '',
-                                    almacen: '',
-                                    articulos: []
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else {
+                            respuesta.render("Administracion/planta/inventariocamaron/salidas/salida", 
+                                {
+                                    user: solicitud.session.user,
+                                    tipos: tipos,
+                                    salida: 
+                                        {   
+                                            id: '',
+                                            folio: 'SAL00000',
+                                            remitente: '',
+                                            referencia: '',
+                                            destinatario: '',
+                                            fecha: '',
+                                            hora: '',
+                                            total_master: '0.00',
+                                            total_kgs: '0.00',
+                                            total_lbs: '0.00',
+                                            observaciones: '',
+                                            almacenista: '',
+                                            almacen: '',
+                                            articulos: []
+                                        },
+                                    titulo: "Inventarios camarón",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "inventarioscamaron"
                                 }
+                            );
                         }
-                    );
+                    });
                 }
             });
         }
@@ -137,13 +255,40 @@ module.exports = {//HAcen falta try-catch a los metodos
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.render("Administracion/planta/inventariocamaron/entradas/entradas", 
-                        {
-                            user: solicitud.session.user,
-                            entradas: entradas,
-                            url: ''
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else {
+                            respuesta.render("Administracion/planta/inventariocamaron/entradas/entradas", 
+                                {
+                                    user: solicitud.session.user,
+                                    entradas: entradas,
+                                    url: '',
+                                    titulo: "Inventarios camarón",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "inventarioscamaron"
+                                }
+                            );
                         }
-                    );
+                    });
                 }
             });
         }
@@ -156,13 +301,40 @@ module.exports = {//HAcen falta try-catch a los metodos
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.render("Administracion/planta/inventariocamaron/salidas/salidas", 
-                        {
-                            user: solicitud.session.user,
-                            salidas: salidas,
-                            url: ''
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else {
+                            respuesta.render("Administracion/planta/inventariocamaron/salidas/salidas", 
+                                {
+                                    user: solicitud.session.user,
+                                    salidas: salidas,
+                                    url: '',
+                                    titulo: "Inventarios camarón",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "inventarioscamaron"
+                                }
+                            );
                         }
-                    );
+                    });
                 }
             });
         }
@@ -176,15 +348,42 @@ module.exports = {//HAcen falta try-catch a los metodos
                     if(error){
                         console.log(error);
                     } else {
-                        respuesta.render("Administracion/planta/inventariocamaron/entradas/editar",
-                            {
-                                user: solicitud.session.user,
-                                tipos: tipos,
-                                tCamaron: '',
-                                entrada: '',
-                                entradas: ''
+                        Usuarios.find( function(error, usuarios){
+                            if(error){
+                                console.log(error);
+                            } else {
+                                respuesta.render("Administracion/planta/inventariocamaron/entradas/editar",
+                                    {
+                                        user: solicitud.session.user,
+                                        tipos: tipos,
+                                        tCamaron: '',
+                                        entrada: '',
+                                        entradas: '',
+                                        titulo: "Inventarios camarón",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "inventarioscamaron"
+                                    }
+                                );
                             }
-                        )
+                        });
                     }
                 });
             // Buscar por presentacion
@@ -193,15 +392,30 @@ module.exports = {//HAcen falta try-catch a los metodos
                     if(error){
                         console.log(error);
                     } else {
-                        respuesta.render("Administracion/planta/inventariocamaron/salidas/editar",
-                            {
-                                user: solicitud.session.user,
-                                tipos: tipos,
-                                tCamaron: '',
-                                entrada: '',
-                                entradas: ''
+                        Usuarios.find( function(error, usuarios){
+                            if(error){
+                                console.log(error);
+                            } else {
+                                respuesta.render("Administracion/planta/inventariocamaron/salidas/editar",
+                                    {
+                                        user: solicitud.session.user,
+                                        tipos: tipos,
+                                        tCamaron: '',
+                                        entrada: '',
+                                        entradas: '',
+                                        titulo: "Inventarios camarón",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            },
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "inventarioscamaron"
+                                    }
+                                );
                             }
-                        )
+                        });
                     }
                 });
             }
@@ -221,15 +435,30 @@ module.exports = {//HAcen falta try-catch a los metodos
                                     if(error){
                                         console.log(error);
                                     } else {
-                                        respuesta.render("Administracion/planta/inventariocamaron/entrada",
-                                            {
-                                                user: solicitud.session.user,
-                                                tipos: tipos,
-                                                tCamaron: '',
-                                                entrada: entrada,
-                                                entradas: entradas
+                                        Usuarios.find( function(error, usuarios){
+                                            if(error){
+                                                console.log(error);
+                                            } else {
+                                                respuesta.render("Administracion/planta/inventariocamaron/entrada",
+                                                    {
+                                                        user: solicitud.session.user,
+                                                        tipos: tipos,
+                                                        tCamaron: '',
+                                                        entrada: entrada,
+                                                        entradas: entradas,
+                                                        titulo: "Inventarios camarón",
+                                                        criterios: [
+                                                            {
+                                                                val: "",
+                                                                name: ""
+                                                            },
+                                                        ],
+                                                        usuarios: usuarios,
+                                                        ruta: "inventarioscamaron"
+                                                    }
+                                                );
                                             }
-                                        );
+                                        });
                                     }
                                 });  
                             }
@@ -250,15 +479,30 @@ module.exports = {//HAcen falta try-catch a los metodos
                                     if(error){
                                         console.log(error);
                                     } else {
-                                        respuesta.render("Administracion/planta/inventariocamaron/entrada",
-                                            {
-                                                user: solicitud.session.user,
-                                                tipos: tipos,
-                                                tCamaron: '',
-                                                entrada: entrada,
-                                                entradas: entradas
+                                        Usuarios.find( function(error, usuarios){
+                                            if(error){
+                                                console.log(error);
+                                            } else {
+                                                respuesta.render("Administracion/planta/inventariocamaron/entrada",
+                                                    {
+                                                        user: solicitud.session.user,
+                                                        tipos: tipos,
+                                                        tCamaron: '',
+                                                        entrada: entrada,
+                                                        entradas: entradas,
+                                                        titulo: "Inventarios camarón",
+                                                        criterios: [
+                                                            {
+                                                                val: "",
+                                                                name: ""
+                                                            },
+                                                        ],
+                                                        usuarios: usuarios,
+                                                        ruta: "inventarioscamaron"
+                                                    }
+                                                );
                                             }
-                                        );
+                                        });
                                     }
                                 });
                             }
@@ -347,13 +591,40 @@ module.exports = {//HAcen falta try-catch a los metodos
                                                                     if(error){
                                                                         console.log(error);
                                                                     } else {
-                                                                        respuesta.render("Administracion/planta/inventariocamaron/entradas/entrada", 
-                                                                            {
-                                                                                user: solicitud.session.user,
-                                                                                tipos: tipos,
-                                                                                entrada: ent
+                                                                        Usuarios.find( function(error, usuarios){
+                                                                            if(error){
+                                                                                console.log(error);
+                                                                            } else {
+                                                                                respuesta.render("Administracion/planta/inventariocamaron/entradas/entrada", 
+                                                                                    {
+                                                                                        user: solicitud.session.user,
+                                                                                        tipos: tipos,
+                                                                                        entrada: ent,
+                                                                                        titulo: "Inventarios camarón",
+                                                                                        criterios: [
+                                                                                            {
+                                                                                                val: "",
+                                                                                                name: ""
+                                                                                            }
+                                                                                        ],
+                                                                                        piscinas: [
+                                                                                            {
+                                                                                                id: 0,
+                                                                                                nombre: ""
+                                                                                            }
+                                                                                        ],
+                                                                                        charoleros: [
+                                                                                            {
+                                                                                                id: 0,
+                                                                                                nombre: ""
+                                                                                            }   
+                                                                                        ],
+                                                                                        usuarios: usuarios,
+                                                                                        ruta: "inventarioscamaron"
+                                                                                    }
+                                                                                );
                                                                             }
-                                                                        );
+                                                                        });
                                                                     }
                                                                 })
                                                             }
@@ -428,13 +699,40 @@ module.exports = {//HAcen falta try-catch a los metodos
                                                         if(error){
                                                             console.log(error);
                                                         } else {
-                                                            respuesta.render("Administracion/planta/inventariocamaron/entradas/entrada", 
-                                                                {
-                                                                    user: solicitud.session.user,
-                                                                    tipos: tipos,
-                                                                    entrada: ent
+                                                            Usuarios.find( function(error, usuarios){
+                                                                if(error){
+                                                                    console.log(error);
+                                                                } else {
+                                                                    respuesta.render("Administracion/planta/inventariocamaron/entradas/entrada", 
+                                                                        {
+                                                                            user: solicitud.session.user,
+                                                                            tipos: tipos,
+                                                                            entrada: ent,
+                                                                            titulo: "Inventarios camarón",
+                                                                            criterios: [
+                                                                                {
+                                                                                    val: "",
+                                                                                    name: ""
+                                                                                }
+                                                                            ],
+                                                                            piscinas: [
+                                                                                {
+                                                                                    id: 0,
+                                                                                    nombre: ""
+                                                                                }
+                                                                            ],
+                                                                            charoleros: [
+                                                                                {
+                                                                                    id: 0,
+                                                                                    nombre: ""
+                                                                                }   
+                                                                            ],
+                                                                            usuarios: usuarios,
+                                                                            ruta: "inventarioscamaron"
+                                                                        }
+                                                                    );
                                                                 }
-                                                            );
+                                                            });
                                                         }
                                                     })
                                                 }
@@ -528,13 +826,28 @@ module.exports = {//HAcen falta try-catch a los metodos
                                                                     if(error){
                                                                         console.log(error);
                                                                     } else {
-                                                                        respuesta.render("Administracion/planta/inventariocamaron/salidas/salida", 
-                                                                            {
-                                                                                user: solicitud.session.user,
-                                                                                tipos: tipos,
-                                                                                salida: sal
+                                                                        Usuarios.find( function(error, usuarios){
+                                                                            if(error){
+                                                                                console.log(error);
+                                                                            } else {
+                                                                                respuesta.render("Administracion/planta/inventariocamaron/salidas/salida", 
+                                                                                    {
+                                                                                        user: solicitud.session.user,
+                                                                                        tipos: tipos,
+                                                                                        salida: sal,
+                                                                                        titulo: "Inventarios camarón",
+                                                                                        criterios: [
+                                                                                            {
+                                                                                                val: "",
+                                                                                                name: ""
+                                                                                            },
+                                                                                        ],
+                                                                                        usuarios: usuarios,
+                                                                                        ruta: "inventarioscamaron"
+                                                                                    }
+                                                                                );
                                                                             }
-                                                                        );
+                                                                        });
                                                                     }
                                                                 })
                                                             }
@@ -609,13 +922,40 @@ module.exports = {//HAcen falta try-catch a los metodos
                                                         if(error){
                                                             console.log(error);
                                                         } else {
-                                                            respuesta.render("Administracion/planta/inventariocamaron/salidas/salida", 
-                                                                {
-                                                                    user: solicitud.session.user,
-                                                                    tipos: tipos,
-                                                                    salida: sal
+                                                            Usuarios.find( function(error, usuarios){
+                                                                if(error){
+                                                                    console.log(error);
+                                                                } else {
+                                                                    respuesta.render("Administracion/planta/inventariocamaron/salidas/salida", 
+                                                                        {
+                                                                            user: solicitud.session.user,
+                                                                            tipos: tipos,
+                                                                            salida: sal,
+                                                                            titulo: "Inventarios camarón",
+                                                                            criterios: [
+                                                                                {
+                                                                                    val: "",
+                                                                                    name: ""
+                                                                                }
+                                                                            ],
+                                                                            piscinas: [
+                                                                                {
+                                                                                    id: 0,
+                                                                                    nombre: ""
+                                                                                }
+                                                                            ],
+                                                                            charoleros: [
+                                                                                {
+                                                                                    id: 0,
+                                                                                    nombre: ""
+                                                                                }   
+                                                                            ],
+                                                                            usuarios: usuarios,
+                                                                            ruta: "inventarioscamaron"
+                                                                        }
+                                                                    );
                                                                 }
-                                                            );
+                                                            });
                                                         }
                                                     })
                                                 }
@@ -644,15 +984,40 @@ module.exports = {//HAcen falta try-catch a los metodos
                         } else {
                             entrada.articulos = JSON.stringify(entrada.articulos);
 
-                            console.log(entrada);
-
-                            respuesta.render("Administracion/planta/inventariocamaron/entradas/editar", 
-                                {
-                                    user: solicitud.session.user,
-                                    tipos: tipos,
-                                    entrada: entrada
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    respuesta.render("Administracion/planta/inventariocamaron/entradas/editar", 
+                                        {
+                                            user: solicitud.session.user,
+                                            tipos: tipos,
+                                            entrada: entrada,
+                                            titulo: "Inventarios camarón",
+                                            criterios: [
+                                                {
+                                                    val: "",
+                                                    name: ""
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
+                                            usuarios: usuarios,
+                                            ruta: "inventarioscamaron"
+                                        }
+                                    );
                                 }
-                            );
+                            });
                         }
                     });
                 }
@@ -671,21 +1036,47 @@ module.exports = {//HAcen falta try-catch a los metodos
                         if(error){
                             console.log(error);
                         } else { 
-                            respuesta.render("Administracion/planta/inventariocamaron/salidas/editar", 
-                                {
-                                    user: solicitud.session.user,
-                                    tipos: tipos,
-                                    salida: salida
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    respuesta.render("Administracion/planta/inventariocamaron/salidas/editar", 
+                                        {
+                                            user: solicitud.session.user,
+                                            tipos: tipos,
+                                            salida: salida,
+                                            titulo: "Inventarios camarón",
+                                            criterios: [
+                                                {
+                                                    val: "",
+                                                    name: ""
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
+                                            usuarios: usuarios,
+                                            ruta: "inventarioscamaron"
+                                        }
+                                    );
                                 }
-                            );
+                            });
                         }
                     });
                 }
             });      
         }
     },
-    reporte: function(solicitud, respuesta){
-        
+    pdf: function(solicitud, respuesta){
         if(solicitud.session.user == 'undefined'){
             respuesta.redirect("/sesion-expirada");
         } else {      
@@ -793,16 +1184,43 @@ module.exports = {//HAcen falta try-catch a los metodos
                                                         if(error){
                                                             console.log(error);
                                                         } else {
-                                                            respuesta.render("Administracion/planta/inventariocamaron/inventarios",
-                                                                {   
-                                                                    user: solicitud.session.user,
-                                                                    tiposCamaron: tiposCamaron,
-                                                                    tallas:  JSON.stringify(tallas),
-                                                                    presentaciones:  JSON.stringify(presentaciones),
-                                                                    usuarios: usuarios,
-                                                                    url: reportePdf('Remitente', solicitud.body.input, lista)
-                                                                } 
-                                                            );
+                                                            Usuarios.find( function(error, usuarios){
+                                                                if(error){
+                                                                    console.log(error);
+                                                                } else {
+                                                                    respuesta.render("Administracion/planta/inventariocamaron/inventarios",
+                                                                        {   
+                                                                            user: solicitud.session.user,
+                                                                            tiposCamaron: tiposCamaron,
+                                                                            tallas:  JSON.stringify(tallas),
+                                                                            presentaciones:  JSON.stringify(presentaciones),
+                                                                            usuarios: usuarios,
+                                                                            url: reportePdf('Remitente', solicitud.body.input, lista),
+                                                                            titulo: "Inventarios camarón",
+                                                                            criterios: [
+                                                                                {
+                                                                                    val: "",
+                                                                                    name: ""
+                                                                                }
+                                                                            ],
+                                                                            piscinas: [
+                                                                                {
+                                                                                    id: 0,
+                                                                                    nombre: ""
+                                                                                }
+                                                                            ],
+                                                                            charoleros: [
+                                                                                {
+                                                                                    id: 0,
+                                                                                    nombre: ""
+                                                                                }   
+                                                                            ],
+                                                                            usuarios: usuarios,
+                                                                            ruta: "inventarioscamaron"
+                                                                        } 
+                                                                    );
+                                                                }
+                                                            });
                                                         }
                                                     });
                                                 }
@@ -876,16 +1294,43 @@ module.exports = {//HAcen falta try-catch a los metodos
                                                         if(error){
                                                             console.log(error);
                                                         } else {
-                                                            respuesta.render("Administracion/planta/inventariocamaron/inventarios",
-                                                                {   
-                                                                    user: solicitud.session.user,
-                                                                    tiposCamaron: tiposCamaron,
-                                                                    tallas:  JSON.stringify(tallas),
-                                                                    presentaciones:  JSON.stringify(presentaciones),
-                                                                    usuarios: usuarios,
-                                                                    url: reportePdf('Destinatario', solicitud.body.input, lista)
-                                                                } 
-                                                            );
+                                                            Usuarios.find( function(error, usuarios){
+                                                                if(error){
+                                                                    console.log(error);
+                                                                } else {
+                                                                    respuesta.render("Administracion/planta/inventariocamaron/inventarios",
+                                                                        {   
+                                                                            user: solicitud.session.user,
+                                                                            tiposCamaron: tiposCamaron,
+                                                                            tallas:  JSON.stringify(tallas),
+                                                                            presentaciones:  JSON.stringify(presentaciones),
+                                                                            usuarios: usuarios,
+                                                                            url: reportePdf('Destinatario', solicitud.body.input, lista),
+                                                                            titulo: "Inventarios camarón",
+                                                                            criterios: [
+                                                                                {
+                                                                                    val: "",
+                                                                                    name: ""
+                                                                                }
+                                                                            ],
+                                                                            piscinas: [
+                                                                                {
+                                                                                    id: 0,
+                                                                                    nombre: ""
+                                                                                }
+                                                                            ],
+                                                                            charoleros: [
+                                                                                {
+                                                                                    id: 0,
+                                                                                    nombre: ""
+                                                                                }   
+                                                                            ],
+                                                                            usuarios: usuarios,
+                                                                            ruta: "inventarioscamaron"
+                                                                        } 
+                                                                    );
+                                                                }
+                                                            });
                                                         }
                                                     });
                                                 }
@@ -929,13 +1374,28 @@ module.exports = {//HAcen falta try-catch a los metodos
                     if(error){
                         console.log(error);
                     } else {
-                        respuesta.render("Administracion/planta/inventariocamaron/entradas/entradas", 
-                            {   
-                                user: solicitud.session.user,
-                                entradas: entradas,
-                                url: generarPdf("Entrada",  entrada.articulos, entrada, ruta_archivo, nombre_archivo, solicitud.session.user)
+                        Usuarios.find( function(error, usuarios){
+                            if(error){
+                                console.log(error);
+                            } else {
+                                respuesta.render("Administracion/planta/inventariocamaron/entradas/entradas", 
+                                    {   
+                                        user: solicitud.session.user,
+                                        entradas: entradas,
+                                        url: generarPdf("Entrada",  entrada.articulos, entrada, ruta_archivo, nombre_archivo, solicitud.session.user),
+                                        titulo: "Inventarios camarón",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            },
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "inventarioscamaron"
+                                    }
+                                );
                             }
-                        );
+                        });
                     }
                 });
             }
@@ -953,13 +1413,28 @@ module.exports = {//HAcen falta try-catch a los metodos
                     if(error){
                         console.log(error);
                     } else {
-                        respuesta.render("Administracion/planta/inventariocamaron/salidas/salidas", 
-                            {   
-                                user: solicitud.session.user,
-                                salidas: salidas,
-                                url: generarPdf("Salida", salida.articulos, salida, ruta_archivo, nombre_archivo, solicitud.session.user)
+                        Usuarios.find( function(error, usuarios){
+                            if(error){
+                                console.log(error);
+                            } else {
+                                respuesta.render("Administracion/planta/inventariocamaron/salidas/salidas", 
+                                    {   
+                                        user: solicitud.session.user,
+                                        salidas: salidas,
+                                        url: generarPdf("Salida", salida.articulos, salida, ruta_archivo, nombre_archivo, solicitud.session.user),
+                                        titulo: "Inventarios camarón",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            },
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "inventarioscamaron"
+                                    }
+                                );
                             }
-                        );
+                        });
                     }
                 });
             }

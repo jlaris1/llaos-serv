@@ -26,10 +26,6 @@ module.exports = {
                         msg: "Error: no existe el usuario " + solicitud.body.user
                     });
                 }else{
-            
-                    
-
-
                     if(usuario.password == solicitud.body.pass){
                         solicitud.session.user = usuario;
                         respuesta.redirect('/home');
@@ -69,12 +65,14 @@ module.exports = {
                     };
 
                     var horror = new Errores(data);
+
                     horror.save(function(error){
                         if(error){
                             //console.log(error);
                             respuesta.redirect("/error-inesperado");
                         }
                     });
+
                 } else {
                     Cotizaciones.find({"estatus": "Nueva"}, function(error, cotizaciones){
                         if(error){
@@ -149,12 +147,35 @@ module.exports = {
                                             if(canceladas)
                                                 canLen = canceladas.length
                                             
-                                            respuesta.render("index",{ 
-                                                user: solicitud.session.user,
-                                                requisiciones: reqLen, 
-                                                cotizaciones: cotLen,
-                                                ordenes: ordLen,
-                                                canceladas: canLen 
+                                            Usuarios.find( function(error, usuarios){
+                                                if(error){
+                                                    console.log(error);
+                                                } else {
+                                                    respuesta.render("index",{ 
+                                                        user: solicitud.session.user,
+                                                        requisiciones: reqLen, 
+                                                        cotizaciones: cotLen,
+                                                        ordenes: ordLen,
+                                                        canceladas: canLen,
+                                                        criterios: {
+                                                            val: "",
+                                                            name: ""
+                                                        }, 
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ],
+                                                        usuarios: usuarios
+                                                    });
+                                                }
                                             });
                                         }
                                     }); 

@@ -9,9 +9,36 @@ module.exports = {
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch
             Proveedores.find( function(error, proveedores) {
-                respuesta.render("Proveedores/proveedores", {
-                    user: solicitud.session.user,
-                    proveedores: proveedores
+                Usuarios.find( function(error, usuarios){
+                    if(error){
+                        console.log(error);
+                    } else { 
+                        respuesta.render("Proveedores/proveedores", {
+                            user: solicitud.session.user,
+                            proveedores: proveedores,
+                            titulo: "Proveedores",
+                            criterios: [
+                                {
+                                    val: "",
+                                    name: ""
+                                }
+                            ],
+                            piscinas: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }
+                            ],
+                            charoleros: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }   
+                            ],
+                            usuarios: usuarios,
+                            ruta: "proveedores"
+                        });
+                    }
                 });
             });
         };
@@ -21,9 +48,36 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch
-            respuesta.render("Proveedores/proveedor", 
-            {
-                user: solicitud.session.user
+            Usuarios.find( function(error, usuarios){
+                if(error){
+                    console.log(error);
+                } else { 
+                    respuesta.render("Proveedores/proveedor", 
+                        {
+                            user: solicitud.session.user,
+                            titulo: "Proveedores",
+                            criterios: [
+                                {
+                                    val: "",
+                                    name: ""
+                                }
+                            ],
+                            piscinas: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }
+                            ],
+                            charoleros: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }   
+                            ],
+                            usuarios: usuarios,
+                            ruta: "proveedores"
+                        });
+                }
             });
         };
     },
@@ -40,10 +94,37 @@ module.exports = {
                         respuesta.redirect("/");
                     }else{
                         //if(solicitud.session.user.permisos === undefined){
-                            respuesta.render("Proveedores/editar",{
-                                user: solicitud.session.user, 
-                                proveedor: proveedor,
-                                //permisos: 'usuario'
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render("Proveedores/editar",{
+                                        user: solicitud.session.user, 
+                                        proveedor: proveedor,
+                                        titulo: "Proveedores",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "proveedores"
+                                        //permisos: 'usuario'
+                                    });
+                                }
                             });
                         /*}else{
                             respuesta.render("producto/editar",{

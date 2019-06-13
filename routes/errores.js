@@ -28,7 +28,7 @@ module.exports = {
                 respuesta.redirect("/error-inesperado");
             }else{
                 respuesta.render("login",{
-                    msg: 'Error: error al buscar usuario. Intente de nuevo.'
+                    msg: 'Error: error al buscar usuario. Intente de nuevo.',
                 });
             };
         });

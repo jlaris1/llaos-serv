@@ -13,12 +13,39 @@ module.exports = {
                 if(error){
                     console.log(chalk.bgRed(error));
                 } else {
-                    respuesta.render("Laboratorio Larvas/all", 
-                        {
-                            user: solicitud.session.user,
-                            laboratorios: laboratorios
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else { 
+                            respuesta.render("Laboratorio Larvas/all", 
+                                {
+                                    user: solicitud.session.user,
+                                    laboratorios: laboratorios,
+                                    titulo: "Laboratorio larvas",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "laboratoriolarvas"
+                                }
+                            );
                         }
-                    )
+                    });
                 }
             })
         } 
@@ -27,11 +54,38 @@ module.exports = {
         if (solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else { 
-            respuesta.render("Laboratorio Larvas/new",
-                {
-                    user: solicitud.session.user
+            Usuarios.find( function(error, usuarios){
+                if(error){
+                    console.log(error);
+                } else { 
+                    respuesta.render("Laboratorio Larvas/new",
+                        {
+                            user: solicitud.session.user,
+                            titulo: "Laboratorio larvas",
+                            criterios: [
+                                {
+                                    val: "",
+                                    name: ""
+                                }
+                            ],
+                            piscinas: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }
+                            ],
+                            charoleros: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }   
+                            ],
+                            usuarios: usuarios,
+                            ruta: "laboratoriolarvas"
+                        }
+                    );
                 }
-            )
+            });
         }
     },
     add: function(solicitud, respuesta){

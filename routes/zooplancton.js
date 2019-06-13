@@ -16,12 +16,39 @@ module.exports = {
                     console.log(error);
                 } else {
                     Estanques.populate(mediciones, {path: 'estanque'}, function(error, mediciones){
-                        respuesta.render("Laboratorio/Zooplancton/all",
-                            {
-                                user: solicitud.session.user,
-                                mediciones: mediciones
+                        Usuarios.find( function(error, usuarios){
+                            if(error){
+                                console.log(error);
+                            } else { 
+                                respuesta.render("Laboratorio/Zooplancton/all",
+                                    {
+                                        user: solicitud.session.user,
+                                        mediciones: mediciones,
+                                        titulo: "Zooplancton",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "zooplancton"
+                                    }
+                                );
                             }
-                        );
+                        });
                     });
                 }
             });
@@ -35,29 +62,56 @@ module.exports = {
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.render("Laboratorio/Zooplancton/new",
-                        {
-                            user: solicitud.session.user,
-                            modulos: modulos,
-                            modulo: solicitud.body.modulo,
-                            zooplancton: {
-                                nauplios: 0,
-                                nauplios_porcent: '',
-                                copepodos: 0,
-                                copepodos_porcent: '',
-                                rutiferos: 0,
-                                rutiferos_porcent: '',
-                                poliquetos: 0,
-                                poliquetos_porcent: '',
-                                otros: 0,
-                                otros_porcent: '',
-                                total_organismos: 0,
-                                fecha: new Date,
-                                biologo: ''
-                            },
-                            estanques: {}
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else { 
+                            respuesta.render("Laboratorio/Zooplancton/new",
+                                {
+                                    user: solicitud.session.user,
+                                    modulos: modulos,
+                                    modulo: solicitud.body.modulo,
+                                    zooplancton: {
+                                        nauplios: 0,
+                                        nauplios_porcent: '',
+                                        copepodos: 0,
+                                        copepodos_porcent: '',
+                                        rutiferos: 0,
+                                        rutiferos_porcent: '',
+                                        poliquetos: 0,
+                                        poliquetos_porcent: '',
+                                        otros: 0,
+                                        otros_porcent: '',
+                                        total_organismos: 0,
+                                        fecha: new Date,
+                                        biologo: ''
+                                    },
+                                    estanques: {},
+                                    titulo: "Zooplancton",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "zooplancton"
+                                }
+                            );
                         }
-                    );
+                    });
                 }
             });
         };
@@ -80,12 +134,39 @@ module.exports = {
                                 } else {
                                     zooplancton.estanque = estanque;
 
-                                    respuesta.render("Laboratorio/Zooplancton/edit", 
-                                        {
-                                            user: solicitud.session.user,
-                                            zooplancton: zooplancton
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(error);
+                                        } else { 
+                                            respuesta.render("Laboratorio/Zooplancton/edit", 
+                                                {
+                                                    user: solicitud.session.user,
+                                                    zooplancton: zooplancton,
+                                                    titulo: "Zooplancton",
+                                                    criterios: [
+                                                        {
+                                                            val: "",
+                                                            name: ""
+                                                        }
+                                                    ],
+                                                    piscinas: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }
+                                                    ],
+                                                    charoleros: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }   
+                                                    ],
+                                                    usuarios: usuarios,
+                                                    ruta: "zooplancton"
+                                                }
+                                            );
                                         }
-                                    );
+                                    });
                                 }
                             });
                         }
@@ -179,26 +260,53 @@ module.exports = {
                         if(error){
                             console.log(chalk.bgRed(error));
                         } else {
-                            respuesta.render('Laboratorio/Zooplancton/new', {
-                                user: solicitud.session.user,
-                                modulos: modulos,
-                                modulo: solicitud.body.modulo,
-                                zooplancton: {
-                                    nauplios: 0,
-                                    nauplios_porcent: '',
-                                    copepodos: 0,
-                                    copepodos_porcent: '',
-                                    rutiferos: 0,
-                                    rutiferos_porcent: '',
-                                    poliquetos: 0,
-                                    poliquetos_porcent: '',
-                                    otros: 0,
-                                    otros_porcent: '',
-                                    total_organismos: 0,
-                                    fecha: new Date,
-                                    biologo: ''
-                                },
-                                estanques: estanques,
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render('Laboratorio/Zooplancton/new', {
+                                        user: solicitud.session.user,
+                                        modulos: modulos,
+                                        modulo: solicitud.body.modulo,
+                                        zooplancton: {
+                                            nauplios: 0,
+                                            nauplios_porcent: '',
+                                            copepodos: 0,
+                                            copepodos_porcent: '',
+                                            rutiferos: 0,
+                                            rutiferos_porcent: '',
+                                            poliquetos: 0,
+                                            poliquetos_porcent: '',
+                                            otros: 0,
+                                            otros_porcent: '',
+                                            total_organismos: 0,
+                                            fecha: new Date,
+                                            biologo: ''
+                                        },
+                                        estanques: estanques,
+                                        titulo: "Zooplancton",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "zooplancton"
+                                    });
+                                }
                             });
                         }
                     }).sort({ codigo : 1});
@@ -206,5 +314,4 @@ module.exports = {
             });
         }
     }
-    
 }

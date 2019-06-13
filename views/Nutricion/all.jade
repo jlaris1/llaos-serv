@@ -9,6 +9,13 @@ block contenido
             $('#spanMenuNutricion').addClass('fa-angle-down');
 
             $('#nutricion').dataTable();
+
+            if($('#url').text() != ''){
+                alert("haber haber")
+                url = '../../reports/nutricion/'+ $('#url').text();
+                window.open(url, 'Download');
+                $('#url').text('');
+            }
         });
         //Termina Javascript
 
@@ -18,14 +25,15 @@ block contenido
                 i.fas.fa-seedling(style="margin-right: 10px;")
                 |   Nutrición
         .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
-            a.btn.btn-special(href="/laboratoriolarvas/new", style="margin-right: 5px;")
+            a.btn.btn-special(href="/nutricion/new", style="margin-right: 5px;")
                 i.fas.fa-plus-circle
                 |   Nueva
             if user.permisos != "usuario"
-                a.btn.btn-special(href="#")
+                a.btn.btn-special(href="#reports" data-toggle="modal" data-target="#reports" style="margin-right: 5px;")
                     i.fas.fa-file-pdf
                     |   Reportes
     .divider
+    label#url.hidden #{url}
     .row
         .table-responsive   
             table#nutricion.table.table-striped.table-hover
@@ -35,11 +43,13 @@ block contenido
                     th Charola 2
                     th Charola 3
                     th Charola 4
-                    th Charola 5
-                    th Charola 6
+                    th Kg Ración
+                    th % Ajuste
                     th Suma
                     th Código Ración
+                    th Kg Sig. Ración
                     th Charolero
+                    th Fecha
                 tbody
                     each nut in nutricion
                         tr  
@@ -48,8 +58,19 @@ block contenido
                             td.text-center #{ nut.charola_2 }
                             td.text-center #{ nut.charola_3 }
                             td.text-center #{ nut.charola_4 }
-                            td.text-center #{ nut.charola_5 }
-                            td.text-center #{ nut.charola_6 }
-                            td.text-center #{ nut.suma }
+                            td.text-center #{ parseFloat(nut.kg_racion).toFixed(2) }
+                            td.text-center #{ parseFloat(nut.porcent_ajuste).toFixed(2) }
+                            td.text-center #{ parseFloat(nut.suma).toFixed(2) }
                             td.text-center #{ nut.codigo_racion }
+                            td.text-center #{ nut.siguiente_racion }
                             td.text-center #{ nut.charolero.nombre }
+                            if (new Date(nut.fecha).getMonth() + 1) < 10
+                                if (new Date(nut.fecha).getDate()) < 10
+                                    td.text-center #{ '0' + new Date(nut.fecha).getDate()+ '/0' + (new Date(nut.fecha).getMonth() + 1)+ '/' + new Date(nut.fecha).getFullYear()}
+                                else         
+                                    td.text-center #{ new Date(nut.fecha).getDate()+ '/0' + (new Date(nut.fecha).getMonth() + 1)+ '/' + new Date(nut.fecha).getFullYear()}
+                            else
+                                if (new Date(nut.fecha).getDate()) < 10
+                                    td.text-center #{ '0' + new Date(nut.fecha).getDate()+ '/' + (new Date(nut.fecha).getMonth() + 1)+ '/' + new Date(nut.fecha).getFullYear()}
+                                else 
+                                    td.text-center #{ new Date(nut.fecha).getDate()+ '/' + (new Date(nut.fecha).getMonth() + 1)+ '/' + new Date(nut.fecha).getFullYear()}

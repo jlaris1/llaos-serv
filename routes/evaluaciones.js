@@ -13,10 +13,37 @@ module.exports = {
         }else{
             Empleados.find(function(error, empleados) {
                 Puestos.populate(empleados, {path: 'puesto'}, function(error, empleados){
-                    respuesta.render("Evaluaciones/empleados", {
-                        user: solicitud.session.user,
-                        empleados: empleados,
-                        msg: ""
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else { 
+                            respuesta.render("Evaluaciones/empleados", {
+                                user: solicitud.session.user,
+                                empleados: empleados,
+                                msg: "",
+                                titulo: "Evaluaciones",
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
+                                usuarios: usuarios,
+                                ruta: "evaluaciones"
+                            });
+                        } 
                     });
                 });
             });
@@ -43,7 +70,28 @@ module.exports = {
                                                 respuesta.render("Evaluaciones/empleados", {
                                                     user: solicitud.session.user,
                                                     empleados: empleados,
-                                                    msg: "Los Objetivos para el puesto "+puestoError.posicion+" no han sido definidos."
+                                                    msg: "Los Objetivos para el puesto "+puestoError.posicion+" no han sido definidos.",
+                                                    titulo: "Evaluaciones",
+                                                    criterios: [
+                                                        {
+                                                            val: "",
+                                                            name: ""
+                                                        }
+                                                    ],
+                                                    piscinas: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }
+                                                    ],
+                                                    charoleros: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }   
+                                                    ],
+                                                    usuarios: usuarios,
+                                                    ruta: "evaluaciones"
                                                 });
                                             });
                                         });
@@ -225,15 +273,42 @@ module.exports = {
                                                 break;                                            
                                         }
                                     });
-                                    respuesta.render("Evaluaciones/calendario", {
-                                        user: solicitud.session.user,
-                                        evaluaciones: evaluaciones,
-                                        empleado: empleado,
-                                        evalPasadas: evalPasadas,
-                                        evalActuales: evalActuales,
-                                        evalFuturas: evalFuturas,
-                                        objetivos: objetivos,
-                                        añoActual: añoActual
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(error);
+                                        } else { 
+                                            respuesta.render("Evaluaciones/calendario", {
+                                                user: solicitud.session.user,
+                                                evaluaciones: evaluaciones,
+                                                empleado: empleado,
+                                                evalPasadas: evalPasadas,
+                                                evalActuales: evalActuales,
+                                                evalFuturas: evalFuturas,
+                                                objetivos: objetivos,
+                                                añoActual: añoActual,
+                                                titulo: "Evaluaciones",
+                                                criterios: [
+                                                    {
+                                                        val: "",
+                                                        name: ""
+                                                    }
+                                                ],
+                                                piscinas: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }
+                                                ],
+                                                charoleros: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }   
+                                                ],
+                                                usuarios: usuarios,
+                                                ruta: "evaluaciones"
+                                            });
+                                        } 
                                     });
                                 };
                             });
@@ -260,10 +335,37 @@ module.exports = {
                                 if(error){
                                     console.log(error);
                                 }else{
-                                    respuesta.render("Evaluaciones/evaluacion", {
-                                        user: solicitud.session.user,
-                                        evaluacion: evaluacion,
-                                        objetivos: objetivos
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(error);
+                                        } else { 
+                                            respuesta.render("Evaluaciones/evaluacion", {
+                                                user: solicitud.session.user,
+                                                evaluacion: evaluacion,
+                                                objetivos: objetivos,
+                                                titulo: "Evaluaciones",
+                                                criterios: [
+                                                    {
+                                                        val: "",
+                                                        name: ""
+                                                    }
+                                                ],
+                                                piscinas: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }
+                                                ],
+                                                charoleros: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }   
+                                                ],
+                                                usuarios: usuarios,
+                                                ruta: "evaluaciones"
+                                            });
+                                        } 
                                     });
                                 }
                             });
@@ -286,11 +388,38 @@ module.exports = {
                         if(error){
                             console.log(error);
                         }else{
-                            respuesta.render("Evaluaciones/evaluar", {
-                                user: solicitud.session.user,
-                                empleado: empleado,
-                                objetivos: objetivos,
-                                mes: solicitud.params.mes
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render("Evaluaciones/evaluar", {
+                                        user: solicitud.session.user,
+                                        empleado: empleado,
+                                        objetivos: objetivos,
+                                        mes: solicitud.params.mes,
+                                        titulo: "Evaluaciones",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "evaluaciones"
+                                    });
+                                } 
                             });
                         }
                     });
@@ -345,9 +474,36 @@ module.exports = {
             respuesta.redirect("/sesion-expirada");
         }else{
             Puestos.find( function(error, puestos) {
-                respuesta.render("Evaluaciones/puestos", {
-                    user: solicitud.session.user,
-                    puestos: puestos
+                Usuarios.find( function(error, usuarios){
+                    if(error){
+                        console.log(error);
+                    } else { 
+                        respuesta.render("Evaluaciones/puestos", {
+                            user: solicitud.session.user,
+                            puestos: puestos,
+                            titulo: "Evaluaciones",
+                            criterios: [
+                                {
+                                    val: "",
+                                    name: ""
+                                }
+                            ],
+                            piscinas: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }
+                            ],
+                            charoleros: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }   
+                            ],
+                            usuarios: usuarios,
+                            ruta: "evaluaciones"
+                        });
+                    } 
                 });
             });
         };
@@ -376,13 +532,40 @@ module.exports = {
                             siguiente = objetivos[i];
                     }
 
-                    respuesta.render("Evaluaciones/objetivos", {
-                        user: solicitud.session.user,
-                        puesto: pues,
-                        anio: añoActual,
-                        anterior: anterior,
-                        actual: actual,
-                        siguiente: siguiente
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else { 
+                            respuesta.render("Evaluaciones/objetivos", {
+                                user: solicitud.session.user,
+                                puesto: pues,
+                                anio: añoActual,
+                                anterior: anterior,
+                                actual: actual,
+                                siguiente: siguiente,
+                                titulo: "Evaluaciones",
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
+                                usuarios: usuarios,
+                                ruta: "evaluaciones"
+                            });
+                        } 
                     });
                 });
             });
@@ -394,10 +577,37 @@ module.exports = {
             respuesta.redirect("/sesion-expirada");
         }else{
             Puestos.findById({ "_id": solicitud.params.idpuesto }, function(error, puesto) {
-                respuesta.render("Evaluaciones/nuevo_objetivos", {
-                    user: solicitud.session.user,
-                    puesto: puesto,
-                    anio: solicitud.params.anio
+                Usuarios.find( function(error, usuarios){
+                    if(error){
+                        console.log(error);
+                    } else { 
+                        respuesta.render("Evaluaciones/nuevo_objetivos", {
+                            user: solicitud.session.user,
+                            puesto: puesto,
+                            anio: solicitud.params.anio,
+                            titulo: "Evaluaciones",
+                            criterios: [
+                                {
+                                    val: "",
+                                    name: ""
+                                }
+                            ],
+                            piscinas: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }
+                            ],
+                            charoleros: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }   
+                            ],
+                            usuarios: usuarios,
+                            ruta: "evaluaciones"
+                        });
+                    } 
                 });
             });
         };
@@ -455,9 +665,36 @@ module.exports = {
                         if(error){
                             console.log(error);
                         }else{
-                            respuesta.render("Evaluaciones/ver_objetivos", {
-                                user: solicitud.session.user,
-                                objetivos: objetivos
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render("Evaluaciones/ver_objetivos", {
+                                        user: solicitud.session.user,
+                                        objetivos: objetivos,
+                                        titulo: "Evaluaciones",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "evaluaciones"
+                                    });
+                                } 
                             });
                         };
                     });

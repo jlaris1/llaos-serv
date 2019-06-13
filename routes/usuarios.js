@@ -9,11 +9,31 @@ module.exports = {//HAcen falta try-catch a los metodos
 		}else{
             Usuarios.find( function(error, usuarios){
                 if(error){
-                    //
+                    console.log(error)
                 } else {
                     respuesta.render("Sistemas/Usuarios/Usuarios",{ 
                         user: solicitud.session.user,
-                        usuarios: usuarios
+                        usuarios: usuarios,
+                        titulo: "Usuarios",
+                        criterios: [
+                            {
+                                val: "",
+                                name: ""
+                            }
+                        ],
+                        piscinas: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }
+                        ],
+                        charoleros: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }   
+                        ],
+                        ruta: "usuarios"
                     });
                 }
             });
@@ -24,9 +44,36 @@ module.exports = {//HAcen falta try-catch a los metodos
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		}else{
-            respuesta.render("Sistemas/Usuarios/Usuario",{
-            user: solicitud.session.user
-        });
+            Usuarios.find( function(error, usuarios){
+                if(error){
+                    console.log(error)
+                } else {
+                    respuesta.render("Sistemas/Usuarios/Usuario",{
+                        user: solicitud.session.user,
+                        titulo: "Usuarios",
+                        criterios: [
+                            {
+                                val: "",
+                                name: ""
+                            }
+                        ],
+                        piscinas: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }
+                        ],
+                        charoleros: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }   
+                        ],
+                        ruta: "usuarios",
+                        usuarios: usuarios
+                    });
+                }
+            });
         };
     },
     // Mostrar edición de usuario
@@ -38,12 +85,39 @@ module.exports = {//HAcen falta try-catch a los metodos
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.render("Sistemas/Usuarios/editar",
-                        {
-                            user: solicitud.session.user,
-                            usr: usuario
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error)
+                        } else {
+                            respuesta.render("Sistemas/Usuarios/editar",
+                                {
+                                    user: solicitud.session.user,
+                                    usr: usuario,
+                                    titulo: "Usuarios",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    ruta: "usuarios",
+                                    usuarios: usuarios
+                                }
+                            );
                         }
-                    );
+                    });
                 }
             });
         };
@@ -87,7 +161,27 @@ module.exports = {//HAcen falta try-catch a los metodos
                             respuesta.render("Sistemas/Usuarios/usuarios",
                                 { 
                                     user: solicitud.session.user,
-                                    usuarios: usuarios
+                                    usuarios: usuarios,
+                                    titulo: "Usuarios",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    ruta: "usuarios"
                                 }
                             );
                         }
@@ -134,7 +228,27 @@ module.exports = {//HAcen falta try-catch a los metodos
                             respuesta.render("Sistemas/Usuarios/Usuarios",
                                 {
                                     user: solicitud.session.user,
-                                    usuarios: usuarios
+                                    usuarios: usuarios,
+                                    titulo: "Usuarios",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    ruta: "usuarios"
                                 }
                             );
                         }
@@ -159,7 +273,27 @@ module.exports = {//HAcen falta try-catch a los metodos
                             respuesta.render("Sistemas/Usuarios/Usuarios",
                                 {
                                     user: solicitud.session.user,
-                                    usuarios: usuarios
+                                    usuarios: usuarios,
+                                    titulo: "Usuarios",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    ruta: "usuarios"
                                 }
                             );
                         }

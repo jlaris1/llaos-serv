@@ -7,11 +7,38 @@ module.exports = {//HAcen falta try-catch a los metodos
         if(solicitud.session.user == 'undefined'){
             respuesta.redirect("/sesion-expirada");
         } else {
-            respuesta.render("Administracion/planta/tiposcamaron/nuevo",
-                {
-                    user: solicitud.session.user
+            Usuarios.find( function(error, usuarios){
+                if(error){
+                    console.log(error);
+                } else { 
+                    respuesta.render("Administracion/planta/tiposcamaron/nuevo",
+                        {
+                            user: solicitud.session.user,
+                            titulo: "Tipos Camarón",
+                            criterios: [
+                                {
+                                    val: "",
+                                    name: ""
+                                }
+                            ],
+                            piscinas: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }
+                            ],
+                            charoleros: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }   
+                            ],
+                            usuarios: usuarios,
+                            ruta: "tiposcamaron"
+                        }
+                    );
                 }
-            );
+            });
         }
     },
     guardar: function(solicitud, respuesta){
@@ -48,12 +75,39 @@ module.exports = {//HAcen falta try-catch a los metodos
                         if(error){
                             console.log(error);
                         } else {
-                            respuesta.render("Administracion/planta/tiposcamaron/tiposcamaron",
-                                {   
-                                    user: solicitud.session.user,
-                                    tiposCamaron: tiposCamaron
-                                } 
-                            );
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render("Administracion/planta/tiposcamaron/tiposcamaron",
+                                        {   
+                                            user: solicitud.session.user,
+                                            tiposCamaron: tiposCamaron,
+                                            titulo: "Tipos Camarón",
+                                            criterios: [
+                                                {
+                                                    val: "",
+                                                    name: ""
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
+                                            usuarios: usuarios,
+                                            ruta: "tiposcamaron"
+                                        } 
+                                    );
+                                }
+                            });
                         }
                     });
                 }
@@ -68,12 +122,39 @@ module.exports = {//HAcen falta try-catch a los metodos
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.render("Administracion/planta/tiposcamaron/editar",
-                        {
-                            user: solicitud.session.user,
-                            tipoCamaron: tipoCamaron
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else { 
+                            respuesta.render("Administracion/planta/tiposcamaron/editar",
+                                {
+                                    user: solicitud.session.user,
+                                    tipoCamaron: tipoCamaron,
+                                    titulo: "Tipos Camarón",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "tiposcamaron"
+                                }
+                            );
                         }
-                    );
+                    });
                 }
             });
         }
@@ -86,12 +167,39 @@ module.exports = {//HAcen falta try-catch a los metodos
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.render("Administracion/planta/tiposcamaron/editarInventario",
-                        {
-                            user: solicitud.session.user,
-                            tipoCamaron: tipoCamaron
-                        }
-                    );
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else { 
+                            respuesta.render("Administracion/planta/tiposcamaron/editarInventario",
+                                {
+                                    user: solicitud.session.user,
+                                    tipoCamaron: tipoCamaron,
+                                    titulo: "Tipos Camarón",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "tiposcamaron"
+                                }
+                            );
+                        }   
+                    });
                 }
             });
         }
@@ -104,12 +212,39 @@ module.exports = {//HAcen falta try-catch a los metodos
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.render("Administracion/planta/tiposcamaron/ver",
-                        {
-                            user: solicitud.session.user,
-                            tipoCamaron: tipoCamaron
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else { 
+                            respuesta.render("Administracion/planta/tiposcamaron/ver",
+                                {
+                                    user: solicitud.session.user,
+                                    tipoCamaron: tipoCamaron,
+                                    titulo: "Tipos Camarón",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "tiposcamaron"
+                                }
+                            );
                         }
-                    );
+                    });
                 }
             });
         }
@@ -126,12 +261,39 @@ module.exports = {//HAcen falta try-catch a los metodos
                         if(error){
                             console.log(error);
                         } else {
-                            respuesta.render("Administracion/planta/tiposcamaron/tiposcamaron",
-                                {   
-                                    user: solicitud.session.user,
-                                    tiposCamaron: tiposCamaron
-                                } 
-                            );
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render("Administracion/planta/tiposcamaron/tiposcamaron",
+                                        {   
+                                            user: solicitud.session.user,
+                                            tiposCamaron: tiposCamaron,
+                                            titulo: "Tipos Camarón",
+                                            criterios: [
+                                                {
+                                                    val: "",
+                                                    name: ""
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
+                                            usuarios: usuarios,
+                                            ruta: "tiposcamaron"
+                                        } 
+                                    );
+                                }
+                            });
                         }
                     });    
                 }
@@ -159,12 +321,39 @@ module.exports = {//HAcen falta try-catch a los metodos
                         if(error){
                             console.log(error);
                         } else {
-                            respuesta.render("Administracion/planta/tiposcamaron/tiposcamaron",
-                                {   
-                                    user: solicitud.session.user,
-                                    tiposCamaron: tiposCamaron
-                                } 
-                            );
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render("Administracion/planta/tiposcamaron/tiposcamaron",
+                                        {   
+                                            user: solicitud.session.user,
+                                            tiposCamaron: tiposCamaron,
+                                            titulo: "Tipos Camarón",
+                                            criterios: [
+                                                {
+                                                    val: "",
+                                                    name: ""
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
+                                            usuarios: usuarios,
+                                            ruta: "tiposcamaron"
+                                        } 
+                                    );
+                                }
+                            });
                         }
                     });
                 }
@@ -190,55 +379,7 @@ module.exports = {//HAcen falta try-catch a los metodos
                 if(error){
                     console.log(error);
                 } else {
-                    TiposCamaron.find( function(error, tiposCamaron){
-                        if(error){
-                            console.log(error);
-                        } else {
-                            TiposCamaron.find({"totalKgs": {$gte:1}}, function(error, tiposCamaron){
-                                if(error){
-                                    console.log(error);
-                                } else {
-                                    Usuarios.find( function(error, usuarios){
-                                        if(error){
-                                            console.log(error);
-                                        } else {
-                                            var tallas = [
-                                                { talla:  "16/20" },
-                                                { talla:  "20/30" },
-                                                { talla:  "21/25" },
-                                                { talla:  "26/30" },
-                                                { talla:  "31/35" },
-                                                { talla:  "36/40" },
-                                                { talla:  "40/50" },
-                                                { talla:  "41/50" },
-                                                { talla:  "51/60" },
-                                                { talla:  "61/70" },
-                                                { talla:  "71/90" },
-                                                { talla:  "91/110" },
-                                                { talla:  "Rezagas" }
-                                            ];
-                        
-                                            var presentaciones = [
-                                                { presentacion: "Frizado 20 kgs" },
-                                                { presentacion: "Top Open 40lbs" },
-                                                { presentacion: "IQF 10 x 4" }
-                                            ]
-                        
-                                            respuesta.render("Administracion/planta/inventariocamaron/inventarios",
-                                                {   
-                                                    user: solicitud.session.user,
-                                                    tiposCamaron: tiposCamaron,
-                                                    tallas:  JSON.stringify(tallas),
-                                                    presentaciones:  JSON.stringify(presentaciones),
-                                                    usuarios: usuarios
-                                                } 
-                                            );
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
+                    respuesta.redirect('/inventarioscamaron/all');
                 }
             });
         }
@@ -251,12 +392,37 @@ module.exports = {//HAcen falta try-catch a los metodos
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.render("Administracion/planta/tiposcamaron/tiposcamaron",
-                        {   
-                            user: solicitud.session.user,
-                            tiposCamaron: tiposCamaron
-                        } 
-                    );
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else { 
+                            respuesta.render("Administracion/planta/tiposcamaron/tiposcamaron",{   
+                                user: solicitud.session.user,
+                                tiposCamaron: tiposCamaron,
+                                titulo: "Tipos Camarón",
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
+                                usuarios: usuarios,
+                                ruta: "tiposcamaron"
+                            });
+                        }
+                    });
                 }
             });
         }

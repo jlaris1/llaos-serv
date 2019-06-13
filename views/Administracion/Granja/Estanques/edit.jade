@@ -1,7 +1,9 @@
 extends ../../../layouts/layout.jade
 block contenido
     style.
-        
+        .font {
+            font-family: 'Roboto', sans-serif;
+        }
     script.
         var locations = [];
         var pointers = [];
@@ -87,7 +89,7 @@ block contenido
             listCount += 1;
 
             $('#listPointer > li:last').append(
-                "<li id='list"+ listCount+"'>" + 
+                "<li class='font' id='list"+ listCount+"'>" + 
                     "<div class='col-lg-4'>" +
                         "<label>" +
                             "<i class='fas fa-map-marker-alt'> X </i>" +

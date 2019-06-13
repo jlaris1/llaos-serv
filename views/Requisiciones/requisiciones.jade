@@ -9,165 +9,12 @@ block contenido
             $('[data-toggle="tooltip"]').tooltip();
             $('#reqs').dataTable();
 
-            //alert($('#url').text());
-
             if($('#url').text() != ''){
                 url = '../../'+ $('#url').text();
                 window.open(url, 'Download');
                 $('#url').text('');
             }
-
-            $('#criterio').on('change', function(){
-                if (this.value == 'area'){
-                    $('#modulos').addClass('hidden');
-                    $('#estatus').addClass('hidden');
-                    $('#otros').addClass('hidden');
-                    $('#fechas').addClass('hidden');
-                    $('#areas').removeClass('hidden');
-                    $('#responsables').addClass('hidden');
-                    $('#solicitantes').addClass('hidden');
-                    $('#fechaInicio').addClass('hidden');
-                    $('#fechaFin').addClass('hidden');
-                    $('#estatus').attr('required', false);
-                    $('#modulo').attr('required', false);
-                    $('#otro').attr('required', false);
-                    $('#fecha').attr('required', false);
-                    $('#area').attr('required', true);
-                    $('#solicitante').attr('required', false);
-                    $('#responsable').attr('required', false);
-                    $('#fechaInicio').attr('required', false);
-                    $('#fechaFin').attr('required', false);
-                } else if (this.value == 'modulo'){
-                    $('#areas').addClass('hidden');
-                    $('#estatus').addClass('hidden');
-                    $('#otros').addClass('hidden');
-                    $('#fechas').addClass('hidden');
-                    $('#responsables').addClass('hidden');
-                    $('#solicitantes').addClass('hidden');
-                    $('#modulos').removeClass('hidden');
-                    $('#fechaInicio').addClass('hidden');
-                    $('#fechaFin').addClass('hidden');
-                    $('#estatus').attr('required', false);
-                    $('#modulo').attr('required', true);
-                    $('#otro').attr('required', false);
-                    $('#fecha').attr('required', false);
-                    $('#area').attr('required', false);
-                    $('#solicitante').attr('required', false);
-                    $('#responsable').attr('required', false);
-                    $('#fechaInicio').attr('required', false);
-                    $('#fechaFin').attr('required', false);
-                } else if (this.value == 'estatus'){
-                    $('#areas').addClass('hidden');
-                    $('#modulos').addClass('hidden');
-                    $('#otros').addClass('hidden');
-                    $('#fechas').addClass('hidden');
-                    $('#responsables').addClass('hidden');
-                    $('#solicitantes').addClass('hidden');
-                    $('#estatus').removeClass('hidden');
-                    $('#fechaInicio').addClass('hidden');
-                    $('#fechaFin').addClass('hidden');
-                    $('#estatus').attr('required', true);
-                    $('#modulo').attr('required', false);
-                    $('#otro').attr('required', false);
-                    $('#fecha').attr('required', false);
-                    $('#area').attr('required', false);
-                    $('#solicitante').attr('required', false);
-                    $('#responsable').attr('required', false);
-                    $('#fechaInicio').attr('required', false);
-                    $('#fechaFin').attr('required', false);
-                } else if (this.value == 'fecha'){
-                    $('#areas').addClass('hidden');
-                    $('#modulos').addClass('hidden');
-                    $('#otros').addClass('hidden');
-                    $('#estatus').addClass('hidden');
-                    $('#responsables').addClass('hidden');
-                    $('#solicitantes').addClass('hidden');
-                    $('#fechas').removeClass('hidden');
-                    $('#fechaInicio').addClass('hidden');
-                    $('#fechaFin').addClass('hidden');
-                    $('#estatus').attr('required', false);
-                    $('#modulo').attr('required', false);
-                    $('#otro').attr('required', false);
-                    $('#fecha').attr('required', true);
-                    $('#area').attr('required', false);
-                    $('#solicitante').attr('required', false);
-                    $('#responsable').attr('required', false);
-                    $('#fechaInicio').attr('required', false);
-                    $('#fechaFin').attr('required', false);
-                } else if (this.value == 'fechas'){                     // FECHAAAAASS!!!
-                    $('#areas').addClass('hidden');
-                    $('#modulos').addClass('hidden');
-                    $('#otros').addClass('hidden');
-                    $('#estatus').addClass('hidden');
-                    $('#responsables').addClass('hidden');
-                    $('#solicitantes').addClass('hidden');
-                    $('#fechas').addClass('hidden');
-                    $('#fechaInicio').removeClass('hidden');
-                    $('#fechaFin').removeClass('hidden');
-                    $('#estatus').attr('required', false);
-                    $('#modulo').attr('required', false);
-                    $('#otro').attr('required', false);
-                    $('#fecha').attr('required', false);
-                    $('#area').attr('required', false);
-                    $('#solicitante').attr('required', false);
-                    $('#responsable').attr('required', false);
-                } else if (this.value == 'responsable') {
-                    $('#areas').addClass('hidden');
-                    $('#modulos').addClass('hidden');
-                    $('#otros').addClass('hidden');
-                    $('#estatus').addClass('hidden');
-                    $('#fechas').addClass('hidden');
-                    $('#solicitantes').addClass('hidden');
-                    $('#responsables').removeClass('hidden');
-                    $('#fechaInicio').addClass('hidden');
-                    $('#fechaFin').addClass('hidden');
-                    $('#estatus').attr('required', false);
-                    $('#modulo').attr('required', false);
-                    $('#otro').attr('required', false);
-                    $('#fecha').attr('required', false);
-                    $('#area').attr('required', false);
-                    $('#solicitante').attr('required', false);
-                    $('#responsable').attr('required', true);
-                    $('#fechaInicio').attr('required', false);
-                    $('#fechaFin').attr('required', false);
-                }  else if (this.value == 'solicita') {
-                    $('#areas').addClass('hidden');
-                    $('#modulos').addClass('hidden');
-                    $('#otros').addClass('hidden');
-                    $('#estatus').addClass('hidden');
-                    $('#fechas').addClass('hidden');
-                    $('#responsables').addClass('hidden');
-                    $('#solicitantes').removeClass('hidden');
-                    $('#fechaInicio').addClass('hidden');
-                    $('#fechaFin').addClass('hidden');
-                    $('#estatus').attr('required', false);
-                    $('#modulo').attr('required', false);
-                    $('#otro').attr('required', false);
-                    $('#fecha').attr('required', false);
-                    $('#area').attr('required', false);
-                    $('#solicitante').attr('required', true);
-                    $('#responsable').attr('required', false);
-                    $('#fechaInicio').attr('required', false);
-                    $('#fechaFin').attr('required', false);
-                }
-
-                $('#btnGenerar').removeClass('hidden');
-            });
-
-            $('#fecha').datetimepicker(
-                {   
-                    format: 'dd-MM-yyyy',
-                    locale: 'es'
-                }
-            );
         })
-
-        function reportes(){
-            $('#headCriterios').removeClass('hidden');
-            $('#criterios').removeClass('hidden');
-            $('#dividerCriterios').removeClass('hidden');
-        }
-
     //Termina Javascript
     .row(style="margin-bottom: -5px;")
         .col-lg-6.col-md-6.col-sm-6.col-xs-12
@@ -179,7 +26,7 @@ block contenido
                 i.fas.fa-plus-circle
                 |   Nueva
             if user.permisos != "usuario"
-                a.btn.btn-special(href="javascript:reportes();", style="margin-right: 5px;")
+                a.btn.btn-special(href="#reports" data-toggle="modal" data-target="#reports" style="margin-right: 5px;")
                     i.fas.fa-file-pdf
                     |   Reportes
             a.btn.btn-special(href="/requisiciones/old")
@@ -189,127 +36,6 @@ block contenido
 
     label.hidden #{user.autorizador}            
     label#url.hidden #{url}
-    .row
-        form(role="form" method="post" action="/requisiciones/pdf/requisiciones")
-            .row#headCriterios.hidden(style="margin-top: -165px;")
-                .col-lg-12
-                    h4.page-header
-                        i.fas.fa-bars(style="margin-right: 10px;")
-                        | Criterios del Reporte
-            .row#criterios.hidden
-                .col-lg-3#criteriosValores
-                    .form-group
-                        label | Criterio
-                        .input-group
-                            span.input-group-addon
-                                i.fas.fa-search-plus
-                            select#criterio.form-control(name="criterio" tabindex="2" value="")
-                                option(value="") << Seleccione >>
-                                option(value="area") Área
-                                option(value="modulo") Módulo
-                                option(value="responsable") Responsable
-                                option(value="solicita") Solicita
-                                option(value="estatus") Estatus
-                                option(value="fecha") Fecha
-                                option(value="fechas") Fechas
-                .col-lg-4#areas.hidden
-                    .form-group
-                        label | Áreas
-                        .input-group
-                            span.input-group-addon
-                                i.fas.fa-map-signs
-                            select#area.form-control(name="area" tabindex="3" value="")
-                                option(value="") << Seleccione >>
-                                option(value="Administración - Granja") Administración - Granja
-                                    option(value="Intensivo") Intensivo
-                                    option(value="Semi-intensivo") Semi-intensivo
-                                    option(value="Laboratorio") Laboratorio
-                                    option(value="Probioticos") Probioticos
-                                    option(value="Taller Mecánico") Taller Mecánico
-                                    option(value="Taller Eléctrico") Taller Eléctrico 
-                                    option(value="Equipo Bombeo") Equipo Bombeo
-                                    option(value="Administración - Matriz") Administración - Matriz
-                                    option(value="Planta - Administración") Planta - Administración
-                                    option(value="Planta - Mantenimiento") Planta - Mantenimiento
-                                    option(value="Planta - Proceso") Planta - Proceso
-                .col-lg-4#modulos.hidden
-                    .form-group
-                        label | Modulo
-                        .input-group
-                            span.input-group-addon
-                                i.fas.fa-map-pin
-                            select#modulo.form-control(name="modulo" tabindex="3")
-                                option(value="") << Seleccione >>
-                                option(value="A") Modulo A
-                                option(value="B") Modulo B
-                                option(value="AC") Modulo A y Medio C
-                                option(value="BC") Modulo B y Medio C
-                                option(value="D") Modulo D
-                                option(value="E") Modulo E
-                                option(value="Reservorio") Reservorio
-                .col-lg-4#estatus.hidden
-                    .form-group
-                        label | Estatus
-                        .input-group
-                            span.input-group-addon
-                                i.fas.fa-stamp
-                            select#estatus.form-control(name="estatus" tabindex="3")
-                                option(value="") << Seleccione >>
-                                option(value="Autorizada") Autorizada
-                                option(value="Cancelada") Cancelada
-                                option(value="Compra parcial") Compra parcial
-                                option(value="Detenida") Detenida
-                                option(value="Cerrada") Cerrada
-                .col-lg-4#fechas.hidden
-                    .form-group
-                        label | Fecha 
-                        .input-group
-                            span.input-group-addon
-                                i.fas.fa-calendar
-                            input#fecha.form-control(type="date" name="fecha" tabindex="3")
-                .col-lg-3#fechaInicio.hidden
-                    .form-group
-                        label | Fecha Inicio
-                        .input-group
-                            span.input-group-addon
-                                i.fas.fa-calendar
-                            input#fecha.form-control(type="date" name="fechaInicio" tabindex="3")
-                .col-lg-3#fechaFin.hidden
-                    .form-group
-                        label | Fecha Fin
-                        .input-group
-                            span.input-group-addon
-                                i.fas.fa-calendar
-                            input#fecha.form-control(type="date" name="fechaFin" tabindex="4")
-                .col-lg-4#responsables.hidden
-                    .form-group
-                        label | Responsables
-                        .input-group
-                            span.input-group-addon
-                                i.fas.fa-users
-                            select#responsable.form-control(name="responsable" tabindex="2" value="")
-                                option(value="") << Seleccione >>
-                                each usr in usuarios
-                                    if usr.autorizador == true
-                                        option(value=usr.id) #{ usr.nombre }
-                .col-lg-4#solicitantes.hidden
-                    .form-group
-                        label | Solicitantes
-                        .input-group
-                            span.input-group-addon
-                                i.fas.fa-users
-                            select#solicitante.form-control(name="solicitante" tabindex="2" value="")
-                                option(value="") << Seleccione >>
-                                each usr in usuarios
-                                    option(value=usr.nombre) #{ usr.nombre }
-                .col-lg-2#btnGenerar.btn-group.pull-right.hidden(style="margin-top: 25px;")
-                    .form-group
-                        .input-group
-                            span.input-group-addon.text-danger
-                                i.fas.fa-file-pdf.text-danger
-                            input(type="submit" value="Generar").btn.btn-danger.form-control
-            .divider#dividerCriterios.hidden(style="margin-bottom: 20px;")
-        
     .row
         table#reqs.table.table-striped.table-hover
             thead
@@ -351,7 +77,16 @@ block contenido
                                 label.label.label-default  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{req.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             else if req.estatus == "Cerrada"
                                 label.label.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{req.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                        td #{ new Date(req.fecha).getDate()+ '/' + (new Date(req.fecha).getMonth()  + 1) + '/' + new Date(req.fecha).getFullYear()}
+                        if (new Date(req.fecha).getMonth() + 1) < 10
+                                if (new Date(req.fecha).getDate()) < 10
+                                    td.text-center #{ '0' + new Date(req.fecha).getDate()+ '/0' + (new Date(req.fecha).getMonth() + 1)+ '/' + new Date(req.fecha).getFullYear()}
+                                else         
+                                    td.text-center #{ new Date(req.fecha).getDate()+ '/0' + (new Date(req.fecha).getMonth() + 1)+ '/' + new Date(req.fecha).getFullYear()}
+                            else
+                                if (new Date(req.fecha).getDate()) < 10
+                                    td.text-center #{ '0' + new Date(req.fecha).getDate()+ '/' + (new Date(req.fecha).getMonth() + 1)+ '/' + new Date(req.fecha).getFullYear()}
+                                else 
+                                    td.text-center #{ new Date(req.fecha).getDate()+ '/' + (new Date(req.fecha).getMonth() + 1)+ '/' + new Date(req.fecha).getFullYear()}
                         td #{ req.hora }
                         td.text-center
                             a(href="/requisiciones/requisicion/ver/#{req.id}", data-toggle="tooltip", data-placement="top",title="Ver detalles", style="margin-right: 5px;")

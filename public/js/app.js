@@ -1,7 +1,3 @@
-/*$(function() {
-    //$('#side-menu').metisMenu();
-});*/
-
 //Loads the correct sidebar on window load,
 //collapses the sidebar on window resize.
 // Sets the min-height of #page-wrapper to window size
@@ -42,6 +38,344 @@ $(function() {
 });
 
 $(document).ready( function() {
+
+    /*** MANEJO DE REPORTES */
+        $('#criterio').on('change', function(){
+            if (this.value == 'area'){
+                $('#piscinas').addClass('hidden');
+                $('#areas').removeClass('hidden');
+                $('#estatus').addClass('hidden');
+                $('#otros').addClass('hidden');
+                $('#fechas').addClass('hidden');
+                $('#responsables').addClass('hidden');
+                $('#solicitantes').addClass('hidden');
+                $('#modulos').addClass('hidden');
+                $('#fechaInicio').addClass('hidden');
+                $('#fechaFin').addClass('hidden');
+                $('#inputs').addClass('hidden');
+                $('#combos').addClass('hidden');
+                $('#charolero').addClass('hidden');
+                $('#piscina').attr('required', false);
+                $('#estatus').attr('required', false);
+                $('#modulo').attr('required', false);
+                $('#otro').attr('required', false);
+                $('#fecha').attr('required', false);
+                $('#area').attr('required', true);
+                $('#charoleros').attr('required', false);
+                $('#solicitante').attr('required', false);
+                $('#responsable').attr('required', false);
+                $('#fInicio').attr('required', false);
+                $('#fFin').attr('required', false);
+                $('#input').attr('required', false);
+                $('#combo').attr('required', false);
+            } else if (this.value == 'modulo'){
+                $('#areas').addClass('hidden');
+                $('#estatus').addClass('hidden');
+                $('#otros').addClass('hidden');
+                $('#fechas').addClass('hidden');
+                $('#responsables').addClass('hidden');
+                $('#solicitantes').addClass('hidden');
+                $('#modulos').removeClass('hidden');
+                $('#fechaInicio').addClass('hidden');
+                $('#fechaFin').addClass('hidden');
+                $('#inputs').addClass('hidden');
+                $('#combos').addClass('hidden');
+                $('#piscinas').addClass('hidden');
+                $('#charoleros').addClass('hidden');
+                $('#charoleros').attr('required', false);
+                $('#piscinas').attr('required', false);
+                $('#estatus').attr('required', false);
+                $('#modulos').attr('required', true);
+                $('#otros').attr('required', false);
+                $('#fechas').attr('required', false);
+                $('#areas').attr('required', false);
+                $('#solicitantes').attr('required', false);
+                $('#responsables').attr('required', false);
+                $('#fechaInicio').attr('required', false);
+                $('#fechaFin').attr('required', false);
+                $('#inputs').attr('required', false);
+                $('#combos').attr('required', false);
+            } else if (this.value == 'estatus'){
+                $('#piscinas').addClass('hidden');
+                $('#areas').addClass('hidden');
+                $('#estatus').removeClass('hidden');
+                $('#otros').addClass('hidden');
+                $('#fechas').addClass('hidden');
+                $('#responsables').addClass('hidden');
+                $('#solicitantes').addClass('hidden');
+                $('#modulos').addClass('hidden');
+                $('#fechaInicio').addClass('hidden');
+                $('#fechaFin').addClass('hidden');
+                $('#inputs').addClass('hidden');
+                $('#combos').addClass('hidden');
+                $('#charoleros').addClass('hidden');
+                $('#piscinas').attr('required', false);
+                $('#estatus').attr('required', true);
+                $('#modulo').attr('required', false);
+                $('#otro').attr('required', false);
+                $('#fechas').attr('required', false);
+                $('#area').attr('required', false);
+                $('#charoleros').attr('required', false);
+                $('#solicitante').attr('required', false);
+                $('#responsable').attr('required', false);
+                $('#fechaInicio').attr('required', false);
+                $('#fechaFin').attr('required', false);
+                $('#input').attr('required', false);
+                $('#combo').attr('required', false);
+            } else if (this.value == 'fecha'){
+                $('#piscinas').addClass('hidden');
+                $('#areas').addClass('hidden');
+                $('#estatus').addClass('hidden');
+                $('#otros').addClass('hidden');
+                $('#fechas').removeClass('hidden');
+                $('#responsables').addClass('hidden');
+                $('#solicitantes').addClass('hidden');
+                $('#modulos').addClass('hidden');
+                $('#fechaInicio').addClass('hidden');
+                $('#fechaFin').addClass('hidden');
+                $('#inputs').addClass('hidden');
+                $('#combos').addClass('hidden');
+                $('#charoleros').addClass('hidden');
+                $('#piscinas').attr('required', false);
+                $('#estatus').attr('required', false);
+                $('#modulo').attr('required', false);
+                $('#otros').attr('required', false);
+                $('#fechas').attr('required', true);
+                $('#area').attr('required', false);
+                $('#charoleros').attr('required', false);
+                $('#solicitante').attr('required', false);
+                $('#responsable').attr('required', false);
+                $('#fechaInicio').attr('required', false);
+                $('#fechaFin').attr('required', false);
+                $('#input').attr('required', false);
+                $('#combo').attr('required', false);
+            } else if (this.value == 'fechas'){                     // FECHAAAAASS!!!
+                $('#piscinas').addClass('hidden');
+                $('#areas').addClass('hidden');
+                $('#estatus').addClass('hidden');
+                $('#otros').addClass('hidden');
+                $('#fechas').addClass('hidden');
+                $('#responsables').addClass('hidden');
+                $('#solicitantes').addClass('hidden');
+                $('#modulos').addClass('hidden');
+                $('#fechaInicio').removeClass('hidden');
+                $('#fechaFin').removeClass('hidden');
+                $('#inputs').addClass('hidden');
+                $('#combos').addClass('hidden');
+                $('#charoleros').addClass('hidden');
+                $('#piscinas').attr('required', false);
+                $('#estatus').attr('required', false);
+                $('#modulo').attr('required', false);
+                $('#otros').attr('required', false);
+                $('#fechas').attr('required', false);
+                $('#area').attr('required', false);
+                $('#charoleros').attr('required', false);
+                $('#solicitante').attr('required', false);
+                $('#responsable').attr('required', false);
+                $('#fechaInicio').attr('required', true);
+                $('#fechaFin').attr('required', true);
+                $('#input').attr('required', false);
+                $('#combo').attr('required', false);
+            } else if (this.value == 'responsable') {
+                $('#piscinas').addClass('hidden');
+                $('#areas').addClass('hidden');
+                $('#estatus').addClass('hidden');
+                $('#otros').addClass('hidden');
+                $('#fechas').addClass('hidden');
+                $('#responsables').removeClass('hidden');
+                $('#solicitantes').addClass('hidden');
+                $('#modulos').addClass('hidden');
+                $('#fechaInicio').addClass('hidden');
+                $('#fechaFin').addClass('hidden');
+                $('#inputs').addClass('hidden');
+                $('#combos').addClass('hidden');
+                $('#charoleros').addClass('hidden');
+                $('#piscinas').attr('required', false);
+                $('#estatus').attr('required', false);
+                $('#modulo').attr('required', false);
+                $('#otros').attr('required', false);
+                $('#fechas').attr('required', false);
+                $('#area').attr('required', false);
+                $('#charoleros').attr('required', false);
+                $('#solicitante').attr('required', false);
+                $('#responsable').attr('required', true);
+                $('#fechaInicio').attr('required', false);
+                $('#fechaFin').attr('required', false);
+                $('#input').attr('required', false);
+                $('#combo').attr('required', false);
+            } else if (this.value == 'solicita') {
+                $('#piscinas').addClass('hidden');
+                $('#areas').addClass('hidden');
+                $('#estatus').addClass('hidden');
+                $('#otros').addClass('hidden');
+                $('#fechas').addClass('hidden');
+                $('#responsables').addClass('hidden');
+                $('#solicitantes').removeClass('hidden');
+                $('#modulos').addClass('hidden');
+                $('#fechaInicio').addClass('hidden');
+                $('#fechaFin').addClass('hidden');
+                $('#inputs').addClass('hidden');
+                $('#combos').addClass('hidden');
+                $('#charoleros').addClass('hidden');
+                $('#piscinas').attr('required', false);
+                $('#estatus').attr('required', false);
+                $('#modulo').attr('required', false);
+                $('#otros').attr('required', false);
+                $('#fechas').attr('required', false);
+                $('#area').attr('required', false);
+                $('#charoleros').attr('required', false);
+                $('#solicitante').attr('required', true);
+                $('#responsable').attr('required', false);
+                $('#fechaInicio').attr('required', false);
+                $('#fechaFin').attr('required', false);
+                $('#input').attr('required', false);
+                $('#combo').attr('required', false);
+            } else if (this.value == 1 || this.value == 2 || this.value == 3 || this.value == 4 || this.value == 7 || this.value == 8 || this.value == 9 || this.value == 10){
+                $('#piscinas').addClass('hidden');
+                $('#areas').addClass('hidden');
+                $('#estatus').addClass('hidden');
+                $('#otros').addClass('hidden');
+                $('#fechas').addClass('hidden');
+                $('#responsables').addClass('hidden');
+                $('#solicitantes').addClass('hidden');
+                $('#modulos').addClass('hidden');
+                $('#fechaInicio').addClass('hidden');
+                $('#fechaFin').addClass('hidden');
+                $('#inputs').removeClass('hidden');
+                $('#combos').addClass('hidden');
+                $('#charoleros').addClass('hidden');
+                $('#piscinas').attr('required', false);
+                $('#estatus').attr('required', false);
+                $('#modulo').attr('required', false);
+                $('#otro').attr('required', false);
+                $('#fechas').attr('required', false);
+                $('#area').attr('required', false);
+                $('#charoleros').attr('required', false);
+                $('#solicitante').attr('required', false);
+                $('#responsable').attr('required', false);
+                $('#fechaInicio').attr('required', false);
+                $('#fechaFin').attr('required', false);
+                $('#input').attr('required', true);
+                $('#combo').attr('required', false);
+                $('#labelInputs').text("| " + $('#criterio option:selected').html());
+            } else if (this.value == 5 || this.value == 6){
+                $('#piscinas').addClass('hidden');
+                $('#areas').addClass('hidden');
+                $('#estatus').addClass('hidden');
+                $('#otros').addClass('hidden');
+                $('#fechas').addClass('hidden');
+                $('#responsables').addClass('hidden');
+                $('#solicitantes').addClass('hidden');
+                $('#modulos').addClass('hidden');
+                $('#fechaInicio').addClass('hidden');
+                $('#fechaFin').addClass('hidden');
+                $('#inputs').addClass('hidden');
+                $('#combos').removeClass('hidden');
+                $('#charoleros').addClass('hidden');
+                $('#piscinas').attr('required', false);
+                $('#estatus').attr('required', false);
+                $('#modulo').attr('required', false);
+                $('#otro').attr('required', false);
+                $('#fechas').attr('required', false);
+                $('#area').attr('required', false);
+                $('#charoleros').attr('required', false);
+                $('#solicitante').attr('required', false);
+                $('#responsable').attr('required', false);
+                $('#fechaInicio').attr('required', false);
+                $('#fechaFin').attr('required', false);
+                $('#input').attr('required', false);
+                $('#combos').attr('required', true);
+                $('#labelCombos').text("| " + $('#criterio option:selected').html());
+                $('#combo').empty();
+
+                if(this.value == 5){
+                    datosCombo($('#tallas').text());
+                } else {
+                    datosCombo($('#presentaciones').text());
+                }
+                
+            } else if (this.value == 11 ){
+                $('#inputs').addClass('hidden');
+                $('#fechas').removeClass('hidden');
+                $('#combos').addClass('hidden');
+                $('#modulo').addClass('hidden');
+                $('#areas').addClass('hidden');
+                $('#estatus').addClass('hidden');
+                $('#otros').addClass('hidden');
+                $('#responsables').addClass('hidden');
+                $('#solicitantes').addClass('hidden');
+                $('#fechaInicio').addClass('hidden');
+                $('#fechaFin').addClass('hidden');
+                $('#input').attr('required', false);
+                $('#fecha').attr('required', true);
+                $('#combo').attr('required', false);
+                $('#estatus').attr('required', false);
+                $('#modulo').attr('required', true);
+                $('#otro').attr('required', false);
+                $('#area').attr('required', false);
+                $('#solicitante').attr('required', false);
+                $('#responsable').attr('required', false);
+                $('#fechaInicio').attr('required', false);
+                $('#fechaFin').attr('required', false);
+            } else if (this.value == 'piscina'){
+                $('#piscinas').removeClass('hidden');
+                $('#areas').addClass('hidden');
+                $('#estatus').addClass('hidden');
+                $('#otros').addClass('hidden');
+                $('#fechas').addClass('hidden');
+                $('#responsables').addClass('hidden');
+                $('#solicitantes').addClass('hidden');
+                $('#modulos').addClass('hidden');
+                $('#fechaInicio').addClass('hidden');
+                $('#fechaFin').addClass('hidden');
+                $('#inputs').addClass('hidden');
+                $('#combos').addClass('hidden');
+                $('#charoleros').addClass('hidden');
+                $('#piscinas').attr('required', true);
+                $('#estatus').attr('required', false);
+                $('#modulo').attr('required', false);
+                $('#otro').attr('required', false);
+                $('#fecha').attr('required', false);
+                $('#area').attr('required', false);
+                $('#charoleros').attr('required', false);
+                $('#solicitante').attr('required', false);
+                $('#responsable').attr('required', false);
+                $('#fechaInicio').attr('required', false);
+                $('#fechaFin').attr('required', false);
+                $('#input').attr('required', false);
+                $('#combo').attr('required', false);
+            } else if (this.value == 'charolero'){
+                $('#charoleros').removeClass('hidden');
+                $('#areas').addClass('hidden');
+                $('#estatus').addClass('hidden');
+                $('#otros').addClass('hidden');
+                $('#fechas').addClass('hidden');
+                $('#responsables').addClass('hidden');
+                $('#solicitantes').addClass('hidden');
+                $('#modulos').addClass('hidden');
+                $('#fechaInicio').addClass('hidden');
+                $('#fechaFin').addClass('hidden');
+                $('#inputs').addClass('hidden');
+                $('#combos').addClass('hidden');
+                $('#piscinas').addClass('hidden');
+                $('#charoleros').attr('required', true);
+                $('#piscinas').attr('required', false);
+                $('#estatus').attr('required', false);
+                $('#modulo').attr('required', false);
+                $('#otro').attr('required', false);
+                $('#fecha').attr('required', false);
+                $('#area').attr('required', false);
+                $('#solicitante').attr('required', false);
+                $('#responsable').attr('required', false);
+                $('#fechaInicio').attr('required', false);
+                $('#fechaFin').attr('required', false);
+                $('#input').attr('required', false);
+                $('#combo').attr('required', false);
+
+            }
+        });
+    /********************** */
+
     $('#side-menu').click(function(e){
         var id = e.target.id;
     });
@@ -450,35 +784,31 @@ $(document).ready( function() {
             });
         
         // Laboratorio de larvas
-        $('#menuLaboratorioLarvas').click( function(){
-            if ($('#submenuLaboratorioLarvas').hasClass('hidden')) {
-                $('#submenuLaboratorioLarvas').removeClass('hidden');
-                $('#spanmenuLaboratorioLarvas').removeClass('fa-angle-left');
-                $('#spanmenuLaboratorioLarvas').addClass('fa-angle-down');
-            }else{
-                $('#submenuLaboratorioLarvas').addClass('hidden');
-                $('#spanmenuLaboratorioLarvas').removeClass('fa-angle-down');
-                $('#spanmenuLaboratorioLarvas').addClass('fa-angle-left');
-            }        
-        });
+            $('#menuLaboratorioLarvas').click( function(){
+                if ($('#submenuLaboratorioLarvas').hasClass('hidden')) {
+                    $('#submenuLaboratorioLarvas').removeClass('hidden');
+                    $('#spanmenuLaboratorioLarvas').removeClass('fa-angle-left');
+                    $('#spanmenuLaboratorioLarvas').addClass('fa-angle-down');
+                }else{
+                    $('#submenuLaboratorioLarvas').addClass('hidden');
+                    $('#spanmenuLaboratorioLarvas').removeClass('fa-angle-down');
+                    $('#spanmenuLaboratorioLarvas').addClass('fa-angle-left');
+                }        
+            });
 
         // Nutrición
-        $('#menuNutricion').click( function(){
-            if ($('#submenuNutricion').hasClass('hidden')) {
-                $('#submenuNutricion').removeClass('hidden');
-                $('#spanmenuNutricion').removeClass('fa-angle-left');
-                $('#spanmenuNutricion').addClass('fa-angle-down');
-            }else{
-                $('#submenuNutricion').addClass('hidden');
-                $('#spanmenuNutricion').removeClass('fa-angle-down');
-                $('#spanmenuNutricion').addClass('fa-angle-left');
-            }        
-        });
-           
-
-
+            $('#menuNutricion').click( function(){
+                if ($('#subMenuNutricion').hasClass('hidden')) {
+                    $('#subMenuNutricion').removeClass('hidden');
+                    $('#spanMenuNutricion').removeClass('fa-angle-left');
+                    $('#spanMenuNutricion').addClass('fa-angle-down');
+                }else{
+                    $('#subMenuNutricion').addClass('hidden');
+                    $('#spanMenuNutricion').removeClass('fa-angle-down');
+                    $('#spanMenuNutricion').addClass('fa-angle-left');
+                }        
+            });
 });
-
 
 function obtenerfecha(){
 	var fecha = new Date()
@@ -522,4 +852,40 @@ function obtenerhora(){
 
 	setTimeout('obtenerhora()',1000);
 	//console.log("un segundo mas...");
+}
+
+function reportePDF(){
+    var action = "/"+ $('#ruta').val() +"/report/pdf";
+
+    $('#frmReports').attr('action', action);
+    document.frmReports.submit();
+}
+
+function reporteXLS(){
+    var action = "/"+ $('#ruta').val() +"/report/xls";
+
+    $('#frmReports').attr('action', action);
+    document.frmReports.submit();
+}
+
+function datosCombo(lista){
+    var obj = new Object();
+    var arr = lista.split("},");
+
+    $("#combo").append(
+        new Option(
+            "<< Seleccione >>", 
+            "0"
+        )
+    );
+
+    for(var i = 0; i < arr.length; i ++){
+        var aObj = arr[i].replace(/"/g, '').replace(/}]/g,'');
+        $("#combo").append(
+            new Option(
+                aObj.split(",")[0].split(":")[1], 
+                aObj.split(",")[0].split(":")[1]
+            )
+        );
+    }
 }

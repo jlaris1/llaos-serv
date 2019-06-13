@@ -25,8 +25,17 @@ block contenido
             $('#charola_2').on('keyup', function(){ sumaCodigo() });
             $('#charola_3').on('keyup', function(){ sumaCodigo() });
             $('#charola_4').on('keyup', function(){ sumaCodigo() });
-            $('#charola_5').on('keyup', function(){ sumaCodigo() });
-            $('#charola_6').on('keyup', function(){ sumaCodigo() });
+
+            $('#porc_ajuste').on('keyup', function(){ 
+                var kg = parseFloat($('#kg_racion').val());
+                var kg_sig = kg * ( 1.0 + parseFloat(this.value / 100));
+
+                $('#seg_rac').val(parseFloat(kg_sig).toFixed(2));
+                $('#sig_racion').text(parseFloat(kg_sig).toFixed(2));
+            });
+
+
+
         });
 
         function obtenerfecha(){
@@ -78,8 +87,6 @@ block contenido
             var charola_2 = parseFloat($('#charola_2').val());
             var charola_3 = parseFloat($('#charola_3').val());
             var charola_4 = parseFloat($('#charola_4').val());
-            var charola_5 = parseFloat($('#charola_5').val());
-            var charola_6 = parseFloat($('#charola_6').val());
 
             var suma = 0.00;
             var codigo_racion = 0.00;
@@ -88,8 +95,6 @@ block contenido
             suma += charola_2;
             suma += charola_3;
             suma += charola_4;
-            suma += charola_5;
-            suma += charola_6;
 
             $('#suma').text(suma);
             $('#sum').val(suma);
@@ -168,7 +173,6 @@ block contenido
                     $('#cod_rad').val(3.00);
                     break;
             }   
-
         }
 
     .row(style="margin-bottom: -5px;")
@@ -214,6 +218,7 @@ block contenido
         input.hidden#est(required name="estanque")
         input.hidden#sum(required name="suma")
         input.hidden#cod_rad(required name="codigo_racion")
+        input.hidden#seg_rac(required name="siguiente_racion")
         .row
             .col-lg-12
                 .panel.panel-primary
@@ -238,12 +243,12 @@ block contenido
                                 input#charola_4.round.form-control(required type="text" name="charola_4" value="#{ nutricion.charola_4}" placeholder="Charola 4" tabindex="6")
                         .col-lg-2.col-md-2.col-sm-2.col-xs-12
                             .form-group
-                                label | Charola 5
-                                input#charola_5.round.form-control(required type="text" name="charola_5" value="#{ nutricion.charola_5}" placeholder="Charola 5" tabindex="7")
+                                label | Kg Ración
+                                input#kg_racion.round.form-control(required type="text" name="kg_racion" value="#{ nutricion.kg_racion}" placeholder="Charola 5" tabindex="7")
                         .col-lg-2.col-md-2.col-sm-2.col-xs-12
                             .form-group
-                                label | Charola 6
-                                input#charola_6.round.form-control(required type="text" name="charola_6" value="#{ nutricion.charola_6}" placeholder="Charola 6" tabindex="8")
+                                label | % Ajuste
+                                input#porc_ajuste.round.form-control(required type="text" name="porcent_ajuste" value="#{ nutricion.porcent_ajuste}" placeholder="Charola 6" tabindex="8")
                     .panel-footer.text-right
                         label 
                             | Suma: 
@@ -251,6 +256,9 @@ block contenido
                         label(style="margin-left: 15px;")
                             | Código Ración: 
                             b#racion #{ nutricion.codigo_racion }
+                        label(style="margin-left: 15px;")
+                            | Kg Siguiente Ración: 
+                            b#sig_racion #{ nutricion.siguiente_racion }
         .divider
         .row
             .col-lg-2.col-md-4.col-xs-6.pull-right

@@ -34,9 +34,36 @@ module.exports = {
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.render("Externos/Cotizaciones/cotizaciones",{
-                        user: solicitud.session.user,
-                        cotizaciones: cotizaciones
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else {
+                            respuesta.render("Externos/Cotizaciones/cotizaciones",{
+                                user: solicitud.session.user,
+                                cotizaciones: cotizaciones,
+                                titulo: "Cotizaciones",
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
+                                usuarios: usuarios,
+                                ruta: "cotizaciones"
+                            });
+                        }
                     });
                 };
             });
@@ -47,19 +74,46 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch
-            respuesta.render("Externos/Cotizaciones/cotizacion",{
-                user: solicitud.session.user,
-                articulos: {},
-                cotizacion: '',
-                subtotal: '',
-                iva: '',
-                total: '',
-                codigo_cot: '',
-                proveedor: '',
-                vigencia: '',
-                observaciones: '',
-                moneda: '',
-                tipoCambio: ''
+            Usuarios.find( function(error, usuarios){
+                if(error){
+                    console.log(error);
+                } else {
+                    respuesta.render("Externos/Cotizaciones/cotizacion",{
+                        user: solicitud.session.user,
+                        articulos: {},
+                        cotizacion: '',
+                        subtotal: '',
+                        iva: '',
+                        total: '',
+                        codigo_cot: '',
+                        proveedor: '',
+                        vigencia: '',
+                        observaciones: '',
+                        moneda: '',
+                        tipoCambio: '',
+                        titulo: "Cotizaciones",
+                        criterios: [
+                            {
+                                val: "",
+                                name: ""
+                            }
+                        ],
+                        piscinas: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }
+                        ],
+                        charoleros: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }   
+                        ],
+                        usuarios: usuarios,
+                        ruta: "cotizaciones"
+                    });
+                }
             });
         };
     },
@@ -112,21 +166,52 @@ module.exports = {
                                 console.log(error);
                             } else {
                                 ArticulosCotizaciones.find({"cotizacion": coti.id}, function(error, articulos){
-                                    respuesta.render("Externos/Cotizaciones/cotizacion",
-                                        {
-                                            user: solicitud.session.user,
-                                            articulos: articulos,
-                                            cotizacion: coti.id,
-                                            codigo_cot: coti.codigo,
-                                            subtotal: parseFloat(solicitud.body.precioUnitario * solicitud.body.cantidad).toFixed(2),
-                                            iva: parseFloat(solicitud.body.iva).toFixed(2),
-                                            total: parseFloat(solicitud.body.importe).toFixed(2),
-                                            proveedor: solicitud.body.proveedor,
-                                            vigencia: solicitud.body.vigencia,
-                                            observaciones: solicitud.body.observaciones
-                                        }
-                                    );
-                                })
+                                    if(erorr){
+                                        console.log(error);
+                                    } else {
+                                        Usuarios.find( function(error, usuarios){
+                                            if(error){
+                                                console.log(error);
+                                            } else {
+                                                respuesta.render("Externos/Cotizaciones/cotizacion",
+                                                    {
+                                                        user: solicitud.session.user,
+                                                        articulos: articulos,
+                                                        cotizacion: coti.id,
+                                                        codigo_cot: coti.codigo,
+                                                        subtotal: parseFloat(solicitud.body.precioUnitario * solicitud.body.cantidad).toFixed(2),
+                                                        iva: parseFloat(solicitud.body.iva).toFixed(2),
+                                                        total: parseFloat(solicitud.body.importe).toFixed(2),
+                                                        proveedor: solicitud.body.proveedor,
+                                                        vigencia: solicitud.body.vigencia,
+                                                        observaciones: solicitud.body.observaciones,
+                                                        titulo: "Cotizaciones",
+                                                        criterios: [
+                                                            {
+                                                                val: "",
+                                                                name: ""
+                                                            }
+                                                        ],
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ],
+                                                        usuarios: usuarios,
+                                                        ruta: "cotizaciones"
+                                                    }
+                                                );
+                                            }
+                                        });
+                                    }
+                                });
                             }
                         });
                     }
@@ -176,23 +261,49 @@ module.exports = {
                                         if(error){
                                             console.log(error);
                                         } else {
-                                            respuesta.render("Externos/Cotizaciones/cotizacion",
-                                                {
-                                                    user: solicitud.session.user,
-                                                    articulos: articulos,
-                                                    cotizacion: coti.id,
-                                                    codigo_cot: coti.codigo,
-                                                    subtotal: parseFloat(coti.subtotal).toFixed(2),
-                                                    iva: parseFloat(coti.iva).toFixed(2) ,
-                                                    total:parseFloat(coti.total).toFixed(2),
-                                                    proveedor: solicitud.body.proveedor,
-                                                    vigencia: solicitud.body.vigencia,
-                                                    observaciones: solicitud.body.observaciones
+                                            Usuarios.find( function(error, usuarios){
+                                                if(error){
+                                                    console.log(error);
+                                                } else {
+                                                    respuesta.render("Externos/Cotizaciones/cotizacion",
+                                                        {
+                                                            user: solicitud.session.user,
+                                                            articulos: articulos,
+                                                            cotizacion: coti.id,
+                                                            codigo_cot: coti.codigo,
+                                                            subtotal: parseFloat(coti.subtotal).toFixed(2),
+                                                            iva: parseFloat(coti.iva).toFixed(2) ,
+                                                            total:parseFloat(coti.total).toFixed(2),
+                                                            proveedor: solicitud.body.proveedor,
+                                                            vigencia: solicitud.body.vigencia,
+                                                            observaciones: solicitud.body.observaciones,
+                                                            titulo: "Cotizaciones",
+                                                            criterios: [
+                                                                {
+                                                                    val: "",
+                                                                    name: ""
+                                                                }
+                                                            ],
+                                                            piscinas: [
+                                                                {
+                                                                    id: 0,
+                                                                    nombre: ""
+                                                                }
+                                                            ],
+                                                            charoleros: [
+                                                                {
+                                                                    id: 0,
+                                                                    nombre: ""
+                                                                }   
+                                                            ],
+                                                            usuarios: usuarios,
+                                                            ruta: "cotizaciones"
+                                                        }
+                                                    );
                                                 }
-                                            );
+                                            });
                                         }
                                     });
-                                    
                                 }
                             });
                         })
@@ -395,20 +506,47 @@ module.exports = {
                                                     if(error){
                                                         console.log(error);
                                                     } else {
-                                                        respuesta.render("Externos/Cotizaciones/cotizacion",
-                                                            {
-                                                                user: solicitud.session.user,
-                                                                articulos: articulos,
-                                                                cotizacion: coti.id,
-                                                                codigo_cot: coti.codigo,
-                                                                subtotal: parseFloat(coti.subtotal).toFixed(2),
-                                                                iva: parseFloat(coti.iva).toFixed(2) ,
-                                                                total:parseFloat(coti.total).toFixed(2),
-                                                                proveedor: solicitud.body.proveedor,
-                                                                vigencia: solicitud.body.vigencia,
-                                                                observaciones: solicitud.body.observaciones
+                                                        Usuarios.find( function(error, usuarios){
+                                                            if(error){
+                                                                console.log(error);
+                                                            } else {
+                                                                respuesta.render("Externos/Cotizaciones/cotizacion",
+                                                                    {
+                                                                        user: solicitud.session.user,
+                                                                        articulos: articulos,
+                                                                        cotizacion: coti.id,
+                                                                        codigo_cot: coti.codigo,
+                                                                        subtotal: parseFloat(coti.subtotal).toFixed(2),
+                                                                        iva: parseFloat(coti.iva).toFixed(2) ,
+                                                                        total:parseFloat(coti.total).toFixed(2),
+                                                                        proveedor: solicitud.body.proveedor,
+                                                                        vigencia: solicitud.body.vigencia,
+                                                                        observaciones: solicitud.body.observaciones,
+                                                                        titulo: "Cotizaciones",
+                                                                        criterios: [
+                                                                            {
+                                                                                val: "",
+                                                                                name: ""
+                                                                            }
+                                                                        ],
+                                                                        piscinas: [
+                                                                            {
+                                                                                id: 0,
+                                                                                nombre: ""
+                                                                            }
+                                                                        ],
+                                                                        charoleros: [
+                                                                            {
+                                                                                id: 0,
+                                                                                nombre: ""
+                                                                            }   
+                                                                        ],
+                                                                        usuarios: usuarios,
+                                                                        ruta: "cotizaciones"
+                                                                    }
+                                                                );
                                                             }
-                                                        );
+                                                        });
                                                     }
                                                 });
                                             }
@@ -419,12 +557,39 @@ module.exports = {
                                             if(error){
                                                 console.log(error);
                                             } else {
-                                                respuesta.render("Externos/Cotizaciones/cotizaciones",
-                                                    {
-                                                        user: solicitud.session.user,
-                                                        cotizaciones: cotizaciones
+                                                Usuarios.find( function(error, usuarios){
+                                                    if(error){
+                                                        console.log(error);
+                                                    } else {
+                                                        respuesta.render("Externos/Cotizaciones/cotizaciones",
+                                                            {
+                                                                user: solicitud.session.user,
+                                                                cotizaciones: cotizaciones,
+                                                                titulo: "Cotizaciones",
+                                                                criterios: [
+                                                                    {
+                                                                        val: "",
+                                                                        name: ""
+                                                                    }
+                                                                ],
+                                                                piscinas: [
+                                                                    {
+                                                                        id: 0,
+                                                                        nombre: ""
+                                                                    }
+                                                                ],
+                                                                charoleros: [
+                                                                    {
+                                                                        id: 0,
+                                                                        nombre: ""
+                                                                    }   
+                                                                ],
+                                                                usuarios: usuarios,
+                                                                ruta: "cotizaciones"
+                                                            }
+                                                        );
                                                     }
-                                                );
+                                                });
                                             }
                                         });
                                     }
@@ -611,12 +776,39 @@ module.exports = {
                                     if(error){
                                         console.log(error);
                                     } else {
-                                        respuesta.render("Externos/Cotizaciones/cotizaciones",
-                                            {
-                                                user: solicitud.session.user,
-                                                cotizaciones: cotizaciones
-                                            }
-                                        );
+                                        Usuarios.find( function(error, usuarios){
+                                            if(error){
+                                                console.log(error);
+                                            } else {
+                                                respuesta.render("Externos/Cotizaciones/cotizaciones",
+                                                    {
+                                                        user: solicitud.session.user,
+                                                        cotizaciones: cotizaciones,
+                                                        titulo: "Cotizaciones",
+                                                        criterios: [
+                                                            {
+                                                                val: "",
+                                                                name: ""
+                                                            }
+                                                        ],
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ],
+                                                        usuarios: usuarios,
+                                                        ruta: "cotizaciones"
+                                                    }
+                                                );
+                                            }   
+                                        });
                                     }
                                 });
                             } else {
@@ -628,20 +820,35 @@ module.exports = {
                                             if(error){
                                                 console.log(error);
                                             } else {
-                                                respuesta.render("Externos/Cotizaciones/cotizacion",
-                                                    {
-                                                        user: solicitud.session.user,
-                                                        articulos: articulos,
-                                                        cotizacion: coti.id,
-                                                        codigo_cot: coti.codigo,
-                                                        subtotal: parseFloat(coti.subtotal).toFixed(2),
-                                                        iva: parseFloat(coti.iva).toFixed(2) ,
-                                                        total:parseFloat(coti.total).toFixed(2),
-                                                        proveedor: solicitud.body.proveedor,
-                                                        vigencia: solicitud.body.vigencia,
-                                                        observaciones: solicitud.body.observaciones
+                                                Usuarios.find( function(error, usuarios){
+                                                    if(error){
+                                                        console.log(error);
+                                                    } else {
+                                                        respuesta.render("Externos/Cotizaciones/cotizacion",
+                                                            {
+                                                                user: solicitud.session.user,
+                                                                articulos: articulos,
+                                                                cotizacion: coti.id,
+                                                                codigo_cot: coti.codigo,
+                                                                subtotal: parseFloat(coti.subtotal).toFixed(2),
+                                                                iva: parseFloat(coti.iva).toFixed(2) ,
+                                                                total:parseFloat(coti.total).toFixed(2),
+                                                                proveedor: solicitud.body.proveedor,
+                                                                vigencia: solicitud.body.vigencia,
+                                                                observaciones: solicitud.body.observaciones,
+                                                                titulo: "Cotizaciones",
+                                                                criterios: [
+                                                                    {
+                                                                        val: "",
+                                                                        name: ""
+                                                                    },
+                                                                ],
+                                                                usuarios: usuarios,
+                                                                ruta: "cotizaciones"
+                                                            }
+                                                        );
                                                     }
-                                                );
+                                                });
                                             }
                                         });
                                     }
@@ -749,23 +956,64 @@ module.exports = {
                                             if(error){
                                                 console.log(error);
                                             } else {
-                                                
-                                                respuesta.render("Externos/Cotizaciones/cotizaciones",
-                                                    {
-                                                        user: solicitud.session.user,
-                                                        cotizaciones: cotizaciones
+                                                Usuarios.find( function(error, usuarios){
+                                                    if(error){
+                                                        console.log(error);
+                                                    } else {
+                                                        respuesta.render("Externos/Cotizaciones/cotizaciones",
+                                                            {
+                                                                user: solicitud.session.user,
+                                                                cotizaciones: cotizaciones,
+                                                                titulo: "Cotizaciones",
+                                                                criterios: [
+                                                                    {
+                                                                        val: "",
+                                                                        name: ""
+                                                                    }
+                                                                ],
+                                                                piscinas: [
+                                                                    {
+                                                                        id: 0,
+                                                                        nombre: ""
+                                                                    }
+                                                                ],
+                                                                charoleros: [
+                                                                    {
+                                                                        id: 0,
+                                                                        nombre: ""
+                                                                    }   
+                                                                ],
+                                                                usuarios: usuarios,
+                                                                ruta: "cotizaciones"
+                                                            }
+                                                        );
                                                     }
-                                                );
+                                                });
                                             }
                                         });
                                     }
                                 });										
                             } else {
-                                respuesta.render("Externos/Cotizaciones/error_proveedor",
-                                    {
-                                        user: solicitud.session.user
+                                Usuarios.find( function(error, usuarios){
+                                    if(error){
+                                        console.log(error);
+                                    } else {
+                                        respuesta.render("Externos/Cotizaciones/error_proveedor",
+                                            {
+                                                user: solicitud.session.user,
+                                                titulo: "Cotizaciones",
+                                                criterios: [
+                                                    {
+                                                        val: "",
+                                                        name: ""
+                                                    },
+                                                ],
+                                                usuarios: usuarios,
+                                                ruta: "cotizaciones"
+                                            }
+                                        );
                                     }
-                                );
+                                });
                             }
                         }
                     });
@@ -814,18 +1062,45 @@ module.exports = {
                                                 if(error){
                                                     console.log(error);
                                                 } else {
-                                                    respuesta.render("Externos/Cotizaciones/cotizacion",
-                                                        {
-                                                            user: solicitud.session.user,
-                                                            articulos: articulos,
-                                                            cotizacion: coti.id,
-                                                            codigo_cot: coti.codigo,
-                                                            subtotal: parseFloat(coti.subtotal).toFixed(2),
-                                                            iva: parseFloat(coti.iva).toFixed(2) ,
-                                                            total:parseFloat(coti.total).toFixed(2),
-                                                            proveedor: solicitud.body.proveedor
+                                                    Usuarios.find( function(error, usuarios){
+                                                        if(error){
+                                                            console.log(error);
+                                                        } else {
+                                                            respuesta.render("Externos/Cotizaciones/cotizacion",
+                                                                {
+                                                                    user: solicitud.session.user,
+                                                                    articulos: articulos,
+                                                                    cotizacion: coti.id,
+                                                                    codigo_cot: coti.codigo,
+                                                                    subtotal: parseFloat(coti.subtotal).toFixed(2),
+                                                                    iva: parseFloat(coti.iva).toFixed(2) ,
+                                                                    total:parseFloat(coti.total).toFixed(2),
+                                                                    proveedor: solicitud.body.proveedor,
+                                                                    titulo: "Cotizaciones",
+                                                                    criterios: [
+                                                                        {
+                                                                            val: "",
+                                                                            name: ""
+                                                                        }
+                                                                    ],
+                                                                    piscinas: [
+                                                                        {
+                                                                            id: 0,
+                                                                            nombre: ""
+                                                                        }
+                                                                    ],
+                                                                    charoleros: [
+                                                                        {
+                                                                            id: 0,
+                                                                            nombre: ""
+                                                                        }   
+                                                                    ],
+                                                                    usuarios: usuarios,
+                                                                    ruta: "cotizaciones"
+                                                                }
+                                                            );
                                                         }
-                                                    );
+                                                    });
                                                 }
                                             });
                                             
@@ -852,12 +1127,39 @@ module.exports = {
                         if(error){
                             console.log(error);
                         } else {
-                            respuesta.render("Externos/Cotizaciones/cotizaciones",
-                                {
-                                    user: solicitud.session.user,
-                                    cotizaciones: cotizaciones
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    respuesta.render("Externos/Cotizaciones/cotizaciones",
+                                        {
+                                            user: solicitud.session.user,
+                                            cotizaciones: cotizaciones,
+                                            titulo: "Cotizaciones",
+                                            criterios: [
+                                                {
+                                                    val: "",
+                                                    name: ""
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
+                                            usuarios: usuarios,
+                                            ruta: "cotizaciones"
+                                        }
+                                    );
                                 }
-                            );
+                            });
                         }
                     });
                 }
@@ -881,12 +1183,39 @@ module.exports = {
                         if(error){
                             console.log(error);
                         } else {
-                            respuesta.render("Externos/Cotizaciones/cotizaciones",
-                                {
-                                    user: solicitud.session.user,
-                                    cotizaciones: cotizaciones
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    respuesta.render("Externos/Cotizaciones/cotizaciones",
+                                        {
+                                            user: solicitud.session.user,
+                                            cotizaciones: cotizaciones,
+                                            titulo: "Cotizaciones",
+                                            criterios: [
+                                                {
+                                                    val: "",
+                                                    name: ""
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
+                                            usuarios: usuarios,
+                                            ruta: "cotizaciones"
+                                        }
+                                    );
                                 }
-                            );
+                            });
                         }
                     });
                 }
@@ -910,12 +1239,39 @@ module.exports = {
                         if(error){
                             console.log(error);
                         } else {
-                            respuesta.render("Externos/Cotizaciones/cotizaciones",
-                                {
-                                    user: solicitud.session.user,
-                                    cotizaciones: cotizaciones
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    respuesta.render("Externos/Cotizaciones/cotizaciones",
+                                        {
+                                            user: solicitud.session.user,
+                                            cotizaciones: cotizaciones,
+                                            titulo: "Cotizaciones",
+                                            criterios: [
+                                                {
+                                                    val: "",
+                                                    name: ""
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
+                                            usuarios: usuarios,
+                                            ruta: "cotizaciones"
+                                        }
+                                    );
                                 }
-                            );
+                            });
                         }
                     });
                 }
@@ -931,12 +1287,39 @@ module.exports = {
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.render("Externos/Cotizaciones/cotizaciones",
-                        {
-                            user: solicitud.session.user,
-                            cotizaciones: cotizaciones
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(error);
+                        } else {
+                            respuesta.render("Externos/Cotizaciones/cotizaciones",
+                                {
+                                    user: solicitud.session.user,
+                                    cotizaciones: cotizaciones,
+                                    titulo: "Cotizaciones",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "cotizaciones"
+                                }
+                            );
                         }
-                    );
+                    });
                 }
             });
         }

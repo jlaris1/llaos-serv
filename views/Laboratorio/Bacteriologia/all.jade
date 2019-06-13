@@ -69,7 +69,7 @@ block contenido
                 i.fas.fa-plus-circle
                 |   Nuevo
             if user.permisos != "usuario"
-                a.btn.btn-special(href="#")
+                a.btn.btn-special(href="#reports" data-toggle="modal" data-target="#reports")
                     i.fas.fa-file-pdf
                     |   Reportes
     .divider
@@ -91,12 +91,18 @@ block contenido
                     each med in mediciones
                         tr
                             td #{ med.estanque.codigo }
-                            td.text-center #{ new Date(med.fecha).getDate()+ '/' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
+                            if (new Date(med.fecha).getMonth() + 1) < 10
+                                td.text-center #{ new Date(med.fecha).getDate()+ '/0' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
+                            else
+                                td.text-center #{ new Date(med.fecha).getDate()+ '/' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
                             td #{ med.agua_ca }
                             td #{ med.agua_cv }
                             td #{ med.mac_larva_ca }
                             td #{ med.mac_larva_cv }
                             td #{ med.hepato_ca }
                             td #{ med.hepato_cv }
-                            td #{ new Date(med.fecha_siembra).getDate()+ '/' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha_siembra).getFullYear()}
+                            if (new Date(med.fecha_siembra).getMonth() + 1) < 10
+                                td.text-center #{ new Date(med.fecha_siembra).getDate()+ '/0' + (new Date(med.fecha_siembra).getMonth() + 1)+ '/' + new Date(med.fecha_siembra).getFullYear()}
+                            else
+                                td.text-center #{ new Date(med.fecha_siembra).getDate()+ '/' + (new Date(med.fecha_siembra).getMonth() + 1)+ '/' + new Date(med.fecha_siembra).getFullYear()}
                             td #{ med.lab_origen.nombre }
