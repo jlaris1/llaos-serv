@@ -138,28 +138,47 @@ module.exports = {
                 if(error){
                     console.log(chalk.bgRed(error));
                 } else {
-                    respuesta.render('Parametros/new', {
-                        user: solicitud.session.user,
-                        modulos: modulos,
-                        modulo: '',
-                        estanques: {},
-                        parametro: {
-                            oxigeno: 0,
-                            ph: 0,
-                            salinidad: 0,
-                            temperatura: 0,
-                            nivel_agua: 0,
-                        },
-                        siguiente_estanque: {
-                            id: 0
-                        },
-                        titulo: "",
-                        criterios: [
-                            {
-                                val: "",
-                                name: ""
-                            },
-                        ],
+                    Usuarios.find( function(error, usuarios){
+                        if(error){
+                            console.log(chalk.bgRed(error));
+                        } else { 
+                            respuesta.render('Parametros/new', {
+                                user: solicitud.session.user,
+                                modulos: modulos,
+                                usuarios: usuarios,
+                                modulo: '',
+                                estanques: {},
+                                parametro: {
+                                    oxigeno: 0,
+                                    ph: 0,
+                                    salinidad: 0,
+                                    temperatura: 0,
+                                    nivel_agua: 0,
+                                },
+                                siguiente_estanque: {
+                                    id: 0
+                                },
+                                titulo: "",
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    },
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
+                            });
+                        }
                     });
                 }
             });
