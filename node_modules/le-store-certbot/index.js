@@ -8,6 +8,9 @@ try {
   PromiseA = Promise;
 }
 var util = require('util');
+if (!util.promisify) {
+  util.promisify = PromiseA.promisify;
+}
 function promisifyAll(obj) {
   var aobj = {};
   Object.keys(obj).forEach(function (key) {
@@ -15,7 +18,7 @@ function promisifyAll(obj) {
   });
   return aobj;
 }
-var mkdirpAsync = util.promisify(require('mkdirp'));
+var mkdirpAsync = util.promisify(require('@root/mkdirp'));
 var path = require('path');
 var fs = require('fs');
 var readFileAsync = util.promisify(fs.readFile);
