@@ -32,7 +32,10 @@ require('mongoose-double')(mongoose);
 // Eliminar mensaje deprecation warning
 mongoose.Promise = global.Promise;
 
-const dbConCloud = "mongodb://llaos-bd:%40Llaos2019@llaos-serv-shard-00-00-y0xgc.gcp.mongodb.net:27017,llaos-serv-shard-00-01-y0xgc.gcp.mongodb.net:27017,llaos-serv-shard-00-02-y0xgc.gcp.mongodb.net:27017/llaosserv?ssl=true&replicaSet=llaos-serv-shard-0&authSource=admin&retryWrites=true"
+llaos-serv-shard-00-00-y0xgc.gcp.mongodb.net
+
+//const dbConCloud = "mongodb://llaos-bd:%40Llaos2019@llaos-serv-shard-00-00-y0xgc.gcp.mongodb.net:27017,llaos-serv-shard-00-01-y0xgc.gcp.mongodb.net:27017,llaos-serv-shard-00-02-y0xgc.gcp.mongodb.net:27017/llaosserv?ssl=true&replicaSet=llaos-serv-shard-0&authSource=admin&retryWrites=true"
+const dbConCloud = "mongodb://llaos-bd:%40Llaos2019@llaos-serv-shard-00-01-y0xgc.gcp.mongodb.net:27017,llaos-serv-shard-00-02-y0xgc.gcp.mongodb.net:27017/llaosserv?ssl=true&replicaSet=llaos-serv-shard-0&authSource=admin&retryWrites=true"
 const dbConLocal = "mongodb://localhost:27017/llaosserv";
 
 mongoose.connect(dbConCloud,  { useNewUrlParser: true });
