@@ -25,7 +25,7 @@ https.createServer({
     passphrase: 'llaos2019'
 }, app).listen(portHttps);
 
-http.createServer(app).listen(portHttps);
+//http.createServer(app).listen(portHttps);
 	
 require('mongoose-double')(mongoose);
 
