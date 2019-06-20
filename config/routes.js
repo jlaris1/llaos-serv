@@ -381,7 +381,7 @@ module.exports = function(app){
     parametrosRouter.post('/find', parametros.find);
     parametrosRouter.post('/next', parametros.next);
     parametrosRouter.post('/report/pdf', parametros.pdf);
-    //parametrosRouter.post('/report/xls', fitoplancton.xls);
+    parametrosRouter.post('/report/xls', parametros.xls);
     
     // Laboratorios
     app.use('/laboratoriolarvas', laboratoriosRouter);

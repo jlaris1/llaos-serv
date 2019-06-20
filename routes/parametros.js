@@ -585,8 +585,6 @@ module.exports = {
             var modulo = '';
 
             if (column == 'piscina'){               
-                xls_name = 'reporte_parametros_piscina_' + solicitud.body.piscina + '.pdf';
-
                 Parametros.find({"estanque": solicitud.body.piscina}, function(error, parametros){
                     if(error){
                         console.log(chalk.bgRed(error));
@@ -602,15 +600,14 @@ module.exports = {
                                         Usuarios.populate(parametros, { path: 'parametrista'}, function(error, parametros){
                                             if(error){
                                                 console.log(chalk.bgRed(error));
-                                            } else {                                      
-                                                console.log(chalk.bgGreen(parametros));
-                                                
+                                            } else {                                                                                      
                                                 parametros.forEach( function(p){
                                                     search = p.estanque.nombre;
                                                     modulo = p.estanque.modulo.codigo;
                                                 });
                                                 
-                                                title =  'Modulo: ' + modulo + '  Piscina: ' + search;         
+                                                title =  'Modulo: ' + modulo + '  Piscina: ' + search;    
+                                                xls_name = 'reporte_parametros_piscina_' + search + '.xlsx';     
                                                 generateXLS(parametros, title, xls_name);
                                             }
                                         });
@@ -638,7 +635,7 @@ module.exports = {
                                         });
   
                                         title = 'Parametrista: ' + search;
-                                        xls_name = 'reporte_parametros_parametrista_' + search + '.pdf';
+                                        xls_name = 'reporte_parametros_parametrista_' + search + '.xlsx';
                                         generateXLS(parametros, title, xls_name)
                                     }
                                 });
@@ -654,7 +651,7 @@ module.exports = {
                 f = new Date(fecha);
 
                 search = solicitud.body.fecha;
-                xls_name = 'reporte_parametros_fecha_' + solicitud.body.fecha + '.pdf';
+                xls_name = 'reporte_parametros_fecha_' + solicitud.body.fecha + '.xlsx';
             
                 Parametros.find( { fecha : { $eq: f }}, function(error, parametros){
                     if(error){
@@ -689,7 +686,7 @@ module.exports = {
                 fF = new Date(fechaFin).toISOString()
 
                 search = fechaInicio.replace(new RegExp('-','g'),'/') + '-' + fechaFin.replace(new RegExp('-','g'),'/');
-                xls_name = 'reporte_parametros_fechas_' + solicitud.body.fechaInicio + '-' + solicitud.body.fechaFin +'.pdf';
+                xls_name = 'reporte_parametros_fechas_' + solicitud.body.fechaInicio + '-' + solicitud.body.fechaFin + '.xlsx';
 
                 Parametros.find({
                     fecha: {
@@ -918,45 +915,108 @@ function generatePDF(data, title, pdf_name){
 }
 
 function generateXLS(data, title, xls_name){
+    var prom_ox = 0;
+    var prom_ph = 0;
+    var prom_sal = 0;
+    var prom_tem = 0;
+    var prom_niv = 0;
 
     var options = {
-        filename:  file_path + '/' + xls_name + '.xlsx' ,
+        filename:  file_path + '/' + xls_name ,
         useStyles: true,
         useSharedStrings: true
     };
 
-    var wb = new new Excel.stream.xlsx.WorkbookWriter(options);
+    var wb = new Excel.stream.xlsx.WorkbookWriter(options);
 
     wb.creator = 'Llaos Web 2.0';
     wb.created = new Date();
 
-    worksheet.columns = [
-        { header: 'Código', key: 'code', width: 45 },
-        { header: 'Oxigeno', key: 'oxigeno', width: 70 },
-        { header: 'pH', key: 'ph', width: 70 },
-        { header: 'Salinidad', key: 'salinidad', width: 70 },
-        { header: 'Temperatura', key: 'temperatura', width: 70 },
-        { header: 'Nivel Agua', key: 'nivel_agua', width: 70 },
-        { header: 'Parametrista', key: 'parametrista', width: 300 },
-        { header: 'Fecha', key: 'fecha', width: 70, style: { numFmt: 'dd/mm/yyyy' } },
-        { header: 'Hora', key: 'hora', width: 70 }
+    var ws = wb.addWorksheet('Reporte');
 
+    ws.mergeCells('A1:I1');
+    ws.getCell('D1').value = title;
+    ws.getCell('D1').font = {
+        name: "Roboto", 
+        size: 12,  
+        //bold: true,
+        //horizontal: 'center'
+    };   
+
+    // Agregar imagen
+    /*var imageId1 = ws.addImage({
+        filename: './public/imgs/logo llaos.jpg',
+        extension: 'jpg',
+    }); 
+
+    wb.addImage( imageId1, {
+        tl: { col: 0, row: 1 },
+        ext: { width: 200, height: 120 }
+    });*/
+
+    ws.getRow(9).values = ['Código', 'Oxigeno', 'pH', 'Salinidad', 'Temperatura', 'Nivel Agua', 'Parametrista', 'Fecha', 'Hora'];
+    ws.getRow(9).fill = {
+        type: 'pattern',
+        pattern:'solid',
+        fgColor:{ argb:'f4f4f4' },
+        bgColor:{ argb:'000000' }
+    };
+
+    ws.getRow(9).eachCell( (cell) => {
+        cell.font = { name: "Roboto", size: 12 };
+        cell.alignment = { horizontal: 'center' };
+    });
+
+    ws.columns = [
+        {  key: 'code', width: 12},
+        {  key: 'oxigeno', width: 10, style: { numFmt: '#,##'}},
+        {  key: 'ph', width: 10, style: { numFmt: '#,##'}},
+        {  key: 'salinidad', width: 10, style: { numFmt: '#,##'}},
+        {  key: 'temperatura', width: 12, style: { numFmt: '#,##'}},
+        {  key: 'nivel_agua', width: 10, style: { numFmt: '#,##'}},
+        {  key: 'parametrista', width: 25},
+        {  key: 'fecha', width: 12 , style: { numFmt: 'dd/mm/yyyy' } },
+        {  key: 'hora', width: 15}
     ];
 
     data.forEach( function(d){
-        worksheet.addRow(
+        prom_ox += parseFloat(d.oxigeno);
+        prom_ph += parseFloat(d.ph);
+        prom_sal += parseFloat(d.salinidad);
+        prom_tem += parseFloat(d.temperatura);
+        prom_niv += parseFloat(d.nivel_agua);
+
+        ws.addRow(
             {   code: d.estanque.codigo, 
                 oxigeno: d.oxigeno, 
                 ph: d.ph,  
                 salinidad: d.salinidad, 
                 temperatura: d.temperatura, 
                 nivel_agua: d.nivel_agua, 
-                parametrista: d.parametrista.nomre, 
+                parametrista: d.parametrista.nombre, 
                 fecha: d.fecha, 
                 hora: d.hora }
         );
     });
 
-    stream.pipe(wb.xlsx.createInputStream());
+    // Promedios
+    ws.addRow(
+        {   code: 'Promedios: ', 
+            oxigeno: (prom_ox / data.length).toFixed(2), 
+            ph: (prom_ph / data.length).toFixed(2),  
+            salinidad: (prom_sal / data.length).toFixed(2), 
+            temperatura: (prom_tem / data.length).toFixed(2), 
+            nivel_agua: (prom_niv / data.length).toFixed(2), 
+            parametrista: '', 
+            fecha: '', 
+            hora: '' }
+    );
+
+    wb.commit().then( function(){
+        console.log("XLS terminado.")
+        return xls_name;
+    });
+
+    ///wb.pipe(wb.xlsx.createInputStream());
 
 }
