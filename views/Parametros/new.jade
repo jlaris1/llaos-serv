@@ -35,8 +35,9 @@ block contenido
                         $("#sig_est").val(select.options[i+1].value);
                     }
                 }
-
             });
+
+            $('#fechaI').on('change', function(){ $('#fec').val(this.value); });
         });
 
         function obtenerfecha(){
@@ -105,7 +106,7 @@ block contenido
     .divider
     .row
         form(role="form" name="frm2" method="post" action="/parametros/find")
-            .col-lg-3
+            .col-lg-4
                 .form-group
                     label | Modulo
                     .input-group
@@ -115,7 +116,7 @@ block contenido
                             option(value="") << Seleccione >>
                             each mod in modulos
                                 option(value="#{mod.id}", selected=(mod.id == modulo)) #{ mod.nombre}
-            .col-lg-3
+            .col-lg-4
                 .form-group
                     label | Estanque
                     .input-group
@@ -125,8 +126,16 @@ block contenido
                             option(value="") << Seleccione >>
                             each est in estanques
                                 option(value="#{est.id}", selected=(est.id == estanque.id)) #{ est.codigo}
+            .col-lg-4
+                .form-group
+                    label | Fecha
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar-alt
+                        input#fechaI.form-control(type="date" name="fecha" tabindex="3")
     form#frm(role="form" method="post" action="/parametros/add")
         input.hidden(name="modu" value="#{modulo}")
+        input.hidden#fec(required type="date" name="fecha")
         input#est.hidden(required name="estanque" value="#{estanque}")
         .row
             .col-lg-12

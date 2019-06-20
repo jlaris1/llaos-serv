@@ -39,7 +39,8 @@ block contenido
             $('#subMenuOrdenes').removeClass('hidden');
             $('#spanMenuOrdenes').removeClass('fa-angle-left');
             $('#spanMenuOrdenes').addClass('fa-angle-down');       
-            
+            $('#arts').dataTable();
+
             obtenerfecha();
             obtenerhora();
             $('[data-toggle="tooltip"]').tooltip();
@@ -151,13 +152,12 @@ block contenido
                     span.input-group-addon
                         i.fas.fa-user
                     input.form-control(readonly type="text" value="#{oRuta.chofer}")
-    if Object.keys(articulosRuta).length > 0
         .row
             .col-lg-12
                 h4.page-header
                     i.fas.fa-boxes(style="margin-right: 10px;")
                     | Artículos en ruta 
-        table.table
+        table#arts.table.table-striped.table-hover
             thead 
                 th Cantidad
                 th Unidad

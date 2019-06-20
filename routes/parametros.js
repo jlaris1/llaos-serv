@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
     Usuarios = mongoose.model('Usuarios');
     TiposModulos = mongoose.model('TiposModulos');
     chalk = require('chalk');
+    Excel = require('exceljs');
 
 var file_path = './files/reports/parametros/';
 
@@ -202,12 +203,11 @@ module.exports = {
                 temperatura: solicitud.body.temperatura,
                 nivel_agua: solicitud.body.nivel_agua,
                 estanque: solicitud.body.estanque,
-                fecha: new Date,
+                //fecha: new Date( fecha.getTime() + Math.abs(fecha.getTimezoneOffset()*60000))
+                fecha: new Date( new Date(solicitud.body.fecha).getTime() + Math.abs( new Date(solicitud.body.fecha).getTimezoneOffset()*60000)),
                 hora: FechaHora.obtenerhora(),
                 parametrista: solicitud.session.user
             }
-
-            console.log(chalk.bgGreen(data));
 
             var parametro = new Parametros(data);
 
@@ -221,43 +221,65 @@ module.exports = {
                         } else {
                             Estanques.find({'modulo': solicitud.body.modu}, function(error, estanques){
                                 if(error){
+                                    respuesta.redirect("/sesion-expirada");
                                     console.log(chalk.bgRed(error));
                                 } else {
         
                                     var estanque = {};
                                     var siguiente_estanque  = {};
-        
+
                                     for (let i = 0; i < estanques.length; i++) {
                                         if(estanques[i].id == solicitud.body.estanque ){
-                                            estanque = estanques[i+1];
-                                            siguiente_estanque = estanques[i+2];
+                                            if(i == estanques.length - 1){
+                                                estanque =  estanques[estanques.length-1];
+                                                siguiente_estanque = estanques[0];
+                                            } else {
+                                                estanque = estanques[i+1];
+                                                siguiente_estanque = estanques[i+2];
+                                            }
                                         }
                                     }
         
-                                    console.log(estanque);
-                                    console.log(siguiente_estanque);
-        
-                                    respuesta.render('Parametros/new', {
-                                        user: solicitud.session.user,
-                                        modulos: modulos,
-                                        modulo: solicitud.body.modu, 
-                                        estanques: estanques,
-                                        estanque: estanque,
-                                        siguiente_estanque: siguiente_estanque,
-                                        parametro: {
-                                            oxigeno: 0,
-                                            ph: 0,
-                                            salinidad: 0,
-                                            temperatura: 0,
-                                            nivel_agua: 0,
-                                        },
-                                        titulo: "",
-                                        criterios: [
-                                            {
-                                                val: "",
-                                                name: ""
-                                            },
-                                        ],
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(chalk.bgRed(error));
+                                        } else {
+                                            respuesta.render('Parametros/new', {
+                                                user: solicitud.session.user,
+                                                modulos: modulos,
+                                                modulo: solicitud.body.modu, 
+                                                estanques: estanques,
+                                                estanque: estanque,
+                                                usuarios: usuarios,
+                                                siguiente_estanque: siguiente_estanque,
+                                                parametro: {
+                                                    oxigeno: 0,
+                                                    ph: 0,
+                                                    salinidad: 0,
+                                                    temperatura: 0,
+                                                    nivel_agua: 0,
+                                                },
+                                                titulo: "",
+                                                criterios: [
+                                                    {
+                                                        val: "",
+                                                        name: ""
+                                                    },
+                                                ],
+                                                piscinas: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }
+                                                ],
+                                                charoleros: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }   
+                                                ],
+                                            });
+                                        }
                                     });
                                 }
                             }).sort({ codigo : 1});
@@ -556,8 +578,213 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else { 
+            var column = solicitud.body.criterio;
+            var xls_name = '';
+            var title = '';
+            var search = '';
+            var modulo = '';
 
+            if (column == 'piscina'){               
+                xls_name = 'reporte_parametros_piscina_' + solicitud.body.piscina + '.pdf';
+
+                Parametros.find({"estanque": solicitud.body.piscina}, function(error, parametros){
+                    if(error){
+                        console.log(chalk.bgRed(error));
+                    } else {
+                        Estanques.populate(parametros, {path: 'estanque'}, function(error, parametros){
+                            if(error){
+                                console.log(chalk.bgRed(error));
+                            } else {
+                                Modulos.populate(parametros, {path: 'estanque.modulo'}, function(error, parametros){
+                                    if(error){
+                                        console.log(chalk.bgRed(error));
+                                    } else {
+                                        Usuarios.populate(parametros, { path: 'parametrista'}, function(error, parametros){
+                                            if(error){
+                                                console.log(chalk.bgRed(error));
+                                            } else {                                      
+                                                console.log(chalk.bgGreen(parametros));
+                                                
+                                                parametros.forEach( function(p){
+                                                    search = p.estanque.nombre;
+                                                    modulo = p.estanque.modulo.codigo;
+                                                });
+                                                
+                                                title =  'Modulo: ' + modulo + '  Piscina: ' + search;         
+                                                generateXLS(parametros, title, xls_name);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            } else if (column == 'parametrista'){
+                Parametros.find({"parametrista": solicitud.body.charolero}, function(error, parametros){
+                    if(error){
+                        console.log(chalk.bgRed(error));
+                    } else {
+                        Estanques.populate(parametros, {path: 'estanque'}, function(error, parametros){
+                            if(error){
+                                console.log(chalk.bgRed(error));
+                            } else {
+                                Usuarios.populate(parametros, { path: 'parametrista'}, function(error, parametros){
+                                    if(error){
+                                        console.log(chalk.bgRed(error));
+                                    } else {
+                                        parametros.forEach(function(p){
+                                            search = p.parametrista.nombre;
+                                        });
+  
+                                        title = 'Parametrista: ' + search;
+                                        xls_name = 'reporte_parametros_parametrista_' + search + '.pdf';
+                                        generateXLS(parametros, title, xls_name)
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            } else if (column == 'fecha'){
+                fecha = new Date(solicitud.body.fecha).getFullYear() + '-' +
+                        (new Date(solicitud.body.fecha).getMonth() + 1) + '-' +
+                        (new Date(solicitud.body.fecha).getDate() + 1);
+
+                f = new Date(fecha);
+
+                search = solicitud.body.fecha;
+                xls_name = 'reporte_parametros_fecha_' + solicitud.body.fecha + '.pdf';
             
+                Parametros.find( { fecha : { $eq: f }}, function(error, parametros){
+                    if(error){
+                        console.log(chalk.bgRed(error));
+                    } else {
+                        Estanques.populate(parametros, {path: 'estanque'}, function(error, parametros){
+                            if(error){
+                                console.log(chalk.bgRed(error));
+                            } else {
+                                Usuarios.populate(parametros, { path: 'parametrista'}, function(error, parametros){
+                                    if(error){
+                                        console.log(chalk.bgRed(error));
+                                    } else { 
+                                        title = 'Fecha: ' + search;
+                                        generateXLS(parametros, title, search, xls_name)
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            } else if (column == 'fechas'){
+                fechaInicio = new Date(solicitud.body.fechaInicio).getFullYear() + '-' +
+                            (new Date(solicitud.body.fechaInicio).getMonth() + 1) +  '-' +
+                            (new Date(solicitud.body.fechaInicio).getDate() + 1);
+                              
+                fechaFin = new Date(solicitud.body.fechaFin).getFullYear() + '-' +
+                        (new Date(solicitud.body.fechaFin).getMonth() + 1) +  '-' +
+                        (new Date(solicitud.body.fechaFin).getDate() + 1);
+
+                fI = new Date(fechaInicio).toISOString();
+                fF = new Date(fechaFin).toISOString()
+
+                search = fechaInicio.replace(new RegExp('-','g'),'/') + '-' + fechaFin.replace(new RegExp('-','g'),'/');
+                xls_name = 'reporte_parametros_fechas_' + solicitud.body.fechaInicio + '-' + solicitud.body.fechaFin +'.pdf';
+
+                Parametros.find({
+                    fecha: {
+                        $gte: fI,
+                        $lte: fF
+                    }
+                }
+                , function(error, parametros){
+                    if(error){
+                        console.log(chalk.bgRed(error));
+                    } else {
+                        Estanques.populate(parametros, {path: 'estanque'}, function(error, parametros){
+                            if(error){
+                                console.log(chalk.bgRed(error));
+                            } else {
+                                Usuarios.populate(parametros, { path: 'parametrista'}, function(error, parametros){
+                                    if(error){
+                                        console.log(chalk.bgRed(error));
+                                    } else {
+                                        title = 'Fechas entre: ' + search;
+                                        generateXLS(parametros, title, xls_name)
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+
+            Parametros.find( function(error, mediciones){
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    Estanques.populate(mediciones, {path: 'estanque'}, function(error, mediciones){
+                        if(error){
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            Usuarios.populate(mediciones, {path: 'parametrista'}, function(error, mediciones){
+                                if(error){
+                                    console.log(chalk.bgRed(error));
+                                } else {
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(chalk.bgRed(error));
+                                        } else {
+                                            var piscinas = Array();
+                                            var parametristas = Array();
+
+                                            mediciones.forEach(function(m){
+                                                if(piscinas.includes(m.estanque) == false){
+                                                    piscinas.push(m.estanque);
+                                                }
+
+                                                if(parametristas.includes(m.parametrista) == false){
+                                                    parametristas.push(m.parametrista);
+                                                }
+                                            });
+
+
+                                            respuesta.render('Parametros/all', {
+                                                user: solicitud.session.user,
+                                                mediciones: mediciones,
+                                                usuarios: usuarios,
+                                                titulo: "Parámetros",
+                                                criterios: [
+                                                    {
+                                                        val: "piscina",
+                                                        name: "Piscina"
+                                                    },
+                                                    {
+                                                        val: "parametrista",
+                                                        name: "Parametrista"
+                                                    },
+                                                    {
+                                                        val: "fecha",
+                                                        name: "Fecha"
+                                                    },
+                                                    {
+                                                        val: "fechas",
+                                                        name: "Fechas"
+                                                    }
+                                                ],
+                                                piscinas: piscinas,
+                                                charoleros: parametristas,
+                                                ruta: "parametros",
+                                                url: xls_name
+                                            });
+                                        }
+                                    });
+                                }
+                            })
+                        }
+                    });
+                }
+            });
         }
     }
 }
@@ -689,4 +916,47 @@ function generatePDF(data, title, pdf_name){
 
     return pdf_name;
 }
-function generateXLS(){}
+
+function generateXLS(data, title, xls_name){
+
+    var options = {
+        filename:  file_path + '/' + xls_name + '.xlsx' ,
+        useStyles: true,
+        useSharedStrings: true
+    };
+
+    var wb = new new Excel.stream.xlsx.WorkbookWriter(options);
+
+    wb.creator = 'Llaos Web 2.0';
+    wb.created = new Date();
+
+    worksheet.columns = [
+        { header: 'Código', key: 'code', width: 45 },
+        { header: 'Oxigeno', key: 'oxigeno', width: 70 },
+        { header: 'pH', key: 'ph', width: 70 },
+        { header: 'Salinidad', key: 'salinidad', width: 70 },
+        { header: 'Temperatura', key: 'temperatura', width: 70 },
+        { header: 'Nivel Agua', key: 'nivel_agua', width: 70 },
+        { header: 'Parametrista', key: 'parametrista', width: 300 },
+        { header: 'Fecha', key: 'fecha', width: 70, style: { numFmt: 'dd/mm/yyyy' } },
+        { header: 'Hora', key: 'hora', width: 70 }
+
+    ];
+
+    data.forEach( function(d){
+        worksheet.addRow(
+            {   code: d.estanque.codigo, 
+                oxigeno: d.oxigeno, 
+                ph: d.ph,  
+                salinidad: d.salinidad, 
+                temperatura: d.temperatura, 
+                nivel_agua: d.nivel_agua, 
+                parametrista: d.parametrista.nomre, 
+                fecha: d.fecha, 
+                hora: d.hora }
+        );
+    });
+
+    stream.pipe(wb.xlsx.createInputStream());
+
+}

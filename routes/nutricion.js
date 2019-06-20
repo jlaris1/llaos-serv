@@ -217,7 +217,8 @@ module.exports = {
                 suma: solicitud.body.suma,
                 codigo_racion: (parseFloat(solicitud.body.codigo_racion)).toFixed(2),
                 estanque: solicitud.body.estanque,
-                fecha: new Date( fecha.getTime() + Math.abs(fecha.getTimezoneOffset()*60000)),
+                //fecha: new Date( fecha.getTime() + Math.abs(fecha.getTimezoneOffset()*60000)),
+                fecha: new Date( solicitud.body.fecha.getTime() + Math.abs(solicitud.body.fecha.getTimezoneOffset()*60000)),
                 hora: FechaHora.obtenerhora(),
                 charolero: solicitud.session.user._id
             }

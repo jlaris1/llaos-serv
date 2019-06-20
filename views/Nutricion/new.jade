@@ -34,7 +34,7 @@ block contenido
                 $('#sig_racion').text(parseFloat(kg_sig).toFixed(2));
             });
 
-
+            $('#fechaI').on('change', function(){ $('#fec').val(this.value); });
 
         });
 
@@ -214,9 +214,17 @@ block contenido
                             option(value="") << Seleccione >>
                             each est in estanques
                                 option(value="#{est.id}") #{ est.codigo}
+            .col-lg-4
+                .form-group
+                    label | Fecha
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar-alt
+                        input#fechaI.form-control(type="date" name="fecha" tabindex="3")
     form#frm(role="form" method="post" action="/nutricion/add")
         input.hidden#est(required name="estanque")
         input.hidden#sum(required name="suma")
+        input.hidden#fec(required type="date" name="fecha")
         input.hidden#cod_rad(required name="codigo_racion")
         input.hidden#seg_rac(required name="siguiente_racion")
         .row
