@@ -292,39 +292,45 @@ module.exports = {
 
                             console.log(estanque);
                             console.log(siguiente_estanque);
-
-                            respuesta.render('Parametros/new', {
-                                user: solicitud.session.user,
-                                modulos: modulos,
-                                modulo: solicitud.body.mod, 
-                                estanques: estanques,
-                                estanque: estanque,
-                                siguiente_estanque: siguiente_estanque,
-                                titulo: "",
-                                criterios: [
-                                    {
-                                        val: "",
-                                        name: ""
-                                    }
-                                ],
-                                piscinas: [
-                                    {
-                                        id: 0,
-                                        nombre: ""
-                                    }
-                                ],
-                                charoleros: [
-                                    {
-                                        id: 0,
-                                        nombre: ""
-                                    }   
-                                ],
-                                parametro: {
-                                    oxigeno: 0,
-                                    ph: 0,
-                                    salinidad: 0,
-                                    temperatura: 0,
-                                    nivel_agua: 0,
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(chalk.bgRed(error));
+                                } else {
+                                    respuesta.render('Parametros/new', {
+                                        user: solicitud.session.user,
+                                        modulos: modulos,
+                                        modulo: solicitud.body.mod, 
+                                        estanques: estanques,
+                                        usuarios: usuarios,
+                                        estanque: estanque,
+                                        siguiente_estanque: siguiente_estanque,
+                                        titulo: "",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        parametro: {
+                                            oxigeno: 0,
+                                            ph: 0,
+                                            salinidad: 0,
+                                            temperatura: 0,
+                                            nivel_agua: 0,
+                                        }
+                                    });
                                 }
                             });
                         }
