@@ -98,6 +98,7 @@ module.exports = {
                                 respuesta.render('Parametros/new', {
                                     user: solicitud.session.user,
                                     modulos: modulos,
+                                    usuarios: usuarios,
                                     modulo: solicitud.body.modulo, 
                                     estanque: estanques[0],
                                     siguiente_estanque: estanques[1],
