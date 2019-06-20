@@ -155,6 +155,9 @@ module.exports = {
                                 modulos: modulos,
                                 usuarios: usuarios,
                                 modulo: '',
+                                estanque: {
+                                    id: 0
+                                },
                                 estanques: {},
                                 parametro: {
                                     oxigeno: 0,
@@ -230,9 +233,14 @@ module.exports = {
 
                                     for (let i = 0; i < estanques.length; i++) {
                                         if(estanques[i].id == solicitud.body.estanque ){
-                                            if(i == estanques.length - 1){
-                                                estanque =  estanques[estanques.length-1];
-                                                siguiente_estanque = estanques[0];
+                                            if(i>0){
+                                                if(i == estanques.length - 1){
+                                                    estanque =  estanques[estanques.length-1];
+                                                    siguiente_estanque = estanques[0];
+                                                } else {
+                                                    estanque = estanques[i+1];
+                                                    siguiente_estanque = estanques[i+2];
+                                                }
                                             } else {
                                                 estanque = estanques[i+1];
                                                 siguiente_estanque = estanques[i+2];

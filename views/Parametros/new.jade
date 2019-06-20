@@ -136,7 +136,7 @@ block contenido
     form#frm(role="form" method="post" action="/parametros/add")
         input.hidden(name="modu" value="#{modulo}")
         input.hidden#fec(required type="date" name="fecha")
-        input#est.hidden(required name="estanque" value="#{estanque}")
+        input#est.hidden(required name="estanque" value="#{estanque.id}")
         .row
             .col-lg-12
                 .panel.panel-primary
