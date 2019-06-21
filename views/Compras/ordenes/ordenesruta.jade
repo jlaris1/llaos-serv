@@ -38,7 +38,7 @@ block contenido
             tbody
                 each ord in ordersRuta
                     tr
-                        td.text-center #{ord.codigo}
+                        td.text-center ORD#{ord.codigo}
                         td.text-center #{ord.unidad}
                         td.text-center #{ord.chofer}
                         td
@@ -57,5 +57,13 @@ block contenido
                         td #{ new Date(ord.fecha).getDate()+ '/' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()} - #{ord.hora} 
                         td
                             a(href="/ordenes/ordenruta/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Ver detalles", style="margin-right: 10px;")
-                                i.fas.fa-eye.text-default.fa-lg
+                                i.fas.fa-eye.text-primary.fa-lg
+                            if ord.estatus == "En Ruta"
+                                a(href="/ordenes/ordenruta/entrada/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Entrada  Inventarios", style="margin-right: 10px;")
+                                    i.fas.fa-sign-in-alt.text-success.fa-lg
+                            else    
+                                a.disabled(href="/ordenes/ordenruta/entrada/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Entrada  Inventarios", style="margin-right: 10px;")
+                                    i.fas.fa-sign-in-alt.text-default.fa-lg     
+                            a(href="/ordenes/orden/ordenruta/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Cerrar", style="margin-right: 5px; color: #000000;")
+                                    i.fas.fa-lock.fa-lg
                             

@@ -2636,8 +2636,6 @@ module.exports = {
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch
             if(solicitud.body.codigo === 'undefined' || solicitud.body.codigo == null){
-                console.log("No existe orden ruta");
-                console.log(solicitud.body.criterio);
                 if(solicitud.body.criterio == 'Serie'){
                     console.log(solicitud.body.buscar);
                     Ordenes.find({"serie": solicitud.body.buscar}, function(error, ordenes){
@@ -2706,20 +2704,16 @@ module.exports = {
                         }
                     });
                 } else if (solicitud.body.criterio == 'Proveedor'){
-                    Proveedores.findById({"_id": solicitud.body.proveedor}, function(error, proveedor){
+                    console.log(solicitud.body.proveedor);
+
+                    Ordenes.find({ $and:[{"proveedor": solicitud.body.proveedor},{ "estatus": "Generada"}]}, function(error, ordenes){
                         if(error){
                             console.log(error);
                         } else {
-                            Ordenes.find({$and:[{"proveedor": proveedor.id},{"estatus": "Enviada"}]}, function(error, ordenes){
+                            Proveedores.populate(ordenes, {path: "proveedor"}, function(error, ordenes){
                                 if(error){
                                     console.log(error);
                                 } else {
-                                    
-                                    ordenes.forEach( function(ord){
-                                        ord.proveedor = proveedor.nombreEmpresa;
-                                        ord.total = fmon.FormatMoney(true, parseFloat(ord.total));
-                                    });
-        
                                     Proveedores.find( function(error, proveedores){
                                         if(error){
                                             console.log(error);
@@ -2730,12 +2724,14 @@ module.exports = {
                                                 } else { 
                                                     respuesta.render("Compras/ordenes/enruta",
                                                         {
+                                                            estatus: '',
                                                             user: solicitud.session.user,
                                                             ordenes: ordenes,
                                                             folio: '00000',
                                                             unidad: '',
                                                             chofer: '',
                                                             articulosRuta: {},
+                                                            proveedor: solicitud.body.proveedor,
                                                             proveedores: proveedores,
                                                             titulo: "Órdenes",
                                                             criterios: [
@@ -2815,6 +2811,7 @@ module.exports = {
                                                                             codigo: ordenRuta.id,
                                                                             folio: ordenRuta.codigo,
                                                                             proveedores: proveedores,
+                                                                            estatus: '',
                                                                             titulo: "Órdenes",
                                                                             criterios: [
                                                                                 {
@@ -2873,6 +2870,7 @@ module.exports = {
                                                                         {
                                                                             user: solicitud.session.user,
                                                                             ordenes: ordenes,
+                                                                            estatus: '',
                                                                             unidad: ordenRuta.unidad,
                                                                             chofer: ordenRuta.chofer,
                                                                             articulosRuta: articulosRuta,
@@ -3011,6 +3009,7 @@ module.exports = {
                                                                                                         folio: oRuta.codigo,
                                                                                                         user: solicitud.session.user,
                                                                                                         ordenes: {},
+                                                                                                        estatus: 'Nueva',
                                                                                                         unidad: solicitud.body.unidad,
                                                                                                         chofer: solicitud.body.chofer,
                                                                                                         articulosRuta: articulosEnRuta,
@@ -3148,6 +3147,7 @@ module.exports = {
                                                                                                 articulosRuta: articulosEnRuta,
                                                                                                 proveedores: proveedores,
                                                                                                 titulo: "Órdenes",
+                                                                                                estatus: 'Nueva',
                                                                                                 criterios: [
                                                                                                     {
                                                                                                         val: "",
@@ -3577,7 +3577,7 @@ module.exports = {
                             //console.log(res);
 
                             var updSta = {
-                                estatus: 'Enviada'
+                                estatus: 'En Ruta'
                             }
 
                             OrdenesRuta.updateOne({"_id": oRuta.id}, updSta, function(error){
@@ -3818,5 +3818,117 @@ module.exports = {
             });
         }
         
+    },
+    ordenRutaEntrada: function(solicitud, respuesta){
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{ 
+            OrdenesRuta.findById({"_id": solicitud.params.id}, function(error, oRuta){
+                if(error){
+                    console.log(error);
+                } else {
+                    ArticulosEnRuta.find({"ordenRuta": oRuta.id}, function(error, articulosEnRuta){
+                        ////var articulos = [];
+                        //articulos = articulosEnRuta;
+                        //console.log(articulos);
+
+                        if(error){
+                            console.log(error);
+                        } else {
+                            Ordenes.populate(articulosEnRuta, {path: "orden"}, function(error, articulosEnRuta){
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    Proveedores.populate(articulosEnRuta, {path: "proveedor"}, function(error, articulosEnRuta){
+                                        if(error){
+                                            console.log(error);
+                                        } else {
+                                            Proveedores.find( function(error, proveedores){
+                                                if(error){
+                                                    console.log(error);
+                                                } else {
+                                                    Usuarios.find( function(error, usuarios){
+                                                        if(error){
+                                                            console.log(error);
+                                                        } else { 
+                                                            respuesta.render("Compras/ordenes/entradaordenruta", 
+                                                                {
+                                                                    user: solicitud.session.user,
+                                                                    oRuta: oRuta,
+                                                                    proveedores: proveedores,
+                                                                    articulosRuta: articulosEnRuta,
+                                                                    titulo: "Órdenes",
+                                                                    criterios: [
+                                                                        {
+                                                                            val: "",
+                                                                            name: ""
+                                                                        }
+                                                                    ],
+                                                                    piscinas: [
+                                                                        {
+                                                                            id: 0,
+                                                                            nombre: ""
+                                                                        }
+                                                                    ],
+                                                                    charoleros: [
+                                                                        {
+                                                                            id: 0,
+                                                                            nombre: ""
+                                                                        }   
+                                                                    ],
+                                                                    usuarios: usuarios,
+                                                                    ruta: "ordenes"
+                                                                }
+                                                            );
+                                                        }
+                                                    });
+                                                }
+                                            }) 
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });                   
+                }
+            });
+        }
+    },
+    entradaOrdenRuta: function(solicitud, respuesta){
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{ 
+            var articulos = JSON.parse(solicitud.body.articulos);
+
+            articulos.forEach( function(art){
+                var data = {
+                    cantidad: art.cantidad,
+                    orden: art.orden.serie
+                }
+
+                Productos.updateOne({"codigo": art.codigo}, data, function(error){
+                    if(error){
+                        console.log(error);
+                    }
+                });
+            });
+
+            //OrdenesRuta.updateOne()
+
+        }
+    },
+    cerrarOrdenRuta: function(solicitud, respuesta){
+        var data = {
+            estatus: "Cerrada"
+        }
+
+        OrdenesRuta.updateOne({"_id": solicitud.params.id}, data,function(error){
+            if(error){
+                console.log(error);
+            } else {
+                respuesta.redirect("/ordenes/enruta");
+            }
+        })
     }
+
 }

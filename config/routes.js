@@ -175,6 +175,8 @@ module.exports = function(app){
     ordenesRouter.get('/articuloruta/eliminar/:id/:id_oRuta', ordenes.eliminarArticuloOrdenRuta);
     ordenesRouter.get('/ordenesruta', ordenes.ordenesEnRutaBandeja);
     ordenesRouter.get('/ordenruta/ver/:id', ordenes.ordenRutaDetalles);
+    ordenesRouter.get('/ordenruta/entrada/:id', ordenes.ordenRutaEntrada);
+    ordenesRouter.get('/ordenruta/cerrar/:id', ordenes.cerrarOrdenRuta);
     //ordenesRouter.post('/report/pdf', ordenes.pdf);
     //ordenesRouter.post('/report/xls', ordenes.xls);
 

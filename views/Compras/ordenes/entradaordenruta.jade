@@ -32,6 +32,8 @@ block contenido
             }
         }
     script.
+        var articulos = [];
+
         $(document).ready( function(){
             $('#subMenuCompras').removeClass('hidden');
             $('#spanMenuCompras').removeClass('fa-angle-left');
@@ -87,12 +89,52 @@ block contenido
             $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
             setTimeout('obtenerhora()',1000);
         }
+
+        function editarCantidad(index){
+            convetirArray();
+            for(var i=0; i < articulos.lenght; i++){
+                alert(articulos[i]);
+                if(i == index){
+                    $('#cant').val(articulos[i].cantidad);
+                    $('#unid').text(articulos[i].unidad);
+                    $('#codi').text(articulos[i].codigo);
+                    $('#orden').text(articulos[i].orden.serie);
+                }
+            }
+        }
+
+        function convetirArray(){
+            var obj = new Object();            
+            var arr = $('#articulos').val().split("},");
+
+            for(var i = 0; i < arr.length; i ++){
+                var aObj = arr[i].replace(/'/g, '');
+
+                obj.id = aObj.split(",")[0].split(":")[1];
+                obj.cantidad = aObj.split(",")[1].split(":")[1];
+                obj.unidad = aObj.split(",")[2].split(":")[1];
+                obj.descripcion = aObj.split(",")[4].split(":")[1];
+                obj.codigo = aObj.split(",")[3].split(":")[1];
+
+                articulos.push(obj);
+                obj = new Object();
+
+            }
+        }
+
+        function eliminarArticulo(index){
+            alert(index);
+            $("#tr"+index).remove();
+            articulos.splice(index, 1);
+            $("#articulos").val(articulos);
+        }
+
     //Termina Javascript
     .row
         .col-lg-12
             h2
                 i.fas.fa-truck-loading(style="margin-right: 10px;")
-                |   Detalles Órden Ruta
+                |   Entrada a Inventario de Órden Ruta
             .divider
     .row
         .col-lg-6.pull-right.text-right
@@ -124,6 +166,8 @@ block contenido
                 label.labelSta.label-danger &nbsp;&nbsp;&nbsp;&nbsp;#{oRuta.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
             else if oRuta.estatus == "Enviada"
                 label.labelSta.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{oRuta.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            else if oRuta.estatus == "En Ruta"
+                label.labelSta(style="background-color: #ffa500;") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{oRuta.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             else if oRuta.estatus == "Cerrada"
                 label.labelSta.label-default &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{oRuta.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
         .col-lg-4.pull-right
@@ -159,11 +203,41 @@ block contenido
                     span.input-group-addon
                         i.fas.fa-user
                     input.form-control(readonly type="text" value="#{oRuta.chofer}")
+    //.row
+        .col-lg-12(style="margin-top: 15px;")
+            i.fas.fa-boxes(style="margin-right: 10px;")
+            | Datos en articulo 
+            .divider
+    //.row
+        .col-lg-2
+            .form-group
+                label | Cantidad
+                .input-group
+                    input.form-control#cant(type="text" name="cantidad")
+        .col-lg-2
+            .form-group
+                label | Unidad
+                .input-group
+                    span#unid
+        .col-lg-2
+            .form-group
+                label | Codio
+                .input-group
+                    span#codi
+        .col-lg-5
+            .form-group
+                label | Descripción
+                .input-group
+                    span#desc
+    
     .row
         .col-lg-12(style="margin-top: 15px;")
             i.fas.fa-boxes(style="margin-right: 10px;")
             | Artículos en ruta 
             .divider
+    input#articulos.hidden(value="#{articulosRuta}")
+    //input#artis.hidden(value="#{articulos}")
+    //label #{articulos}
     table#arts.table.table-striped.table-hover
         thead 
             th Cantidad
@@ -172,12 +246,18 @@ block contenido
             th Descripción
             th Orden
             th Proveedor
+            th Acciones
         tbody
-            each art in articulosRuta
-                tr
-                    td #{art.cantidad}
+            each art, index in articulosRuta
+                tr(id="tr#{index}")
+                    td.text-right #{parseFloat(art.cantidad).toFixed(3)}
                     td #{art.unidad}
                     td #{art.codigo}
                     td #{art.descripcion}
                     td #{art.orden.serie}
                     td #{art.proveedor.nombreEmpresa}
+                    td
+                        //a(href="#" onclick="editarCantidad(this.id)" id="#{index}", data-toggle="tooltip", data-placement="top", title="Editar cantidad", style="margin-right: 10px;")
+                            i.fas.fa-pencil-alt.text-info.fa-lg
+                        a(href="#" onclick="eliminarArticulo(this.id)" id="#{index}", data-toggle="tooltip", data-placement="top", title="Eliminar artículo", style="margin-right: 10px;")
+                            i.fas.fa-minus-circle.text-danger.fa-lg

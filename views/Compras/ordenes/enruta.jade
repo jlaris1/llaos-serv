@@ -7,6 +7,12 @@ block contenido
             color: white; 
             border-radius: 8px;
         }
+
+        .labelSta {
+            color: white;
+            font-size: 2em; 
+            border-radius: 0 8px 8px 0;
+        } 
     script.
         $(document).ready( function(){
             $('#subMenuCompras').removeClass('hidden');
@@ -43,6 +49,9 @@ block contenido
                     $('#txtBusca').attr('required', true);
                 }
             });
+
+            $('#orders').dataTable();
+            $('#arts').dataTable();
         });
 
         function obtenerfecha(){
@@ -87,10 +96,6 @@ block contenido
             setTimeout('obtenerhora()',1000);
         }
 
-        window.onload = function () { 
-
-        }
-
         function FormatMoney(bol, valor){
             var total = 0;
 
@@ -133,9 +138,10 @@ block contenido
     //Termina Javascript
     .row
         .col-lg-12
-            h2.page-header 
+            h3
                 i.fas.fa-truck-loading(style="margin-right: 10px;")
                 |   Órdenes en Ruta
+            .divider
     .row
         .col-lg-6.pull-right.text-right
             span
@@ -146,18 +152,30 @@ block contenido
         .col-lg-6.pull-left.text-left
             label#fecha(style="margin-right: 10px;")
             label#hora
+    .divider
     label#url.hidden #{url}
     form#frm(role="form" method="post" action="/ordenes/buscar/orden")
         .row
-            .col-lg-12
-                h4.page-header
-                    i.fas.fa-bars(style="margin-right: 10px;")
-                    | Datos Orden Ruta
-        
+            .col-lg-12(style="margin-top: 15px;")
+                i.fas.fa-bars(style="margin-right: 10px;")
+                | Datos Orden Ruta
+                .divider
         .row
-            .col-lg-3.pull-left.right-padding
-                label.labelFol
-                    | &nbsp;&nbsp; ORD#{folio} &nbsp;&nbsp;
+            .col-lg-3.pull-left
+                label.labelFol.right-padding
+                    |   &nbsp;&nbsp; ORD#{folio} &nbsp;&nbsp;
+            .col-lg-3.pull-left
+                if estatus == "Nueva"
+                    label.labelSta.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                else if estatus == "Generada"
+                    label.labelSta.label-success &nbsp;&nbsp;&nbsp;&nbsp; #{estatus} &nbsp;&nbsp;&nbsp;&nbsp;
+                else if estatus == "Cancelada" 
+                    label.labelSta.label-danger &nbsp;&nbsp;&nbsp;&nbsp;#{estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                else if estatus == "Enviada"
+                    label.labelSta.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                else if estatus == "Cerrada"
+                    label.labelSta.label-default &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+
             .col-lg-4.pull-right
                 .form-group
                     label | Código Envió
@@ -167,9 +185,9 @@ block contenido
                         input#codigo.form-control(readonly type="text" name="codigo" placeholder="Código" value="#{codigo}")
         .row
             .col-lg-12
-                h4.page-header
-                    i.fas.fa-search(style="margin-right: 10px;")
-                    | Búsqueda
+                i.fas.fa-search(style="margin-right: 10px;")
+                | Búsqueda
+                .divider
         .row
             .col-lg-4
                 .form-group
@@ -190,7 +208,7 @@ block contenido
                         select(required id="cmbProveedor" name="proveedor" tabindex="10").form-control
                             option(value="") << Seleccione >>
                             each p in proveedores
-                                option(value=p.id) #{ p.nombreEmpresa }
+                                option(value=p.id, selected=(p.id == proveedor) ) #{ p.nombreEmpresa }
             .col-lg-6#Busca
                 .form-group
                     label | Buscar
@@ -209,10 +227,10 @@ block contenido
     form#frm2(role="form" name="frm2" method="post" action="/ordenes/agregar/enruta/idOrd")
         input.hidden.form-control(readonly type="text" name="codigo" placeholder="Código" value="#{codigo}")
         .row
-            .col-lg-12
-                h4.page-header
-                    i.fas.fa-truck(style="margin-right: 10px;")
-                    | Datos de transportación
+            .col-lg-12(style="margin-top: 15px;")
+                i.fas.fa-truck(style="margin-right: 10px;")
+                | Datos de transportación
+                .divider
         .row
             .col-lg-4
                 .form-group
@@ -234,13 +252,13 @@ block contenido
                         span.input-group-addon
                             i.fas.fa-user
                         input.form-control(required type="text" name="chofer" placeholder="Chofer" value="#{chofer}" tabindex="6")
-    if Object.keys(ordenes).length > 0    
+    if Object.keys(ordenes).length > 0 
         .row
-            .col-lg-12
-                h4.page-header
-                    i.fas.fa-list-alt(style="margin-right: 10px;")
-                    | Órdenes encontradas
-        table.table
+            .col-lg-12(style="margin-top: 15px;")
+                i.fas.fa-list-alt(style="margin-right: 10px;")
+                | Órdenes encontradas
+                .divider
+        table#orders.table.table-striped.table-hover
             thead 
                 th Serie
                 th Proveedor
@@ -251,19 +269,19 @@ block contenido
                 each ord in ordenes
                     tr
                         td #{ord.serie}
-                        td #{ord.proveedor}
+                        td #{ord.proveedor.nombreEmpresa}
                         td #{ord.estatus}
-                        td #{ord.total}
-                        td
+                        td.text-right $ #{ord.total}
+                        td.text-center
                             a(id="#{ord.id}" href="#" data-toggle="tooltip" data-placement="top" title="Agregar" onclick="asignarIdOrden(this.id)")
                                 i.fas.fa-plus-circle.text-success.fa-lg
     if Object.keys(articulosRuta).length > 0
         .row
-            .col-lg-12
-                h4.page-header
-                    i.fas.fa-boxes(style="margin-right: 10px;")
-                    | Artículos en ruta 
-        table.table
+            .col-lg-12(style="margin-top: 15px;")
+                i.fas.fa-boxes(style="margin-right: 10px;")
+                | Artículos en ruta 
+                .divider
+        table#arts.table.table-striped.table-hover
             thead 
                 th Cantidad
                 th Unidad
