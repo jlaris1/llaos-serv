@@ -1598,6 +1598,56 @@ var mongoose = require('mongoose');
             });
         };
     },
+    verAnteriores: function(solicitud, respuesta){
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{//Agregar try-catch
+            RequisicionesOld.findOne({"_id": solicitud.params.id}, function(error, requisicion){
+                if(error){
+                    console.log(error);
+                } else {
+                    ArticulosRequisiciones.find({"codigoRequisicion": requisicion.id}, function(error, articulos){
+                        if(error){
+                            console.log(error);
+                        } else {
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(errro);
+                                } else {
+                                    respuesta.render("Requisiciones/viewold",{
+                                        req: requisicion,
+                                        user: solicitud.session.user,
+                                        listaRequisicion: articulos,
+                                        usuarios: usuarios,
+                                        codReq: requisicion.codigoRequi,
+                                        titulo: "",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                    });
+                                }
+                            });
+                        }
+                    })
+                }
+            });
+        };
+    },
     // Ver datos de requisición redireccionado desde correo
     verReqCorreo: function(solicitud, respuesta){
         Usuarios.findById({"_id": solicitud.params.id_usr}, function(error, user){

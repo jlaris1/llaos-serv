@@ -58,9 +58,8 @@ block contenido
             } else {
                 $('#autoriza').removeClass('hidden');
             }
-
-            $('#arts').dataTable();
                      
+            $('#arts').dataTable();
         });
 
         function obtenerfecha(){
@@ -275,27 +274,3 @@ block contenido
                         if lr.estatus == 'No Autorizado'
                             td 
                                 label.label.label-close &nbsp; #{lr.estatus}&nbsp;
-        if user.permisos == "admin" || user.permisos == "developer"
-            .divider
-            .row.pull-right(style="margin-bottom: 20px;")
-                .col-lg-2.btn-group.pull-right(style="margin-left: -25px;")
-                    .form-group
-                        .input-group
-                            span.input-group-addon.text-danger
-                                i.fas.fa-times-circle.text-danger
-                            a#btnEnviar(href="/requisiciones/requisicion/cancelar/#{req.id}").btn.btn-danger.form-control
-                                |   Cancelar
-                .col-lg-2.btn-group.pull-right#autoriza(style="margin-left: -25px;").hidden
-                    .form-group
-                        .input-group
-                            span.input-group-addon.text-success
-                                i.fas.fa-check-circle.text-success
-                            a#btnEnviar(href="/requisiciones/requisicion/autorizar/#{req.id}").btn.btn-success.form-control
-                                |   Autorizar
-                .col-lg-2.btn-group.pull-right
-                    .form-group
-                        .input-group
-                            span.input-group-addon.text-primary
-                                i.fas.fa-pencil-alt.text-primary
-                            a#btnEnviar(href="/requisiciones/requisicion/editar/#{req.id}").btn.btn-primary.form-control
-                                |   Editar

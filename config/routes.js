@@ -133,6 +133,7 @@ module.exports = function(app){
     requisicionesRouter.get('/requisicion/autorizar/:id', requisiciones.autorizar);
     requisicionesRouter.get('/requisicion/cancelar/:id', requisiciones.cancelar);
     requisicionesRouter.get('/requisicion/ver/:id', requisiciones.ver);
+    requisicionesRouter.get('/requisicion/veranteriores/:id', requisiciones.verAnteriores);
     requisicionesRouter.get('/requisicion/ver/:id/:id_usr', requisiciones.verReqCorreo);
     requisicionesRouter.get('/requisicion/editar/:id', requisiciones.editarRequisicion);
     requisicionesRouter.get('/editar/articulo-requisicion/:id/:req_id', requisiciones.editarArticulo);

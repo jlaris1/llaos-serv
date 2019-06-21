@@ -321,6 +321,7 @@ block contenido
                     |   Fecha
                 th(scope="col")
                     |   Hora
+                th Acciones
             tbody
                 each req in requisiciones
                     tr(scope="row")
@@ -343,3 +344,6 @@ block contenido
                                 label.label.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{req.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
                         td #{ req.fecha }
                         td #{ req.hora }
+                        td.text-center
+                            a(href="/requisiciones/requisicion/veranteriores/#{req.id}", data-toggle="tooltip", data-placement="top",title="Ver detalles", style="margin-right: 5px;")
+                                i.fas.fa-eye.text-primary.fa-lg
