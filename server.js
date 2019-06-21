@@ -58,6 +58,15 @@ app.locals._      = require('underscore');
 app.locals._.str  = require('underscore.string');
 app.locals.moment = require('moment');
 
+
+/* Middleware para manejo de errores */
+app.use( (err, solicitud, respuest, next) => {
+	res.status(500);
+	res.json({
+	  "error": `${err}`
+	});
+});
+
 /* Importaciones de modelos */
 require('./config/models/Usuarios');
 require('./config/models/Proveedores');

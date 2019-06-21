@@ -19,6 +19,7 @@ module.exports = {
             Parametros.find( function(error, mediciones){
                 if(error){
                     console.log(chalk.bgRed(error));
+                    
                 } else {
                     Estanques.populate(mediciones, {path: 'estanque'}, function(error, mediciones){
                         if(error){
@@ -207,6 +208,7 @@ module.exports = {
                 nivel_agua: solicitud.body.nivel_agua,
                 estanque: solicitud.body.estanque,
                 //fecha: new Date( fecha.getTime() + Math.abs(fecha.getTimezoneOffset()*60000))
+                //fecha: new Date(solicitud.body.fecha),
                 fecha: new Date( new Date(solicitud.body.fecha).getTime() + Math.abs( new Date(solicitud.body.fecha).getTimezoneOffset()*60000)),
                 tiempo: solicitud.body.tiempo,
                 hora: FechaHora.obtenerhora(),
@@ -232,15 +234,24 @@ module.exports = {
                                     var estanque = {};
                                     var siguiente_estanque  = {};
 
+                                    console.log(estanques.length);
+
                                     for (let i = 0; i < estanques.length; i++) {
                                         if(estanques[i].id == solicitud.body.estanque ){
                                             if(i>0){
+                                                console.log(i);
+                                                console.log(estanques[i].codigo);
                                                 if(i == estanques.length - 1){
                                                     estanque =  estanques[estanques.length-1];
                                                     siguiente_estanque = estanques[0];
                                                 } else {
-                                                    estanque = estanques[i+1];
-                                                    siguiente_estanque = estanques[i+2];
+                                                    if(i == estanques.length - 2){
+                                                        estanque = estanques[i+1];
+                                                        siguiente_estanque = estanques[0];
+                                                    } else {
+                                                        estanque = estanques[i+1];
+                                                        siguiente_estanque = estanques[i+2];
+                                                    }
                                                 }
                                             } else {
                                                 estanque = estanques[i+1];
@@ -398,9 +409,7 @@ module.exports = {
                                         Usuarios.populate(parametros, { path: 'parametrista'}, function(error, parametros){
                                             if(error){
                                                 console.log(chalk.bgRed(error));
-                                            } else {                                      
-                                                console.log(chalk.bgGreen(parametros));
-                                                
+                                            } else {                                                                                     
                                                 parametros.forEach( function(p){
                                                     search = p.estanque.nombre;
                                                     modulo = p.estanque.modulo.codigo;
@@ -860,11 +869,11 @@ function generatePDF(data, title, pdf_name){
 
         doc.fillColor('black')
         .text(dat.estanque.codigo, 10, y, {align: 'center', width: 45 })
-        .text(dat.oxigeno, 67, y,  {align: 'center', width: 70 })
-        .text(dat.ph, 137, y, {align: 'center', width: 70 })
-        .text(dat.salinidad, 207, y, {align: 'center', width: 70 })
-        .text(dat.temperatura, 277, y, {align: 'center', width: 70 })
-        .text(dat.nivel_agua, 347, y, {align: 'center', width: 70 })
+        .text(parseFloat(dat.oxigeno).toFixed(2), 67, y,  {align: 'center', width: 70 })
+        .text(parseFloat(dat.ph).toFixed(2), 137, y, {align: 'center', width: 70 })
+        .text(parseFloat(dat.salinidad).toFixed(2), 207, y, {align: 'center', width: 70 })
+        .text(parseFloat(dat.temperatura).toFixed(2), 277, y, {align: 'center', width: 70 })
+        .text(parseFloat(dat.nivel_agua).toFixed(2), 347, y, {align: 'center', width: 70 })
         .text(dat.tiempo, 417, y, {align: 'center', width: 70 })
         .text(dat.parametrista.nombre, 447, y, {align: 'center', width: 200 })
         //.text("", 564, y, {align: 'center', width: 70 })
@@ -906,9 +915,7 @@ function generatePDF(data, title, pdf_name){
     .text((prom_sal / data.length).toFixed(2), 207, y + 15, {align: 'center', width: 70 })
     .text((prom_tem / data.length).toFixed(2), 277, y + 15, {align: 'center', width: 70 })
     .text((prom_niv / data.length).toFixed(2), 347, y + 15, {align: 'center', width: 70 })
-                                                            
-    console.log(file_path);
-    
+                                                                
     doc.pipe(fs.createWriteStream(file_path+pdf_name)).on('finish', function (error){
         if(error){
             console.log(error);
@@ -949,7 +956,7 @@ function generateXLS(data, title, xls_name){
         name: "Roboto", 
         size: 12,  
         //bold: true,
-        //horizontal: 'center'
+        horizontal: 'center'
     };   
 
     // Agregar imagen
@@ -963,15 +970,15 @@ function generateXLS(data, title, xls_name){
         ext: { width: 200, height: 120 }
     });*/
 
-    ws.getRow(9).values = ['Código', 'Oxigeno', 'pH', 'Salinidad', 'Temperatura', 'Nivel Agua', 'Parametrista', 'Fecha', 'Hora', 'Tiempo'];
-    ws.getRow(9).fill = {
+    ws.getRow(3).values = ['Código', 'Oxigeno', 'pH', 'Salinidad', 'Temperatura', 'Nivel Agua', 'Parametrista', 'Fecha', 'Hora', 'Tiempo'];
+    ws.getRow(3).fill = {
         type: 'pattern',
         pattern:'solid',
         fgColor:{ argb:'f4f4f4' },
         bgColor:{ argb:'000000' }
     };
 
-    ws.getRow(9).eachCell( (cell) => {
+    ws.getRow(3).eachCell( (cell) => {
         cell.font = { name: "Roboto", size: 12 };
         cell.alignment = { horizontal: 'center' };
     });
@@ -998,11 +1005,11 @@ function generateXLS(data, title, xls_name){
 
         ws.addRow(
             {   code: d.estanque.codigo, 
-                oxigeno: d.oxigeno, 
-                ph: d.ph,  
-                salinidad: d.salinidad, 
-                temperatura: d.temperatura, 
-                nivel_agua: d.nivel_agua, 
+                oxigeno: parseFloat(d.oxigeno).toFixed(2), 
+                ph: parseFloat(d.ph).toFixed(2),  
+                salinidad: parseFloat(d.salinidad).toFixed(2), 
+                temperatura: parseFloat(d.temperatura).toFixed(2), 
+                nivel_agua: parseFloat(d.nivel_agua).toFixed(2), 
                 parametrista: d.parametrista.nombre, 
                 fecha: d.fecha, 
                 hora: d.hora, 

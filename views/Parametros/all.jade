@@ -49,21 +49,21 @@ block contenido
                     each med in mediciones
                         tr
                             td #{ med.estanque.codigo }
-                            if med.oxigeno > 4
+                            if med.oxigeno < 4 
                                 td.text-danger
                                     i.fas.fa-exclamation-circle.text-danger &nbsp;
-                                    b #{ med.oxigeno }
+                                    b #{ parseFloat(med.oxigeno).toFixed(2) }
                             else
-                                td #{ med.oxigeno }
-                            if med.ph > 7
+                                td #{ parseFloat(med.oxigeno).toFixed(2) }
+                            if med.ph < 7
                                 td.text-danger
                                     i.fas.fa-exclamation-circle.text-danger &nbsp;
-                                    b #{ med.ph }
+                                    b #{ parseFloat(med.ph).toFixed(2) }
                             else
-                                td #{ med.ph }
-                            td #{ med.salinidad }
-                            td #{ med.temperatura }
-                            td #{ med.nivel_agua }
+                                td #{ parseFloat(med.ph).toFixed(2) }
+                            td #{ parseFloat(med.salinidad).toFixed(2) }
+                            td #{ parseFloat(med.temperatura).toFixed(2) }
+                            td #{ parseFloat(med.nivel_agua).toFixed(2) }
                             if (new Date(med.fecha).getMonth() + 1) < 10
                                 td.text-center #{ new Date(med.fecha).getDate()+ '/0' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
                             else
