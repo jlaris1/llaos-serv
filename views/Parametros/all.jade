@@ -43,6 +43,7 @@ block contenido
                     th Nivel Agua
                     th Fecha
                     th Hora
+                    th Tiempo
                     th Parametrista
                 tbody
                     each med in mediciones
@@ -68,4 +69,5 @@ block contenido
                             else
                                 td.text-center #{ new Date(med.fecha).getDate()+ '/' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
                             td #{ med.hora }
+                            td #{ med.tiempo }
                             td #{ med.parametrista.nombre }

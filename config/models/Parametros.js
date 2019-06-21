@@ -11,6 +11,7 @@ var parametrosSchemaJSON = {
     estanque: { type: Schema.ObjectId, ref: "Estanques" },
     fecha: Date,
     hora: String,
+    tiempo: String,
     parametrista: String
 }
 

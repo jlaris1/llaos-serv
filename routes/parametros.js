@@ -208,6 +208,7 @@ module.exports = {
                 estanque: solicitud.body.estanque,
                 //fecha: new Date( fecha.getTime() + Math.abs(fecha.getTimezoneOffset()*60000))
                 fecha: new Date( new Date(solicitud.body.fecha).getTime() + Math.abs( new Date(solicitud.body.fecha).getTimezoneOffset()*60000)),
+                tiempo: solicitud.body.tiempo,
                 hora: FechaHora.obtenerhora(),
                 parametrista: solicitud.session.user
             }
@@ -839,7 +840,7 @@ function generatePDF(data, title, pdf_name){
     .text("Salinidad", 207, 143, {align: 'center', width: 70})
     .text("Temperatura", 277, 143, {align: 'center', width: 70})
     .text("Nivel Agua", 347, 143, {align: 'center', width: 70})
-    //.text("", 417, 143, {align: 'center', width: 70})
+    .text("Tiempo", 417, 143, {align: 'center', width: 70})
     //.text("", 494, 143, {align: 'center', width: 70})
     .text("Parametrista", 564, 143, {align: 'center', width: 70})
     .text("Fecha", 637, 143, {align: 'center', width: 70})
@@ -864,8 +865,8 @@ function generatePDF(data, title, pdf_name){
         .text(dat.salinidad, 207, y, {align: 'center', width: 70 })
         .text(dat.temperatura, 277, y, {align: 'center', width: 70 })
         .text(dat.nivel_agua, 347, y, {align: 'center', width: 70 })
-        .text(dat.parametrista.nombre, 417, y, {align: 'center', width: 300 })
-        //.text(dat.suma, 494, y, {align: 'center', width: 70 })
+        .text(dat.tiempo, 417, y, {align: 'center', width: 70 })
+        .text(dat.parametrista.nombre, 447, y, {align: 'center', width: 200 })
         //.text("", 564, y, {align: 'center', width: 70 })
         if ((new Date(dat.fecha).getMonth() + 1) < 10) {
             if ((new Date(dat.fecha).getDate()) < 10) {
@@ -962,7 +963,7 @@ function generateXLS(data, title, xls_name){
         ext: { width: 200, height: 120 }
     });*/
 
-    ws.getRow(9).values = ['Código', 'Oxigeno', 'pH', 'Salinidad', 'Temperatura', 'Nivel Agua', 'Parametrista', 'Fecha', 'Hora'];
+    ws.getRow(9).values = ['Código', 'Oxigeno', 'pH', 'Salinidad', 'Temperatura', 'Nivel Agua', 'Parametrista', 'Fecha', 'Hora', 'Tiempo'];
     ws.getRow(9).fill = {
         type: 'pattern',
         pattern:'solid',
@@ -984,7 +985,8 @@ function generateXLS(data, title, xls_name){
         {  key: 'nivel_agua', width: 10, style: { numFmt: '#,##'}},
         {  key: 'parametrista', width: 25},
         {  key: 'fecha', width: 12 , style: { numFmt: 'dd/mm/yyyy' } },
-        {  key: 'hora', width: 15}
+        {  key: 'hora', width: 15},
+        {  key: 'tiempo', width: 15}
     ];
 
     data.forEach( function(d){
@@ -1003,7 +1005,9 @@ function generateXLS(data, title, xls_name){
                 nivel_agua: d.nivel_agua, 
                 parametrista: d.parametrista.nombre, 
                 fecha: d.fecha, 
-                hora: d.hora }
+                hora: d.hora, 
+                tiempo: d.tiempo,
+            }
         );
     });
 

@@ -38,6 +38,7 @@ block contenido
             });
 
             $('#fechaI').on('change', function(){ $('#fec').val(this.value); });
+            $('#tiempo').on('change', function(){ $('#tiem').val(this.value); });
         });
 
         function obtenerfecha(){
@@ -106,7 +107,7 @@ block contenido
     .divider
     .row
         form(role="form" name="frm2" method="post" action="/parametros/find")
-            .col-lg-4
+            .col-lg-3
                 .form-group
                     label | Modulo
                     .input-group
@@ -116,9 +117,9 @@ block contenido
                             option(value="") << Seleccione >>
                             each mod in modulos
                                 option(value="#{mod.id}", selected=(mod.id == modulo)) #{ mod.nombre}
-            .col-lg-4
+            .col-lg-3
                 .form-group
-                    label | Estanque
+                    label | Piscina
                     .input-group
                         span.input-group-addon
                             i.fas.fa-water
@@ -126,17 +127,28 @@ block contenido
                             option(value="") << Seleccione >>
                             each est in estanques
                                 option(value="#{est.id}", selected=(est.id == estanque.id)) #{ est.codigo}
-            .col-lg-4
+            .col-lg-3
                 .form-group
                     label | Fecha
                     .input-group
                         span.input-group-addon
                             i.fas.fa-calendar-alt
                         input#fechaI.form-control(type="date" name="fecha" tabindex="3")
+            .col-lg-3
+                .form-group
+                    label | Tiempo
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-clock
+                        select#tiempo.form-control(name="tiempo" tabindex="4")
+                            option(value="") << Seleccione >>
+                            option(value="AM") AM
+                            option(value="PM") PM
     form#frm(role="form" method="post" action="/parametros/add")
         input.hidden(name="modu" value="#{modulo}")
         input.hidden#fec(required type="date" name="fecha")
         input#est.hidden(required name="estanque" value="#{estanque.id}")
+        input#tiem.hidden(required name="tiempo")
         .row
             .col-lg-12
                 .panel.panel-primary
@@ -166,7 +178,7 @@ block contenido
                                 input.form-control(type="text" value="#{parametro.nivel_agua}" name="nivel_agua" placeholder="# Necro" tabindex="7")
         .divider
         .row  
-            .col-lg-2.col-md-4.col-xs-6.pull-right( style="margin-left: 5px;")
+            .col-lg-2.col-md-4.col-xs-6.pull-right( style="margin-left: 15px;")
                 .form-group
                     .input-group
                         span.input-group-addon
