@@ -234,13 +234,10 @@ module.exports = {
                                     var estanque = {};
                                     var siguiente_estanque  = {};
 
-                                    console.log(estanques.length);
-
                                     for (let i = 0; i < estanques.length; i++) {
                                         if(estanques[i].id == solicitud.body.estanque ){
                                             if(i>0){
-                                                console.log(i);
-                                                console.log(estanques[i].codigo);
+
                                                 if(i == estanques.length - 1){
                                                     estanque =  estanques[estanques.length-1];
                                                     siguiente_estanque = estanques[0];
