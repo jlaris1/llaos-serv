@@ -196,6 +196,86 @@ module.exports = {
             });
         }
     },
+    edit: function(solicitud, respuesta){
+        if (solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else {
+            var estanque = {};
+            var siguiente_estanque = {};
+
+            Parametros.findById({"_id": solicitud.params.id}, function(error, parametro){
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    Modulos.find( function(error, modulos){
+                        if(error){
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(chalk.bgRed(error));
+                                } else { 
+                                    Estanques.find( function(error, estanques){
+                                        if(error){
+                                            console.log(chalk.bgRed(error));
+                                        } else {
+                                            for(var i = 0; i < estanques.length; i ++){
+                                                if(estanques[i].id == parametro.estanque){
+                                                    if(i == estanques.length - 1 ){
+                                                        estanque = estanques[i];
+                                                        siguiente_estanque = estanques[0];
+                                                        break;
+                                                    } else if (i == estanques.length -2){
+                                                        estanque = estanques[i];
+                                                        siguiente_estanque = estanques[i+1];
+                                                        break;
+                                                    } else {
+                                                        estanque = estanques[i];
+                                                        siguiente_estanque = estanques[i+1];
+                                                        break;
+                                                    }
+                                                }
+                                            }
+
+                                            respuesta.render('Parametros/edit', {
+                                                user: solicitud.session.user,
+                                                modulos: modulos,
+                                                usuarios: usuarios,
+                                                modulo: estanque.modulo,
+                                                estanque: estanque,
+                                                estanques: estanques,
+                                                parametro: parametro,
+                                                siguiente_estanque: siguiente_estanque,
+                                                titulo: "",
+                                                criterios: [
+                                                    {
+                                                        val: "",
+                                                        name: ""
+                                                    },
+                                                ],
+                                                piscinas: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }
+                                                ],
+                                                charoleros: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }   
+                                                ],
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    },
     add: function(solicitud, respuesta){    
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
@@ -302,6 +382,47 @@ module.exports = {
                             }).sort({ codigo : 1});
                         }
                     });
+                }
+            });
+        }
+    },
+    update: function(solicitud, respuesta){
+        if (solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else {
+            var data  = {
+                oxigeno: solicitud.body.oxigeno,
+                ph: solicitud.body.ph,
+                salinidad: solicitud.body.salinidad,
+                temperatura: solicitud.body.temperatura,
+                nivel_agua: solicitud.body.nivel_agua,
+                estanque: solicitud.body.estanque,
+                //fecha: new Date( fecha.getTime() + Math.abs(fecha.getTimezoneOffset()*60000))
+                //fecha: new Date(solicitud.body.fecha),
+                fecha: new Date( new Date(solicitud.body.fecha).getTime() + Math.abs( new Date(solicitud.body.fecha).getTimezoneOffset()*60000)),
+                tiempo: solicitud.body.tiempo,
+                hora: FechaHora.obtenerhora(),
+                parametrista: solicitud.session.user
+            }
+
+            Parametros.updateOne({"_id": solicitud.body.id}, data, function(error){
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    respuesta.redirect('/parametros/all');
+                }
+            });
+        }
+    },
+    delete: function(solicitud, respuesta){
+        if (solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else {
+            Parametros.delete({"_id": solicitud.params.id}, function(error){
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    respuesta.redirect('/parametros/all')
                 }
             });
         }

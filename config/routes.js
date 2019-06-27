@@ -178,6 +178,7 @@ module.exports = function(app){
     ordenesRouter.get('/ordenruta/ver/:id', ordenes.ordenRutaDetalles);
     ordenesRouter.get('/ordenruta/entrada/:id', ordenes.ordenRutaEntrada);
     ordenesRouter.get('/ordenruta/cerrar/:id', ordenes.cerrarOrdenRuta);
+    ordenesRouter.post('/ordenruta/inventario', ordenes.entradaOrdenRuta);
     //ordenesRouter.post('/report/pdf', ordenes.pdf);
     //ordenesRouter.post('/report/xls', ordenes.xls);
 
@@ -378,9 +379,10 @@ module.exports = function(app){
     app.use('/parametros', parametrosRouter);
     parametrosRouter.get('/all', parametros.all);
     parametrosRouter.get('/new', parametros.new);
-    //parametrosRouter.get('/edit', parametros.edit);
+    parametrosRouter.get('/edit/:id', parametros.edit);
     parametrosRouter.post('/add', parametros.add );
-    //parametrosRouter.get('/detail/:id', parametros.detail);
+    parametrosRouter.put('/update', parametros.update );
+    parametrosRouter.get('/delete/:id', parametros.delete);
     parametrosRouter.post('/find', parametros.find);
     parametrosRouter.post('/next', parametros.next);
     parametrosRouter.post('/report/pdf', parametros.pdf);

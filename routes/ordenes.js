@@ -3828,10 +3828,6 @@ module.exports = {
                     console.log(error);
                 } else {
                     ArticulosEnRuta.find({"ordenRuta": oRuta.id}, function(error, articulosEnRuta){
-                        ////var articulos = [];
-                        //articulos = articulosEnRuta;
-                        //console.log(articulos);
-
                         if(error){
                             console.log(error);
                         } else {
@@ -3851,11 +3847,16 @@ module.exports = {
                                                         if(error){
                                                             console.log(error);
                                                         } else { 
-                                                            respuesta.render("Compras/ordenes/entradaordenruta", 
+                                                            ArticulosEnRuta.find({"ordenRuta": oRuta.id}, function(error, articulos){
+                                                                if(error){
+                                                                    console.log(error);
+                                                                } else { 
+                                                                    respuesta.render("Compras/ordenes/entradaordenruta", 
                                                                 {
                                                                     user: solicitud.session.user,
                                                                     oRuta: oRuta,
                                                                     proveedores: proveedores,
+                                                                    articulos: articulos,
                                                                     articulosRuta: articulosEnRuta,
                                                                     titulo: "Órdenes",
                                                                     criterios: [
@@ -3880,6 +3881,8 @@ module.exports = {
                                                                     ruta: "ordenes"
                                                                 }
                                                             );
+                                                                }
+                                                            });
                                                         }
                                                     });
                                                 }
@@ -3898,7 +3901,9 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{ 
-            var articulos = JSON.parse(solicitud.body.articulos);
+            console.log(solicitud.body.arts);
+            
+            var articulos = JSON.parse(solicitud.body.arts);
 
             articulos.forEach( function(art){
                 var data = {
@@ -3906,11 +3911,13 @@ module.exports = {
                     orden: art.orden.serie
                 }
 
-                Productos.updateOne({"codigo": art.codigo}, data, function(error){
+                console.log(data);
+
+                /*Productos.updateOne({"codigo": art.codigo}, data, function(error){
                     if(error){
                         console.log(error);
                     }
-                });
+                });*/
             });
 
             //OrdenesRuta.updateOne()

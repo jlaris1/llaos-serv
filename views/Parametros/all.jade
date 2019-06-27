@@ -45,6 +45,7 @@ block contenido
                     th Hora
                     th Tiempo
                     th Parametrista
+                    th Acciones
                 tbody
                     each med in mediciones
                         tr
@@ -71,3 +72,9 @@ block contenido
                             td #{ med.hora }
                             td #{ med.tiempo }
                             td #{ med.parametrista.nombre }
+                            td
+                                a(href="/parametros/edit/#{med.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px; color: #057e95;")
+                                    i.fas.fa-pencil-alt.fa-lg
+                                a(href="/parametros/delete/#{med.id}", data-toggle="tooltip", data-placement="top", title="Eliminar", style="margin-right: 5px;")
+                                    i.fas.fa-minus-circle.fa-lg.text-danger
+                                

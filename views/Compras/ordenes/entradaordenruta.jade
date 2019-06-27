@@ -33,6 +33,7 @@ block contenido
         }
     script.
         var articulos = [];
+        var articulos_fuera = [];
 
         $(document).ready( function(){
             $('#subMenuCompras').removeClass('hidden');
@@ -46,6 +47,7 @@ block contenido
             obtenerfecha();
             obtenerhora();
             $('[data-toggle="tooltip"]').tooltip();
+            convetirArray();
         });
 
         function obtenerfecha(){
@@ -91,7 +93,6 @@ block contenido
         }
 
         function editarCantidad(index){
-            convetirArray();
             for(var i=0; i < articulos.lenght; i++){
                 alert(articulos[i]);
                 if(i == index){
@@ -104,11 +105,12 @@ block contenido
         }
 
         function convetirArray(){
-            var obj = new Object();            
-            var arr = $('#articulos').val().split("},");
+                     
+            var arr = $('#artis').val().split("},");
 
             for(var i = 0; i < arr.length; i ++){
                 var aObj = arr[i].replace(/'/g, '');
+                var obj = new Object();   
 
                 obj.id = aObj.split(",")[0].split(":")[1];
                 obj.cantidad = aObj.split(",")[1].split(":")[1];
@@ -117,16 +119,19 @@ block contenido
                 obj.codigo = aObj.split(",")[3].split(":")[1];
 
                 articulos.push(obj);
-                obj = new Object();
-
+                //alert(obj);
             }
+            $("#arts").val(JSON.stringify(articulos));
+            //alert(articulos);
         }
 
         function eliminarArticulo(index){
-            alert(index);
+            //alert(index);
             $("#tr"+index).remove();
+            articulos_fuera.push(articulos[index]);
             articulos.splice(index, 1);
-            $("#articulos").val(articulos);
+            $("#artis").val(JSON.stringify(articulos));
+            $("#articulos_fuera").val(JSON.stringify(articulos_fuera));
         }
 
     //Termina Javascript
@@ -177,87 +182,91 @@ block contenido
                     span.input-group-addon
                         i.fas.fa-hashtag
                     input#codigo.form-control(readonly type="text" value="#{oRuta.id}")
-    .row
-        .col-lg-12(style="margin-top: 15px;")
-            i.fas.fa-truck(style="margin-right: 10px;")
-            | Datos de transportación
-            .divider
-    .row
-        .col-lg-4
-            .form-group
-                label | Unidad
-                .input-group
-                    span.input-group-addon
-                        i.fas.fa-shipping-fast
-                    select.form-control(reanonly)
-                        option(value="") << Seleccione >>
-                        option(value="Trailer Kenworth", selected=("Trailer Kenworth"== oRuta.unidad)) Trailer Kenworth
-                        option(value="Camión Pasajeros", selected=("Camión Pasajeros"== oRuta.unidad)) Camión Pasajeros
-                        option(value="Doble Rodado #1", selected=("Doble Rodado #1"== oRuta.unidad)) Doble Rodado #1
-                        option(value="Doble Rodado #2", selected=("Doble Rodado #2"== oRuta.unidad)) Doble Rodado #2
-                        option(value="Tundra", selected=("Tundra"== oRuta.unidad)) Tundra
-        .col-lg-6
-            .form-group
-                label | Chofer
-                .input-group
-                    span.input-group-addon
-                        i.fas.fa-user
-                    input.form-control(readonly type="text" value="#{oRuta.chofer}")
-    //.row
-        .col-lg-12(style="margin-top: 15px;")
-            i.fas.fa-boxes(style="margin-right: 10px;")
-            | Datos en articulo 
-            .divider
-    //.row
-        .col-lg-2
-            .form-group
-                label | Cantidad
-                .input-group
-                    input.form-control#cant(type="text" name="cantidad")
-        .col-lg-2
-            .form-group
-                label | Unidad
-                .input-group
-                    span#unid
-        .col-lg-2
-            .form-group
-                label | Codio
-                .input-group
-                    span#codi
-        .col-lg-5
-            .form-group
-                label | Descripción
-                .input-group
-                    span#desc
-    
-    .row
-        .col-lg-12(style="margin-top: 15px;")
-            i.fas.fa-boxes(style="margin-right: 10px;")
-            | Artículos en ruta 
-            .divider
-    input#articulos.hidden(value="#{articulosRuta}")
-    //input#artis.hidden(value="#{articulos}")
-    //label #{articulos}
-    table#arts.table.table-striped.table-hover
-        thead 
-            th Cantidad
-            th Unidad
-            th Codigo
-            th Descripción
-            th Orden
-            th Proveedor
-            th Acciones
-        tbody
-            each art, index in articulosRuta
-                tr(id="tr#{index}")
-                    td.text-right #{parseFloat(art.cantidad).toFixed(3)}
-                    td #{art.unidad}
-                    td #{art.codigo}
-                    td #{art.descripcion}
-                    td #{art.orden.serie}
-                    td #{art.proveedor.nombreEmpresa}
-                    td
-                        //a(href="#" onclick="editarCantidad(this.id)" id="#{index}", data-toggle="tooltip", data-placement="top", title="Editar cantidad", style="margin-right: 10px;")
-                            i.fas.fa-pencil-alt.text-info.fa-lg
-                        a(href="#" onclick="eliminarArticulo(this.id)" id="#{index}", data-toggle="tooltip", data-placement="top", title="Eliminar artículo", style="margin-right: 10px;")
-                            i.fas.fa-minus-circle.text-danger.fa-lg
+    form(name="frm" action="/ordenes/ordenruta/inventario" method="post")
+        .row
+            .col-lg-12(style="margin-top: 15px;")
+                i.fas.fa-truck(style="margin-right: 10px;")
+                | Datos de transportación
+                .divider
+        .row
+            .col-lg-6
+                .form-group
+                    label | Unidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-shipping-fast
+                        input.form-control(readonly value="#{oRuta.unidad}")
+            .col-lg-6
+                .form-group
+                    label | Chofer
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user
+                        input.form-control(readonly type="text" value="#{oRuta.chofer}")
+        //.row
+            .col-lg-12(style="margin-top: 15px;")
+                i.fas.fa-boxes(style="margin-right: 10px;")
+                | Datos en articulo 
+                .divider
+        //.row
+            .col-lg-2
+                .form-group
+                    label | Cantidad
+                    .input-group
+                        input.form-control#cant(type="text" name="cantidad")
+            .col-lg-2
+                .form-group
+                    label | Unidad
+                    .input-group
+                        span#unid
+            .col-lg-2
+                .form-group
+                    label | Codio
+                    .input-group
+                        span#codi
+            .col-lg-5
+                .form-group
+                    label | Descripción
+                    .input-group
+                        span#desc
+        .row
+            .col-lg-12(style="margin-top: 15px;")
+                i.fas.fa-boxes(style="margin-right: 10px;")
+                | Artículos en ruta 
+                .divider
+
+            input#articulos_fuera.hidden(name="articulos_fuera")
+            input#art.hiddem(name="arts")
+            input#artis.hidden(name="articulos" value="#{articulos}")
+            //label #{articulos}
+            table#arts.table.table-striped.table-hover
+                thead 
+                    th Cantidad
+                    th Unidad
+                    th Codigo
+                    th Descripción
+                    th Orden
+                    th Proveedor
+                    th Acciones
+                tbody
+                    each art, index in articulosRuta
+                        tr(id="tr#{index}")
+                            td.text-right #{parseFloat(art.cantidad).toFixed(3)}
+                            td #{art.unidad}
+                            td #{art.codigo}
+                            td #{art.descripcion}
+                            td #{art.orden.serie}
+                            td #{art.proveedor.nombreEmpresa}
+                            td
+                                //a(href="#" onclick="editarCantidad(this.id)" id="#{index}", data-toggle="tooltip", data-placement="top", title="Editar cantidad", style="margin-right: 10px;")
+                                    i.fas.fa-pencil-alt.text-info.fa-lg
+                                a(href="#" onclick="eliminarArticulo(this.id)" id="#{index}", data-toggle="tooltip", data-placement="top", title="Eliminar artículo", style="margin-right: 10px;")
+                                    i.fas.fa-minus-circle.text-danger.fa-lg
+        .divider
+        .row(style="margin-bottom: 20px;")
+            .col-lg-2.pull-right
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-truck-loading.text-success
+                        input(type="submit" value="Entrada a Invetarios" tabindex="8").btn.btn-success.form-control

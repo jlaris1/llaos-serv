@@ -92,7 +92,7 @@ block contenido
         .col-lg-6.col-md-6.col-sm-6.col-xs-12
             h2 
                 i.fas.fa-eye-dropper(style="margin-right: 10px;")
-                |   Registro de Parámetros
+                |   Edición de Parámetros
     .divider
     .row
         .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-right.text-right
@@ -133,7 +133,11 @@ block contenido
                     .input-group
                         span.input-group-addon
                             i.fas.fa-calendar-alt
-                        input#fechaI.form-control(type="date" name="fecha" tabindex="3")
+                        //input#fechaI.form-control(type="date" value="2013-01-08" name="fecha" tabindex="3")
+                        if (new Date(parametro.fecha).getMonth() + 1) < 10
+                            input#fechaI.form-control(type="date" value="#{new Date(parametro.fecha).getFullYear() + '-0' + (new Date(parametro.fecha).getMonth() + 1)+ '-' + new Date(parametro.fecha).getDate()}" name="fecha" tabindex="3")
+                        else
+                            input#fechaI.form-control(type="date" value="#{new Date(parametro.fecha).getFullYear() + '-' + (new Date(parametro.fecha).getMonth() + 1)+ '-' + new Date(parametro.fecha).getDate()}" name="fecha" tabindex="3")
             .col-lg-3
                 .form-group
                     label | Tiempo
@@ -142,13 +146,17 @@ block contenido
                             i.fas.fa-clock
                         select#tiempo.form-control(name="tiempo" tabindex="4")
                             option(value="") << Seleccione >>
-                            option(value="AM") AM
-                            option(value="PM") PM
-    form#frm(role="form" method="post" action="/parametros/add")
+                            option(value="AM", selected=("AM" == parametro.tiempo)) AM
+                            option(value="PM", selected=("PM" == parametro.tiempo)) PM
+    form#frm(role="form" method="post" action="/parametros/update?_method=put")
+        input.hidden(name="id" value="#{parametro.id}")
         input.hidden(name="modu" value="#{modulo}")
-        input.hidden#fec(required type="date" name="fecha")
+        if (new Date(parametro.fecha).getMonth() + 1) < 10
+            input#fec.hidden(type="date" value="#{new Date(parametro.fecha).getFullYear() + '-0' + (new Date(parametro.fecha).getMonth() + 1)+ '-' + new Date(parametro.fecha).getDate()}" name="fecha" tabindex="3")
+        else
+            input#fec.hidden(type="date" value="#{new Date(parametro.fecha).getFullYear() + '-' + (new Date(parametro.fecha).getMonth() + 1)+ '-' + new Date(parametro.fecha).getDate()}" name="fecha" tabindex="3")
         input#est.hidden(required name="estanque" value="#{estanque.id}")
-        input#tiem.hidden(required name="tiempo")
+        input#tiem.hidden(required name="tiempo" value="#{parametro.tiempo}")
         .row
             .col-lg-12
                 .panel.panel-primary
@@ -184,8 +192,8 @@ block contenido
                     .input-group
                         span.input-group-addon
                             i.fas.fa-plus-circle.text-success
-                        input(type="submit" value="Agregar" tabindex="8").btn.btn-success.form-control
-    form(action="/parametros/next" method="post" name="frm3")
+                        input(type="submit" value="Actualizar" tabindex="8").btn.btn-success.form-control
+    //form(action="/parametros/next" method="post" name="frm3")
         input.hidden(name="mod" value="#{modulo}")
         input#sig_est.hidden(name="estanque_siguiente" value="#{siguiente_estanque.id}")  
         .col-lg-2.col-md-4.col-xs-6.pull-right(style="margin-top: -49px; margin-right: 170px;")

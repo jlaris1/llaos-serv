@@ -516,7 +516,9 @@ module.exports = {//HAcen falta try-catch a los metodos
         var articulos = JSON.parse(solicitud.body.entradas);
         var articulo = JSON.parse(solicitud.body.articulo);
 
-        if(solicitud.body.codigo == ''){
+        console.log(articulos);
+
+        /*if(solicitud.body.codigo == ''){
             EntradasCamaron.find(function(error, entradas){
                 if(error){
                     console.log(error);
@@ -745,7 +747,7 @@ module.exports = {//HAcen falta try-catch a los metodos
                     });
                 }
             });
-        }
+        }*/
     },
     agregarSalida: function(solicitud, respuesta){
         var articulos = JSON.parse(solicitud.body.salidas);
