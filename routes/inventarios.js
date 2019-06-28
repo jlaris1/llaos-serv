@@ -939,7 +939,7 @@ module.exports = {
                             console.log(error);
                         } else {
                             var data = {
-                                producto: producto.id,
+                                producto:solicitud.params.id_prod,
                                 cantidad: solicitud.body.cantidad,
                                 solicitante: solicitud.body.solicitante,
                                 area: solicitud.body.area,
