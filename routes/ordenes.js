@@ -1197,6 +1197,8 @@ module.exports = {
                                     var y = 280
                                         mon = false;
 
+                                    var iva = 0;
+
                                     articulos.forEach( function(art) {
                                         y += 15;
 
@@ -1223,18 +1225,21 @@ module.exports = {
                                         .text(art.unidad, 389, y, {align: 'center', width: 65})
                                         .text(fmon.FormatMoney(true,parseFloat(pU)), 454, y, {align: 'center', width: 80})
                                         .text(fmon.FormatMoney(true,parseFloat(art.precio_unitario)), 529, y, {align: 'center', width: 80})
+                                        
+                                        iva += art.iva; 
+                                    
                                     });
                                                 
                                     console.log(orden.incluyeIVA);
 
-                                    if(orden.incluyeIVA == true){
+                                    //if(orden.incluyeIVA == true){
                                         orden.subtotal = parseFloat(orden.subtotal).toFixed(3);
-                                        orden.iva = parseFloat(parseFloat(orden.subtotal) * 0.16).toFixed(3);
+                                        orden.iva = iva;
                                         orden.total = parseFloat(parseFloat(orden.subtotal) + parseFloat(orden.iva)).toFixed(3);
-                                    } else {
+                                    /*} else {
                                         orden.iva = 0.00;
                                         orden.total = parseFloat(orden.subtotal).toFixed(3);
-                                    }
+                                    }*/
 
                                     // División productos y totales
                                     doc.lineWidth(2)
