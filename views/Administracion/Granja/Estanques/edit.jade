@@ -8,6 +8,7 @@ block contenido
         var locations = [];
         var pointers = [];
         var markers = [];
+        var listCount = 1;
 
         $(document).ready( function(){
             obtenerfecha();
@@ -78,13 +79,11 @@ block contenido
         }
 
         function agregarPointer(){
-            listCount = $('#listPointer >li ').length;
-
             var loc = new Object();
             var point = new Object();
 
             point.x = $('#x'+ listCount).val();
-            point.y = $('#y' + listCount).val();
+            point.y = $('#y'+ listCount).val();
 
             listCount += 1;
 
@@ -129,8 +128,6 @@ block contenido
 
             loc.pointer = point;
 
-            alert(loc);
-
             locations.push(loc);
 
             $('#locations').val(JSON.stringify(locations));
@@ -164,7 +161,7 @@ block contenido
             label#hora
     .divider
     form#frm(role="form" name="frm" method="post" action="/estanque/update/#{estanque.id}?_method=put")
-        input#locations(name="locations").hidden
+        input#locations.hidden(name="locations")
         input#marker_x(type="text" value="#{estanque.marker_x}" name="marker_x").hidden
         input#marker_y(type="text" value="#{estanque.marker_y}" name="marker_y").hidden
         input#pointer_x(type="text" value="#{estanque.pointer_x}" name="pointer_x").hidden

@@ -264,7 +264,8 @@ module.exports = {
                                         fecha: 1,
                                         oxigeno: 1,
                                         temperatura: 1, 
-                                        ph: 1 
+                                        ph: 1 ,
+                                        tiempo: 1,
                                     }, function(error, ph){
                                         if(error) {
                                             console.log(chalk.bgRed(error));
@@ -273,14 +274,44 @@ module.exports = {
                                             var data = [];
                                             var oxigeno = [];
                                             var temperatura = [];
+                                            var sum_ox = 0;
+                                            var sum_ph = 0;
+                                            var sum_tm = 0;
+                                            var ph_min = 0;
+                                            var tm_min = 0;
+                                            var ox_min = 0;
+                                            var ph_max = 0;
+                                            var tm_max = 0;
+                                            var ox_max = 0;
 
                                             ph.forEach(p => {
-                                                fechas.push(new Date(p.fecha).getDate()+ '/' + (new Date(p.fecha).getMonth() + 1)+ '/' + new Date(p.fecha).getFullYear())
-                                                oxigeno.push(p.oxigeno);
-                                                temperatura.push(p.temperatura);
-                                                data.push(p.ph);
+                                                fechas.push(new Date(p.fecha).getDate()+ '/' + (new Date(p.fecha).getMonth() + 1)+ '/' + new Date(p.fecha).getFullYear() + "-" + p.tiempo)
+                                                oxigeno.push(parseFloat(p.oxigeno));
+                                                sum_ox += parseFloat(p.oxigeno);
+                                                temperatura.push(parseFloat(p.temperatura));
+                                                sum_tm += parseFloat(parseFloat(p.temperatura));
+                                                if(p.ph > 0){
+                                                    data.push(parseFloat(p.ph));
+                                                    sum_ph += parseFloat(p.ph);
+                                                }
                                             });
 
+                                            var prom_ph = (parseFloat(sum_ph) / parseFloat(data.length)).toFixed(2);
+                                            var prom_c = (parseFloat(sum_tm) / parseFloat(temperatura.length)).toFixed(2);
+                                            var prom_ox = (parseFloat(sum_ox) / parseFloat(oxigeno.length)).toFixed(2);
+
+                                            ph_min = Math.min.apply(null, data);
+                                            tm_min = Math.min.apply(null, temperatura);
+                                            ox_min = Math.min.apply(null, oxigeno);
+                                            ph_max = Math.max.apply(null, data);
+                                            tm_max = Math.max.apply(null, temperatura);
+                                            ox_max = Math.max.apply(null, oxigeno);
+
+
+                                            /*console.log(data);
+                                            console.log(ph_min);
+                                            console.log(ph_max);*/
+ 
                                             var fechasP = [];
                                             var listbranquias_necro = [];
                                             var listbranquias_mo = [];
@@ -598,6 +629,15 @@ module.exports = {
                                                                                                     } else {
                                                                                                         respuesta.render("Administracion/Granja/Estanques/detail",
                                                                                                             {
+                                                                                                                ph_min: ph_min,
+                                                                                                                tm_min: tm_min,
+                                                                                                                ox_min: ox_min,
+                                                                                                                ph_max: ph_max,
+                                                                                                                tm_max: tm_max,
+                                                                                                                ox_max: ox_max,    
+                                                                                                                prom_c: prom_c,
+                                                                                                                prom_ox: prom_ox,
+                                                                                                                prom_ph: prom_ph,
                                                                                                                 user: solicitud.session.user,
                                                                                                                 estanque: estanque,
                                                                                                                 locations: Locations,

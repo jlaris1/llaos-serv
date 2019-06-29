@@ -1,7 +1,9 @@
 extends ../../../layouts/layout.jade
 block contenido
     style.
-        
+        .text-warning{
+            color: #f78200;
+        }
     script.
         $(document).ready( function(){
             obtenerfecha();
@@ -25,53 +27,29 @@ block contenido
             });
 
             // Mostrar Mapa
-            //var mymap = L.map('map').setView([27.307156, -110.423355], 16);
             var mymap = L.map('map').setView([$('#pointerx').val(),$('#pointery').val()], 16);
 
             L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
-                maxZoom: 20,
+                maxZoom: 18,
                 subdomains:['mt0','mt1','mt2','mt3']
             }).addTo(mymap);
 
             // Marcadores en Mapa
-            //var marker = L.marker([27.307141, -110.423128]).addTo(mymap);
             var marker = L.marker([$('#markerx').val(),$('#markery').val()]).addTo(mymap);
-
             
-            var points = [];
+            // Puntos en el mapa para dibujar piscina
             var p = $('#locations').val().split(",");
-
-            if(p.lenght == 20){
-
-            }
-
+    
             var locations = [
                 [parseFloat(p[0]), parseFloat(p[1])],
-                /*[parseFloat(p[2]), parseFloat(p[3])],
+                [parseFloat(p[2]), parseFloat(p[3])],
                 [parseFloat(p[4]), parseFloat(p[5])],
                 [parseFloat(p[6]), parseFloat(p[7])],
                 [parseFloat(p[8]), parseFloat(p[9])],
                 [parseFloat(p[10]), parseFloat(p[11])],
                 [parseFloat(p[12]), parseFloat(p[13])],
                 [parseFloat(p[14]), parseFloat(p[15])],
-                [parseFloat(p[16]), parseFloat(p[17])],
-                [parseFloat(p[18]), parseFloat(p[19])]*/
             ];
-
-            //alert(locations);
-
-            /*var location = [
-                [27.308601, -110.423742],
-                [27.308641, -110.423117],
-                [27.308630, -110.422525],
-                [27.308531, -110.422414],
-                [27.304616, -110.422308],
-                [27.304465, -110.422385],
-                [27.304474, -110.422849],
-                [27.304552, -110.422973],
-                [27.307053, -110.423906],
-                [27.308455, -110.423958]
-            ];*/
 
             var location = locations;
 
@@ -419,7 +397,8 @@ block contenido
                             display: true,
                             drowBorder: true,
                             drawOnChartArea: false
-                        }
+                        },
+                        responsive: true                        
                     }
                 });
 
@@ -1106,8 +1085,12 @@ block contenido
             h2
                 i.fas.fa-water(style="margin-right: 10px;")
                 |   Detalle de la piscina 
-                strong #{ estanque.codigo }
+                strong #{ estanque.codigo } &nbsp;
+                if prom_ph >= 8 && prom_c > 3 && prom_ox < 34
+                    i.fas.fa-check-circle.text-success
+                    b.text-success &nbsp;(Piscina estable)
         .divider
+    // Datos Generales
     .row
         .col-lg-3.col-sm-3
             .card.card-default
@@ -1125,57 +1108,97 @@ block contenido
                         |   #{ estanque.tipo.nombre}
             .card.card-default
                 .card-body.card-5-7
-                    h4  Parametros del Día
-                    .col-lg-6
-                        h5.text-center 
-                            b AM
+                    h4.text-center
+                        b Promedios
+                    .col-lg-4(style="font-size: 16px;")
                         span 
                             b pH: 
-                            |   7
-                        br
+                            span.text-right #{prom_ph}
+                    .col-lg-4(style="font-size: 16px;")
                         span 
                             b °C: 
-                            |   25
-                        br
+                            span.text-right #{prom_c}
+                    .col-lg-4(style="font-size: 16px;")
                         span 
                             b 0
                             sub
                                 b 2
                             b : 
-                            |   3ppm
+                            span.text-right #{prom_ox}
+            .card.card-default
+                .card-body.card-5-7
                     .col-lg-6
-                        h5.text-center
-                            b PM
-                        span 
+                        h4.text-center 
+                            b Mínimos
+                        span(style="font-size: 16px;") 
                             b pH: 
-                            |   7
+                                if ph_min >= 8
+                                    i.fas.fa-check-circle.text-success
+                                    span.text-right.text-success  #{ parseFloat(ph_min).toFixed(2)}
+                                else if ph_min < 8
+                                    i.fas.fa-info-circle.text-warning
+                                    span.text-right.text-warning  #{ parseFloat(ph_min).toFixed(2)}
+                                else if ph_min < 7
+                                    i.fas.fa-exclamation-circle.text-danger
+                                    span.text-right.text-danger  #{ parseFloat(ph_min).toFixed(2)}
                         br
-                        span 
+                        span(style="font-size: 16px;") 
                             b °C: 
-                            |   25
+                            span.text-right #{ parseFloat(tm_min).toFixed(2)}
                         br
-                        span 
+                        span(style="font-size: 16px;") 
                             b 0
                             sub
                                 b 2
                             b : 
-                            |   3ppm
-        .col-lg-4.col-sm-6
-            input#locations(type="text" value="#{locations}").hidden
+                            span.text-right #{ parseFloat(ox_min).toFixed(2)}
+                    .col-lg-6
+                        h4.text-center
+                            b Máximos
+                        span(style="font-size: 16px;") 
+                            b pH: 
+                                if ph_max >= 8
+                                    i.fas.fa-check-circle.text-success
+                                    span.text-success  #{ parseFloat(ph_max).toFixed(2)}
+                                else if ph_max < 8
+                                    span.text-warning  #{ parseFloat(ph_max).toFixed(2)}
+                                else if ph_max < 7
+                                    span.text-danger  #{ parseFloat(ph_max).toFixed(2)}
+                        br
+                        span(style="font-size: 16px;") 
+                            b °C: 
+                            span.text-right  #{ parseFloat(tm_max).toFixed(2)}
+                        br
+                        span(style="font-size: 16px;") 
+                            b 0
+                            sub
+                                b 2
+                            b : 
+                            span.text-right  #{ parseFloat(ox_max).toFixed(2)}
+        .col-lg-9.chart-container(style="position: relative;")
+            .card.card-default
+                .card-body.card-5-7
+                    // Datos para gráficos parámetros
+                    h4.text-center 
+                        b Parámetros
+                    input#fechas.hidden(type="text" value="#{fechas}")
+                    input#data.hidden(type="text" value="#{data}")
+                    input#datosoxigeno.hidden(type="text" value="#{datosoxigeno}")
+                    input#datostemperatura.hidden(type="text" value="#{datostemperatura}")
+                    canvas#myChart
+    .row
+        .col-lg-12.col-md-12.col-xs-12
+            h4
+                i.fas.fa-map-marked-alt(style="margin-right: 10px;")
+                |   Ubicación
+            .divider
+        .col-lg-12.col-sm-12
+            input#locations.hidden(type="text" value="#{locations}")
             input#markerx(type="text" value="#{estanque.marker_x}").hidden
             input#markery(type="text" value="#{estanque.marker_y}").hidden
             input#pointerx(type="text" value="#{estanque.pointer_x}").hidden
             input#pointery(type="text" value="#{estanque.pointer_y}").hidden
-            #map(style="width: 100%; min-height: 350px;")
-        .col-lg-5.chart-container(style="position: relative; height: 100%;")
-            // Datos para gráficos parámetros
-            h5.text-center 
-                    b Parámetros
-            input#fechas.hidden(type="text" value="#{fechas}")
-            input#data.hidden(type="text" value="#{data}")
-            input#datosoxigeno.hidden(type="text" value="#{datosoxigeno}")
-            input#datostemperatura.hidden(type="text" value="#{datostemperatura}")
-            canvas#myChart
+            #map(style="width: 100%; min-height: 400px;")
     .row 
         .col-lg-12.col-md-12.col-xs-12
             h4
