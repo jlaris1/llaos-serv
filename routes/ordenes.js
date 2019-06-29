@@ -1230,7 +1230,7 @@ module.exports = {
                                     
                                     });
                                                 
-                                    console.log(orden.incluyeIVA);
+                                    console.log(iva);
 
                                     //if(orden.incluyeIVA == true){
                                         orden.subtotal = parseFloat(orden.subtotal).toFixed(3);
