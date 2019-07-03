@@ -104,34 +104,42 @@ block contenido
             }
         }
 
-        function convetirArray(){
-                     
+        function convetirArray(){            
             var arr = $('#artis').val().split("},");
 
             for(var i = 0; i < arr.length; i ++){
                 var aObj = arr[i].replace(/'/g, '');
                 var obj = new Object();   
 
-                obj.id = aObj.split(",")[0].split(":")[1];
-                obj.cantidad = aObj.split(",")[1].split(":")[1];
-                obj.unidad = aObj.split(",")[2].split(":")[1];
-                obj.descripcion = aObj.split(",")[4].split(":")[1];
-                obj.codigo = aObj.split(",")[3].split(":")[1];
+                obj.id = ltrim(rtrim(aObj.split(",")[0].split(":")[1]));
+                obj.cantidad = ltrim(rtrim(aObj.split(",")[1].split(":")[1]));
+                obj.unidad = ltrim(rtrim(aObj.split(",")[2].split(":")[1]));
+                obj.codigo = ltrim(rtrim(aObj.split(",")[3].split(":")[1]));
+                obj.descripcion = ltrim(rtrim(aObj.split(",")[4].split(":")[1]));
+                obj.orden = ltrim(rtrim(aObj.split(",")[5].split(":")[1]));
 
                 articulos.push(obj);
-                //alert(obj);
             }
-            $("#arts").val(JSON.stringify(articulos));
-            //alert(articulos);
+
+            $("#articulos").val(JSON.stringify(articulos));
         }
 
         function eliminarArticulo(index){
             //alert(index);
             $("#tr"+index).remove();
+            //alert(articulos);
+            //alert("Numero elementos: " + articulos.length);
             articulos_fuera.push(articulos[index]);
             articulos.splice(index, 1);
-            $("#artis").val(JSON.stringify(articulos));
+            $("#articulos").val(JSON.stringify(articulos));
             $("#articulos_fuera").val(JSON.stringify(articulos_fuera));
+        }
+
+        function ltrim(stringToTrim) {
+            return stringToTrim.replace(/^\s+/,"");
+        }
+        function rtrim(stringToTrim) {
+            return stringToTrim.replace(/\s+$/,"");
         }
 
     //Termina Javascript
@@ -236,9 +244,8 @@ block contenido
                 .divider
 
             input#articulos_fuera.hidden(name="articulos_fuera")
-            input#art.hiddem(name="arts")
-            input#artis.hidden(name="articulos" value="#{articulos}")
-            //label #{articulos}
+            input#artis.hidden(name="arts" value="#{articulos}")
+            input#articulos.hidden(name="articulos")
             table#arts.table.table-striped.table-hover
                 thead 
                     th Cantidad

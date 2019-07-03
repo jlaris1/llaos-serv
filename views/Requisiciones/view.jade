@@ -159,7 +159,7 @@ block contenido
             .col-lg-3.pull-left.right-padding
                 label.labelReq
                     | &nbsp;&nbsp; #{codReq} &nbsp;&nbsp;
-            .col-lg-5.pull-left
+            .col-lg-3.pull-left
                 if req.estatus == "Nueva"
                     label.labelSta.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{req.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 else if req.estatus == "Autorizada"
@@ -275,7 +275,7 @@ block contenido
                         if lr.estatus == 'No Autorizado'
                             td 
                                 label.label.label-close &nbsp; #{lr.estatus}&nbsp;
-        if user.permisos == "admin" || user.permisos == "developer"
+        if (user.permisos == "admin" || user.permisos == "developer") && req.estatus != "Cancelada"
             .divider
             .row.pull-right(style="margin-bottom: 20px;")
                 .col-lg-2.btn-group.pull-right(style="margin-left: -25px;")

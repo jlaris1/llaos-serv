@@ -7,7 +7,9 @@ block contenido
             $('#spanMenuRequisiciones').addClass('fa-angle-down');  
             
             $('[data-toggle="tooltip"]').tooltip();
-            $('#reqs').dataTable();
+            $('#reqs').dataTable({
+                "order": [[ 1, "desc" ]]
+            });
 
             if($('#url').text() != ''){
                 url = '../../'+ $('#url').text();

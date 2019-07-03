@@ -43,6 +43,7 @@ block contenido
             obtenerfecha();
             obtenerhora();
             $('[data-toggle="tooltip"]').tooltip();
+            $('#articulos').dataTable();    
         });
 
         function obtenerfecha(){
@@ -220,8 +221,8 @@ block contenido
                     i.fas.fa-boxes(style="margin-right: 10px;")
                     | Artículos en orden 
         .row
-            .responsive
-                table.table.table-striped.table-hover
+            .table-responsive
+                table#articulos.table.table-striped.table-hover
                     thead
                         tr
                             th Cantidad
@@ -244,25 +245,26 @@ block contenido
                                 td(id="pArt#{index}") #{art.importe}
         .divider
         .row.pull-right
-            .table-responsive
-                table.table.table-striped
-                    thead
-                    tbody
-                        tr
-                            td.text-right
-                                label
-                                    | Subtotal
-                            td.text-right 
-                            td.text-right#sub #{subtotal}
-                        tr
-                            td.text-right
-                                label
-                                    | I.V.A
-                            td.text-right 
-                            td.text-right#iva #{iva}
-                        tr
-                            td.text-right
-                                label
-                                    | Total
-                            td.text-right 
-                            td.text-right#total #{total}
+            .col-lg-12
+                .table-responsive
+                    table.table.table-striped
+                        thead
+                        tbody
+                            tr
+                                td.text-right
+                                    label
+                                        | Subtotal
+                                td.text-right 
+                                td.text-right#sub #{subtotal}
+                            tr
+                                td.text-right
+                                    label
+                                        | I.V.A
+                                td.text-right 
+                                td.text-right#iva #{iva}
+                            tr
+                                td.text-right
+                                    label
+                                        | Total
+                                td.text-right 
+                                td.text-right#total #{total}

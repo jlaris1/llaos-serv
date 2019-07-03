@@ -269,7 +269,7 @@ var mongoose = require('mongoose');
                             });
                         }).sort({ nombre : 1});
                     }
-                });
+                }).sort({ fecha : 1});
             } else if (solicitud.session.user.permisos == 'developer' || solicitud.session.user.permisos == "admin") {
                 Requisiciones.find( function(error, requisiciones){
                     if(error){
@@ -329,7 +329,7 @@ var mongoose = require('mongoose');
                             });
                         }).sort({ nombre : 1});
                     }
-                });
+                }).sort({ fecha : 1});
             } else if (solicitud.session.user.permisos == "usuario"){
                 Requisiciones.find({ "solicita": solicitud.session.user.nombre } , function(error, requisiciones){
                     if(error){
@@ -389,7 +389,7 @@ var mongoose = require('mongoose');
                             });
                         }).sort({ nombre : 1});
                     }
-                });
+                }).sort({ fecha : 1});
             } else if (solicitud.session.user.permisos == "owner"){
                 Requisiciones.find({ "responsable": solicitud.session.user._id } , function(error, requisiciones){
                     if(error){
@@ -449,7 +449,7 @@ var mongoose = require('mongoose');
                             });
                         }).sort({ nombre : 1});
                     }
-                });
+                }).sort({ fecha : 1});
             } else if (solicitud.session.user.permisos == "supervisor"){ // REVISAR BIEN QUE MOSTRARA
                 Requisiciones.find( function(error, requisiciones){
                     if(error){
@@ -509,7 +509,7 @@ var mongoose = require('mongoose');
                             });
                         }).sort({ nombre : 1});
                     }
-                });
+                }).sort({ fecha : 1});
             }
         };
     },

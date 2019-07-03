@@ -13,7 +13,7 @@ module.exports = {
                 if(error){
                     console.log(error);
                 }else{
-                    Proveedores.find( function(error, proveedores){
+                    Proveedores.populate(productos, {path: 'proveedor'}, function(error, productos){
                         if(error){
                             console.log(error);
                         }else{
@@ -54,7 +54,6 @@ module.exports = {
                                     respuesta.render("Productos/productos",{
                                         user: solicitud.session.user,
                                         productos: productos,
-                                        proveedores: proveedores,
                                         titulo: "Productos",
                                         criterios: [
                                             {

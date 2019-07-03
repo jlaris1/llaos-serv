@@ -2522,7 +2522,7 @@ module.exports = {
         };
     },
     // Cerrar orden
-    cerrarOrden: function(solicitud, respuesta){
+    cerrarOrden: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch
@@ -2585,7 +2585,7 @@ module.exports = {
         };
     },
     // Mostrar enviar ordenes en ruta a granja
-    ordenesEnRuta: function(solicitud, respuesta){
+    ordenesEnRuta: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch
@@ -2636,7 +2636,7 @@ module.exports = {
             }).sort({ nombreEmpresa : 1});          
         };
     },
-    buscarOrdenes: function(solicitud, respuesta){
+    buscarOrdenes: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch
@@ -2921,7 +2921,7 @@ module.exports = {
             };
         };
     },
-    agregarOrdenEnRuta: function(solicitud, respuesta){
+    agregarOrdenEnRuta: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch
@@ -3196,7 +3196,7 @@ module.exports = {
             };
         };
     },
-    pdfOrdenRuta: function(solicitud, respuesta){
+    pdfOrdenRuta: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch
@@ -3405,7 +3405,7 @@ module.exports = {
             });
         };
     },
-    enviarOrdenRuta: function(solicitud, respuesta){
+    enviarOrdenRuta: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch
@@ -3637,7 +3637,7 @@ module.exports = {
             });
         };
     },
-    eliminarArticuloOrdenRuta: function(solicitud, respuesta){
+    eliminarArticuloOrdenRuta: (solicitud, respuesta) => {
         ArticulosEnRuta.deleteOne({"_id": solicitud.params.id}, function(error){
             if(error){
                 console.log(error);
@@ -3714,7 +3714,7 @@ module.exports = {
             }
         });
     },
-    ordenesEnRutaBandeja: function(solicitud, respuesta){
+    ordenesEnRutaBandeja: (solicitud, respuesta) => {
         OrdenesRuta.find( function(error, oRutas){
             if(solicitud.session.user === undefined){
                 respuesta.redirect("/sesion-expirada");
@@ -3753,7 +3753,7 @@ module.exports = {
             }
         })
     },
-    ordenRutaDetalles: function(solicitud, respuesta){
+    ordenRutaDetalles: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{
@@ -3824,7 +3824,7 @@ module.exports = {
         }
         
     },
-    ordenRutaEntrada: function(solicitud, respuesta){
+    ordenRutaEntrada: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{ 
@@ -3902,28 +3902,40 @@ module.exports = {
             });
         }
     },
-    entradaOrdenRuta: function(solicitud, respuesta){
+    entradaOrdenRuta: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{ 
-            console.log(solicitud.body.arts);
-            
-            var articulos = JSON.parse(solicitud.body.arts);
+           
+            var articulos = JSON.parse(solicitud.body.articulos);
 
-            articulos.forEach( function(art){
-                var data = {
-                    cantidad: art.cantidad,
-                    orden: art.orden.serie
+            console.log(articulos);
+
+            Ordenes.populate(articulos, {path: 'orden'}, (error, articulos) => {
+                if(error){
+                    console.log(error);
+                } else {
+                   // console.log(articulos);    
+                    
+                    articulos.forEach( (art) => {
+                        var data = {
+                            cantidad: art.cantidad,
+                            orden: art.orden.serie
+                        }
+
+                        Productos.updateOne({"id": art.id}, data, (error) => {
+                            if(error){
+                                console.log(error);
+                            } else {
+                                //console.log(prod);
+                                respuesta.redirect('/ordenes/ordenesruta')
+                            }
+                        });
+                    });
                 }
-
-                console.log(data);
-
-                /*Productos.updateOne({"codigo": art.codigo}, data, function(error){
-                    if(error){
-                        console.log(error);
-                    }
-                });*/
             });
+
+            
 
             //OrdenesRuta.updateOne()
 

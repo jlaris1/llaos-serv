@@ -31,6 +31,7 @@ block contenido
                 th IVA
                 th Precio Neto
                 th Moneda
+                th Invetario
                 th Acciones
             tbody
                 each p in productos
@@ -39,13 +40,12 @@ block contenido
                         td #{ p.unidad }
                         td #{ p.nombre }
                         td 
-                            each pro in proveedores
-                                if pro.id == p.proveedor
-                                    strong #{ pro.nombreEmpresa }
+                            strong #{ p.proveedor.nombreEmpresa }
                         td #{ p.precioUnitario}
                         td #{ p.iva }
                         td #{ p.precioNeto }
                         td #{ p.moneda }
+                        td #{ p.cantidad }
                         td
                             a(href="productos/producto/editar/#{p.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 15px;")
                                 i.fas.fa-pencil-alt.text-info.fa-lg

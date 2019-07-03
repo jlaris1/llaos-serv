@@ -80,6 +80,7 @@ block contenido
             obtenerfecha();
             obtenerhora();
             $('[data-toggle="tooltip"]').tooltip();
+            $('#articulos').dataTable();   
         });
 
         function obtenerfecha(){
@@ -363,7 +364,7 @@ block contenido
                         | Artículos en órden 
             .row
                 .table-responsive
-                    table.table.table-striped.table-hover
+                    table#articulos.table.table-striped.table-hover
                         thead
                             tr
                                 th Cantidad
@@ -390,28 +391,29 @@ block contenido
                                             i.fas.fa-minus-circle.text-danger.fa-lg
         .divider
         .row.pull-right
-            .table-responsive
-                table.table.table-striped
-                    thead
-                    tbody
-                        tr
-                            td.text-right
-                                label
-                                    | Subtotal
-                            td.text-right 
-                            td.text-right#sub #{subtotal}
-                        tr
-                            td.text-right
-                                label
-                                    | I.V.A
-                            td.text-right 
-                            td.text-right#iva #{iva}
-                        tr
-                            td.text-right
-                                label
-                                    | Total
-                            td.text-right 
-                            td.text-right#total #{total}
+            .col-lg-12
+                .table-responsive
+                    table#articulos.table.table-striped
+                        thead
+                        tbody
+                            tr
+                                td.text-right
+                                    label
+                                        | Subtotal
+                                td.text-right 
+                                td.text-right#sub #{subtotal}
+                            tr
+                                td.text-right
+                                    label
+                                        | I.V.A
+                                td.text-right 
+                                td.text-right#iva #{iva}
+                            tr
+                                td.text-right
+                                    label
+                                        | Total
+                                td.text-right 
+                                td.text-right#total #{total}
         if Object.keys(articulos).length > 0  
             .divider
             .row(style="margin-bottom: 20px;")

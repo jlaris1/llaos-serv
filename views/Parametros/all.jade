@@ -65,10 +65,16 @@ block contenido
                             td #{ parseFloat(med.salinidad).toFixed(2) }
                             td #{ parseFloat(med.temperatura).toFixed(2) }
                             td #{ parseFloat(med.nivel_agua).toFixed(2) }
-                            if (new Date(med.fecha).getMonth() + 1) < 10
-                                td.text-center #{ new Date(med.fecha).getDate()+ '/0' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
+                            if (new Date(ord.fecha).getMonth() + 1) < 10
+                                if (new Date(ord.fecha).getDate()) < 10
+                                    td.text-center #{ '0' + new Date(ord.fecha).getDate()+ '/0' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()}
+                                else         
+                                    td.text-center #{ new Date(ord.fecha).getDate()+ '/0' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()}
                             else
-                                td.text-center #{ new Date(med.fecha).getDate()+ '/' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
+                                if (new Date(ord.fecha).getDate()) < 10
+                                    td.text-center #{ '0' + new Date(ord.fecha).getDate()+ '/' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()}
+                                else 
+                                    td.text-center #{ new Date(ord.fecha).getDate()+ '/' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()}
                             td #{ med.hora }
                             td #{ med.tiempo }
                             td #{ med.parametrista.nombre }

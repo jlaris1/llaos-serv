@@ -13,7 +13,9 @@ block contenido
             $('#spanMenuOrdenesRuta').removeClass('fa-angle-left');
             $('#spanMenuOrdenesRuta').addClass('fa-angle-down'); 
 
-            $('#orders').dataTable();
+            $('#orders').dataTable({
+                "order": [[ 0, "desc" ]]
+            });
         });
     .row(style="margin-bottom: -5px;")
         .col-lg-6.col-md-6.col-sm-6.col-xs-12
@@ -54,7 +56,16 @@ block contenido
                                 label.label(style="background-color: #ffa500;") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{ord.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             else if ord.estatus == "Cerrada"
                                 label.label.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{ord.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                        td #{ new Date(ord.fecha).getDate()+ '/' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()} - #{ord.hora} 
+                            if (new Date(ord.fecha).getMonth() + 1) < 10
+                                if (new Date(ord.fecha).getDate()) < 10
+                                    td.text-center #{ '0' + new Date(ord.fecha).getDate()+ '/0' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()}
+                                else         
+                                    td.text-center #{ new Date(ord.fecha).getDate()+ '/0' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()}
+                            else
+                                if (new Date(ord.fecha).getDate()) < 10
+                                    td.text-center #{ '0' + new Date(ord.fecha).getDate()+ '/' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()}
+                                else 
+                                    td.text-center #{ new Date(ord.fecha).getDate()+ '/' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()}
                         td
                             a(href="/ordenes/ordenruta/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Ver detalles", style="margin-right: 10px;")
                                 i.fas.fa-eye.text-primary.fa-lg
