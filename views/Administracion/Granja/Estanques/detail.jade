@@ -36,6 +36,18 @@ block contenido
 
             // Marcadores en Mapa
             var marker = L.marker([$('#markerx').val(),$('#markery').val()]).addTo(mymap);
+            /*var marker2 = L.geoJson(
+                [$('#markerx').val(),$('#markery').val()],
+                {
+                    //fillColor: getColor(feature.properties.density),
+                    fillColor: '#E23838',
+                    weight: 2,
+                    opacity: 1,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.7
+                }
+            ).addTo(mymap);*/
             
             // Puntos en el mapa para dibujar piscina
             var p = $('#locations').val().split(",");
@@ -54,7 +66,7 @@ block contenido
             var location = locations;
 
             // Crear diujo del estanque
-            var polygon = L.geoJson(location).addTo(mymap);
+            var polygon = L.polygon(location).addTo(mymap);
 
             // Creación de gráficos
             var ctx = document.getElementById('myChart');
