@@ -2,7 +2,9 @@ extends ../../layouts/layout.jade
 block contenido
     script.
         $(document).ready( function(){
-            $('#orders').dataTable();
+            $('#orders').dataTable(
+                {"order": [[ 0, "desc" ]]}
+            );
             
             $('[data-toggle="tooltip"]').tooltip();
             $('#subMenuCompras').removeClass('hidden');
