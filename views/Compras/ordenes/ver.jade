@@ -255,16 +255,16 @@ block contenido
                                     label
                                         | Subtotal
                                 td.text-right 
-                                td.text-right#sub #{subtotal}
+                                td.text-right#sub #{ parseFloat(subtotal).toFixed(3)}
                             tr
                                 td.text-right
                                     label
                                         | I.V.A
                                 td.text-right 
-                                td.text-right#iva #{iva}
+                                td.text-right#iva #{parseFloat(iva).toFixed(3)}
                             tr
                                 td.text-right
                                     label
                                         | Total
                                 td.text-right 
-                                td.text-right#total #{total}
+                                td.text-right#total #{parseFloat(total).toFixed(3)}

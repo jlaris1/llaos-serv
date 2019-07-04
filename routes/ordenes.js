@@ -1234,7 +1234,7 @@ module.exports = {
 
                                     //if(orden.incluyeIVA == true){
                                         orden.subtotal = parseFloat(orden.subtotal).toFixed(3);
-                                        orden.iva = iva;
+                                        orden.iva = parseFloat(iva).toFixed(3);
                                         orden.total = parseFloat(parseFloat(orden.subtotal) + parseFloat(orden.iva)).toFixed(3);
                                     /*} else {
                                         orden.iva = 0.00;
