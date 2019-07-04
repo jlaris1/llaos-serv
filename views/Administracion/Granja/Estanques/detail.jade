@@ -35,7 +35,18 @@ block contenido
             }).addTo(mymap);
 
             // Marcadores en Mapa
-            var marker = L.marker([$('#markerx').val(),$('#markery').val()]).addTo(mymap);
+            //var marker = L.marker([$('#markerx').val(),$('#markery').val()]).addTo(mymap);
+            var marker2 = L.geoJson(
+                [$('#markerx').val(),$('#markery').val()],
+                {
+                    fillColor: getColor(feature.properties.density),
+                    weight: 2,
+                    opacity: 1,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.7
+                }
+            ).addTo(mymap);
             
             // Puntos en el mapa para dibujar piscina
             var p = $('#locations').val().split(",");
@@ -1035,6 +1046,10 @@ block contenido
                         }
                     }
                 });
+        
+        
+            // Actualizar la páguna cada 5 minutos
+            //setInterval("location.reload(true)", 300000);
         });
 
         function obtenerfecha(){

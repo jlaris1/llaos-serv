@@ -1256,11 +1256,11 @@ module.exports = {
 
                                     // Subtotal, IVA y total
                                     doc.text("Subtotal", 440, 670, { align: 'right', width: 80 })
-                                    .text(fmon.FormatMoney(true, parseFloat(orden.subtotal)), 520, 670, { align: 'right', width: 80 })
+                                    .text(fmon.FormatMoney(true, parseFloat(orden.subtotal).toFixed(3)), 520, 670, { align: 'right', width: 80 })
                                     .text("IVA", 440, 685, { align: 'right', width: 80 })
-                                    .text(fmon.FormatMoney(true, parseFloat(orden.iva)), 520, 685, { align: 'right', width: 80 })
+                                    .text(fmon.FormatMoney(true, parseFloat(orden.iva).toFixed(3)), 520, 685, { align: 'right', width: 80 })
                                     .text("Total", 440, 700, { align: 'right', width: 80 })
-                                    .text(fmon.FormatMoney(true, parseFloat(orden.total)), 520, 700, { align: 'right', width: 80 })
+                                    .text(fmon.FormatMoney(true, parseFloat(orden.total).toFixed(3)), 520, 700, { align: 'right', width: 80 })
                                 
                                     // Creación del documento y guardado
 
@@ -3909,7 +3909,7 @@ module.exports = {
            
             var articulos = JSON.parse(solicitud.body.articulos);
 
-            console.log(articulos);
+            //console.log(articulos);
 
             Ordenes.populate(articulos, {path: 'orden'}, (error, articulos) => {
                 if(error){
@@ -3918,20 +3918,35 @@ module.exports = {
                    // console.log(articulos);    
                     
                     articulos.forEach( (art) => {
-                        var data = {
-                            cantidad: art.cantidad,
-                            orden: art.orden.serie
-                        }
-
-                        Productos.updateOne({"id": art.id}, data, (error) => {
+                        //console.log(art.id);
+                        
+                        Productos.findOne({"codigo": art.codigo}, (error, producto) => {
                             if(error){
                                 console.log(error);
                             } else {
-                                //console.log(prod);
-                                respuesta.redirect('/ordenes/ordenesruta')
+                                //console.log(producto);
+
+                                if(producto.cantidad == NaN){
+                                    producto.cantidad = 0;
+                                }
+
+                                var data = {
+                                    cantidad: parseFloat(parseFloat(art.cantidad) + parseFloat(producto.cantidad)).toFixed(2),
+                                    orden: art.orden.serie
+                                }
+
+                                Productos.updateOne({"_id": producto.id}, data, (error, arti) => {
+                                    if(error){
+                                        console.log(error);
+                                    } else {
+                                        console.log(arti);
+                                    }
+                                });
                             }
                         });
                     });
+
+                    respuesta.redirect('/ordenes/ordenesruta');
                 }
             });
 

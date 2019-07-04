@@ -127,10 +127,16 @@ block contenido
         function eliminarArticulo(index){
             //alert(index);
             $("#tr"+index).remove();
-            //alert(articulos);
-            //alert("Numero elementos: " + articulos.length);
-            articulos_fuera.push(articulos[index]);
-            articulos.splice(index, 1);
+            
+            for(var i=0; i < articulos.length; i ++){
+                if(articulos[i].id == index){
+                    articulos_fuera.push(articulos[i]);
+                    articulos.splice(i, 1);
+                    break;
+                }
+            }
+
+            //alert(JSON.stringify(articulos));
             $("#articulos").val(JSON.stringify(articulos));
             $("#articulos_fuera").val(JSON.stringify(articulos_fuera));
         }
@@ -257,7 +263,7 @@ block contenido
                     th Acciones
                 tbody
                     each art, index in articulosRuta
-                        tr(id="tr#{index}")
+                        tr(id="tr#{art.id}")
                             td.text-right #{parseFloat(art.cantidad).toFixed(3)}
                             td #{art.unidad}
                             td #{art.codigo}
@@ -265,9 +271,9 @@ block contenido
                             td #{art.orden.serie}
                             td #{art.proveedor.nombreEmpresa}
                             td
-                                //a(href="#" onclick="editarCantidad(this.id)" id="#{index}", data-toggle="tooltip", data-placement="top", title="Editar cantidad", style="margin-right: 10px;")
+                                //a(href="#" onclick="editarCantidad(this.id)" id="#{art.id}", data-toggle="tooltip", data-placement="top", title="Editar cantidad", style="margin-right: 10px;")
                                     i.fas.fa-pencil-alt.text-info.fa-lg
-                                a(href="#" onclick="eliminarArticulo(this.id)" id="#{index}", data-toggle="tooltip", data-placement="top", title="Eliminar artículo", style="margin-right: 10px;")
+                                a(href="#" onclick="eliminarArticulo(this.id)" id="#{art.id}", data-toggle="tooltip", data-placement="top", title="Eliminar artículo", style="margin-right: 10px;")
                                     i.fas.fa-minus-circle.text-danger.fa-lg
         .divider
         .row(style="margin-bottom: 20px;")
