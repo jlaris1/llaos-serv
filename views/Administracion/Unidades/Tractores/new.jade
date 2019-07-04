@@ -1,0 +1,160 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .round {
+            border-radius: 5px !important;
+            -moz-border-radius: 5px !important;
+            -webkit-border-radius: 5px !important;
+        }
+        thead {
+            background-color: black;
+            color: #fff;
+        } 
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora(); 
+
+            $('#subMenuParametros').removeClass('hidden');
+            $('#spanMenuParametros').removeClass('fa-angle-left');
+            $('#spanMenuParametros').addClass('fa-angle-down');
+
+            $('#modulo').on('change', function(){
+                document.frm2.submit();
+            });
+
+            $('#estanques').on('change', function(){
+                $('#est').val(this.value);
+
+                var select=document.getElementById("estanques");
+ 
+                // recorremos todos los valores del select
+                for(var i=1; i<select.length; i++){
+                    if(select.options[i].value == this.value){
+                        // seleccionamos el valor que coincide
+                        $("#sig_est").val(select.options[i+1].value);
+                    }
+                }
+            });
+
+            $('#fechaI').on('change', function(){ $('#fec').val(this.value); });
+            $('#tiempo').on('change', function(){ $('#tiem').val(this.value); });
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+
+        function submit() {
+            document.frm3.submit();
+        }
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2 
+                i.fas.fa-eye-dropper(style="margin-right: 10px;")
+                |   Registro de Tractor
+    .divider
+    .row
+        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-right.text-right
+            span
+                | Usuario: 
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .divider
+    .row
+        form(role="form" name="frm" method="post" action="/tractor/add")
+            .row
+                .col-lg-3
+                    .form-group
+                        label | Código
+                        .input-group
+                            span.input-group-addon
+                                i.fas.fa-qrcode
+                            input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="1")
+                .col-lg-3
+                    .form-group
+                        label | Marca
+                        .input-group
+                            span.input-group-addon
+                                i.fas.fa-registered
+                            input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="2")
+                .col-lg-3
+                    .form-group
+                        label | Modelo
+                        .input-group
+                            span.input-group-addon
+                                i.fas.fa-modx
+                            input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="3")
+                .col-lg-3
+                    .form-group
+                        label | Llantas
+                        .input-group
+                            span.input-group-addon
+                                i.fas.fa-car-side
+                            input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="4")
+            .row
+                .col-lg-3
+                    .form-group
+                        label | Batería # 1
+                        .input-group
+                            span.input-group-addon
+                                i.fas.fa-car-battery
+                            input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="5")
+                .col-lg-3
+                    .form-group
+                        label | Batería # 2
+                        .input-group
+                            span.input-group-addon
+                                i.fas.fa-car-battery
+                            input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="5")
+                .col-lg-3
+                    .form-group
+                        label | Horometro
+                        .input-group
+                            span.input-group-addon
+                                i.fas.fa-tachometer-alt
+                            input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="6")
