@@ -1256,11 +1256,11 @@ module.exports = {
 
                                     // Subtotal, IVA y total
                                     doc.text("Subtotal", 440, 670, { align: 'right', width: 80 })
-                                    .text(true, "$ " + orden.subtotal, 520, 670, { align: 'right', width: 80 })
+                                    .text("$ " + orden.subtotal, 520, 670, { align: 'right', width: 80 })
                                     .text("IVA", 440, 685, { align: 'right', width: 80 })
-                                    .text(true, "$ " + orden.iva, 520, 685, { align: 'right', width: 80 })
+                                    .text("$ " + orden.iva, 520, 685, { align: 'right', width: 80 })
                                     .text("Total", 440, 700, { align: 'right', width: 80 })
-                                    .text(true, "$ " + orden.total, 520, 700, { align: 'right', width: 80 })
+                                    .text("$ " + orden.total, 520, 700, { align: 'right', width: 80 })
                                 
                                     // Creación del documento y guardado
 
