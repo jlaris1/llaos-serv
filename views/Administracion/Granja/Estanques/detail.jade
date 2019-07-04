@@ -66,7 +66,18 @@ block contenido
             var location = locations;
 
             // Crear diujo del estanque
-            var polygon = L.polygon(location).addTo(mymap);
+            var polygon = L.polygon(location,
+                {
+                    style: {
+                        fillColor: '#E23838',
+                        weight: 2,
+                        opacity: 1,
+                        color: 'white',
+                        dashArray: '3',
+                        fillOpacity: 0.7
+                    }
+                }
+            ).addTo(mymap);
 
             // Creación de gráficos
             var ctx = document.getElementById('myChart');
