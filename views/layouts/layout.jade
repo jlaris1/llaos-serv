@@ -112,7 +112,7 @@ html(lang="es")
                                                                     |   Nuevo
                                             li
                                                 a(href='#')#menuAdmGranja
-                                                    i.fas.fa-tractor.fa-fw
+                                                    i.fas.fa-globe-americas.fa-fw
                                                     |   Granja
                                                     span#spanMenuAdmGranja.fas.fa-angle-left
                                                 ul#subMenuAdmGranja.nav.nav-third-level.hidden
@@ -129,7 +129,27 @@ html(lang="es")
                                                             li
                                                                 a(href='/estanque/new')
                                                                     i.fas.fa-plus-circle.fa-fw
-                                                                    |   Nuevo                   
+                                                                    |   Nuevo               
+                                            li
+                                                a(href='#')#menuUnidades
+                                                    i.fas.fa-car-side.fa-fw
+                                                    |   Unidades
+                                                    span#spanMenuUnidades.fas.fa-angle-left
+                                                ul#subMenuUnidades.nav.nav-third-level.hidden
+                                                    li
+                                                        a(href='#')#menuTractores
+                                                            i.fas.fa-tractor.fa-fw 
+                                                            |   Tractores
+                                                            span#spanMenuTractores.fas.fa-angle-left
+                                                        ul#subMenuTractores.nav.nav-fourth-level.hidden
+                                                            li
+                                                                a(href='/unidades/tractor/all')
+                                                                    i.fas.fa-table.fa-fw
+                                                                    |   Bandeja
+                                                            li
+                                                                a(href='/unidades/tractor/new')
+                                                                    i.fas.fa-plus-circle.fa-fw
+                                                                    |   Nuevo         
                                     // /.nav-second-level
                                 // MENÚ COMPRAS
                                 if user.permisos == "admin" || user.permisos == "developer" || user.permisos == "compras"

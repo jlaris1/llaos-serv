@@ -76,6 +76,9 @@ module.exports = function(app){
     var recepcionLarvas = require('../routes/recepcionlarvas.js');
     var recepcionLarvasRouter = express.Router();
 
+    var unidad = require('../routes/unidades.js')
+    var unidadRouter = express.Router();
+
     //Pruebas
     app.get('/pruebita', pruebita.prueba); 
     
@@ -413,6 +416,9 @@ module.exports = function(app){
 
 
     // Unidades
-    
+    app.use('/unidades', unidadRouter);
+    unidadRouter.get('/tractor/all', unidad.allT);
+    unidadRouter.get('/tractor/new', unidad.newT);
+    unidadRouter.post('/tractor/add', unidad.addT)
 
 } 

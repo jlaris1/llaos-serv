@@ -1,4 +1,4 @@
-extends ../layouts/layout.jade
+extends ../../../layouts/layout.jade
 block contenido
     style.
         .round {
@@ -106,7 +106,7 @@ block contenido
             label#hora
     .divider
     .row
-        form(role="form" name="frm" method="post" action="/tractor/add")
+        form(role="form" name="frm" method="post" action="/unidad/tractor/add")
             .row
                 .col-lg-3
                     .form-group
@@ -114,28 +114,28 @@ block contenido
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-qrcode
-                            input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="1")
+                            input.form-control(type="text" name="temperatura" placeholder="# Necro" tabindex="1")
                 .col-lg-3
                     .form-group
                         label | Marca
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-registered
-                            input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="2")
+                            input.form-control(type="text" name="temperatura" placeholder="# Necro" tabindex="2")
                 .col-lg-3
                     .form-group
                         label | Modelo
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-modx
-                            input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="3")
+                            input.form-control(type="text" name="temperatura" placeholder="# Necro" tabindex="3")
                 .col-lg-3
                     .form-group
                         label | Llantas
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-car-side
-                            input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="4")
+                            input.form-control(type="text" name="temperatura" placeholder="# Necro" tabindex="4")
             .row
                 .col-lg-3
                     .form-group
@@ -143,18 +143,18 @@ block contenido
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-car-battery
-                            input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="5")
+                            input.form-control(type="text" name="temperatura" placeholder="# Necro" tabindex="5")
                 .col-lg-3
                     .form-group
                         label | Batería # 2
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-car-battery
-                            input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="5")
+                            input.form-control(type="text" name="temperatura" placeholder="# Necro" tabindex="5")
                 .col-lg-3
                     .form-group
                         label | Horometro
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-tachometer-alt
-                            input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="6")
+                            input.form-control(type="text" name="temperatura" placeholder="# Necro" tabindex="6")

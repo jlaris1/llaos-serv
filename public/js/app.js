@@ -473,6 +473,32 @@ $(document).ready( function() {
                     $('#spanMenuNutricion').addClass('fa-angle-left');
                 }        
             });
+
+        // Unidades
+            $('#menuUnidades').click( function(){
+                if ($('#subMenuUnidades').hasClass('hidden')) {
+                    $('#subMenuUnidades').removeClass('hidden');
+                    $('#spanMenuUnidades').removeClass('fa-angle-left');
+                    $('#spanMenuUnidades').addClass('fa-angle-down');
+                }else{
+                    $('#subMenuUnidades').addClass('hidden');
+                    $('#spanMenuUnidades').removeClass('fa-angle-down');
+                    $('#spanMenuUnidades').addClass('fa-angle-left');
+                }        
+            });
+            
+            // Tractores
+            $('#menuTractores').click( function(){
+                if ($('#subMenuTractores').hasClass('hidden')) {
+                    $('#subMenuTractores').removeClass('hidden');
+                    $('#spanMenuTractores').removeClass('fa-angle-left');
+                    $('#spanMenuTractores').addClass('fa-angle-down');
+                }else{
+                    $('#subMenuTractores').addClass('hidden');
+                    $('#spanMenuTractores').removeClass('fa-angle-down');
+                    $('#spanMenuTractores').addClass('fa-angle-left');
+                }        
+            });
 });
 
 function obtenerfecha(){
