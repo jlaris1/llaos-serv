@@ -1174,7 +1174,7 @@ block contenido
                             b Mínimos
                         span(style="font-size: 16px;") 
                             b pH: 
-                                if ph_min >= 8.0 && <= 8.3
+                                if ph_min >= 8.0 && ph_min <= 8.3
                                     i.fas.fa-check-circle.text-success
                                     span.text-right.text-success  #{ parseFloat(ph_min).toFixed(2)}
                                 else if (ph_min < 8.0 && ph_min >= 7.7) || (ph_min >= 8.4 && ph_min <= 8.7)
