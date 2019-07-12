@@ -1199,13 +1199,15 @@ block contenido
                             b Máximos
                         span(style="font-size: 16px;") 
                             b pH: 
-                                if ph_max >= 8
+                                if ph_min >= 8.0 && ph_min <= 8.3
                                     i.fas.fa-check-circle.text-success
-                                    span.text-success  #{ parseFloat(ph_max).toFixed(2)}
-                                else if ph_max < 8
-                                    span.text-warning  #{ parseFloat(ph_max).toFixed(2)}
-                                else if ph_max < 7
-                                    span.text-danger  #{ parseFloat(ph_max).toFixed(2)}
+                                    span.text-right.text-success  #{ parseFloat(ph_min).toFixed(2)}
+                                else if (ph_min < 8.0 && ph_min >= 7.7) || (ph_min >= 8.4 && ph_min <= 8.7)
+                                    i.fas.fa-info-circle.text-warning
+                                    span.text-right.text-warning  #{ parseFloat(ph_min).toFixed(2)}
+                                else if ph_min < 7.7 || ph_min > 8.7
+                                    i.fas.fa-exclamation-circle.text-danger
+                                    span.text-right.text-danger  #{ parseFloat(ph_min).toFixed(2)}
                         br
                         span(style="font-size: 16px;") 
                             b °C: 
