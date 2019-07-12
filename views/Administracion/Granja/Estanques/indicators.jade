@@ -2,6 +2,8 @@
 extends ../../../layouts/layout.jade
 block contenido
     script.
+        var estanques = [];
+
         $(document).ready( function(){
             $('#subMenuAdministracion').removeClass('hidden');
             $('#spanMenuAdministracion').removeClass('fa-angle-left');
@@ -23,7 +25,61 @@ block contenido
                 maxZoom: 18,
                 subdomains:['mt0','mt1','mt2','mt3']
             }).addTo(mymap);
+
+            var piscinasData = JSON.parse($('#piscinaData').val());
+
+            L.geoJson(piscinasData, {style: style}).addTo(map);                   
+
         });
+
+        function convetirArray(){            
+            var arr = $('#estanques').val().split("},");
+
+            for(var i = 0; i < arr.length; i ++){
+                var aObj = arr[i].replace(/'/g, '');
+                var obj = new Object();   
+
+
+                estanques.push(obj);
+            }
+        }
+
+        function getColor(d) {
+            return d > 1000 ? '#800026' :
+                d > 500  ? '#BD0026' :
+                d > 200  ? '#E31A1C' :
+                d > 100  ? '#FC4E2A' :
+                d > 50   ? '#FD8D3C' :
+                d > 20   ? '#FEB24C' :
+                d > 10   ? '#FED976' :
+                            '#FFEDA0';
+        }
+
+        function style(feature) {
+            return {
+                fillColor: getColor(feature.properties.density),
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
+
+        function highlightFeature(e) {
+            var layer = e.target;
+
+            layer.setStyle({
+                weight: 5,
+                color: '#666',
+                dashArray: '',
+                fillOpacity: 0.7
+            });
+
+            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+                layer.bringToFront();
+            }
+        }
 
     .row
         .col-lg-9.col-md-9.col-xs-9
@@ -36,5 +92,6 @@ block contenido
                 |   Regresar
         .divider
     .row
+        #input#piscinaData.hidden(value="#{piscinaData}")
         .col-lg-12
-            #map(style="width: 100%; min-height: 400px;")
+            #map(style="width: 100%; min-height: 800px;")

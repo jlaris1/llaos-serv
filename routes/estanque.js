@@ -818,10 +818,49 @@ module.exports = {
                                         if(error){
                                             console.log(error);
                                         } else {
+                                            var features = [];
+                                            var data = {};
+
+                                            estanques.forEach( estanque => {
+                                                data= 
+                                                    {
+                                                        "type":"Feature",
+                                                        "id": estanque.id,
+                                                        "properties":
+                                                            {
+                                                                "name": estanque.codigo,
+                                                                "density": estanque.oxigeno
+                                                            },
+                                                        "geometry":
+                                                            {
+                                                                "type":"Polygon",
+                                                                "coordinates":
+                                                                    [[
+                                                                        [parseFloat(element.locations.pointer[0]), parseFloat(element.locations.pointer[1])],
+                                                                        [parseFloat(element.locations.pointer[2]), parseFloat(element.locations.pointer[3])],
+                                                                        [parseFloat(element.locations.pointer[4]), parseFloat(element.locations.pointer[5])],
+                                                                        [parseFloat(element.locations.pointer[6]), parseFloat(element.locations.pointer[7])],
+                                                                        [parseFloat(element.locations.pointer[8]), parseFloat(element.locations.pointer[9])],
+                                                                        [parseFloat(element.locations.pointer[10]), parseFloat(element.locations.pointer[11])],
+                                                                        [parseFloat(element.locations.pointer[12]), parseFloat(element.locations.pointer[13])],
+                                                                        [parseFloat(element.locations.pointer[14]), parseFloat(element.locations.pointer[15])] 
+                                                                    ]]
+                                                            }
+                                                    };
+                                                
+                                                    features.push(data);
+                                            });
+
+                                            var piscinaData = {
+                                                "type":"FeatureCollection",
+                                                "features": features
+                                            };                                          
+
                                             respuesta.render('Administracion/Granja/Estanques/indicators',
                                                 {
                                                     user: solicitud.session.user,
                                                     estanques: estanques,
+                                                    piscinaData: piscinaData,
                                                     titulo: "Piscinas",
                                                     criterios: [
                                                         {
