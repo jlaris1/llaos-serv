@@ -136,7 +136,7 @@ block contenido
                 }
             }
 
-            //alert(JSON.stringify(articulos));
+            $('#return').val(articulos_fuera.length);
             $("#articulos").val(JSON.stringify(articulos));
             $("#articulos_fuera").val(JSON.stringify(articulos_fuera));
         }
@@ -249,6 +249,7 @@ block contenido
                 | Artículos en ruta 
                 .divider
 
+            input#return.hidden(name="return")
             input#articulos_fuera.hidden(name="articulos_fuera")
             input#artis.hidden(name="arts" value="#{articulos}")
             input#articulos.hidden(name="articulos")
