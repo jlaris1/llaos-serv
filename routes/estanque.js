@@ -836,14 +836,14 @@ module.exports = {
                                                                 "type":"Polygon",
                                                                 "coordinates":
                                                                     [[
-                                                                        [parseFloat(element.locations.pointer[0]), parseFloat(element.locations.pointer[1])],
-                                                                        [parseFloat(element.locations.pointer[2]), parseFloat(element.locations.pointer[3])],
-                                                                        [parseFloat(element.locations.pointer[4]), parseFloat(element.locations.pointer[5])],
-                                                                        [parseFloat(element.locations.pointer[6]), parseFloat(element.locations.pointer[7])],
-                                                                        [parseFloat(element.locations.pointer[8]), parseFloat(element.locations.pointer[9])],
-                                                                        [parseFloat(element.locations.pointer[10]), parseFloat(element.locations.pointer[11])],
-                                                                        [parseFloat(element.locations.pointer[12]), parseFloat(element.locations.pointer[13])],
-                                                                        [parseFloat(element.locations.pointer[14]), parseFloat(element.locations.pointer[15])] 
+                                                                        [parseFloat(estanque.locations.pointer[0]), parseFloat(estanque.locations.pointer[1])],
+                                                                        [parseFloat(estanque.locations.pointer[2]), parseFloat(estanque.locations.pointer[3])],
+                                                                        [parseFloat(estanque.locations.pointer[4]), parseFloat(estanque.locations.pointer[5])],
+                                                                        [parseFloat(estanque.locations.pointer[6]), parseFloat(estanque.locations.pointer[7])],
+                                                                        [parseFloat(estanque.locations.pointer[8]), parseFloat(estanque.locations.pointer[9])],
+                                                                        [parseFloat(estanque.locations.pointer[10]), parseFloat(estanque.locations.pointer[11])],
+                                                                        [parseFloat(estanque.locations.pointer[12]), parseFloat(estanque.locations.pointer[13])],
+                                                                        [parseFloat(estanque.locations.pointer[14]), parseFloat(estanque.locations.pointer[15])] 
                                                                     ]]
                                                             }
                                                     };
