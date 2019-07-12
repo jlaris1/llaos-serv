@@ -797,5 +797,62 @@ module.exports = {
                 respuesta.redirect('/estanque/all');
             }
         });
+    },
+    indicators: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{
+            Estanques.find( function(error, estanques){
+                if(error){
+                    console.log(error);
+                } else {
+                    Modulos.populate(estanques, { path: 'modulo'}, function(error, estanques){
+                        if(error){
+                            console.log(error);
+                        } else {
+                            TiposModulos.populate(estanques, { path: 'tipo'}, function(error, estanques){
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(error);
+                                        } else {
+                                            respuesta.render('Administracion/Granja/Estanques/indicators',
+                                                {
+                                                    user: solicitud.session.user,
+                                                    estanques: estanques,
+                                                    titulo: "Piscinas",
+                                                    criterios: [
+                                                        {
+                                                            val: "modulos",
+                                                            name: "Módulo"
+                                                        },
+                                                    ],
+                                                    piscinas: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }
+                                                    ],
+                                                    charoleros: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }   
+                                                    ],
+                                                    usuarios: usuarios,
+                                                    ruta: "estanque"
+                                                }
+                                            );
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
     }
 }

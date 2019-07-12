@@ -377,6 +377,7 @@ module.exports = function(app){
     estanqueRouter.get('/delete/:id', estanque.delete);
     //estanqueRouter.post('/report/pdf', estanque.pdf);
     //estanqueRouter.post('/report/xls', estanque.xls);
+    estanqueRouter.get('/indicators', estanque.indicators);
 
     // Parametros
     app.use('/parametros', parametrosRouter);

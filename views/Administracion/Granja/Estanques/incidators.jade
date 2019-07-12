@@ -1,0 +1,47 @@
+    
+    extends ../../../layouts/layout.jade
+block contenido
+    style.
+        .text-warning{
+            color: #f78200;
+        }
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora(); 
+
+            $('#subMenuAdministracion').removeClass('hidden');
+            $('#spanMenuAdministracion').removeClass('fa-angle-left');
+            $('#spanMenuAdministracion').addClass('fa-angle-down'); 
+            $('#subMenuAdmGranja').removeClass('hidden');
+            $('#spanMenuAdmGranja').removeClass('fa-angle-left');
+            $('#spanMenuAdmGranja').addClass('fa-angle-down');
+            $('#subMenuEstanques').removeClass('hidden');
+            $('#spanMenuEstanques').removeClass('fa-angle-left');
+            $('#spanMenuEstanques').addClass('fa-angle-down');
+            $('#subMenuEstanques').removeClass('hidden');
+            $('#spanMenuEstanques').removeClass('fa-angle-left');
+            $('#spanMenuEstanques').addClass('fa-angle-down');
+
+            // Mostrar Mapa
+            var mymap = L.map('map').setView([27.30673, -110.41087], 16);
+
+            L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+                maxZoom: 18,
+                subdomains:['mt0','mt1','mt2','mt3']
+            }).addTo(mymap);
+        });
+
+    .row
+        .col-lg-9.col-md-9.col-xs-9
+            h2
+                i.fas.fa-water(style="margin-right: 10px;")
+                |   Indicadores de piscinas
+        .col-lg-3.col-md-3.col-sm-3.col-xs-3.text-right(style="margin-top: 15px;")
+            a.btn.btn-special(href="/estanque/all")
+                i.fas.fa-arrow-alt-circle-left
+                |   Regresar
+        .divider
+    .row
+        .col-lg-12
+            #map(style="width: 100%; min-height: 400px;")
