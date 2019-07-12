@@ -1119,7 +1119,7 @@ block contenido
             //console.log("un segundo mas...");
         }
     .row
-        .col-lg-12.col-md-12.col-xs-12
+        .col-lg-9.col-md-9.col-xs-9
             h2
                 i.fas.fa-water(style="margin-right: 10px;")
                 |   Detalle de la piscina 
@@ -1127,6 +1127,10 @@ block contenido
                 if prom_ph >= 8 && prom_c > 3 && prom_ox < 34
                     i.fas.fa-check-circle.text-success
                     b.text-success &nbsp;(Piscina estable)
+        .col-lg-3.col-md-3.col-sm-3.col-xs-3.text-right(style="margin-top: 15px;")
+            a.btn.btn-special(href="/estanque/all")
+                i.fas.fa-arrow-alt-circle-left
+                |   Regresar
         .divider
     // Datos Generales
     .row
@@ -1170,13 +1174,13 @@ block contenido
                             b Mínimos
                         span(style="font-size: 16px;") 
                             b pH: 
-                                if ph_min >= 8
+                                if ph_min >= 8.0 && <= 8.3
                                     i.fas.fa-check-circle.text-success
                                     span.text-right.text-success  #{ parseFloat(ph_min).toFixed(2)}
-                                else if ph_min < 8
+                                else if (ph_min < 8.0 && ph_min >= 7.7) || (ph_min >= 8.4 && ph_min <= 8.7)
                                     i.fas.fa-info-circle.text-warning
                                     span.text-right.text-warning  #{ parseFloat(ph_min).toFixed(2)}
-                                else if ph_min < 7
+                                else if ph_min < 7.7 || ph_min > 8.7
                                     i.fas.fa-exclamation-circle.text-danger
                                     span.text-right.text-danger  #{ parseFloat(ph_min).toFixed(2)}
                         br
