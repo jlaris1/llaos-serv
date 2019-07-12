@@ -1155,18 +1155,42 @@ block contenido
                     .col-lg-4(style="font-size: 16px;")
                         span 
                             b pH: 
-                            span.text-right #{prom_ph}
+                                if prom_ph >= 8.0 && prom_ph <= 8.3
+                                    i.fas.fa-check-circle.text-success
+                                    span.text-right.text-success  #{ parseFloat(prom_ph).toFixed(2)}
+                                else if (prom_ph < 8.0 && prom_ph >= 7.7) || (prom_ph >= 8.4 && prom_ph <= 8.7)
+                                    i.fas.fa-info-circle.text-warning
+                                    span.text-right.text-warning  #{ parseFloat(prom_ph).toFixed(2)}
+                                else if prom_ph < 7.7 || prom_ph > 8.7
+                                    i.fas.fa-exclamation-circle.text-danger
+                                    span.text-right.text-danger  #{ parseFloat(prom_ph).toFixed(2)}
                     .col-lg-4(style="font-size: 16px;")
                         span 
                             b °C: 
-                            span.text-right #{prom_c}
+                                if prom_c >= 29.0 && prom_c <= 31.0
+                                    i.fas.fa-check-circle.text-success
+                                    span.text-right.text-success  #{ parseFloat(prom_c).toFixed(2)}
+                                else if (prom_c < 29.0 && prom_c >= 25.0) || (prom_c > 31.0 && prom_c <= 33.0)
+                                    i.fas.fa-info-circle.text-warning
+                                    span.text-right.text-warning  #{ parseFloat(prom_c).toFixed(2)}
+                                else if prom_c < 25.0 || prom_c > 33.0
+                                    i.fas.fa-exclamation-circle.text-danger
+                                    span.text-right.text-danger  #{ parseFloat(prom_c).toFixed(2)}
                     .col-lg-4(style="font-size: 16px;")
                         span 
                             b 0
                             sub
                                 b 2
-                            b : 
-                            span.text-right #{prom_ox}
+                            b :
+                                if prom_ox >= 3.5 && prom_ox <= 8.0
+                                    i.fas.fa-check-circle.text-success
+                                    span.text-right.text-success  #{ parseFloat(prom_ox).toFixed(2)}
+                                else if prom_ox < 3.5 && prom_ox >= 3.1
+                                    i.fas.fa-info-circle.text-warning
+                                    span.text-right.text-warning  #{ parseFloat(prom_ox).toFixed(2)}
+                                else if prom_ox < 3.0 || prom_ox > 8.0
+                                    i.fas.fa-exclamation-circle.text-danger
+                                    span.text-right.text-danger  #{ parseFloat(prom_ox).toFixed(2)} 
             .card.card-default
                 .card-body.card-5-7
                     .col-lg-6
@@ -1185,40 +1209,73 @@ block contenido
                                     span.text-right.text-danger  #{ parseFloat(ph_min).toFixed(2)}
                         br
                         span(style="font-size: 16px;") 
-                            b °C: 
-                            span.text-right #{ parseFloat(tm_min).toFixed(2)}
+                            b °C:
+                                if tm_min >= 29.0 && tm_min <= 31.0
+                                    i.fas.fa-check-circle.text-success
+                                    span.text-right.text-success  #{ parseFloat(tm_min).toFixed(2)}
+                                else if (tm_min < 29.0 && tm_min >= 25.0) || (tm_min > 31.0 && tm_min <= 33.0)
+                                    i.fas.fa-info-circle.text-warning
+                                    span.text-right.text-warning  #{ parseFloat(tm_min).toFixed(2)}
+                                else if tm_min < 25.0 || tm_min > 33.0
+                                    i.fas.fa-exclamation-circle.text-danger
+                                    span.text-right.text-danger  #{ parseFloat(tm_min).toFixed(2)}
                         br
                         span(style="font-size: 16px;") 
                             b 0
                             sub
                                 b 2
                             b : 
-                            span.text-right #{ parseFloat(ox_min).toFixed(2)}
+                                if ox_min >= 3.5 && ox_min <= 8.0
+                                    i.fas.fa-check-circle.text-success
+                                    span.text-right.text-success  #{ parseFloat(ox_min).toFixed(2)}
+                                else if ox_min < 3.5 && ox_min >= 3.1
+                                    i.fas.fa-info-circle.text-warning
+                                    span.text-right.text-warning  #{ parseFloat(ox_min).toFixed(2)}
+                                else if ox_min < 3.0 || ox_min > 8.0
+                                    i.fas.fa-exclamation-circle.text-danger
+                                    span.text-right.text-danger  #{ parseFloat(ox_min).toFixed(2)}
                     .col-lg-6
                         h4.text-center
                             b Máximos
                         span(style="font-size: 16px;") 
                             b pH: 
-                                if ph_min >= 8.0 && ph_min <= 8.3
+                                if ph_max >= 8.0 && ph_max <= 8.3
                                     i.fas.fa-check-circle.text-success
-                                    span.text-right.text-success  #{ parseFloat(ph_min).toFixed(2)}
-                                else if (ph_min < 8.0 && ph_min >= 7.7) || (ph_min >= 8.4 && ph_min <= 8.7)
+                                    span.text-right.text-success  #{ parseFloat(ph_max).toFixed(2)}
+                                else if (ph_max < 8.0 && ph_max >= 7.7) || (ph_max >= 8.4 && ph_max <= 8.7)
                                     i.fas.fa-info-circle.text-warning
-                                    span.text-right.text-warning  #{ parseFloat(ph_min).toFixed(2)}
-                                else if ph_min < 7.7 || ph_min > 8.7
+                                    span.text-right.text-warning  #{ parseFloat(ph_max).toFixed(2)}
+                                else if ph_max < 7.7 || ph_max > 8.7
                                     i.fas.fa-exclamation-circle.text-danger
-                                    span.text-right.text-danger  #{ parseFloat(ph_min).toFixed(2)}
+                                    span.text-right.text-danger  #{ parseFloat(ph_max).toFixed(2)}
                         br
                         span(style="font-size: 16px;") 
                             b °C: 
-                            span.text-right  #{ parseFloat(tm_max).toFixed(2)}
+                                if tm_max >= 29.0 && tm_max <= 31.0
+                                    i.fas.fa-check-circle.text-success
+                                    span.text-right.text-success  #{ parseFloat(tm_max).toFixed(2)}
+                                else if (tm_max < 29.0 && tm_max >= 25.0) || (tm_max > 31.0 && tm_max <= 33.0)
+                                    i.fas.fa-info-circle.text-warning
+                                    span.text-right.text-warning  #{ parseFloat(tm_max).toFixed(2)}
+                                else if tm_max < 25.0 || tm_max > 33.0
+                                    i.fas.fa-exclamation-circle.text-danger
+                                    span.text-right.text-danger  #{ parseFloat(tm_max).toFixed(2)}
+                                span.text-right  #{ parseFloat(tm_max).toFixed(2)}
                         br
                         span(style="font-size: 16px;") 
                             b 0
                             sub
                                 b 2
                             b : 
-                            span.text-right  #{ parseFloat(ox_max).toFixed(2)}
+                                if ox_max >= 3.5 && ox_max <= 8.0
+                                    i.fas.fa-check-circle.text-success
+                                    span.text-right.text-success  #{ parseFloat(ox_max).toFixed(2)}
+                                else if ox_max < 3.5 && ox_max >= 3.1
+                                    i.fas.fa-info-circle.text-warning
+                                    span.text-right.text-warning  #{ parseFloat(ox_max).toFixed(2)}
+                                else if ox_max < 3.0 || ox_max > 8.0
+                                    i.fas.fa-exclamation-circle.text-danger
+                                    span.text-right.text-danger  #{ parseFloat(ox_max).toFixed(2)}
         .col-lg-9.chart-container(style="position: relative;")
             .card.card-default
                 .card-body.card-5-7
