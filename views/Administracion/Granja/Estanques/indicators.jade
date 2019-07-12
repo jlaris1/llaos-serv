@@ -19,7 +19,7 @@ block contenido
             $('#spanMenuEstanques').addClass('fa-angle-down');
 
             // Mostrar Mapa
-            var mymap = L.map('map').setView([27.30673, -110.41087], 16);
+            var mymap = L.map('map').setView([27.30673, -110.41087], 15);
 
             L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
                 maxZoom: 18,
@@ -28,7 +28,40 @@ block contenido
 
             var piscinasData = JSON.parse($('#piscinaData').val());
 
-            L.geoJson(piscinasData, {style: style}).addTo(map);                   
+            var piscinaData = {
+                                "type":"FeatureCollection",
+                                "features": [
+                                    {
+                                        "type":"Feature",
+                                        "id": "01",
+                                        "properties":
+                                            {
+                                                "name": "S-01",
+                                                "density": 30.00
+                                            },
+                                        "geometry":
+                                            {
+                                                "type":"Polygon",
+                                                "coordinates":
+                                                    [[
+                                                        [27.303921,-110.422584],
+                                                        [27.304044,-110.42075],
+                                                        [27.303911,-110.420621],
+                                                        [27.300841,-110.420642],
+                                                        [27.300717,-110.420793],
+                                                        [27.300727,-110.421275],
+                                                        [27.300822,-110.421458],
+                                                        [27.303444,-110.422606] 
+                                                    ]]
+                                            }
+                                    }
+                                ]
+                            };
+
+
+            
+
+            L.geoJson(piscinaData, {style: style}).addTo(map);                   
 
         });
 
