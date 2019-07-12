@@ -822,33 +822,35 @@ module.exports = {
                                             var data = {};
 
                                             estanques.forEach( estanque => {
-                                                data= 
-                                                    {
-                                                        "type":"Feature",
-                                                        "id": estanque.id,
-                                                        "properties":
-                                                            {
-                                                                "name": estanque.codigo,
-                                                                "density": estanque.oxigeno
-                                                            },
-                                                        "geometry":
-                                                            {
-                                                                "type":"Polygon",
-                                                                "coordinates":
-                                                                    [[
-                                                                        [parseFloat(estanque.locations.pointer[0]), parseFloat(estanque.locations.pointer[1])],
-                                                                        [parseFloat(estanque.locations.pointer[2]), parseFloat(estanque.locations.pointer[3])],
-                                                                        [parseFloat(estanque.locations.pointer[4]), parseFloat(estanque.locations.pointer[5])],
-                                                                        [parseFloat(estanque.locations.pointer[6]), parseFloat(estanque.locations.pointer[7])],
-                                                                        [parseFloat(estanque.locations.pointer[8]), parseFloat(estanque.locations.pointer[9])],
-                                                                        [parseFloat(estanque.locations.pointer[10]), parseFloat(estanque.locations.pointer[11])],
-                                                                        [parseFloat(estanque.locations.pointer[12]), parseFloat(estanque.locations.pointer[13])],
-                                                                        [parseFloat(estanque.locations.pointer[14]), parseFloat(estanque.locations.pointer[15])] 
-                                                                    ]]
-                                                            }
-                                                    };
-                                                
-                                                    features.push(data);
+                                                estanque.locations.forEach(element => {
+                                                    data= 
+                                                        {
+                                                            "type":"Feature",
+                                                            "id": estanque.id,
+                                                            "properties":
+                                                                {
+                                                                    "name": estanque.codigo,
+                                                                    "density": estanque.oxigeno
+                                                                },
+                                                            "geometry":
+                                                                {
+                                                                    "type":"Polygon",
+                                                                    "coordinates":
+                                                                        [[
+                                                                            [parseFloat(element.pointer[0]), parseFloat(element.pointer[1])],
+                                                                            [parseFloat(element.pointer[2]), parseFloat(element.pointer[3])],
+                                                                            [parseFloat(element.pointer[4]), parseFloat(element.pointer[5])],
+                                                                            [parseFloat(element.pointer[6]), parseFloat(element.pointer[7])],
+                                                                            [parseFloat(element.pointer[8]), parseFloat(element.pointer[9])],
+                                                                            [parseFloat(element.pointer[10]), parseFloat(element.pointer[11])],
+                                                                            [parseFloat(element.pointer[12]), parseFloat(element.pointer[13])],
+                                                                            [parseFloat(element.pointer[14]), parseFloat(element.pointer[15])] 
+                                                                        ]]
+                                                                }
+                                                        };
+                                                    
+                                                        features.push(data);
+                                                    });
                                             });
 
                                             var piscinaData = {
