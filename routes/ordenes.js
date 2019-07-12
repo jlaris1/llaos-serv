@@ -3960,7 +3960,7 @@ module.exports = {
                             } else { 
                                 articulos_fuera.forEach( (af) => {
                                     contenidoTabla += "<tr>" + 
-                                            "<td>" +  af.cantidad + "</td>" +
+                                            "<td>" +  parseFloat(af.cantidad).toFixed(3) + "</td>" +
                                             "<td>" +  af.unidad + "</td>" +
                                             "<td>" +  af.codigo + "</td>" +
                                             "<td>" +  af.descripcion + "</td>" +
