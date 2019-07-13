@@ -801,7 +801,7 @@ var mongoose = require('mongoose');
                         Usuarios.findOne({"nombre": req.solicita}, function(error, usuario){
                             var mailOptions = {
                                 from: 'Llaos Sist 1.0 <sistema@llaos.com>',
-                                to: 'jparrilla@llaos.com, jcuamea@llaos.com',
+                                to: 'jcuamea@llaos.com',
                                 cco: 'flopez@llaos.com',
                                 subject: 'Requisición autorizada',
                                 html: "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>"+

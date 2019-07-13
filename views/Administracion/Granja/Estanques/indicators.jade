@@ -19,14 +19,14 @@ block contenido
             $('#spanMenuEstanques').addClass('fa-angle-down');
 
             // Mostrar Mapa
-            var mymap = L.map('map').setView([27.30673, -110.41087], 15);
+            /*var mymap = L.map('map').setView([27.30673, -110.41087], 15);
 
             L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
                 maxZoom: 18,
                 subdomains:['mt0','mt1','mt2','mt3']
             }).addTo(mymap);
 
-            var piscinasData = JSON.parse($('#piscinaData').val());
+            //var piscinasData = JSON.parse($('#piscinaData').val());
 
             var piscinaData = {
                                 "type":"FeatureCollection",
@@ -58,28 +58,6 @@ block contenido
                                 ]
             };
 
-            function style(feature) {
-                return {
-                    fillColor: getColor(feature.properties.density),
-                    weight: 2,
-                    opacity: 1,
-                    color: 'white',
-                    dashArray: '3',
-                    fillOpacity: 0.7
-                };
-            }
-
-            function getColor(d) {
-                return d > 1000 ? '#800026' :
-                    d > 500  ? '#BD0026' :
-                    d > 200  ? '#E31A1C' :
-                    d > 100  ? '#FC4E2A' :
-                    d > 50   ? '#FD8D3C' :
-                    d > 20   ? '#FEB24C' :
-                    d > 10   ? '#FED976' :
-                                '#FFEDA0';
-            }
-
             function highlightFeature(e) {
                 var layer = e.target;
 
@@ -95,9 +73,74 @@ block contenido
                 }
             }
     
+            var mapa = L.geoJson(piscinaData).addTo(mymap);*/
 
-            var mapa = L.geoJson(piscinaData).addTo(mymap);                   
+            // create a map in the "map" div, set the view to a given place and zoom
+            var map =  L.map('map').setView([27.30673, -110.41087], 15);
 
+            L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+                maxZoom: 18,
+                subdomains:['mt0','mt1','mt2','mt3']
+            }).addTo(map);
+
+            var mp = {
+                "type": "Feature",
+                    "geometry": {
+                    "type": "Polygon",
+                        "coordinates": [
+                        [
+                            [27.30384, -110.41207],
+                            [27.30393, -110.41199],
+                            [27.30395, -110.41114],
+                            [27.30383, -110.41105],
+                            [27.30001, -110.41105],
+                            [27.2999, -110.41115],
+                            [27.29989, -110.41205],
+                            [27.3, -110.41214]
+                        ], ],
+                },
+                    "properties": {
+                    "name": "MultiPolygon",
+                        "style": {
+                        color: "black",
+                        opacity: 1,
+                        fillColor: "red",
+                        fillOpacity: 0.1
+                    }
+                }
+            };
+
+            var mpArray = {
+                "type": "FeatureCollection",
+                    "features": []
+            }
+
+            mpArray.push(mp);
+
+            new L.GeoJSON(mpArray, {
+                style: function style(feature) {
+                    return {
+                        fillColor: getColor(feature.properties.density),
+                        weight: 2,
+                        opacity: 1,
+                        color: 'white',
+                        dashArray: '3',
+                        fillOpacity: 0.7
+                };
+            },
+                //onEachFeature: onEachFeature
+            }).addTo(map);                   
+
+            function getColor(d) {
+                return d > 1000 ? '#800026' :
+                    d > 500  ? '#BD0026' :
+                    d > 200  ? '#E31A1C' :
+                    d > 100  ? '#FC4E2A' :
+                    d > 50   ? '#FD8D3C' :
+                    d > 20   ? '#FEB24C' :
+                    d > 10   ? '#FED976' :
+                                '#FFEDA0';
+            }
         });
 
         function convetirArray(){            
@@ -112,6 +155,16 @@ block contenido
             }
         }
 
+        function getColor(d) {
+            return d > 1000 ? '#800026' :
+                d > 500  ? '#BD0026' :
+                d > 200  ? '#E31A1C' :
+                d > 100  ? '#FC4E2A' :
+                d > 50   ? '#FD8D3C' :
+                d > 20   ? '#FEB24C' :
+                d > 10   ? '#FED976' :
+                            '#FFEDA0';
+        }
         
 
     .row

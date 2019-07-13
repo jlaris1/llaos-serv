@@ -3417,7 +3417,7 @@ module.exports = {
                         from: 'Llaos Sist 1.0 <sistema@llaos.com>',
                         //to: 'flopez@llaos.com',
                         to: 'davilar@llaos.com',
-                        cc: 'jcuamea@llaos.com,jparrilla@llaos.com',
+                        cc: 'jcuamea@llaos.com',
                         bcc: 'flopez@llaos.com',
                         subject: 'Ordenes en Ruta ' + oRuta.codigo,
                         html: "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>"+

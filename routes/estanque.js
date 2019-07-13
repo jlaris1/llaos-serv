@@ -821,6 +821,41 @@ module.exports = {
                                             var features = [];
                                             var data = {};
 
+                                            var mp = {
+                                                "type": "Feature",
+                                                    "geometry": {
+                                                    "type": "Polygon",
+                                                        "coordinates": [
+                                                        [
+                                                            [101.2, 1.2],
+                                                            [101.7, 1.3],
+                                                            [101.8, 1.8],
+                                                            [101.3, 1.7],
+                                                            [101.7, 1.6],
+                                                            [101.4, 1.1]
+                                                        ], ],
+                                                },
+                                                    "properties": {
+                                                    "name": "MultiPolygon",
+                                                        "style": {
+                                                        color: "black",
+                                                        opacity: 1,
+                                                        fillColor: "red",
+                                                        fillOpacity: 0.1
+                                                    }
+                                                }
+                                            };
+
+                                            var mpArray = {
+                                                "type": "FeatureCollection",
+                                                    "features": []
+                                            }
+
+                                            for (var i = 0; i < 5000; i++) {
+                                                mpArray.features.push(mp);
+                                            }
+
+
                                             estanques.forEach( estanque => {
                                                 estanque.locations.forEach(element => {
                                                     data= 
