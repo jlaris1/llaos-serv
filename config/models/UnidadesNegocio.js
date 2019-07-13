@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
 var unidadNegocioSchemaJSON = {
     codigo: String,
     nombre: String,
-    razon_social: Number,
+    razon_social: String,
     representante_legal: String,
     direccion: String,
     correo: String,

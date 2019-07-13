@@ -10,6 +10,7 @@ var mongoose = require('mongoose');
     NutrientesToxSemanal = mongoose.model('NutrientesToxSemanal');
     Patologicos = mongoose.model('Patologicos');
     Zooplancton = mongoose.model('Zooplancton');
+    UnidadesNegocio = mongoose.model('UnidadesNegocio');
 
 module.exports = {
     all: function(solicitud, respuesta){
@@ -827,7 +828,24 @@ module.exports = {
                                                     });
                                                 });
                                             });
-                                                                                      
+                                                            
+                                            var data = {
+                                                codigo: "LLAOS",
+                                                nombre: "LLAOS ACUACULTURA",
+                                                razon_social: "Llaos Acuacultura S.A. de C.V.",
+                                                representante_legal: "Lic. Oscar Adrian Cota Llanes",
+                                                direccion: "Flabio Borquez #1603A, Col. Prados del Tepeyac, Cd. Obregón, Sonora.",
+                                                correo: "info@llaos.com",
+                                                telefono: "(644) 417-2477",
+                                                rfc: "LAC040819TN1",
+                                                cp: "85150"
+                                            }
+
+                                            var unidad = new UnidadesNegocio(data);
+
+                                            unidad.save( (error) => {
+                                                console.log(error);
+                                            });
                                             
                                             respuesta.render('Administracion/Granja/Estanques/indicators',
                                                 {
