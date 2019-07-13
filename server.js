@@ -100,6 +100,7 @@ require('./config/models/Nutricion');
 require('./config/models/Laboratorios');
 require('./config/models/RecepcionLarva');
 require('./config/models/Unidades');
+require('./config/models/UnidadesNegocio');
 
 /* Importación de clase que contiene todas las rutas */
 require('./config/routes')(app);
