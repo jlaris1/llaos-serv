@@ -16,4 +16,4 @@ var unidadNegocioSchemaJSON = {
 
 var unidadNegocioSchema = new Schema(unidadNegocioSchemaJSON);
 
-mongoose.model("UnidadNegocio", unidadNegocioSchema);
+mongoose.model("UnidadesNegocio", unidadNegocioSchema);
