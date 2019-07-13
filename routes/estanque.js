@@ -819,13 +819,15 @@ module.exports = {
                                             console.log(error);
                                         } else {   
                                             var piscinaData = [];
-
-                                            estanque.locations.forEach(element => {
-                                                element.pointer.forEach(p => {
-                                                    piscinaData.push([[p.x,p.y]]);
+                                            
+                                            estanques.forEach(estanque => {
+                                                estanque.locations.forEach(element => {
+                                                    element.pointer.forEach(p => {
+                                                        piscinaData.push([[p.x,p.y]]);
+                                                    });
                                                 });
                                             });
-                                            
+                                                                                      
                                             
                                             respuesta.render('Administracion/Granja/Estanques/indicators',
                                                 {
