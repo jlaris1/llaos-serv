@@ -10,6 +10,7 @@ var unidadNegocioSchemaJSON = {
     correo: String,
     telefono: String,
     rfc: String,
+    cp: String,
     registro: { type: Date, default: Date.now }
 }
 

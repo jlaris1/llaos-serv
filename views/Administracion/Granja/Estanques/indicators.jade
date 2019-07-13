@@ -39,7 +39,14 @@ block contenido
                 [27.303444,-110.422606] 
             ];
    
-            var mapa = L.polygon(piscinaData).addTo(mymap);
+            var mapa = L.polygon(piscinaData, {
+                    fillColor: "#FC4E2A",
+                    weight: 2,
+                    opacity: 1,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.7
+                }).addTo(mymap);
         });
 
         function convetirArray(){            
