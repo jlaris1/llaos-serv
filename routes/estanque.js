@@ -829,24 +829,6 @@ module.exports = {
                                                 });
                                             });
                                                             
-                                            var data = {
-                                                codigo: "ANCLAR",
-                                                nombre: "ANCLAR",
-                                                razon_social: "Anclar S.A. de C.V.",
-                                                representante_legal: "Lic. Oscar Adrian Cota Llanes",
-                                                direccion: "Valentín Gómez Farias #206 Col. Campestre, Cd. Obregón, Sonora.",
-                                                correo: "info@llaos.com",
-                                                telefono: "(644) 417-2477",
-                                                rfc: "ANC9612099X1",
-                                                cp: "85160"
-                                            }
-
-                                            var unidad = new UnidadesNegocio(data);
-
-                                            unidad.save( (error) => {
-                                                console.log(error);
-                                            });
-                                            
                                             respuesta.render('Administracion/Granja/Estanques/indicators',
                                                 {
                                                     user: solicitud.session.user,
