@@ -817,82 +817,16 @@ module.exports = {
                                     Usuarios.find( function(error, usuarios){
                                         if(error){
                                             console.log(error);
-                                        } else {
-                                            var features = [];
-                                            var data = {};
+                                        } else {   
+                                            var piscinaData = [];
 
-                                            var mp = {
-                                                "type": "Feature",
-                                                    "geometry": {
-                                                    "type": "Polygon",
-                                                        "coordinates": [
-                                                        [
-                                                            [101.2, 1.2],
-                                                            [101.7, 1.3],
-                                                            [101.8, 1.8],
-                                                            [101.3, 1.7],
-                                                            [101.7, 1.6],
-                                                            [101.4, 1.1]
-                                                        ], ],
-                                                },
-                                                    "properties": {
-                                                    "name": "MultiPolygon",
-                                                        "style": {
-                                                        color: "black",
-                                                        opacity: 1,
-                                                        fillColor: "red",
-                                                        fillOpacity: 0.1
-                                                    }
-                                                }
-                                            };
-
-                                            var mpArray = {
-                                                "type": "FeatureCollection",
-                                                    "features": []
-                                            }
-
-                                            for (var i = 0; i < 5000; i++) {
-                                                mpArray.features.push(mp);
-                                            }
-
-
-                                            estanques.forEach( estanque => {
-                                                estanque.locations.forEach(element => {
-                                                    data= 
-                                                        {
-                                                            "type":"Feature",
-                                                            "id": estanque.id,
-                                                            "properties":
-                                                                {
-                                                                    "name": estanque.codigo,
-                                                                    "density": estanque.oxigeno
-                                                                },
-                                                            "geometry":
-                                                                {
-                                                                    "type":"Polygon",
-                                                                    "coordinates":
-                                                                        [[
-                                                                            [parseFloat(element.pointer[0]), parseFloat(element.pointer[1])],
-                                                                            [parseFloat(element.pointer[2]), parseFloat(element.pointer[3])],
-                                                                            [parseFloat(element.pointer[4]), parseFloat(element.pointer[5])],
-                                                                            [parseFloat(element.pointer[6]), parseFloat(element.pointer[7])],
-                                                                            [parseFloat(element.pointer[8]), parseFloat(element.pointer[9])],
-                                                                            [parseFloat(element.pointer[10]), parseFloat(element.pointer[11])],
-                                                                            [parseFloat(element.pointer[12]), parseFloat(element.pointer[13])],
-                                                                            [parseFloat(element.pointer[14]), parseFloat(element.pointer[15])] 
-                                                                        ]]
-                                                                }
-                                                        };
-                                                    
-                                                        features.push(data);
-                                                    });
+                                            estanque.locations.forEach(element => {
+                                                element.pointer.forEach(p => {
+                                                    piscinaData.push([[p.x,p.y]]);
+                                                });
                                             });
-
-                                            var piscinaData = {
-                                                "type":"FeatureCollection",
-                                                "features": features
-                                            };                                          
-
+                                            
+                                            
                                             respuesta.render('Administracion/Granja/Estanques/indicators',
                                                 {
                                                     user: solicitud.session.user,
