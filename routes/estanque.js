@@ -830,15 +830,15 @@ module.exports = {
                                             });
                                                             
                                             var data = {
-                                                codigo: "LLAOS",
-                                                nombre: "LLAOS ACUACULTURA",
-                                                razon_social: "Llaos Acuacultura S.A. de C.V.",
+                                                codigo: "ANCLAR",
+                                                nombre: "ANCLAR",
+                                                razon_social: "Anclar S.A. de C.V.",
                                                 representante_legal: "Lic. Oscar Adrian Cota Llanes",
-                                                direccion: "Flabio Borquez #1603A, Col. Prados del Tepeyac, Cd. Obregón, Sonora.",
+                                                direccion: "Valentín Gómez Farias #206 Col. Campestre, Cd. Obregón, Sonora.",
                                                 correo: "info@llaos.com",
                                                 telefono: "(644) 417-2477",
-                                                rfc: "LAC040819TN1",
-                                                cp: "85150"
+                                                rfc: "ANC9612099X1",
+                                                cp: "85160"
                                             }
 
                                             var unidad = new UnidadesNegocio(data);
