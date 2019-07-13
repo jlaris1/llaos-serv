@@ -19,7 +19,7 @@ block contenido
             $('#spanMenuEstanques').addClass('fa-angle-down');
 
             // Mostrar Mapa
-            /*var mymap = L.map('map').setView([27.30673, -110.41087], 15);
+            var mymap = L.map('map').setView([27.30673, -110.41087], 15);
 
             L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
                 maxZoom: 18,
@@ -28,119 +28,18 @@ block contenido
 
             //var piscinasData = JSON.parse($('#piscinaData').val());
 
-            var piscinaData = {
-                                "type":"FeatureCollection",
-                                "features": [
-                                    {
-                                        "type":"Feature",
-                                        "id": "01",
-                                        "properties":
-                                            {
-                                                "name": "S-01",
-                                                "density": 30.00
-                                            },
-                                        "geometry":
-                                            {
-                                                "type":"Polygon",
-                                                "coordinates":
-                                                    [[
-                                                        [27.303921,-110.422584],
-                                                        [27.304044,-110.42075],
-                                                        [27.303911,-110.420621],
-                                                        [27.300841,-110.420642],
-                                                        [27.300717,-110.420793],
-                                                        [27.300727,-110.421275],
-                                                        [27.300822,-110.421458],
-                                                        [27.303444,-110.422606] 
-                                                    ]]
-                                            }
-                                    }
-                                ]
-            };
-
-            function highlightFeature(e) {
-                var layer = e.target;
-
-                layer.setStyle({
-                    weight: 5,
-                    color: '#666',
-                    dashArray: '',
-                    fillOpacity: 0.7
-                });
-
-                if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-                    layer.bringToFront();
-                }
-            }
-    
-            var mapa = L.geoJson(piscinaData).addTo(mymap);*/
-
-            // create a map in the "map" div, set the view to a given place and zoom
-            var map =  L.map('map').setView([27.30673, -110.41087], 15);
-
-            L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
-                maxZoom: 18,
-                subdomains:['mt0','mt1','mt2','mt3']
-            }).addTo(map);
-
-            var mp = {
-                "type": "Feature",
-                    "geometry": {
-                    "type": "Polygon",
-                        "coordinates": [
-                        [
-                            [27.30384, -110.41207],
-                            [27.30393, -110.41199],
-                            [27.30395, -110.41114],
-                            [27.30383, -110.41105],
-                            [27.30001, -110.41105],
-                            [27.2999, -110.41115],
-                            [27.29989, -110.41205],
-                            [27.3, -110.41214]
-                        ], ],
-                },
-                    "properties": {
-                    "name": "MultiPolygon",
-                        "style": {
-                        color: "black",
-                        opacity: 1,
-                        fillColor: "red",
-                        fillOpacity: 0.1
-                    }
-                }
-            };
-
-            var mpArray = {
-                "type": "FeatureCollection",
-                    "features": []
-            }
-
-            mpArray.features.push(mp);
-
-            new L.GeoJSON(mpArray, {
-                style: function style(feature) {
-                    return {
-                        fillColor: '#FC4E2A',
-                        weight: 2,
-                        opacity: 1,
-                        color: 'white',
-                        dashArray: '3',
-                        fillOpacity: 0.7
-                };
-            },
-                //onEachFeature: onEachFeature
-            }).addTo(map);                   
-
-            function getColor(d) {
-                return d > 1000 ? '#800026' :
-                    d > 500  ? '#BD0026' :
-                    d > 200  ? '#E31A1C' :
-                    d > 100  ? '#FC4E2A' :
-                    d > 50   ? '#FD8D3C' :
-                    d > 20   ? '#FEB24C' :
-                    d > 10   ? '#FED976' :
-                                '#FFEDA0';
-            }
+            var piscinaData = [
+                [27.303921,-110.422584],
+                [27.304044,-110.42075],
+                [27.303911,-110.420621],
+                [27.300841,-110.420642],
+                [27.300717,-110.420793],
+                [27.300727,-110.421275],
+                [27.300822,-110.421458],
+                [27.303444,-110.422606] 
+            ];
+   
+            var mapa = L.polygon(piscinaData).addTo(mymap);
         });
 
         function convetirArray(){            
