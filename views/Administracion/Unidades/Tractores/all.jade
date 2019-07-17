@@ -1,0 +1,52 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+    script.
+        $(document).ready( function() { 
+            $('#subMenuParametros').removeClass('hidden');
+            $('#spanMenuParametros').removeClass('fa-angle-left');
+            $('#spanMenuParametros').addClass('fa-angle-down');
+            $('#mediciones').dataTable();
+
+            if($('#url').text() != ''){
+                url = '../../reports/unidades/'+ $('#url').text();
+                window.open(url, 'Download');
+                $('#url').text('');
+            }
+        });
+        //Termina Javascript
+
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-eye-dropper(style="margin-right: 10px;")
+                |   Tractores
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
+            a.btn.btn-special(href="/parametros/new", style="margin-right: 5px;")
+                i.fas.fa-plus-circle
+                |   Nuevo
+            if user.permisos != "usuario"
+                a.btn.btn-special(href="#reports" data-toggle="modal" data-target="#reports" style="margin-right: 5px;")
+                    i.fas.fa-file-pdf
+                    |   Reportes
+    .divider
+    label#url.hidden #{url}
+    .row
+        .table-responsive   
+            table#mediciones.table.table-striped.table-hover
+                thead
+                    th Est.
+                    th Oxigeno (mg/L)
+                    th pH
+                    th Salinidad (ppm)
+                    th Temperatura (°C)
+                    th Nivel Agua
+                    th Fecha
+                    th Hora
+                    th Tiempo
+                    th Parametrista
+                    th Acciones
+                tbody
+                    each med in mediciones
+                        tr
+                            td #{ med.estanque.codigo }

@@ -15,30 +15,12 @@ block contenido
             obtenerfecha();
             obtenerhora(); 
 
-            $('#subMenuParametros').removeClass('hidden');
-            $('#spanMenuParametros').removeClass('fa-angle-left');
-            $('#spanMenuParametros').addClass('fa-angle-down');
-
-            $('#modulo').on('change', function(){
-                document.frm2.submit();
-            });
-
-            $('#estanques').on('change', function(){
-                $('#est').val(this.value);
-
-                var select=document.getElementById("estanques");
- 
-                // recorremos todos los valores del select
-                for(var i=1; i<select.length; i++){
-                    if(select.options[i].value == this.value){
-                        // seleccionamos el valor que coincide
-                        $("#sig_est").val(select.options[i+1].value);
-                    }
-                }
-            });
-
-            $('#fechaI').on('change', function(){ $('#fec').val(this.value); });
-            $('#tiempo').on('change', function(){ $('#tiem').val(this.value); });
+            $('#subMenuUnidades').removeClass('hidden');
+            $('#spanMenuUnidades').removeClass('fa-angle-left');
+            $('#spanMenuUnidades').addClass('fa-angle-down');
+            $('#subMenuTractores').removeClass('hidden');
+            $('#spanMenuTractores').removeClass('fa-angle-left');
+            $('#spanMenuTractores').addClass('fa-angle-down');
         });
 
         function obtenerfecha(){
@@ -91,7 +73,7 @@ block contenido
     .row(style="margin-bottom: -5px;")
         .col-lg-6.col-md-6.col-sm-6.col-xs-12
             h2 
-                i.fas.fa-eye-dropper(style="margin-right: 10px;")
+                i.fas.fa-tractor(style="margin-right: 10px;")
                 |   Registro de Tractor
     .divider
     .row
@@ -105,56 +87,72 @@ block contenido
             label#fecha(style="margin-right: 10px;")
             label#hora
     .divider
-    .row
-        form(role="form" name="frm" method="post" action="/unidad/tractor/add")
-            .row
+    form(role="form" name="frm" method="post" action="/unidades/tractor/add")
+        .row
+            .col-lg-12
                 .col-lg-3
                     .form-group
                         label | Código
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-qrcode
-                            input.form-control(type="text" name="temperatura" placeholder="# Necro" tabindex="1")
+                            input.form-control(type="text" name="codigo" placeholder="Código" tabindex="1")
                 .col-lg-3
                     .form-group
                         label | Marca
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-registered
-                            input.form-control(type="text" name="temperatura" placeholder="# Necro" tabindex="2")
+                            input.form-control(type="text" name="marca" placeholder="Marca" tabindex="2")
                 .col-lg-3
                     .form-group
                         label | Modelo
                         .input-group
                             span.input-group-addon
-                                i.fas.fa-modx
-                            input.form-control(type="text" name="temperatura" placeholder="# Necro" tabindex="3")
+                                i.fab.fa-modx
+                            input.form-control(type="text" name="modelo" placeholder="Modelo" tabindex="3")
                 .col-lg-3
                     .form-group
                         label | Llantas
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-car-side
-                            input.form-control(type="text" name="temperatura" placeholder="# Necro" tabindex="4")
-            .row
+                            input.form-control(type="text" name="llantas" placeholder="% Llantas" tabindex="4")
+                            span.input-group-addon
+                                i %
+        .row
+            .col-lg-12
                 .col-lg-3
                     .form-group
                         label | Batería # 1
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-car-battery
-                            input.form-control(type="text" name="temperatura" placeholder="# Necro" tabindex="5")
+                            input.form-control(type="text" name="bateria_1" placeholder="Bateria 1" tabindex="5")
+                            span.input-group-addon
+                                i %
                 .col-lg-3
                     .form-group
                         label | Batería # 2
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-car-battery
-                            input.form-control(type="text" name="temperatura" placeholder="# Necro" tabindex="5")
+                            input.form-control(type="text" name="bateria_2" placeholder="Bateria 2" tabindex="6")
+                            span.input-group-addon
+                                i %
                 .col-lg-3
                     .form-group
                         label | Horometro
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-tachometer-alt
-                            input.form-control(type="text" name="temperatura" placeholder="# Necro" tabindex="6")
+                            input.form-control(type="text" name="horometro" placeholder="Horometro" tabindex="7")
+                .divider
+        .row  
+            .col-lg-12
+                .col-lg-2.col-md-4.col-xs-6.pull-right( style="margin-left: 15px;")
+                    .form-group
+                        .input-group
+                            span.input-group-addon
+                                i.fas.fa-plus-circle.text-success
+                            input(type="submit" value="Agregar" tabindex="8").btn.btn-success.form-control

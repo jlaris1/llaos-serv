@@ -3949,7 +3949,7 @@ module.exports = {
                         });
                     });
 
-                    if(solicitu.body.return > 0){
+                    if(solicitud.body.return > 0){
                         var contenidoTabla = "";
 
                         console.log(articulos_fuera);

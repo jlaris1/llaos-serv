@@ -803,66 +803,64 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{
-            Estanques.find( function(error, estanques){
+            var piscinas = [];
+
+            Estanques.find({}, {
+                _id: 0,
+                modulo: 0,
+                tipo: 0
+            }, (error, estanques) => {
                 if(error){
                     console.log(error);
                 } else {
-                    Modulos.populate(estanques, { path: 'modulo'}, function(error, estanques){
+                    Usuarios.find(  (error, usuarios) => {
                         if(error){
                             console.log(error);
-                        } else {
-                            TiposModulos.populate(estanques, { path: 'tipo'}, function(error, estanques){
-                                if(error){
-                                    console.log(error);
-                                } else {
-                                    Usuarios.find( function(error, usuarios){
-                                        if(error){
-                                            console.log(error);
-                                        } else {   
-                                            var piscinaData = [];
-                                            
-                                            estanques.forEach(estanque => {
-                                                estanque.locations.forEach(element => {
-                                                    element.pointer.forEach(p => {
-                                                        piscinaData.push([[p.x,p.y]]);
-                                                    });
-                                                });
-                                            });
-                                                            
-                                            respuesta.render('Administracion/Granja/Estanques/indicators',
-                                                {
-                                                    user: solicitud.session.user,
-                                                    estanques: estanques,
-                                                    piscinaData: piscinaData,
-                                                    titulo: "Piscinas",
-                                                    criterios: [
-                                                        {
-                                                            val: "modulos",
-                                                            name: "Módulo"
-                                                        },
-                                                    ],
-                                                    piscinas: [
-                                                        {
-                                                            id: 0,
-                                                            nombre: ""
-                                                        }
-                                                    ],
-                                                    charoleros: [
-                                                        {
-                                                            id: 0,
-                                                            nombre: ""
-                                                        }   
-                                                    ],
-                                                    usuarios: usuarios,
-                                                    ruta: "estanque"
-                                                }
-                                            );
-                                        }
-                                    });
-                                }
+                        } else {   
+                            estanques.forEach( est => {
+                                var obj = new Object();
+                                obj.codigo = est.codigo;
+                                obj.nombre = est.nombre;
+                                obj.modulo = est.modulo;
+                                obj.pointer_x = est.pointer_x;
+                                obj.pointer_y = est.pointer_y;
+                                obj.marker_x = est.marker_x;
+                                obj.marker_y = est.marker_y;
+                                obj.location = est.location;
+
+                                piscinas.push(obj)
                             });
-                        }
-                    });
+        
+                            respuesta.render('Administracion/Granja/Estanques/indicators',
+                                {
+                                    user: solicitud.session.user,
+                                    estanques: estanques,
+                                    piscinas: piscinas,
+                                    titulo: "Piscinas",
+                                    criterios: [
+                                        {
+                                            val: "modulos",
+                                            name: "Módulo"
+                                        },
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "estanque"
+                                }
+                            );
+                            }
+                    });             
                 }
             });
         }

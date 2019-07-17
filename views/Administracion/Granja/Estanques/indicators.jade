@@ -26,9 +26,7 @@ block contenido
                 subdomains:['mt0','mt1','mt2','mt3']
             }).addTo(mymap);
 
-            var piscinasData = $('#piscinaData').val();
-
-            alert(piscinasData);
+            alert(JSON.parse($('#piscinas').val()));
 
             var piscinaData = [
                 [27.303921,-110.422584],
@@ -57,7 +55,15 @@ block contenido
             for(var i = 0; i < arr.length; i ++){
                 var aObj = arr[i].replace(/'/g, '');
                 var obj = new Object();   
-
+                
+                obj.codigo = aObj.split(",")[0].split(":")[1];;
+                obj.nombre = aObj.split(",")[0].split(":")[1];;
+                obj.modulo = aObj.split(",")[0].split(":")[1];;
+                obj.pointer_x = aObj.split(",")[0].split(":")[1];;
+                obj.pointer_y = aObj.split(",")[0].split(":")[1];;
+                obj.marker_x = aObj.split(",")[0].split(":")[1];;
+                obj.marker_y = aObj.split(",")[0].split(":")[1];;
+                obj.location = aObj.split(",")[0].split(":")[1];;
 
                 estanques.push(obj);
             }
@@ -86,6 +92,7 @@ block contenido
                 |   Regresar
         .divider
     .row
-        input#piscinaData(value="#{piscinaData}")
+        input#piscinas.hidden(value="#{piscinas}")
+        input#estanques.hidden(value="#{estanques}")
         .col-lg-12
             #map(style="width: 100%; min-height: 800px;")

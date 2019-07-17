@@ -108,7 +108,7 @@ module.exports = {
                 if(error){
                     console.log(chalk.bgRed(error));
                 } else {
-                    respuesta.redirect('/unidades/tractores/all');
+                    respuesta.redirect('/unidades/tractor/all');
                 }
             });
         }
