@@ -3909,7 +3909,7 @@ module.exports = {
            
             var articulos = JSON.parse(solicitud.body.articulos);
 
-            if(solicitu.body.return > 0){
+            if(solicitud.body.return > 0){
                 var articulos_fuera = JSON.parse(solicitud.body.articulos_fuera);
             }
             
