@@ -420,6 +420,13 @@ module.exports = function(app){
     app.use('/unidades', unidadRouter);
     unidadRouter.get('/tractor/all', unidad.allT);
     unidadRouter.get('/tractor/new', unidad.newT);
-    unidadRouter.post('/tractor/add', unidad.addT)
+    unidadRouter.post('/tractor/add', unidad.addT);
+    unidadRouter.get('/tractor/view/:id', unidad.viewT);
+
+    // Servicios
+    unidadRouter.get('/servicios/all', unidad.allS);
+    unidadRouter.get('/servicios/new', unidad.newS);
+    unidadRouter.post('/servicios/add', unidad.addS);
+    //unidadRouter.get('/servicios/view/:id', unidad.viewS);
 
 } 

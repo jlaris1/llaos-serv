@@ -1,0 +1,464 @@
+extends ../../../layouts/layout.jade
+block contenido
+    style.
+        .round {
+            border-radius: 5px !important;
+            -moz-border-radius: 5px !important;
+            -webkit-border-radius: 5px !important;
+        }
+        thead {
+            background-color: black;
+            color: #fff;
+        } 
+
+        .form-control2{
+            display:block;
+            width:100%;
+            height:30px;
+            padding:6px 12px;
+            font-size:14px;
+            line-height:1.42857143;
+            color:#555;
+            background-color:#e6e6e6;
+            background-image:none;
+            border: 0;
+            outline: none !important;
+        }
+        .control-group {
+            display: inline-block;
+            vertical-align: top;
+            background: #fff;
+            text-align: left;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 200px;
+            height: 210px;
+            margin: 10px;
+        }
+        .control {
+            display: block;
+            position: relative;
+            padding-top: 5px;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .control input {
+            position: absolute;
+            opacity: 0;
+        }
+        .control__indicator {
+            position: absolute;
+            top: 2px;
+            left: 0;
+            height: 25px;
+            width: 25px;
+            background: #e6e6e6;
+        }
+        .control:hover input ~ .control__indicator,
+        .control input:focus ~ .control__indicator {
+            background: #ccc;
+        }
+        .control input:checked ~ .control__indicator {
+            background: #e07808;
+        }
+        .control:hover input:not([disabled]):checked ~ .control__indicator,
+        .control input:checked:focus ~ .control__indicator {
+            background: #e07808;
+        }
+        .control input:disabled ~ .control__indicator {
+            background: #e6e6e6;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .control__indicator:after {
+            content: '';
+            position: absolute;
+            display: none;
+        }
+        .control input:checked ~ .control__indicator:after {
+            display: block;
+        }
+        .control--checkbox .control__indicator:after {
+            left: 9px;
+            top: 3px;
+            width: 8px;
+            height: 16px;
+            border: solid #fff;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+        }
+        .control--checkbox input:disabled ~ .control__indicator:after {
+            border-color: #7b7b7b;
+        }
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora(); 
+
+            $('#subMenuUnidades').removeClass('hidden');
+            $('#spanMenuUnidades').removeClass('fa-angle-left');
+            $('#spanMenuUnidades').addClass('fa-angle-down');
+            $('#subMenuServicios').removeClass('hidden');
+            $('#spanMenuServicios').removeClass('fa-angle-left');
+            $('#spanMenuServicios').addClass('fa-angle-down');
+
+            $('#arr').on('change', function() {
+                if($(this).is(":checked") == true){
+                    $('#fecha_arr').removeClass('hidden');
+                } else {
+                    $('#fecha_arr').addClass('hidden');
+                }
+            });
+
+            $('#alt').on('change', function() {
+                if($(this).is(":checked") == true){
+                    $('#fecha_alt').removeClass('hidden');
+                } else {
+                    $('#fecha_alt').addClass('hidden');
+                }
+            });
+
+            $('#chkOtro').on('change', function() {
+                if($(this).is(":checked") == true){
+                    $('#fecha_otr').removeClass('hidden');
+                    $('#inputOtro').removeClass('hidden');
+                } else {
+                    $('#inputOtro').addClass('hidden');
+                    $('#fecha_otr').addClass('hidden');
+                }
+            });
+
+            $('#tipos').on('change', function(){
+                if(this.value == 'Tractores') {
+                    $('#tractores').removeClass('hidden');
+                    $('#camionetas').addClass('hidden');
+                    $('#motos').addClass('hidden');
+                    $('#motores').addClass('hidden');
+                    $('#bombas').addClass('hidden');
+                    $('#generadores').addClass('hidden');
+                    $('#tractor').attr('required', true);
+                    $('#camioneta').attr('required', false);
+                    $('#moto').attr('required', false);
+                    $('#motor').attr('required', false);
+                    $('#bomba').attr('required', false);
+                    $('#generador').attr('required', false);
+                } else if(this.value == 'Camionetas') {
+                    $('#camionetas').removeClass('hidden');
+                    $('#tractores').addClass('hidden');
+                    $('#motos').addClass('hidden');
+                    $('#motores').addClass('hidden');
+                    $('#bombas').addClass('hidden');
+                    $('#generadores').addClass('hidden');
+                    $('#tractor').attr('required', false);
+                    $('#camioneta').attr('required', true);
+                    $('#moto').attr('required', false);
+                    $('#motor').attr('required', false);
+                    $('#bomba').attr('required', false);
+                    $('#generador').attr('required', false);
+                } else if(this.value == 'Motos') {
+                    $('#motos').removeClass('hidden');
+                    $('#tractores').addClass('hidden');
+                    $('#camionetas').addClass('hidden');
+                    $('#motores').addClass('hidden');
+                    $('#bombas').addClass('hidden');
+                    $('#generadores').addClass('hidden');
+                    $('#tractor').attr('required', false);
+                    $('#camioneta').attr('required', false);
+                    $('#moto').attr('required', true);
+                    $('#motor').attr('required', false);
+                    $('#bomba').attr('required', false);
+                    $('#generador').attr('required', false);
+                } else if(this.value == 'Motores') {
+                    $('#motores').removeClass('hidden');
+                    $('#tractores').addClass('hidden');
+                    $('#camionetas').addClass('hidden');
+                    $('#motos').addClass('hidden');
+                    $('#bombas').addClass('hidden');
+                    $('#generadores').addClass('hidden');
+                    $('#tractor').attr('required', false);
+                    $('#camioneta').attr('required', false);
+                    $('#moto').attr('required', false);
+                    $('#motor').attr('required', true);
+                    $('#bomba').attr('required', false);
+                    $('#generador').attr('required', false);
+                } else if(this.value == 'Bombas') {
+                    $('#bombas').removeClass('hidden');
+                    $('#tractores').addClass('hidden');
+                    $('#camionetas').addClass('hidden');
+                    $('#motos').addClass('hidden');
+                    $('#motores').addClass('hidden');
+                    $('#generadores').addClass('hidden');
+                    $('#tractor').attr('required', false);
+                    $('#camioneta').attr('required', false);
+                    $('#moto').attr('required', false);
+                    $('#motor').attr('required', false);
+                    $('#bomba').attr('required', true);
+                    $('#generador').attr('required', false);
+                } if(this.value == 'Generadores') {
+                    $('#generadores').removeClass('hidden');
+                    $('#tractores').addClass('hidden');
+                    $('#camionetas').addClass('hidden');
+                    $('#motos').addClass('hidden');
+                    $('#motores').addClass('hidden');
+                    $('#bombas').addClass('hidden');
+                    $('#tractor').attr('required', false);
+                    $('#camioneta').attr('required', false);
+                    $('#moto').attr('required', false);
+                    $('#motor').attr('required', false);
+                    $('#bomba').attr('required', false);
+                    $('#generador').attr('required', true);
+                }
+            });
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2 
+                i.fas.fa-wrench(style="margin-right: 10px;")
+                |   Registro de Servicios
+    .divider
+    .row
+        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-right.text-right
+            span
+                | Usuario: 
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .divider
+    form(role="form" name="frm" method="post" action="/unidades/servicios/add")
+        .row
+            .col-lg-3
+                .form-group
+                    label | Tipo Unidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-car
+                        select#tipos.form-control(required name="tipo" tabindex="1")
+                            option(value="") << Seleccione >>
+                            option(value="Tractores") Tractores
+                            option(value="Camionetas") Camionetas
+                            option(value="Motos") Motos
+                            option(value="Motores") Motores
+                            option(value="Bombas") Bombas
+                            option(value="Generadores") Generadores
+            .col-lg-3#tractores.hidden
+                .form-group
+                    label | Tractores
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-tractor
+                        select#tractor.form-control( name="tractor" tabindex="2")
+                            option(value="") << Seleccione >>
+                            each tractor in tractores
+                                option(value=tractor.id) #{tractor.marca} - #{tractor.modelo}
+            .col-lg-3#camionetas.hidden
+                .form-group
+                    label | Camionetas
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-truck-pickup
+                        select#camioneta.form-control( name="camioneta" tabindex="2")
+                            option(value="") << Seleccione >>
+                            each tractor in tractores
+                                option(value=tractor.id) #{tractor.marca} - #{tractor.modelo}
+            .col-lg-3#motos.hidden
+                .form-group
+                    label | Motos
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-motorcycle
+                        select#moto.form-control( name="motos" tabindex="2")
+                            option(value="") << Seleccione >>
+                            each tractor in tractores
+                                option(value=tractor.id) #{tractor.marca} - #{tractor.modelo}
+            .col-lg-3#motores.hidden
+                .form-group
+                    label | Motores
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-cogs
+                        select#motor.form-control( name="motores" tabindex="2")
+                            option(value="") << Seleccione >>
+                            each tractor in tractores
+                                option(value=tractor.id) #{tractor.marca} - #{tractor.modelo}
+            .col-lg-3#bombas.hidden
+                .form-group
+                    label | Bombas
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-shower
+                        select#bomba.form-control( name="bombas" tabindex="2")
+                            option(value="") << Seleccione >>
+                            each tractor in tractores
+                                option(value=tractor.id) #{tractor.marca} - #{tractor.modelo}
+            .col-lg-3#generadores.hidden
+                .form-group
+                    label | Generadores
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-bolt
+                        select#generador.form-control( name="generadores" tabindex="2")
+                            option(value="") << Seleccione >>
+                            each tractor in tractores
+                                option(value=tractor.id) #{tractor.marca} - #{tractor.modelo}
+            .col-lg-3
+                .form-group
+                    label | Llantas
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-circle-notch
+                        input.form-control(required type="text" name="llantas" placeholder="% Llantas" tabindex="3") 
+            .col-lg-3
+                .form-group
+                    label | Batería 1
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-car-battery
+                        input.form-control(required type="text" name="bateria_1" placeholder="% Bateria 1" tabindex="4") 
+        .row
+            .col-lg-6
+                .form-group
+                    label | Tipo Servicio
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-screwdriver
+                        input.form-control(required type="text" name="tipo_serv" placeholder="Tipo" tabindex="5") 
+            .col-lg-3
+                .form-group
+                    label | Batería 2
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-car-battery
+                        input.form-control(required type="text" name="bateria_2" placeholder="% Bateria 2" tabindex="6") 
+            .col-lg-3
+                .form-group
+                    label | Horometro
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-tachometer-alt
+                        input.form-control(required type="text" name="horometro" placeholder="# Horometro" tabindex="7") 
+        .row    
+            .col-lg-9
+                .form-group
+                    label | Fugas o Fallas
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-oil-can
+                        input.form-control( type="text" name="fugas" placeholder="Especificar" tabindex="8") 
+            .col-lg-3
+                .form-group
+                    label | Estatus Unidad
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-star
+                        select.form-control(required name="estatus" tabindex="9")
+                            option(value="") << Seleccione >>
+                            option(value="Buen estado") Buen estado
+                            option(value="Funcional") Funcional
+                            option(value="En reparación") En reparación
+                            option(value="No sirve") No sirve
+                            option(value="No reparable") No reparable
+                            option(value="Para venta") Para venta
+        .row
+            .col-lg-3#fecha_arr.hidden
+                .form-group
+                    label | Fecha Servicio Arranque
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar-alt
+                        input.form-control( type="date" name="fecha_arr" placeholder="Fecha Arranque" tabindex="10") 
+            .col-lg-3#fecha_alt.hidden
+                .form-group
+                    label | Fecha Servicio Alternador
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar-alt
+                        input.form-control( type="date" name="fecha_alt" placeholder="Fecha Alternador" tabindex="11") 
+            .col-lg-3#fecha_otr.hidden
+                .form-group
+                    label | Fecha Otro Servicio
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-calendar-alt
+                        input.form-control( type="date" name="fecha_otr" placeholder="Fecha Otro" tabindex="12") 
+        .row
+            .col-lg-6.col-md-6.col-sm-6.col-xs-12
+                h3 
+                    i.fas.fa-tools(style="margin-right: 10px;")
+                    |   Servicios
+        .divider
+        .row
+            .col-lg-12
+                .col-lg-2
+                    label.control.control--checkbox
+                        | Arranque
+                        input#arr(type='checkbox', name="chk_carpintero" tabindex="13")
+                        .control__indicator
+                .col-lg-2
+                    label.control.control--checkbox
+                        | Alternador
+                        input#alt(type='checkbox', name="chk_chofer" tabindex="14")
+                        .control__indicator
+                .col-lg-2
+                    label.control.control--checkbox
+                        | Otro
+                        input#chkOtro(type='checkbox', name="chk_otro" tabindex="15")
+                        .control__indicator
+                .col-lg-6.hidden#inputOtro
+                    input.form-control2(type="text" name="otro_habilidad" tabindex="16" placeholder="Especifique")
+        .divider
+        .row
+            .col-lg-2.col-md-4.col-xs-6.pull-right( style="margin-left: 15px;")
+                .form-group
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-plus-circle.text-success
+                        input(type="submit" value="Registrar" tabindex="17").btn.btn-success.form-control

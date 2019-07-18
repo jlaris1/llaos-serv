@@ -499,6 +499,19 @@ $(document).ready( function() {
                     $('#spanMenuTractores').addClass('fa-angle-left');
                 }        
             });
+
+            // Servicios
+            $('#menuServicios').click( function(){
+                if ($('#subMenuServicios').hasClass('hidden')) {
+                    $('#subMenuServicios').removeClass('hidden');
+                    $('#spanMenuServicios').removeClass('fa-angle-left');
+                    $('#spanMenuServicios').addClass('fa-angle-down');
+                }else{
+                    $('#subMenuServicios').addClass('hidden');
+                    $('#spanMenuServicios').removeClass('fa-angle-down');
+                    $('#spanMenuServicios').addClass('fa-angle-left');
+                }        
+            });
 });
 
 function obtenerfecha(){

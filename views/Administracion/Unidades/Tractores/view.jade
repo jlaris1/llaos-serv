@@ -1,0 +1,345 @@
+extends ../../../layouts/layout.jade
+block contenido
+    style.
+        .round {
+            border-radius: 5px !important;
+            -moz-border-radius: 5px !important;
+            -webkit-border-radius: 5px !important;
+        }
+        thead {
+            background-color: black;
+            color: #fff;
+        } 
+    script.
+        $(document).ready( function(){
+            obtenerfecha();
+            obtenerhora(); 
+
+            $('#subMenuUnidades').removeClass('hidden');
+            $('#spanMenuUnidades').removeClass('fa-angle-left');
+            $('#spanMenuUnidades').addClass('fa-angle-down');
+            $('#subMenuTractores').removeClass('hidden');
+            $('#spanMenuTractores').removeClass('fa-angle-left');
+            $('#spanMenuTractores').addClass('fa-angle-down');
+
+            /** Modificación para permitir Label en el centro de chart*/
+                Chart.pluginService.register({
+                    beforeDraw: function (chart) {
+                        if (chart.config.options.elements.center) {
+                    //Get ctx from string
+                    var ctx = chart.chart.ctx;
+                    
+                            //Get options from the center object in options
+                    var centerConfig = chart.config.options.elements.center;
+                    var fontStyle = centerConfig.fontStyle || 'Arial';
+                            var txt = centerConfig.text;
+                    var color = centerConfig.color || '#000';
+                    var sidePadding = centerConfig.sidePadding || 20;
+                    var sidePaddingCalculated = (sidePadding/100) * (chart.innerRadius * 2)
+                    //Start with a base font of 30px
+                    ctx.font = "40px " + fontStyle;
+                    
+                            //Get the width of the string and also the width of the element minus 10 to give it 5px side padding
+                    var stringWidth = ctx.measureText(txt).width;
+                    var elementWidth = (chart.innerRadius * 2) - sidePaddingCalculated;
+
+                    // Find out how much the font can grow in width.
+                    var widthRatio = elementWidth / stringWidth;
+                    var newFontSize = Math.floor(30 * widthRatio);
+                    var elementHeight = (chart.innerRadius * 2);
+
+                    // Pick a new font size so it will not be larger than the height of label.
+                    var fontSizeToUse = Math.min(newFontSize, elementHeight);
+
+                            //Set font settings to draw it correctly.
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    var centerX = ((chart.chartArea.left + chart.chartArea.right) / 2);
+                    var centerY = ((chart.chartArea.top + chart.chartArea.bottom) / 2) + 50;
+                    ctx.font = fontSizeToUse+"px " + fontStyle;
+                    ctx.fillStyle = color;
+                    
+                    //Draw text in center
+                    ctx.fillText(txt, centerX, centerY);
+                        }
+                    }
+                });
+            /***/
+
+            /** Eliminar labels */
+                Chart.defaults.global.legend.display = false;    
+
+            // Creación de gráficos
+            var ctx_llantas = document.getElementById('chart_llantas');
+            var ctx_bateria_1 = document.getElementById('chart_bateria');
+            //var ctx_bateria_2 = document.getElementById('chart_llantas');
+
+            var llantas = parseFloat($('#llantas').val()).toFixed(2);
+            var resLlantas = parseFloat(100 - parseFloat($('#llantas').val())).toFixed(2);
+
+            var bateria = parseFloat($('#bateria_1').val()).toFixed(2);
+            var resBateria = parseFloat(100 - parseFloat($('#bateria_1').val())).toFixed(2);
+
+            var color1 = '';
+            var color2 = '#bfbfbf';
+            var hover1 = '';
+            var hover2 = '#bfbfbf'
+
+            var color1b = '';
+            var color2b = '#bfbfbf';
+            var hover1b = '';
+            var hover2b = '#bfbfbf'
+
+            if ( llantas >= 70 ) {
+                color1 = '#6dce57';
+                hover1 = '#2fba10';
+            } else if ( llantas < 70 && llantas > 55) {
+                color1 = '#ffff46';
+                hover1 = '#e5e500';
+            } else if ( llantas < 55){
+                color1 = '#ff4c4c';
+                hover1 = '#ff1919';
+                
+            }
+
+            if ( bateria >= 70 ) {
+                color1b = '#6dce57';
+                hover1b = '#2fba10';
+            } else if ( bateria < 70 && bateria > 55) {
+                color1b = '#ffff46';
+                hover1b = '#e5e500';
+            } else if ( bateria < 55){
+                color1b = '#ff4c4c';
+                hover1b = '#ff1919';
+                
+            }
+
+            var data_llantas = {
+                labels: ["% Uso Llantas", ""],
+                datasets: [
+                    {
+                        data: [llantas, resLlantas],
+                        backgroundColor: [
+                            color1,
+                            color2
+                        ],
+                        hoverBackgroundColor: [
+                            hover1,
+                            hover2
+                        ]
+                    }]
+            };
+
+            var data_bateria = {
+                labels: ["% Uso Batería", ""],
+                datasets: [
+                    {
+                        data: [bateria, resBateria],
+                        backgroundColor: [
+                            color1b,
+                            color2b
+                        ],
+                        hoverBackgroundColor: [
+                            hover1b,
+                            hover2b
+                        ]
+                    }]
+            };
+
+            var llantasChart = new Chart(ctx_llantas, {
+                type: 'doughnut',
+                data: data_llantas,
+                options: {
+                    rotation: 1 * Math.PI,
+                    circumference: 1 * Math.PI,
+                    title: {
+                        display: true,
+                        text: 'Llantas',
+                        fontSize: '18',
+                        fontFamily: 'Roboto'
+                    },
+                    elements: {
+                        center: {
+                            text: $('#llantas').val() + '%',
+                            color: color1, // Default is #000000
+                            fontStyle: 'Arial', // Default is Arial
+                            sidePadding: 15 // Defualt is 20 (as a percentage)
+                        }
+                    },
+                    tooltips: {
+                        enabled: false
+                    }
+                }
+            });
+
+            var bateria1Chart = new Chart(ctx_bateria_1, {
+                type: 'doughnut',
+                data: data_bateria,
+                options: {
+                    rotation: 1 * Math.PI,
+                    circumference: 1 * Math.PI,
+                    title: {
+                        display: true,
+                        text: 'Batería',
+                        fontSize: '18',
+                        fontFamily: 'Roboto'
+                    },
+                    elements: {
+                        center: {
+                            text: $('#bateria_1').val() + '%',
+                            color: color1, // Default is #000000
+                            fontStyle: 'Arial', // Default is Arial
+                            sidePadding: 15 // Defualt is 20 (as a percentage)
+                        }
+                    },
+                    tooltips: {
+                        enabled: false
+                    }
+                }
+            });
+
+
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+
+            setTimeout('obtenerhora()',1000);
+            //console.log("un segundo mas...");
+        }
+
+    .row(style="margin-bottom: -5px;")
+        .col-lg-12.col-md-12.col-sm-12.col-xs-12
+            h2 
+                i.fas.fa-tractor(style="margin-right: 10px;")
+                |   Detalles del tractor 
+                strong #{ tractor.codigo } &nbsp;
+                if tractor.estatus == 'Buen estado'
+                    i.fas.fa-check-circle.text-success
+                    b.text-success &nbsp;(#{tractor.estatus})
+    .divider
+    .row
+        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-right.text-right
+            span
+                | Usuario: 
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .divider
+            // Datos Generales
+    .row
+        .col-lg-3.col-sm-3
+            .card.card-default
+                .card-body.card-5-7
+                    span 
+                        b Código: 
+                        span(style="font-size: 18px;") #{ tractor.codigo}
+                    br
+                    span 
+                        b Marca: 
+                        span(style="font-size: 18px;") #{ tractor.marca}
+                    br
+                    span 
+                        b Modelo: 
+                        span(style="font-size: 18px;") #{ tractor.modelo}
+                    br
+                    span 
+                        b Horometro: 
+                        span(style="font-size: 24px;") #{ tractor.horometro}
+        .col-lg-9.col-sm-9
+            input#llantas.hidden(value="#{tractor.llantas}")
+            input#bateria_1.hidden(value="#{tractor.bateria_1}")
+            input#bateria_2.hidden(value="#{tractor.bateria_2}")
+            input#horometro.hidden(value="#{tractor.horometro}")
+            .card.card-default
+                .card-body.card-5-7
+                    .col-lg-6
+                        canvas#chart_llantas
+                    .col-lg-6
+                        canvas#chart_bateria
+    .row
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h3 
+                i.fas.fa-wrench(style="margin-right: 10px;")
+                |   Registro de Servicios
+    .divider(style="margin-top: -35px;")
+    .row     
+        .col-lg-12 
+            .table-responsive   
+                table#tractores.table.table-striped.table-hover
+                    thead
+                        th Codigo
+                        th Fecha
+                        th Tipo
+                        th Llantas
+                        th Batería
+                        th Servicio Arranque
+                        th Servicio Alternador
+                        th Horometro
+                        th Fallas o Fugas
+                        th Acciones
+                    tbody
+                        each t in servicios
+                            tr
+                                td
+                                    b #{ t.codigo }
+                                if (new Date(t.registro).getMonth() + 1) < 10
+                                    if (new Date(t.registro).getDate()) < 10
+                                        td.text-center #{ '0' + new Date(t.registro).getDate()+ '/0' + (new Date(t.registro).getMonth() + 1)+ '/' + new Date(t.registro).getFullYear()}
+                                    else         
+                                        td.text-center #{ new Date(t.registro).getDate()+ '/0' + (new Date(t.registro).getMonth() + 1)+ '/' + new Date(t.registro).getFullYear()}
+                                else
+                                    if (new Date(t.registro).getDate()) < 10
+                                        td.text-center #{ '0' + new Date(t.registro).getDate()+ '/' + (new Date(t.registro).getMonth() + 1)+ '/' + new Date(t.registro).getFullYear()}
+                                    else 
+                                        td.text-center #{ new Date(t.registro).getDate()+ '/' + (new Date(t.registro).getMonth() + 1)+ '/' + new Date(t.registro).getFullYear()}
+                                td #{t.tipo}
+                                td.text-center #{t.llantas} %
+                                td.text-center #{t.bateria_1} %
+                                td #{t.arranque}
+                                td #{t.alternador}
+                                td #{t.horometro}
+                                td #{t.fallas}
+                                td
+                                    a(href="/unidades/servicio/view/#{t.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px;")
+                                        i.fas.fa-eye.fa-lg.text-primary

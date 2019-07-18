@@ -153,7 +153,22 @@ html(lang="es")
                                                             li
                                                                 a(href='/unidades/tractor/new')
                                                                     i.fas.fa-plus-circle.fa-fw
-                                                                    |   Nuevo         
+                                                                    |   Nuevo  
+                                                    li
+                                                        a(href='#')#menuServicios
+                                                            i.fas.fa-wrench.fa-fw 
+                                                            |   Servicios
+                                                            span#spanMenuServicios.fas.fa-angle-left
+                                                        ul#subMenuServicios.nav.nav-fourth-level.hidden
+                                                            li
+                                                                a(href='/unidades/servicios/all')
+                                                                    i.fas.fa-table.fa-fw
+                                                                    |   Bandeja
+                                                            li
+                                                                a(href='/unidades/servicios/new')
+                                                                    i.fas.fa-plus-circle.fa-fw
+                                                                    |   Nuevo  
+                                           
                                     // /.nav-second-level
                                 // MENÚ COMPRAS
                                 if user.permisos == "admin" || user.permisos == "developer" || user.permisos == "compras"
