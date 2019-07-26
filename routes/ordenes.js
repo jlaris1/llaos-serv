@@ -2408,6 +2408,7 @@ module.exports = {
                         proveedor: solicitud.body.proveedor,
                         comentarios: solicitud.body.comentario,
                         tipoCambio: solicitud.body.tipoCambio,
+                        unidad_negocio: solicitud.body.unidad_negocio,
                         incluyeIVA: incluyeIVA,
                         iva: iva,
                         total: total
@@ -2435,45 +2436,55 @@ module.exports = {
                                                 if(error){
                                                     console.log(error);
                                                 } else { 
-                                                    respuesta.render("Compras/ordenes/editar", {
-                                                        user: solicitud.session.user,
-                                                        busca: '',
-                                                        criterio: '',
-                                                        products: {},
-                                                        orden: ord.id,
-                                                        articulos: articulos,
-                                                        subtotal: ord.subtotal,
-                                                        iva: ord.iva,
-                                                        total: ord.total,
-                                                        proveedores: proveedores,
-                                                        proveedor: ord.proveedor,
-                                                        articulo: {},
-                                                        estatus: ord.estatus,
-                                                        serie: ord.serie,
-                                                        comentario: ord.comentarios,
-                                                        tipoCambio: ord.tipoCambio,
-                                                        incluyeIVA: incluyeIVA,
-                                                        titulo: "Órdenes",
-                                                        criterios: [
-                                                            {
-                                                                val: "",
-                                                                name: ""
-                                                            }
-                                                        ],
-                                                        piscinas: [
-                                                            {
-                                                                id: 0,
-                                                                nombre: ""
-                                                            }
-                                                        ],
-                                                        charoleros: [
-                                                            {
-                                                                id: 0,
-                                                                nombre: ""
-                                                            }   
-                                                        ],
-                                                        usuarios: usuarios,
-                                                        ruta: "ordenes"
+                                                    UnidadesNegocio.find( (error, unidades_negocio, next) =>{
+                                                        if(error) {
+                                                            console.log(error);
+                                                            //respuesta.sendStatus(500);
+                                                            next(error);
+                                                        } else { 
+                                                            respuesta.render("Compras/ordenes/editar", {
+                                                                user: solicitud.session.user,
+                                                                busca: '',
+                                                                criterio: '',
+                                                                products: {},
+                                                                orden: ord.id,
+                                                                articulos: articulos,
+                                                                unidades_negocio: unidades_negocio,
+                                                                unid_nego: ord.unidad_negocio,
+                                                                subtotal: ord.subtotal,
+                                                                iva: ord.iva,
+                                                                total: ord.total,
+                                                                proveedores: proveedores,
+                                                                proveedor: ord.proveedor,
+                                                                articulo: {},
+                                                                estatus: ord.estatus,
+                                                                serie: ord.serie,
+                                                                comentario: ord.comentarios,
+                                                                tipoCambio: ord.tipoCambio,
+                                                                incluyeIVA: incluyeIVA,
+                                                                titulo: "Órdenes",
+                                                                criterios: [
+                                                                    {
+                                                                        val: "",
+                                                                        name: ""
+                                                                    }
+                                                                ],
+                                                                piscinas: [
+                                                                    {
+                                                                        id: 0,
+                                                                        nombre: ""
+                                                                    }
+                                                                ],
+                                                                charoleros: [
+                                                                    {
+                                                                        id: 0,
+                                                                        nombre: ""
+                                                                    }   
+                                                                ],
+                                                                usuarios: usuarios,
+                                                                ruta: "ordenes"
+                                                            });
+                                                        }
                                                     });
                                                 }
                                             });
