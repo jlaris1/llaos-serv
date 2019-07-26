@@ -378,7 +378,6 @@ block contenido
                         span.input-group-addon
                             i.fas.fa-suitcase
                         select#u_neg.form-control(name="unidad_negocio" tabindex="4")
-                            option(value="") << Seleccione >>
                             each u in unidades_negocio
                                 option(value=u.id, selected=(u.id == unidad_neg)) #{u.nombre}
             .col-lg-3.hidden(style="margin-top: 25px;")
