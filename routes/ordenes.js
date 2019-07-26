@@ -976,46 +976,56 @@ module.exports = {
                                                                                     if(error){
                                                                                         console.log(error);
                                                                                     } else { 
-                                                                                        respuesta.render("Compras/ordenes/orden", {
-                                                                                            user: solicitud.session.user,
-                                                                                            busca: '',
-                                                                                            criterio: '',
-                                                                                            products: {},
-                                                                                            orden: solicitud.params.id_orden,
-                                                                                            articulos: articulos,
-                                                                                            subtotal: parseFloat(orden.subtotal).toFixed(3),
-                                                                                            iva: parseFloat(orden.iva).toFixed(3),
-                                                                                            total: parseFloat(orden.total).toFixed(3),
-                                                                                            proveedores: proveedores,
-                                                                                            proveedor: solicitud.body.proveedor,
-                                                                                            comentario: solicitud.body.comentario,
-                                                                                            articulo: {},
-                                                                                            estatus: orden.estatus,
-                                                                                            serie: orden.serie,
-                                                                                            moneda: producto.moneda,
-                                                                                            tipoCambio: solicitud.body.tipoCambio,
-                                                                                            incluyeIVA: orden.incluyeIVA,
-                                                                                            titulo: "Órdenes",
-                                                                                            criterios: [
-                                                                                                {
-                                                                                                    val: "",
-                                                                                                    name: ""
-                                                                                                }
-                                                                                            ],
-                                                                                            piscinas: [
-                                                                                                {
-                                                                                                    id: 0,
-                                                                                                    nombre: ""
-                                                                                                }
-                                                                                            ],
-                                                                                            charoleros: [
-                                                                                                {
-                                                                                                    id: 0,
-                                                                                                    nombre: ""
-                                                                                                }   
-                                                                                            ],
-                                                                                            usuarios: usuarios,
-                                                                                            ruta: "ordenes"
+                                                                                        UnidadesNegocio.find( (error, unidades_negocio, next) =>{
+                                                                                            if(error) {
+                                                                                                console.log(error);
+                                                                                                //respuesta.sendStatus(500);
+                                                                                                next(error);
+                                                                                            } else {  
+                                                                                                respuesta.render("Compras/ordenes/orden", {
+                                                                                                    user: solicitud.session.user,
+                                                                                                    busca: '',
+                                                                                                    criterio: '',
+                                                                                                    products: {},
+                                                                                                    orden: solicitud.params.id_orden,
+                                                                                                    unidades_negocio: unidades_negocio,
+                                                                                                    unidad_neg: orden.unidad_negocio,
+                                                                                                    articulos: articulos,
+                                                                                                    subtotal: parseFloat(orden.subtotal).toFixed(3),
+                                                                                                    iva: parseFloat(orden.iva).toFixed(3),
+                                                                                                    total: parseFloat(orden.total).toFixed(3),
+                                                                                                    proveedores: proveedores,
+                                                                                                    proveedor: solicitud.body.proveedor,
+                                                                                                    comentario: solicitud.body.comentario,
+                                                                                                    articulo: {},
+                                                                                                    estatus: orden.estatus,
+                                                                                                    serie: orden.serie,
+                                                                                                    moneda: producto.moneda,
+                                                                                                    tipoCambio: solicitud.body.tipoCambio,
+                                                                                                    incluyeIVA: orden.incluyeIVA,
+                                                                                                    titulo: "Órdenes",
+                                                                                                    criterios: [
+                                                                                                        {
+                                                                                                            val: "",
+                                                                                                            name: ""
+                                                                                                        }
+                                                                                                    ],
+                                                                                                    piscinas: [
+                                                                                                        {
+                                                                                                            id: 0,
+                                                                                                            nombre: ""
+                                                                                                        }
+                                                                                                    ],
+                                                                                                    charoleros: [
+                                                                                                        {
+                                                                                                            id: 0,
+                                                                                                            nombre: ""
+                                                                                                        }   
+                                                                                                    ],
+                                                                                                    usuarios: usuarios,
+                                                                                                    ruta: "ordenes"
+                                                                                                });
+                                                                                            }
                                                                                         });
                                                                                     }
                                                                                 });
@@ -1105,46 +1115,56 @@ module.exports = {
                                                                                     if(error){
                                                                                         console.log(error);
                                                                                     } else { 
-                                                                                        respuesta.render("Compras/ordenes/orden", {
-                                                                                            user: solicitud.session.user,
-                                                                                            busca: '',
-                                                                                            criterio: '',
-                                                                                            products: {},
-                                                                                            orden: solicitud.params.id_orden,
-                                                                                            articulos: articulos,
-                                                                                            subtotal: parseFloat(orden.subtotal).toFixed(3),
-                                                                                            iva: parseFloat(orden.iva).toFixed(3),
-                                                                                            total: parseFloat(orden.total).toFixed(3),
-                                                                                            proveedores: proveedores,
-                                                                                            proveedor: solicitud.body.proveedor,
-                                                                                            comentario: solicitud.body.comentario,
-                                                                                            estatus: orden.estatus,
-                                                                                            serie: orden.serie,
-                                                                                            moneda: producto.moneda,
-                                                                                            tipoCambio: solicitud.body.tipoCambio,
-                                                                                            incluyeIVA: orden.incluyeIVA,
-                                                                                            titulo: "Órdenes",
-                                                                                            criterios: [
-                                                                                                {
-                                                                                                    val: "",
-                                                                                                    name: ""
-                                                                                                }
-                                                                                            ],
-                                                                                            piscinas: [
-                                                                                                {
-                                                                                                    id: 0,
-                                                                                                    nombre: ""
-                                                                                                }
-                                                                                            ],
-                                                                                            charoleros: [
-                                                                                                {
-                                                                                                    id: 0,
-                                                                                                    nombre: ""
-                                                                                                }   
-                                                                                            ],
-                                                                                            usuarios: usuarios,
-                                                                                            ruta: "ordenes"
-                                                                                        });
+                                                                                        UnidadesNegocio.find( (error, unidades_negocio, next) =>{
+                                                                                            if(error) {
+                                                                                                console.log(error);
+                                                                                                //respuesta.sendStatus(500);
+                                                                                                next(error);
+                                                                                            } else {  
+                                                                                                respuesta.render("Compras/ordenes/orden", {
+                                                                                                    user: solicitud.session.user,
+                                                                                                    busca: '',
+                                                                                                    criterio: '',
+                                                                                                    unidades_negocio: unidades_negocio,
+                                                                                                    unidad_neg: orden.unidad_negocio,
+                                                                                                    products: {},
+                                                                                                    orden: solicitud.params.id_orden,
+                                                                                                    articulos: articulos,
+                                                                                                    subtotal: parseFloat(orden.subtotal).toFixed(3),
+                                                                                                    iva: parseFloat(orden.iva).toFixed(3),
+                                                                                                    total: parseFloat(orden.total).toFixed(3),
+                                                                                                    proveedores: proveedores,
+                                                                                                    proveedor: solicitud.body.proveedor,
+                                                                                                    comentario: solicitud.body.comentario,
+                                                                                                    estatus: orden.estatus,
+                                                                                                    serie: orden.serie,
+                                                                                                    moneda: producto.moneda,
+                                                                                                    tipoCambio: solicitud.body.tipoCambio,
+                                                                                                    incluyeIVA: orden.incluyeIVA,
+                                                                                                    titulo: "Órdenes",
+                                                                                                    criterios: [
+                                                                                                        {
+                                                                                                            val: "",
+                                                                                                            name: ""
+                                                                                                        }
+                                                                                                    ],
+                                                                                                    piscinas: [
+                                                                                                        {
+                                                                                                            id: 0,
+                                                                                                            nombre: ""
+                                                                                                        }
+                                                                                                    ],
+                                                                                                    charoleros: [
+                                                                                                        {
+                                                                                                            id: 0,
+                                                                                                            nombre: ""
+                                                                                                        }   
+                                                                                                    ],
+                                                                                                    usuarios: usuarios,
+                                                                                                    ruta: "ordenes"
+                                                                                                });
+                                                                                            }
+                                                                                        })
                                                                                     }
                                                                                 });
                                                                             }
