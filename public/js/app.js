@@ -625,15 +625,22 @@ function reports(){
             $('#input').attr('required', false);
             $('#combo').attr('required', false);
         } else if (this.value == 'modulo'){
+            $('#concentrado').removeClass('hidden');
             $('#areas').addClass('hidden');
             $('#estatus').addClass('hidden');
             $('#otros').addClass('hidden');
-            $('#fechas').addClass('hidden');
+
+            if($('#titulo').val() == "Parámetros") {
+                $('#fechaInicio').removeClass('hidden');
+                $('#fechaFin').removeClass('hidden');
+            } else {
+                $('#fechaInicio').addClass('hidden');
+                $('#fechaFin').addClass('hidden');
+            }
+            
             $('#responsables').addClass('hidden');
             $('#solicitantes').addClass('hidden');
             $('#modulos').removeClass('hidden');
-            $('#fechaInicio').addClass('hidden');
-            $('#fechaFin').addClass('hidden');
             $('#inputs').addClass('hidden');
             $('#combos').addClass('hidden');
             $('#piscinas').addClass('hidden');
@@ -652,6 +659,7 @@ function reports(){
             $('#inputs').attr('required', false);
             $('#combos').attr('required', false);
         } else if (this.value == 'estatus'){
+            $('#concentrado').addClass('hidden');
             $('#piscinas').addClass('hidden');
             $('#areas').addClass('hidden');
             $('#estatus').removeClass('hidden');
@@ -679,6 +687,7 @@ function reports(){
             $('#input').attr('required', false);
             $('#combo').attr('required', false);
         } else if (this.value == 'fecha'){
+            $('#concentrado').addClass('hidden');
             $('#piscinas').addClass('hidden');
             $('#areas').addClass('hidden');
             $('#estatus').addClass('hidden');
@@ -733,6 +742,7 @@ function reports(){
             $('#input').attr('required', false);
             $('#combo').attr('required', false);
         } else if (this.value == 'responsable') {
+            $('#concentrado').addClass('hidden');
             $('#piscinas').addClass('hidden');
             $('#areas').addClass('hidden');
             $('#estatus').addClass('hidden');
@@ -760,6 +770,7 @@ function reports(){
             $('#input').attr('required', false);
             $('#combo').attr('required', false);
         } else if (this.value == 'solicita') {
+            $('#concentrado').addClass('hidden');
             $('#piscinas').addClass('hidden');
             $('#areas').addClass('hidden');
             $('#estatus').addClass('hidden');
@@ -787,6 +798,7 @@ function reports(){
             $('#input').attr('required', false);
             $('#combo').attr('required', false);
         } else if (this.value == 1 || this.value == 2 || this.value == 3 || this.value == 4 || this.value == 7 || this.value == 8 || this.value == 9 || this.value == 10){
+            $('#concentrado').addClass('hidden');
             $('#piscinas').addClass('hidden');
             $('#areas').addClass('hidden');
             $('#estatus').addClass('hidden');
@@ -815,6 +827,7 @@ function reports(){
             $('#combo').attr('required', false);
             $('#labelInputs').text("| " + $('#criterio option:selected').html());
         } else if (this.value == 5 || this.value == 6){
+            $('#concentrado').addClass('hidden');
             $('#piscinas').addClass('hidden');
             $('#areas').addClass('hidden');
             $('#estatus').addClass('hidden');
@@ -851,6 +864,7 @@ function reports(){
             }
             
         } else if (this.value == 11 ){
+            $('#concentrado').addClass('hidden');
             $('#inputs').addClass('hidden');
             $('#fechas').removeClass('hidden');
             $('#combos').addClass('hidden');
@@ -874,6 +888,7 @@ function reports(){
             $('#fechaInicio').attr('required', false);
             $('#fechaFin').attr('required', false);
         } else if (this.value == 'piscina'){
+            $('#concentrado').addClass('hidden');
             $('#piscinas').removeClass('hidden');
             $('#areas').addClass('hidden');
             $('#estatus').addClass('hidden');
@@ -901,6 +916,7 @@ function reports(){
             $('#input').attr('required', false);
             $('#combo').attr('required', false);
         } else if (this.value == 'charolero'){
+            $('#concentrado').addClass('hidden');
             $('#charoleros').removeClass('hidden');
             $('#areas').addClass('hidden');
             $('#estatus').addClass('hidden');
@@ -929,6 +945,7 @@ function reports(){
             $('#combo').attr('required', false);
             $('#label_charo').text("| Charolero");
         } else if(this.value == 'parametrista'){
+            $('#concentrado').addClass('hidden');
             $('#charoleros').removeClass('hidden');
             $('#areas').addClass('hidden');
             $('#estatus').addClass('hidden');

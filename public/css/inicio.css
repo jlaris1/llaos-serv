@@ -172,6 +172,9 @@ input.invalid {
   padding: 0 15px;
   min-height: 568px;
   background-color: #b0b5b9;
+  /*background-image: url('../imgs/fondo-3.png');
+  background-size: cover;
+  background-repeat: no-repeat;*/
   height: 100%;
 }
 

@@ -14,7 +14,8 @@ var ordenSchemaJSON = {
     comentarios: String,
     factura: String,
     tipoCambio: String,
-    incluyeIVA: Boolean
+    incluyeIVA: Boolean,
+    unidad_negocio: { type: Schema.ObjectId, ref: "UnidadesNegocio" },
 }
 // ARTICULOS EN LA ORDEN
 var articulosOrdenSchemaJSON = {

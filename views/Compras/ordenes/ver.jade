@@ -191,7 +191,7 @@ block contenido
                             i.fas.fa-hashtag
                         input#codigo.form-control(readonly type="text" name="codigo" placeholder="Código" value="#{orden}")
         .row
-            .col-lg-8
+            .col-lg-6
                 .form-group
                     label | Proveedor
                     .input-group
@@ -200,13 +200,20 @@ block contenido
                         select#prov.form-control(readonly name="proveedor")
                             each p in proveedores
                                 option(value=p.id, selected=(p.id == proveedor)) #{p.nombreEmpresa}
-             .col-lg-4
+             .col-lg-2
                 .form-group
                     label | Tipo de Cambio
                     .input-group
                         span.input-group-addon
                             i.fas.fa-hand-holding-usd
                         input#tipoCambio.form-control(type="text" name="tipoCambio" value="#{tipoCambio}" placeholder="00.00" tabindex="5")
+            .col-lg-4
+                .form-group
+                    label |  Unidad de Negocio
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-suitcase
+                        input.form-control(readonly type="text" value="#{unidad_negocio}" tabindex="6")
         .row
             .col-lg-12
                 .form-group

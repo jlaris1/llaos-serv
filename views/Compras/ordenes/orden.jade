@@ -44,6 +44,10 @@ block contenido
                 $('#provI').val(this.value);
             });    
 
+            $('#u_neg').on('change', function(){
+                $('#unidNeg').val(this.value);
+            });    
+
             $('#chkIVA').checkboxpicker({
                 offLabel: 'No',
                 onLabel: 'Si'
@@ -264,6 +268,7 @@ block contenido
                             |   Buscar
         .row.hidden
             input#provI(type="text" name="prov" value="#{proveedor}")
+            input#unidNeg(type="text" name="unid_nego" value="#{unidad_neg}")
             input#tCamb(type="text" name="tCam" value="#{tipoCambio}")
             input#comen(type="text" name="comen" value="#{comentario}")
             input#chk(type="text" name="iIVA" value="#{incluyeIVA}")
@@ -279,14 +284,24 @@ block contenido
                             option(value="") << Seleccione >>
                             each p in proveedores
                                 option(value=p.id, selected=(p.id == proveedor)) #{p.nombreEmpresa}
-            .col-lg-3
+            .col-lg-2
                 .form-group
                     label | Tipo de Cambio
                     .input-group
                         span.input-group-addon
                             i.fas.fa-hand-holding-usd
                         input#tipoCambio.form-control(type="text" name="tipoCambio" value="#{tipoCambio}" placeholder="00.00" tabindex="5")
-            .col-lg-3(style="margin-top: 25px;")
+            .col-lg-4
+                .form-group
+                    label |  Unidad de Negocio
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-suitcase
+                        select#u_neg.form-control(required name="unidad_negocio" tabindex="4")
+                            option(value="") << Seleccione >>
+                            each u in unidades_negocio
+                                option(value=u.id, selected=(u.id == unidad_neg)) #{u.nombre}
+            .col-lg-3.hidden(style="margin-top: 25px;")
                 .form-check
                     input#chkIVA(type="checkbox" name="incluyeIVA" tabindex="6")
                     label(style="margin-left: 15px;")
