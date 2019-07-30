@@ -2108,6 +2108,12 @@ module.exports = {
                                                     console.log(error);
                                                     next(error);
                                                 } else { 
+                                                    if(orden.unidad_negocio == undefined){
+                                                        orden.unidad_negocio = {
+                                                            nombre: ''
+                                                        };
+                                                    };
+
                                                     respuesta.render("Compras/ordenes/ver", {
                                                         user: solicitud.session.user,
                                                         busca: '',
