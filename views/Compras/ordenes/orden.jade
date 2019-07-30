@@ -84,7 +84,8 @@ block contenido
             obtenerfecha();
             obtenerhora();
             $('[data-toggle="tooltip"]').tooltip();
-            $('#articulos').dataTable();   
+            $('#articulos').dataTable();  
+            $('#productos').dataTable();
         });
 
         function obtenerfecha(){
@@ -341,8 +342,8 @@ block contenido
                         i.fas.fa-list-alt(style="margin-right: 10px;")
                         | Artículos encontrados 
             .row
-                .table-respomsive
-                    table.table.table-striped.table-hover
+                .table-responsive
+                    table#productos.table.table-striped.table-hover
                         thead
                             tr
                                 th Código
