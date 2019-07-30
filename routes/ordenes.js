@@ -2103,16 +2103,17 @@ module.exports = {
                                         if(error){
                                             console.log(error);
                                         } else { 
-                                            UnidadesNegocio.populate( orden, {path: 'unidad_negocio'},  (error, orden,next) =>{
+                                            UnidadesNegocio.populate( orden, {path: 'unidad_negocio'},  (error, orden, next) =>{
                                                 if(error){
                                                     console.log(error);
                                                     next(error);
                                                 } else { 
-                                                    if(orden.unidad_negocio == undefined){
-                                                        orden.unidad_negocio = {
-                                                            nombre: ''
-                                                        };
-                                                    };
+                                            
+                                                    if(orden.unidad_negocio === undefined){
+                                                        orden.unidad_negocio = new UnidadesNegocio();
+                                                        orden.unidad_negocio.nombre = '' ;
+                                                    }
+                                                        
 
                                                     respuesta.render("Compras/ordenes/ver", {
                                                         user: solicitud.session.user,
@@ -2191,6 +2192,12 @@ module.exports = {
                                                     console.log(error);
                                                     next(error);
                                                 } else {
+                                                    if(orden.unidad_negocio === undefined){
+                                                        orden.unidad_negocio = new UnidadesNegocio();
+                                                        orden.unidad_negocio.nombre = '' ;
+                                                    }
+
+
                                                     respuesta.render("Compras/ordenes/editar", {
                                                         user: solicitud.session.user,
                                                         busca: '',
