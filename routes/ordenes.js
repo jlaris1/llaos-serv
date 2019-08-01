@@ -1902,7 +1902,7 @@ module.exports = {
                                                                             orden: ord.id,
                                                                             articulo: {},
                                                                             unidades_negocio: unidades_negocio,
-                                                                            unidad_neg: orden.unidad_negocio, 
+                                                                            unidad_neg: ord.unidad_negocio, 
                                                                             articulos: articulos,
                                                                             subtotal: ord.subtotal,
                                                                             iva: ord.iva,

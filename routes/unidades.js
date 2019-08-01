@@ -216,7 +216,7 @@ module.exports = {
                                 } else {
                                     respuesta.render('Administracion/Unidades/Servicios/all', {
                                         user: solicitud.session.user,
-                                        titulo: "Unidades",
+                                        titulo: "Servicios",
                                         usuarios: usuarios,
                                         criterios: [
                                             {
@@ -236,7 +236,7 @@ module.exports = {
                                                 nombre: ""
                                             }   
                                         ],
-                                        ruta: "unidades",
+                                        ruta: "servicios",
                                         servicios: servicios
                                     });
                                 }
@@ -295,66 +295,114 @@ module.exports = {
         if (solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else {
-            var servs = 0;
-
             Servicios.find( (error, servicios) =>{
                 if(error){
                     console.log(chalk.bgRed(error));
                     respuesta.sendStatus(501);
                 } else {
-                    servs = servicios.length;
-                }
-            });
-
-            console.log(solicitud.body.alternador);
-            
-            var data = {
-                codigo: 'SERV' + zf.zfill( servs + 1, 5),
-                unidad: solicitud.body.tractor,
-                registro: new Date,
-                tipo: solicitud.body.tipo_serv,
-                llantas: solicitud.body.llantas,
-                bateria_1: solicitud.body.bateria_1,
-                bateria_2: solicitud.body.bateria_2,
-                arranque: solicitud.body.arranque,
-                fecha_arranque: solicitud.body.fecha_arr,
-                alternador: solicitud.body.alternador,
-                fecha_alternador: solicitud.body.fecha_alt,
-                otro: solicitud.body.otro_input,
-                fecha_otro: solicitud.body.fecha_otr,
-                horometro: solicitud.body.horometro,
-                fallas: solicitud.body.fallas
-            }
-
-            console.log(data);
-
-            var servicio = new Servicios(data);
-
-            servicio.save( (error) => {
-                if(error){
-                    console.log(chalk.bgRed(error));
-                    respuesta.sendStatus(501)
-                } else {
-
+                    
                     var data = {
-                        estatus: solicitud.body.estatus,
+                        codigo: 'SERV' + zf.zfill( servicios.length + 1, 5),
+                        unidad: solicitud.body.tractor,
+                        registro: new Date,
+                        tipo: solicitud.body.tipo_serv,
                         llantas: solicitud.body.llantas,
                         bateria_1: solicitud.body.bateria_1,
                         bateria_2: solicitud.body.bateria_2,
+                        arranque: solicitud.body.arranque,
+                        fecha_arranque: solicitud.body.fecha_arr,
+                        alternador: solicitud.body.alternador,
+                        fecha_alternador: solicitud.body.fecha_alt,
+                        otro: solicitud.body.otro_input,
+                        fecha_otro: solicitud.body.fecha_otr,
                         horometro: solicitud.body.horometro,
+                        fallas: solicitud.body.fallas
                     }
-
-                    Tractores.updateOne({"_id": solicitud.body.tractor}, data ,(error) => {
+        
+                    console.log(data);
+        
+                    var servicio = new Servicios(data);
+        
+                    servicio.save( (error) => {
                         if(error){
-                            console.log(error);
-                            respuesta.sendStatus(417)
+                            console.log(chalk.bgRed(error));
+                            respuesta.sendStatus(501)
                         } else {
-                            respuesta.redirect('all');
+        
+                            var data = {
+                                estatus: solicitud.body.estatus,
+                                llantas: solicitud.body.llantas,
+                                bateria_1: solicitud.body.bateria_1,
+                                bateria_2: solicitud.body.bateria_2,
+                                horometro: solicitud.body.horometro,
+                            }
+        
+                            Tractores.updateOne({"_id": solicitud.body.tractor}, data ,(error) => {
+                                if(error){
+                                    console.log(error);
+                                    respuesta.sendStatus(417)
+                                } else {
+                                    respuesta.redirect('all');
+                                }
+                            });
                         }
                     });
                 }
             });
         }
     },
+    viewS: (solicitud, respuesta) => {
+        if (solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else { 
+            Servicios.findById({ "_id": solicitud.params.id }, (error, servicios) =>{
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    var unidad = "Tractores";
+
+                    unidad.populate( servicios, {path: 'unidad'}, (error, servicios) => {
+                        if(error){
+                            console.log(chalk.bgRed(error))
+                            respuesta.send(417);
+                        } else {
+                            Usuarios.find( (error, usuarios) => {
+                                if(error){
+                                    console.log(error);
+                                    respuesta.send(401);
+                                } else {
+                                    respuesta.render('Administracion/Unidades/Servicios/all', {
+                                        user: solicitud.session.user,
+                                        titulo: "Unidades",
+                                        usuarios: usuarios,
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        ruta: "unidades",
+                                        servicios: servicios
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    }
 
 }

@@ -119,10 +119,10 @@ block contenido
                 color1b = '#0F9D58';
                 hover1b = '#2fba10';
             } else if ( bateria < 70 && bateria > 55) {
-                color1b = '#ffff46';
+                color1b = '#F4B400';
                 hover1b = '#e5e500';
             } else if ( bateria < 55){
-                color1b = '#ff4c4c';
+                color1b = '#DB4437';
                 hover1b = '#ff1919';
                 
             }
@@ -298,7 +298,7 @@ block contenido
                     br
                     span 
                         b Horometro: 
-                        span(style="font-size: 24px;").font-orbit #{ tractor.horometro }
+                        span(style="font-size: 24px; text-shadow: 1px 1px 1px #4a4b4b;").font-orbit #{ tractor.horometro }
         .col-lg-9.col-sm-9
             input#llantas.hidden(value="#{tractor.llantas}")
             input#bateria_1.hidden(value="#{tractor.bateria_1}")
@@ -347,8 +347,19 @@ block contenido
                                     else 
                                         td.text-center #{ new Date(t.registro).getDate()+ '/' + (new Date(t.registro).getMonth() + 1)+ '/' + new Date(t.registro).getFullYear()}
                                 td #{t.tipo}
-                                td.text-center #{t.llantas} %
-                                td.text-center #{t.bateria_1} %
+                                if t.llantas >= 70
+                                    td.text-center(style="color: #0F9D58; font-weight: 700; text-shadow: 1px 1px 1px #4a4b4b;") #{t.llantas} %
+                                else if t.llantas < 70 && t.llantas >= 55
+                                    td.text-center(style="color: #F4B400; font-weight: 700; text-shadow: 1px 1px 1px #4a4b4b;") #{t.llantas} %
+                                else
+                                    td.text-center(style="color: #DB4437; font-weight: 700; text-shadow: 1px 1px 1px #4a4b4b;") #{t.llantas} %
+
+                                if t.bateria_1 >= 70
+                                    td.text-center(style="color: #0F9D58; font-weight: 700; text-shadow: 1px 1px 1px #4a4b4b;") #{t.bateria_1} %
+                                else if t.bateria_1 < 70 && t.bateria_1 >= 55
+                                    td.text-center(style="color: #F4B400; font-weight: 700; text-shadow: 1px 1px 1px #4a4b4b;") #{t.bateria_1} %
+                                else
+                                    td.text-center(style="color: #DB4437; font-weight: 700; text-shadow: 1px 1px 1px #4a4b4b;") #{t.bateria_1} %
                                 if t.arranque
                                     td.text-center
                                         i.fas.fa-check-circle.text-success.fa-lg
