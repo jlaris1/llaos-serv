@@ -305,6 +305,8 @@ module.exports = {
                     servs = servicios.length;
                 }
             });
+
+            console.log(solicitud.body.alternador);
             
             var data = {
                 codigo: 'SERV' + zf.zfill( servs + 1, 5),
@@ -318,11 +320,13 @@ module.exports = {
                 fecha_arranque: solicitud.body.fecha_arr,
                 alternador: solicitud.body.alternador,
                 fecha_alternador: solicitud.body.fecha_alt,
-                otro: solicitud.body.otro,
+                otro: solicitud.body.otro_input,
                 fecha_otro: solicitud.body.fecha_otr,
                 horometro: solicitud.body.horometro,
                 fallas: solicitud.body.fallas
             }
+
+            console.log(data);
 
             var servicio = new Servicios(data);
 
@@ -337,7 +341,7 @@ module.exports = {
                         llantas: solicitud.body.llantas,
                         bateria_1: solicitud.body.bateria_1,
                         bateria_2: solicitud.body.bateria_2,
-                        horometro: solicitud.body.codigo,
+                        horometro: solicitud.body.horometro,
                     }
 
                     Tractores.updateOne({"_id": solicitud.body.tractor}, data ,(error) => {

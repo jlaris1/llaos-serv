@@ -1,6 +1,9 @@
 extends ../../../layouts/layout.jade
 block contenido
     style.
+        @import url('https://fonts.googleapis.com/css?family=Orbitron&display=swap');
+        @import url('https://fonts.googleapis.com/css?family=Exo&display=swap');
+        
         .round {
             border-radius: 5px !important;
             -moz-border-radius: 5px !important;
@@ -10,6 +13,16 @@ block contenido
             background-color: black;
             color: #fff;
         } 
+
+        .font-orbit {
+            font-family: 'Exo', sans-serif;
+            color: #0F9D58;
+            font-size: 18px;
+        }
+
+        .font-orbit-2 {
+            font-family: 'Exo', sans-serif;
+        }
     script.
         $(document).ready( function(){
             obtenerfecha();
@@ -91,7 +104,7 @@ block contenido
             var hover2b = '#bfbfbf'
 
             if ( llantas >= 70 ) {
-                color1 = '#6dce57';
+                color1 = '#0F9D58';
                 hover1 = '#2fba10';
             } else if ( llantas < 70 && llantas > 55) {
                 color1 = '#ffff46';
@@ -103,7 +116,7 @@ block contenido
             }
 
             if ( bateria >= 70 ) {
-                color1b = '#6dce57';
+                color1b = '#0F9D58';
                 hover1b = '#2fba10';
             } else if ( bateria < 70 && bateria > 55) {
                 color1b = '#ffff46';
@@ -162,7 +175,7 @@ block contenido
                         center: {
                             text: $('#llantas').val() + '%',
                             color: color1, // Default is #000000
-                            fontStyle: 'Arial', // Default is Arial
+                            fontStyle: 'Exo', // Default is Arial
                             sidePadding: 15 // Defualt is 20 (as a percentage)
                         }
                     },
@@ -188,7 +201,7 @@ block contenido
                         center: {
                             text: $('#bateria_1').val() + '%',
                             color: color1, // Default is #000000
-                            fontStyle: 'Arial', // Default is Arial
+                            fontStyle: 'Exo', // Default is Arial
                             sidePadding: 15 // Defualt is 20 (as a percentage)
                         }
                     },
@@ -285,7 +298,7 @@ block contenido
                     br
                     span 
                         b Horometro: 
-                        span(style="font-size: 24px;") #{ tractor.horometro}
+                        span(style="font-size: 24px;").font-orbit #{ tractor.horometro }
         .col-lg-9.col-sm-9
             input#llantas.hidden(value="#{tractor.llantas}")
             input#bateria_1.hidden(value="#{tractor.bateria_1}")
@@ -336,8 +349,18 @@ block contenido
                                 td #{t.tipo}
                                 td.text-center #{t.llantas} %
                                 td.text-center #{t.bateria_1} %
-                                td #{t.arranque}
-                                td #{t.alternador}
+                                if t.arranque
+                                    td.text-center
+                                        i.fas.fa-check-circle.text-success.fa-lg
+                                else
+                                    td.disabled.text-center
+                                        i.fas.fa-times-circle.text-default.fa-lg
+                                if t.alternador
+                                    td.text-center
+                                        i.fas.fa-check-circle.text-success.fa-lg
+                                else
+                                    td.disabled.text-center
+                                        i.fas.fa-times-circle.text-default.fa-lg
                                 td #{t.horometro}
                                 td #{t.fallas}
                                 td
