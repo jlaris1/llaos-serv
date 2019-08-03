@@ -3737,6 +3737,7 @@ var mongoose = require('mongoose');
                                                                     name: "Fechas"
                                                                 }
                                                             ],
+                                                            ruta: "requisiciones",
                                                             piscinas: [
                                                                 {
                                                                     id: 0,
@@ -4062,6 +4063,7 @@ var mongoose = require('mongoose');
                                                                     name: "Fechas"
                                                                 }
                                                             ],
+                                                            ruta: "requisiciones",
                                                             piscinas: [
                                                                 {
                                                                     id: 0,
@@ -4652,7 +4654,326 @@ var mongoose = require('mongoose');
                 nombre_xls = 'requisicionesResponsable.xlsx';
                 titulo = 'Responsable ';
 
-                
+                Requisiciones.find({ "responsable": solicitud.body.responsable} , (error, requis) =>{
+                    if(error){
+                        console.log(error);
+                    } else {
+                        var codigosRequis = [];
+
+                        requis.forEach( req =>{
+                            codigosRequis.push(req.id);
+                        });
+
+                        ArticulosRequisiciones.find({"codigoRequisicion":  { $in: codigosRequis }}, (error, articulos) => {
+                            if(error){
+                                console.log(error);
+                            } else {
+                                Requisiciones.populate( articulos, { path: 'codigoRequisicion'}, (error, articulos) =>{
+                                    if(error) {
+                                        console.log(error);
+                                    } else {
+                                        if (solicitud.session.user.permisos == "compras"){
+                                            Requisiciones.find({ "estatus": {$in:['Autorizada','Compra parcial']}}, function(error, requisiciones){
+                                                if(error){
+                                                    console.log(error);
+                                                } else {
+                                                    Usuarios.find( function(error, usuarios){
+                                                        respuesta.render("Requisiciones/requisiciones", {
+                                                            user: solicitud.session.user,
+                                                            requisiciones: requisiciones,
+                                                            usuarios: usuarios,
+                                                            titulo: "Requisiciones",
+                                                            criterios: [
+                                                                {
+                                                                    val: "area",
+                                                                    name: "Área"
+                                                                },
+                                                                {
+                                                                    val: "modulo",
+                                                                    name: "Módulo"
+                                                                },
+                                                                {
+                                                                    val: "responsable",
+                                                                    name: "Responsable"
+                                                                },
+                                                                {
+                                                                    val: "solicita",
+                                                                    name: "Solicita"
+                                                                },
+                                                                {
+                                                                    val: "estatus",
+                                                                    name: "Estatus"
+                                                                },
+                                                                {
+                                                                    val: "fecha",
+                                                                    name: "Fecha"
+                                                                },
+                                                                {
+                                                                    val: "fechas",
+                                                                    name: "Fechas"
+                                                                }
+                                                            ],
+                                                            ruta: "requisiciones",
+                                                            piscinas: [
+                                                                {
+                                                                    id: 0,
+                                                                    nombre: ""
+                                                                }
+                                                            ],
+                                                            charoleros: [
+                                                                {
+                                                                    id: 0,
+                                                                    nombre: ""
+                                                                }   
+                                                            ],
+                                                            url: generateXLS(articulos, titulo, nombre_xls)
+                                                        });
+                                                    });
+                                                }
+                                            });
+                                        } else if (solicitud.session.user.permisos == 'developer' || solicitud.session.user.permisos == "admin") {
+                                            Requisiciones.find( function(error, requisiciones){
+                                                if(error){
+                                                    console.log(error);
+                                                } else {
+                                                    Usuarios.find( function(error, usuarios){
+                                                        respuesta.render("Requisiciones/requisiciones", {
+                                                            user: solicitud.session.user,
+                                                            requisiciones: requisiciones,
+                                                            usuarios: usuarios,
+                                                            titulo: "Requisiciones",
+                                                            criterios: [
+                                                                {
+                                                                    val: "area",
+                                                                    name: "Área"
+                                                                },
+                                                                {
+                                                                    val: "modulo",
+                                                                    name: "Módulo"
+                                                                },
+                                                                {
+                                                                    val: "responsable",
+                                                                    name: "Responsable"
+                                                                },
+                                                                {
+                                                                    val: "solicita",
+                                                                    name: "Solicita"
+                                                                },
+                                                                {
+                                                                    val: "estatus",
+                                                                    name: "Estatus"
+                                                                },
+                                                                {
+                                                                    val: "fecha",
+                                                                    name: "Fecha"
+                                                                },
+                                                                {
+                                                                    val: "fechas",
+                                                                    name: "Fechas"
+                                                                }
+                                                            ],
+                                                            ruta: "requisiciones",
+                                                            piscinas: [
+                                                                {
+                                                                    id: 0,
+                                                                    nombre: ""
+                                                                }
+                                                            ],
+                                                            charoleros: [
+                                                                {
+                                                                    id: 0,
+                                                                    nombre: ""
+                                                                }   
+                                                            ],
+                                                            url: generateXLS(articulos, titulo, busqueda, nombre_xls)
+                                                        });
+                                                    });
+                                                }
+                                            });
+                                        } else if (solicitud.session.user.permisos == "usuario"){
+                                            Requisiciones.find({ "solicita": solicitud.session.user.nombre } , function(error, requisiciones){
+                                                if(error){
+                                                    console.log(error);
+                                                } else {
+                                                    Usuarios.find( function(error, usuarios){
+                                                        respuesta.render("Requisiciones/requisiciones", {
+                                                            user: solicitud.session.user,
+                                                            requisiciones: requisiciones,
+                                                            usuarios: usuarios,
+                                                            titulo: "Requisiciones",
+                                                            criterios: [
+                                                                {
+                                                                    val: "area",
+                                                                    name: "Área"
+                                                                },
+                                                                {
+                                                                    val: "modulo",
+                                                                    name: "Módulo"
+                                                                },
+                                                                {
+                                                                    val: "responsable",
+                                                                    name: "Responsable"
+                                                                },
+                                                                {
+                                                                    val: "solicita",
+                                                                    name: "Solicita"
+                                                                },
+                                                                {
+                                                                    val: "estatus",
+                                                                    name: "Estatus"
+                                                                },
+                                                                {
+                                                                    val: "fecha",
+                                                                    name: "Fecha"
+                                                                },
+                                                                {
+                                                                    val: "fechas",
+                                                                    name: "Fechas"
+                                                                }
+                                                            ],
+                                                            ruta: "requisiciones",
+                                                            piscinas: [
+                                                                {
+                                                                    id: 0,
+                                                                    nombre: ""
+                                                                }
+                                                            ],
+                                                            charoleros: [
+                                                                {
+                                                                    id: 0,
+                                                                    nombre: ""
+                                                                }   
+                                                            ],
+                                                            url: generateXLS(articulos, titulo, nombre_xls)
+                                                        });
+                                                    });
+                                                }
+                                            });
+                                        } else if (solicitud.session.user.permisos == "owner"){
+                                            Requisiciones.find({ "responsable": solicitud.session.user._id } , function(error, requisiciones){
+                                                if(error){
+                                                    console.log(error);
+                                                } else {
+                                                    Usuarios.find( function(error, usuarios){
+                                                        respuesta.render("Requisiciones/requisiciones", {
+                                                            user: solicitud.session.user,
+                                                            requisiciones: requisiciones,
+                                                            usuarios: usuarios,
+                                                            titulo: "Requisiciones",
+                                                            criterios: [
+                                                                {
+                                                                    val: "area",
+                                                                    name: "Área"
+                                                                },
+                                                                {
+                                                                    val: "modulo",
+                                                                    name: "Módulo"
+                                                                },
+                                                                {
+                                                                    val: "responsable",
+                                                                    name: "Responsable"
+                                                                },
+                                                                {
+                                                                    val: "solicita",
+                                                                    name: "Solicita"
+                                                                },
+                                                                {
+                                                                    val: "estatus",
+                                                                    name: "Estatus"
+                                                                },
+                                                                {
+                                                                    val: "fecha",
+                                                                    name: "Fecha"
+                                                                },
+                                                                {
+                                                                    val: "fechas",
+                                                                    name: "Fechas"
+                                                                }
+                                                            ],
+                                                            ruta: "requisiciones",
+                                                            piscinas: [
+                                                                {
+                                                                    id: 0,
+                                                                    nombre: ""
+                                                                }
+                                                            ],
+                                                            charoleros: [
+                                                                {
+                                                                    id: 0,
+                                                                    nombre: ""
+                                                                }   
+                                                            ],
+                                                            url: generateXLS(articulos, titulo, nombre_xls)
+                                                        });
+                                                    });
+                                                }
+                                            });
+                                        } else if (solicitud.session.user.permisos == "supervisor"){ // REVISAR BIEN QUE MOSTRARA
+                                            Requisiciones.find( function(error, requisiciones){
+                                                if(error){
+                                                    console.log(error);
+                                                } else {
+                                                    Usuarios.find( function(error, usuarios){
+                                                        respuesta.render("Requisiciones/requisiciones", {
+                                                            user: solicitud.session.user,
+                                                            requisiciones: requisiciones,
+                                                            usuarios: usuarios,
+                                                            titulo: "Requisiciones",
+                                                            criterios: [
+                                                                {
+                                                                    val: "area",
+                                                                    name: "Área"
+                                                                },
+                                                                {
+                                                                    val: "modulo",
+                                                                    name: "Módulo"
+                                                                },
+                                                                {
+                                                                    val: "responsable",
+                                                                    name: "Responsable"
+                                                                },
+                                                                {
+                                                                    val: "solicita",
+                                                                    name: "Solicita"
+                                                                },
+                                                                {
+                                                                    val: "estatus",
+                                                                    name: "Estatus"
+                                                                },
+                                                                {
+                                                                    val: "fecha",
+                                                                    name: "Fecha"
+                                                                },
+                                                                {
+                                                                    val: "fechas",
+                                                                    name: "Fechas"
+                                                                }
+                                                            ],
+                                                            ruta: "requisiciones",
+                                                            piscinas: [
+                                                                {
+                                                                    id: 0,
+                                                                    nombre: ""
+                                                                }
+                                                            ],
+                                                            charoleros: [
+                                                                {
+                                                                    id: 0,
+                                                                    nombre: ""
+                                                                }   
+                                                            ],
+                                                            url: generateXLS(articulos, titulo, nombre_xls)
+                                                        });
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
             } else if (columna == 'solicita'){
                 busqueda = solicitud.body.solicitante;
                 nombre_xls = 'requisicionesSolicitante.xlsx';
