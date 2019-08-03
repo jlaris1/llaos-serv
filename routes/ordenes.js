@@ -740,7 +740,7 @@ module.exports = {
                                                                                                             products: {},
                                                                                                             orden: ord.id,
                                                                                                             unidades_negocio: unidades_negocio,
-                                                                                                            unidad_neg: solicitud.body.unidad_negocio,
+                                                                                                            unidad_neg: ord.unidad_negocio,
                                                                                                             articulos: articulos,
                                                                                                             subtotal: subtotal.toFixed(3),
                                                                                                             iva: iva.toFixed(3),
@@ -865,7 +865,7 @@ module.exports = {
                                                                                                                     criterio: '',
                                                                                                                     products: {},
                                                                                                                     unidades_negocio: unidades_negocio,
-                                                                                                                    unidad_neg: solicitud.body.unid_nego,
+                                                                                                                    unidad_neg: solicitud.body.unidad_negocio,
                                                                                                                     orden: ord.id,
                                                                                                                     articulos: articulos,
                                                                                                                     subtotal: subtotal.toFixed(3),
@@ -1869,7 +1869,7 @@ module.exports = {
                                         total: total
                                     }
                     
-                                    Ordenes.updateOne({"_id": solicitud.params.id_orden}, dataOrdUpd, function(error, ord){
+                                    Ordenes.updateOne({"_id": solicitud.params.id_orden}, dataOrdUpd, function(error){
                                         if(error){
                                             console.log(error);
                                         } else {
@@ -1889,9 +1889,9 @@ module.exports = {
                                                                         next(error);
                                                                     } else {
 
-                                                                        if(orden.unidad_negocio === undefined){
-                                                                            orden.unidad_negocio = new UnidadesNegocio();
-                                                                            orden.unidad_negocio.nombre = '' ;
+                                                                        if(ord.unidad_negocio === undefined){
+                                                                            ord.unidad_negocio = new UnidadesNegocio();
+                                                                            ord.unidad_negocio.nombre = '' ;
                                                                         }
 
                                                                         respuesta.render("Compras/ordenes/orden", {
@@ -1929,9 +1929,9 @@ module.exports = {
                                                                         next(error);
                                                                     } else {
 
-                                                                        if(orden.unidad_negocio === undefined){
-                                                                            orden.unidad_negocio = new UnidadesNegocio();
-                                                                            orden.unidad_negocio.nombre = '' ;
+                                                                        if(ord.unidad_negocio === undefined){
+                                                                            ord.unidad_negocio = new UnidadesNegocio();
+                                                                            ord.unidad_negocio.nombre = '' ;
                                                                         }
 
                                                                         respuesta.render("Compras/ordenes/editar", {
@@ -1944,7 +1944,7 @@ module.exports = {
                                                                             articulos: articulos,
                                                                             subtotal: ord.subtotal,
                                                                             unidades_negocio: unidades_negocio,
-                                                                            unidad_neg: orden.unidad_negocio, 
+                                                                            unidad_neg: ord.unidad_negocio, 
                                                                             iva: ord.iva,
                                                                             total: ord.total,
                                                                             proveedores: proveedores,
