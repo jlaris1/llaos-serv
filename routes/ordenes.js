@@ -236,7 +236,7 @@ module.exports = {
                                                         articulos: {},
                                                         orden: undefined,
                                                         proveedor: solicitud.body.prov,
-                                                        unidad_neg: solicitud.body.unidad_negocio,
+                                                        unidad_neg: solicitud.body.unid_nego,
                                                         serie: 'S-00000',
                                                         req: {
                                                             uso: solicitud.body.uso
@@ -1911,7 +1911,28 @@ module.exports = {
                                                                             proveedor: ord.proveedor,
                                                                             serie: ord.serie,
                                                                             comentario: ord.comentarios,
-                                                                            estatus: ord.estatus
+                                                                            estatus: ord.estatus,
+                                                                            titulo: "Órdenes",
+                                                                            criterios: [
+                                                                                {
+                                                                                    val: "",
+                                                                                    name: ""
+                                                                                }
+                                                                            ],
+                                                                            piscinas: [
+                                                                                {
+                                                                                    id: 0,
+                                                                                    nombre: ""
+                                                                                }
+                                                                            ],
+                                                                            charoleros: [
+                                                                                {
+                                                                                    id: 0,
+                                                                                    nombre: ""
+                                                                                }   
+                                                                            ],
+                                                                            usuarios: usuarios,
+                                                                            ruta: "ordenes"
                                                                         });
                                                                     }
                                                                 });
@@ -4383,5 +4404,4 @@ module.exports = {
             }
         })
     }
-
 }

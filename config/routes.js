@@ -147,7 +147,7 @@ module.exports = function(app){
     requisicionesRouter.get('/eliminar/articulo-requisicion/:id', requisiciones.eliminarArticulo);
     requisicionesRouter.get('/requisiciones/nuevas', requisiciones.requisicionesNuevasAutorizadas);
     requisicionesRouter.post('/report/pdf', requisiciones.pdfRequisiciones);
-    //requisicionesRouter.post('/report/xls', requisiciones.pdfXls);
+    requisicionesRouter.post('/report/xls', requisiciones.xls);
     requisicionesRouter.get('/requisicion/cerrar/:id', requisiciones.cerrar);
     requisicionesRouter.get('/requisicion/fechas', requisiciones.reqFechas);
 

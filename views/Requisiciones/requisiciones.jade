@@ -12,7 +12,10 @@ block contenido
             });
 
             if($('#url').text() != ''){
+                
                 url = '../../'+ $('#url').text();
+                
+                console.log(url);
                 window.open(url, 'Download');
                 $('#url').text('');
             }
