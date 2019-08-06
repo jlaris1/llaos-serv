@@ -3674,20 +3674,28 @@ var mongoose = require('mongoose');
 
             if(columna == 'fecha'){
                 busqueda = solicitud.body.fecha;
-                especial = true;
                 nombre_xls = 'requisicionesFecha.xlsx';
                 titulo = 'Fecha ';
 
-                fecha = (new Date(solicitud.body.fecha).getDate() + 1)+ '-' +
-                              (new Date(solicitud.body.fecha).getMonth() + 1)+ '-' +
-                              new Date(solicitud.body.fecha).getFullYear();
+                console.log(solicitud.body.fecha);
 
-                f = new Date(fecha).toISOString();
+                var fF = (solicitud.body.fecha).split('-')[0] + '-' + 
+                         (solicitud.body.fecha).split('-')[1] + '-';
 
-                Requisiciones.find({ "fecha": f} , (error, requis) =>{
+                if((solicitud.body.fecha).split('-')[2] < 10 ){
+                    fF += '0' + (parseFloat((solicitud.body.fecha).split('-')[2])+1);
+                } else {
+                    fF += (solicitud.body.fecha).split('-')[2];
+                }
+
+                console.log(fF);
+
+                Requisiciones.find({ fecha: { $gte: solicitud.body.fecha, $lte: fF }} , (error, requis) =>{
                     if(error){
                         console.log(error);
                     } else {
+                        console.log(requis);
+
                         var codigosRequis = [];
 
                         requis.forEach( req =>{
@@ -5312,12 +5320,16 @@ var mongoose = require('mongoose');
                     }
                 }).sort({ fecha : -1});
             } else if (columna == 'fechas'){
+                busqueda = solicitud.body.fechaInicio + ' a ' + solicitud.body.fechaFin;
+                nombre_xls = 'requisicionesFechas.xlsx';
+                titulo = 'Fechas ';
 
-
-                Requisiciones.find({ "responsable": solicitud.body.responsable} , (error, requis) =>{
+                Requisiciones.find({ fecha: { $gte: solicitud.body.fechaInicio, $lte: solicitud.body.fechaFin }} , (error, requis) =>{
                     if(error){
                         console.log(error);
                     } else {
+                        console.log(requis);
+                        
                         var codigosRequis = [];
 
                         requis.forEach( req =>{
@@ -5385,7 +5397,7 @@ var mongoose = require('mongoose');
                                                                     nombre: ""
                                                                 }   
                                                             ],
-                                                            url: generateXLS(articulos, titulo, nombre_xls)
+                                                            url: generateXLS(articulos, titulo, busqueda,nombre_xls)
                                                         });
                                                     });
                                                 }
