@@ -10,7 +10,7 @@ var usuarioSchemaJSON = {
     nacimiento: String,
     numero_nomina: Number,
     empresa: String,
-    unidad_negocio: String,
+    unidad_negocio: { type: Schema.ObjectId, ref: "UnidadesNegocio" },
     puesto: String,
     permisos: String,
     autorizador: Boolean

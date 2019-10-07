@@ -175,9 +175,8 @@ block contenido
                             i.fas.fa-asterisk
                         select.form-control(required id="cmbUnidadNeg" name="unidad_negocio" tabindex="8")
                             option(value="") << Seleccione >>
-                            option(value="Matriz") Matriz
-                            option(value="Granja") Granja
-                            option(value="Planta") Planta
+                            each unidad in unidades_negocios
+                                option(value = unidad.id) #{ unidad.nombre }
         .row
             .col-lg-5
                 .form-group

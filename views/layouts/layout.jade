@@ -24,6 +24,7 @@ html(lang="es")
         //script(src="js/chart.js@2.8.0")
         script(src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js")
         script(src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0")
+        //script(src="https://kit.fontawesome.com/19636afd68.js" crossorigin="anonymous")
     body
         #wrapper
             // Navigation
@@ -154,7 +155,21 @@ html(lang="es")
                                                             li
                                                                 a(href='/unidades/tractor/new')
                                                                     i.fas.fa-plus-circle.fa-fw
-                                                                    |   Nuevo  
+                                                                    |   Nuevo   
+                                                    li
+                                                        a(href='#')#menuCamionetas
+                                                            i.fas.fa-truck-pickup.fa-fw 
+                                                            |   Camionetas
+                                                            span#spanMenuCamionetas.fas.fa-angle-left
+                                                        ul#subMenuCamionetas.nav.nav-fourth-level.hidden
+                                                            li
+                                                                a(href='/unidades/camioneta/all')
+                                                                    i.fas.fa-table.fa-fw
+                                                                    |   Bandeja
+                                                            li
+                                                                a(href='/unidades/camioneta/new')
+                                                                    i.fas.fa-plus-circle.fa-fw
+                                                                    |   Nuevo
                                                     li
                                                         a(href='#')#menuServicios
                                                             i.fas.fa-wrench.fa-fw 
@@ -749,7 +764,7 @@ html(lang="es")
                                             label | Fecha Fin
                                             .input-group
                                                 span.input-group-addon
-                                                    i.far.fa-calendar-alt
+                                                    i.fas.fa-calendar-alt
                                                 input#fFin.form-control(type="date" name="fechaFin" tabindex="4")            
                         .modal-footer
                             input.hidden#ruta(value="#{ruta}")

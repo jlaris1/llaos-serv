@@ -187,10 +187,122 @@ module.exports = {
         if (solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else { 
-
+            Tractores.deleteOne({"_id": solicitud.params.id}, (error) =>{
+                if(error){
+                    console.log(error);
+                } else {
+                    respuesta.redirect('/unidades/tractor/all');
+                }
+            });
         }
     },
     // CAMIONETAS
+    allC: (solicitud, respuesta) => {
+        if (solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else { 
+            Camionetas.find( (error, camionetas) =>{
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    Usuarios.find( (error, usuarios) => {
+                        if(error){
+                            console.log(error);
+                            respuesta.send(401);
+                        } else {
+                            respuesta.render('Administracion/Unidades/Camionetas/all', {
+                                user: solicitud.session.user,
+                                titulo: "Unidades",
+                                usuarios: usuarios,
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
+                                ruta: "unidades",
+                                camioneta: camionetas
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    },
+    newC: (solicitud, respuesta) => {
+        if (solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else { 
+            Usuarios.find( (error, usuarios) => {
+                if(error){
+                    console.log(error);
+                } else {
+                    respuesta.render('Administracion/Unidades/Camionetas/new', {
+                        user: solicitud.session.user,
+                        usuarios: usuarios,
+                        titulo: "Unidades",
+                        criterios: [
+                            {
+                                val: "",
+                                name: ""
+                            }
+                        ],
+                        piscinas: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }
+                        ],
+                        charoleros: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }   
+                        ],
+                        ruta: "unidades"
+                    });
+                }
+            });
+        }
+    },
+    addC: (solicitud, respuesta) => {
+        if (solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else { 
+            var data = {
+                codigo: solicitud.body.codigo,
+                marca: solicitud.body.marca,
+                año: solicitud.body.año,
+                modelo: solicitud.body.modelo,
+                llantas: solicitud.body.llantas,
+                bateria: solicitud.body.bateria,
+                carroceria: solicitud.body.carroceria,
+                horometro: solicitud.body.horometro
+            }
+
+            var camioneta = new Camionetas(data);
+        
+            camioneta.save( (error) => {
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    respuesta.redirect('/unidades/camioneta/all');
+                }
+            });
+        }
+    },
     // MOTOS
     // MOTORES
     // BOMBAS

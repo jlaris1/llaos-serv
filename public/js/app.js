@@ -500,6 +500,19 @@ $(document).ready( function() {
                 }        
             });
 
+            // Camionetas
+            $('#menuCamionetas').click( function(){
+                if ($('#subMenuCamionetas').hasClass('hidden')) {
+                    $('#subMenuCamionetas').removeClass('hidden');
+                    $('#spanMenuCamionetas').removeClass('fa-angle-left');
+                    $('#spanMenuCamionetas').addClass('fa-angle-down');
+                }else{
+                    $('#subMenuCamionetas').addClass('hidden');
+                    $('#spanMenuCamionetas').removeClass('fa-angle-down');
+                    $('#spanMenuCamionetas').addClass('fa-angle-left');
+                }        
+            });
+
             // Servicios
             $('#menuServicios').click( function(){
                 if ($('#subMenuServicios').hasClass('hidden')) {

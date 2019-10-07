@@ -422,6 +422,12 @@ module.exports = function(app){
     unidadRouter.get('/tractor/new', unidad.newT);
     unidadRouter.post('/tractor/add', unidad.addT);
     unidadRouter.get('/tractor/view/:id', unidad.viewT);
+    unidadRouter.get('/tractor/delete/:id', unidad.deleteT);
+    unidadRouter.get('/camioneta/all', unidad.allC);
+    unidadRouter.get('/camioneta/new', unidad.newC);
+    unidadRouter.post('/tractor/add', unidad.addS);
+    /*unidadRouter.get('/tractor/view/:id', unidad.viewT);
+    unidadRouter.get('/tractor/delete/:id', unidad.deleteT);*/
 
     // Servicios
     unidadRouter.get('/servicios/all', unidad.allS);

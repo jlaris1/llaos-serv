@@ -1,0 +1,69 @@
+extends ../../../layouts/layout.jade
+block contenido
+    style.
+    script.
+        $(document).ready( function() { 
+            $('#subMenuUnidades').removeClass('hidden');
+            $('#spanMenuUnidades').removeClass('fa-angle-left');
+            $('#spanMenuUnidades').addClass('fa-angle-down');
+            $('#subMenuTractores').removeClass('hidden');
+            $('#spanMenuTractores').removeClass('fa-angle-left');
+            $('#spanMenuTractores').addClass('fa-angle-down');
+            $('#tractores').dataTable();
+
+            if($('#url').text() != ''){
+                url = '../../reports/unidades/'+ $('#url').text();
+                window.open(url, 'Download');
+                $('#url').text('');
+            }
+        });
+        //Termina Javascript
+
+    .row(style="margin-bottom: -5px;")
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            h2
+                i.fas.fa-truck-pickup(style="margin-right: 10px;")
+                |   Camionetas
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
+            a.btn.btn-special(href="/unidades/tractor/new", style="margin-right: 5px;")
+                i.fas.fa-plus-circle
+                |   Nuevo
+            if user.permisos != "usuario"
+                a.btn.btn-special(href="#reports" data-toggle="modal" data-target="#reports" style="margin-right: 5px;")
+                    i.fas.fa-file-pdf
+                    |   Reportes
+    .divider
+    label#url.hidden #{url}
+    .row
+        .table-responsive   
+            table#tractores.table.table-striped.table-hover
+                thead
+                    th Código
+                    th Marca
+                    th Modelo
+                    th Registro
+                    th Acciones
+                tbody
+                    each t in camionetas
+                        tr
+                            td.text-center 
+                                b #{ t.codigo }
+                            td #{ t.marca }
+                            td #{ t.modelo }
+                            if (new Date(t.registro).getMonth() + 1) < 10
+                                if (new Date(t.registro).getDate()) < 10
+                                    td.text-center #{ '0' + new Date(t.registro).getDate()+ '/0' + (new Date(t.registro).getMonth() + 1)+ '/' + new Date(t.registro).getFullYear()}
+                                else         
+                                    td.text-center #{ new Date(t.registro).getDate()+ '/0' + (new Date(t.registro).getMonth() + 1)+ '/' + new Date(t.registro).getFullYear()}
+                            else
+                                if (new Date(t.registro).getDate()) < 10
+                                    td.text-center #{ '0' + new Date(t.registro).getDate()+ '/' + (new Date(t.registro).getMonth() + 1)+ '/' + new Date(t.registro).getFullYear()}
+                                else 
+                                    td.text-center #{ new Date(t.registro).getDate()+ '/' + (new Date(t.registro).getMonth() + 1)+ '/' + new Date(t.registro).getFullYear()}
+                            td
+                                a(href="/unidades/tractor/view/#{t.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px;")
+                                    i.fas.fa-eye.fa-lg.text-primary
+                                a(href="/unidades/tractor/edit/#{t.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px; color: #057e95;")
+                                    i.fas.fa-pencil-alt.fa-lg
+                                a(href="/unidades/tractor/delete/#{t.id}", data-toggle="tooltip", data-placement="top", title="Eliminar", style="margin-right: 5px;")
+                                    i.fas.fa-minus-circle.fa-lg.text-danger

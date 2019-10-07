@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
     Usuarios = mongoose.model('Usuarios');
+    UnidadesNegocios = mongoose.model('UnidadesNegocio');
     
 module.exports = {//HAcen falta try-catch a los metodos
     //Método para obtener todos los usuarios
@@ -48,29 +49,36 @@ module.exports = {//HAcen falta try-catch a los metodos
                 if(error){
                     console.log(error)
                 } else {
-                    respuesta.render("Sistemas/Usuarios/Usuario",{
-                        user: solicitud.session.user,
-                        titulo: "Usuarios",
-                        criterios: [
-                            {
-                                val: "",
-                                name: ""
-                            }
-                        ],
-                        piscinas: [
-                            {
-                                id: 0,
-                                nombre: ""
-                            }
-                        ],
-                        charoleros: [
-                            {
-                                id: 0,
-                                nombre: ""
-                            }   
-                        ],
-                        ruta: "usuarios",
-                        usuarios: usuarios
+                    UnidadesNegocios.find( (error, unidades) => {
+                        if(error){
+                            console.log(error);
+                        } else {
+                            respuesta.render("Sistemas/Usuarios/Usuario",{
+                                user: solicitud.session.user,
+                                titulo: "Usuarios",
+                                criterios: [
+                                    {
+                                        val: "",
+                                        name: ""
+                                    }
+                                ],
+                                piscinas: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }
+                                ],
+                                charoleros: [
+                                    {
+                                        id: 0,
+                                        nombre: ""
+                                    }   
+                                ],
+                                ruta: "usuarios",
+                                usuarios: usuarios,
+                                unidades_negocios: unidades
+                            });
+                        }
                     });
                 }
             });
@@ -89,7 +97,11 @@ module.exports = {//HAcen falta try-catch a los metodos
                         if(error){
                             console.log(error)
                         } else {
-                            respuesta.render("Sistemas/Usuarios/editar",
+                            UnidadesNegocios.find( (error, unidades) => {
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    respuesta.render("Sistemas/Usuarios/editar",
                                 {
                                     user: solicitud.session.user,
                                     usr: usuario,
@@ -113,9 +125,12 @@ module.exports = {//HAcen falta try-catch a los metodos
                                         }   
                                     ],
                                     ruta: "usuarios",
-                                    usuarios: usuarios
+                                    usuarios: usuarios,
+                                    unidades_negocios: unidades
                                 }
                             );
+                                }
+                            });
                         }
                     });
                 }

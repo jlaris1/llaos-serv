@@ -785,10 +785,20 @@ module.exports = {
                 });
             } else if (column == 'fecha'){
                 search = solicitud.body.fecha;
+
+                var fF = (solicitud.body.fecha).split('-')[0] + '-' + 
+                         (solicitud.body.fecha).split('-')[1] + '-';
+
+                if((solicitud.body.fecha).split('-')[2] < 10 ){
+                    fF += '0' + (parseFloat((solicitud.body.fecha).split('-')[2])+1);
+                } else {
+                    fF += (solicitud.body.fecha).split('-')[2];
+                }
+
                 xls_name = 'reporte_parametros_fecha_' + solicitud.body.fecha + '.xlsx';
 
                 Parametros.find({})
-                    .where({fecha: {$eq: new Date(solicitud.body.fecha)}})
+                    .where({fecha: {$gte: solicitud.body.fecha, $lte: fF}})
                     .populate('estanque')
                     .exec((err, parametros) => {
                         Usuarios.populate(parametros, { path: 'parametrista'}, function(error, parametros){
@@ -835,10 +845,7 @@ module.exports = {
                 xls_name = 'reporte_parametros_fechas_' + solicitud.body.fechaInicio + '-' + solicitud.body.fechaFin + '.xlsx';
 
                 Parametros.find({
-                    fecha: {
-                        $gte: fI,
-                        $lte: fF
-                    }
+                    fecha: { $gte: solicitud.body.fechaInicio, $lte: solicitud.body.fechaFin }
                 }
                 ,  (error, parametros) => {
                     if(error){
@@ -861,17 +868,6 @@ module.exports = {
                     }
                 });
             } else if (column == 'modulo'){
-                fechaInicio = new Date(solicitud.body.fechaInicio).getFullYear() + '-' +
-                            (new Date(solicitud.body.fechaInicio).getMonth() + 1) +  '-' +
-                            (new Date(solicitud.body.fechaInicio).getDate() + 1);
-                              
-                fechaFin = new Date(solicitud.body.fechaFin).getFullYear() + '-' +
-                        (new Date(solicitud.body.fechaFin).getMonth() + 1) +  '-' +
-                        (new Date(solicitud.body.fechaFin).getDate() + 1);
-
-                fI = new Date(fechaInicio).toISOString();
-                fF = new Date(fechaFin).toISOString();
-
                 Modulos.findOne( {"codigo": solicitud.body.modulo}, (error, modulo) => {
                     if(error){
                         console.log(chalk.bgRed(error));
@@ -881,29 +877,31 @@ module.exports = {
                             if(error){
                                 console.log(chalk.bgRed(error));
                                 respuesta.sendStatus(501);
-                            } else {
-                                Parametros.find({ fecha: {
-                                    $gte: fI,
-                                    $lte: fF
-                                }
+                            } else {                                
+                                Parametros.find(
+                                    {$and: [
+                                        { estanque: { $in: estanques }},
+                                        { fecha: {
+                                            $gte: solicitud.body.fechaInicio,
+                                            $lte: solicitud.body.fechaFin
+                                        }}
+                                    ]
                                 }, (error, parametros) => {
                                     if(error){
                                         console.log(chalk.bgRed(error));
                                         respuesta.sendStatus(417);
                                     } else {
-                                        console.log(parametros);
-                                        /*Estanques.populate(parametros, { path: 'estanque', match: {estanque: { $in: estanques }} }, function(error, parametros){
+                                        
+                                        Estanques.populate(parametros, { path: 'estanque' }, function(error, parametros){
                                             if(error){
                                                 console.log(chalk.bgRed(error));
                                             } else {
                                                 title = 'Modulo ' + solicitud.body.modulo;
                                                 xls_name = 'reporte_concetrado_modulo_' + solicitud.body.modulo + '.xlsx';
                                                 
-                                                console.log(parametros);
-                                                
-                                                //generateConcentradoXLS(parametros, title, xls_name, solicitud.body.fechaInicio, solicitud.body.fechaFin)
+                                                generateConcentradoXLS(parametros, title, xls_name, solicitud.body.fechaInicio, solicitud.body.fechaFin)
                                             }
-                                        });*/
+                                        });
                                     }
                                 }).sort({estanque: 1, fecha: 1});
                             }
@@ -1219,6 +1217,16 @@ function generateConcentradoXLS(data, title, xls_name, fecha_ini, fecha_fin){
     var prom_tem_pm = 0;
     var prom_niv_am = 0;
     var prom_niv_pm = 0;
+    var gen_prom_tem_am = 0;
+    var gen_prom_tem_pm = 0;
+    var gen_prom_niv_am = 0;
+    var gen_prom_niv_pm = 0;
+    var gen_prom_ox_am = 0;
+    var gen_prom_ox_pm = 0;
+    var gen_prom_sal = 0;
+    var gen_prom_ph = 0;
+
+
 
     var options = {
         filename:  file_path + '/' + xls_name ,
@@ -1233,35 +1241,43 @@ function generateConcentradoXLS(data, title, xls_name, fecha_ini, fecha_fin){
 
     // NOMBRE DE LA HOJA
     var ws = wb.addWorksheet('Reporte');
-
-    ws.properties.defaultRowHeight = 20;
+    ws.properties.defaultRowHeight = 18;
+    ws.properties.defaultRowWidth = 10;
 
     // TITULO
     ws.mergeCells('A1:K1');
     ws.getCell('E1').value = "Reporte " + title;
     ws.getCell('E1').font = {
         name: "Roboto", 
-        size: 16,  
-        //bold: true,
-        horizontal: 'center'
+        size: 12,  
+        bold: true,
+        horizontal: 'center',
+        color: { argb: 'ffffff'}
     };   
     ws.getCell('E1').fill = {
         type: "pattern",
         pattern: "solid",
-        fgColor: {argb:'83909c'}
+        fgColor: {argb:'000000'}
     };
     ws.getCell('E1').alignment = { vertical: 'middle', horizontal: 'center' };
+    //ws.getCell('E1').height = 25;
 
     // SUBTITULO
     ws.mergeCells('A2:K2');
     ws.getCell('E2').value = 'LLAOS ACUACULTURA S.A. DE C.V.';
     ws.getCell('E2').font = {
         name: "Roboto", 
-        size: 12,  
-        //bold: true,
-        horizontal: 'center'
+        size: 11,  
+        bold: true,
+        horizontal: 'center',
+        color: { argb: 'ffffff'}
     };
-    ws.getCell('E2').alignment = { vertical: 'middle', horizontal: 'center' };   
+    ws.getCell('E2').alignment = { vertical: 'middle', horizontal: 'center' }; 
+    ws.getCell('E2').fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: {argb:'000000'},
+    };  
 
     // CICLO + AÑO
     ws.getCell('A4').value = 'Ciclo:';
@@ -1269,8 +1285,10 @@ function generateConcentradoXLS(data, title, xls_name, fecha_ini, fecha_fin){
         name: "Roboto", 
         size: 12,  
         bold: true,
-        horizontal: 'center'
+        horizontal: 'center',
+        color: { argb: 'ffffff'}
     }; 
+
     ws.getCell('A4').alignment = { vertical: 'middle', horizontal: 'center' };
     ws.getCell('B4').value = new Date().getFullYear();
     ws.getCell('B4').alignment = { vertical: 'middle', horizontal: 'center' };
@@ -1288,358 +1306,701 @@ function generateConcentradoXLS(data, title, xls_name, fecha_ini, fecha_fin){
     ws.mergeCells('H4:K4');
     ws.getCell('H4').value = fecha_ini.replace(/-/g,'/') + ' al ' + fecha_fin.replace(/-/g,'/') ;
     ws.getCell('H4').alignment = { vertical: 'middle', horizontal: 'center' };
+    //ws.getCell('H4').width = 7;
+    //ws.getCell('I4').width = 7;
 
     ws.getRow(4).eachCell( (cell) => {
-        cell.font = { name: "Roboto", size: 12,color: {argb: '000000'} };
+        cell.font = { name: "Roboto", size: 12,color: {argb: 'ffffff'} };
         cell.alignment = { vertical: 'middle', horizontal: 'center' };
         cell.fill = {
             type: "pattern",
 	        pattern: "solid",
-            fgColor: {argb:'83909c'},
-            //bgColor: {argb:'000000'}
+            fgColor: {argb:'000000'},
         };
     });
 
 
-    // ENCABEZADOS DE LA TABLA DE PARAMETROS
-    ws.getCell('A8').value = 'Est.';
-    ws.getCell('A8').alignment = { vertical: 'middle', horizontal: 'center' };
-    ws.getCell('B8').value = 'Fecha';
-    ws.getCell('B8').alignment = { vertical: 'middle', horizontal: 'center' };
-    ws.getCell('C8').value = 'Día';
-    ws.getCell('C8').alignment = { vertical: 'middle', horizontal: 'center' };
+    /***** ENCABEZADOS DE LA TABLA DE PARAMETROS *****/
+        ws.getCell('A8').value = '';
+        ws.getCell('B8').value = '';    
+        ws.getCell('C8').value = '';   
+
+        ws.mergeCells('D8:E8');
+        ws.getCell('D8').value = 'TEMP. (°C)';
+        ws.getCell('D8').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('D8').font = {
+            name: "Roboto", 
+            size: 12,  
+            //bold: true,
+            horizontal: 'center'
+        };  
+
+        ws.mergeCells('F8:G8');
+        ws.getCell('F8').value = 'O2 (mg/L)';
+        ws.getCell('F8').font = {
+            name: "Roboto", 
+            size: 12,  
+            //bold: true,
+            horizontal: 'center'
+        };
+        ws.getCell('F8').alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+        ws.mergeCells('H8:I8');
+        ws.getCell('H8').value = 'Nivel';
+        ws.getCell('H8').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('H8').font = {
+            name: "Roboto", 
+            size: 12,  
+            //bold: true,
+            horizontal: 'center'
+        }; 
+
+        ws.getCell('J8').value = '';
+        ws.getCell('K8').value = '';
+
+        ws.getCell('A9').value = 'Est';
+        ws.getCell('A9').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('B9').value = 'Fecha';
+        ws.getCell('B9').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('C9').value = 'Día';
+        ws.getCell('C9').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('D9').value = 'AM';
+        ws.getCell('D9').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('D9').font = {
+            name: "Roboto", 
+            size: 12,  
+            bold: true,
+            horizontal: 'center'
+        }; 
+
+        ws.getCell('E9').value = 'PM';
+        ws.getCell('E9').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('E9').font = {
+            name: "Roboto", 
+            size: 12,  
+            bold: true,
+            horizontal: 'center'
+        }; 
+
+        ws.getCell('F9').value = 'AM';
+        ws.getCell('F9').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('F9').font = {
+            name: "Roboto", 
+            size: 12,  
+            bold: true,
+            horizontal: 'center'
+        }; 
+        //ws.getCell('F9').width = 7;
+
+        ws.getCell('G9').value = 'PM';
+        ws.getCell('G9').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('G9').font = {
+            name: "Roboto", 
+            size: 12,  
+            bold: true,
+            horizontal: 'center'
+        }; 
+        //ws.getCell('G9').width = 7;
+
+        ws.getCell('H9').value = 'AM';
+        ws.getCell('H9').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('H9').font = {
+            name: "Roboto", 
+            size: 12,  
+            bold: true,
+            horizontal: 'center'
+        }; 
+        //ws.getCell('H9').width = 7;
+
+        ws.getCell('I9').value = 'PM';
+        ws.getCell('I9').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('I9').font = {
+            name: "Roboto", 
+            size: 12,  
+            bold: true,
+            horizontal: 'center'
+        }; 
+        //ws.getCell('I9').width = 7;
+
+        ws.getCell('J9').value = 'Sal.';
+        ws.getCell('J9').alignment = { vertical: 'middle', horizontal: 'center' };
+        //ws.getCell('J9').width = 7;
+
+        ws.getCell('K9').value = 'pH';
+        ws.getCell('K9').alignment = { vertical: 'middle', horizontal: 'center' };
+        //ws.getCell('K9').width = 7;
+
+        ws.getRow(8).eachCell( (cell) => {
+            cell.font = { name: "Roboto", size: 12, color: {argb: 'ffffff'}, bold: true };
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+            cell.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor:{argb:'000000'}
+            };
+        });
+
+        ws.autoFilter = {
+            from: 'A9',
+            to: 'K9',
+        };
+
+
+        ws.getRow(9).eachCell( (cell) => {
+            cell.font = { name: "Roboto", size: 12, color: {argb: '000000'}, bold: true };
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+            cell.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor:{argb:'FFFFFF00'},
+                bgColor:{argb:'FF0000FF'}
+                //fgColor: {argb:'c6c6c6'},
+
+            };
+        });
+
+        ws.columns = [
+            {  key: 'est', width: 8 },
+            {  key: 'fecha', width: 12, style: { numFmt: 'dd/mm/yyyy' } },
+            {  key: 'dia', width: 10 },
+            {  key: 'temp_am', width: 5, style: { numFmt: '#,##'} },
+            {  key: 'temp_pm', width: 5, style: { numFmt: '#,##'} },
+            {  key: 'ox_am', width: 5, style: { numFmt: '#,##'} },
+            {  key: 'ox_pm', width: 5, style: { numFmt: '#,##'} },
+            {  key: 'nivel_am', width: 8, style: { numFmt: '#,##'} },
+            {  key: 'nivel_pm', width: 8, style: { numFmt: '#,##'} },
+            {  key: 'sal', width: 5 },
+            {  key: 'ph', width: 5 }
+        ];
+
+        var days = [ "DOMINGO", "LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO"];
+
+    /**** */
     
+    /*** Contadores  */
+        var j_am = 0;
+        var j_pm = 0;
+        var j_ph = 0;
+        var j_sal = 0;
+        var g_am = 0;
+        var g_pm = 0;
+        var g_ph = 0;
+        var g_sal = 0;
+        var fila = 10;
+    /*** */
 
-    ws.getCell('A8').border = {
-        top: {style:'thick', color: {argb:'#FFFFFF'}},
-        left: {style:'thick', color: {argb:'#FFFFFF'}}
-    };
-
-    ws.getCell('B8').border = {
-        top: {style:'thick', color: {argb:'#FFFFFF'}}
-    };
-
-    ws.getCell('C8').border = {
-        top: {style:'thick', color: {argb:'#FFFFFF'}}
-    };
-
-    ws.mergeCells('D8:E8');
-    ws.getCell('D8').value = 'TEMP.';
-    ws.getCell('D8').alignment = { vertical: 'middle', horizontal: 'center' };
-    ws.getCell('D8').font = {
-        name: "Roboto", 
-        size: 12,  
-        //bold: true,
-        horizontal: 'center'
-    };  
-
-    ws.getCell('D8').border = { top: {style:'thick', color: {argb:'#FFFFFF'}} };
-    ws.getCell('E8').border = { top: {style:'thick', color: {argb:'#FFFFFF'}} };
-
-    ws.mergeCells('F8:G8');
-    ws.getCell('F8').value = 'O2';
-    ws.getCell('F8').font = {
-        name: "Roboto", 
-        size: 12,  
-        //bold: true,
-        horizontal: 'center'
-    };
-    ws.getCell('F8').alignment = { vertical: 'middle', horizontal: 'center' }; 
-    ws.getCell('F8').border = { top: {style:'thick', color: {argb:'#FFFFFF'}} };
-    ws.getCell('G8').border = { top: {style:'thick', color: {argb:'#FFFFFF'}} };
-
-    ws.mergeCells('H8:I8');
-    ws.getCell('H8').value = 'Nivel';
-    ws.getCell('H8').alignment = { vertical: 'middle', horizontal: 'center' };
-    ws.getCell('H8').font = {
-        name: "Roboto", 
-        size: 12,  
-        //bold: true,
-        horizontal: 'center'
-    }; 
-    ws.getCell('H8').border = { top: {style:'thick', color: {argb:'#FFFFFF'}} };
-    ws.getCell('H8').border = { top: {style:'thick', color: {argb:'#FFFFFF'}} };
-
-    ws.getCell('J8').value = 'Sal.';
-    ws.getCell('J8').alignment = { vertical: 'middle', horizontal: 'center' };
-    ws.getCell('J8').border = { top: {style:'thick', color: {argb:'#FFFFFF'}} };
-
-    ws.getCell('K8').value = 'pH';
-    ws.getCell('K8').alignment = { vertical: 'middle', horizontal: 'center' };
-    ws.getCell('K8').border = {
-        top: {style:'thick', color: {argb:'#FFFFFF'}},
-        right: {style:'thick', color: {argb:'#FFFFFF'}}
-    };
-
-    ws.getCell('A9').value = '';
-    ws.getCell('A9').border = {
-        bottom: {style:'thick', color: {argb:'#FFFFFF'}},
-        left: {style:'thick', color: {argb:'#FFFFFF'}}
-    };
-
-    ws.getCell('B9').value = '';
-    ws.getCell('B9').border = { bottom: {style:'thick', color: {argb:'#FFFFFF'}} };
-
-    ws.getCell('C9').value = '';
-    ws.getCell('C9').border = { bottom: {style:'thick', color: {argb:'#FFFFFF'}} };
-
-    ws.getCell('D9').value = 'AM';
-    ws.getCell('D9').alignment = { vertical: 'middle', horizontal: 'center' };
-    ws.getCell('D9').font = {
-        name: "Roboto", 
-        size: 12,  
-        bold: true,
-        horizontal: 'center'
-    }; 
-    ws.getCell('D9').border = { bottom: {style:'thick', color: {argb:'#FFFFFF'}} };
-
-    ws.getCell('E9').value = 'PM';
-    ws.getCell('E9').alignment = { vertical: 'middle', horizontal: 'center' };
-    ws.getCell('E9').font = {
-        name: "Roboto", 
-        size: 12,  
-        bold: true,
-        horizontal: 'center'
-    }; 
-    ws.getCell('E9').border = { bottom: {style:'thick', color: {argb:'#FFFFFF'}} };
-
-    ws.getCell('F9').value = 'AM';
-    ws.getCell('F9').alignment = { vertical: 'middle', horizontal: 'center' };
-    ws.getCell('F9').font = {
-        name: "Roboto", 
-        size: 12,  
-        bold: true,
-        horizontal: 'center'
-    }; 
-    ws.getCell('F9').border = { bottom: {style:'thick', color: {argb:'#FFFFFF'}} };
-
-    ws.getCell('G9').value = 'PM';
-    ws.getCell('G9').alignment = { vertical: 'middle', horizontal: 'center' };
-    ws.getCell('G9').font = {
-        name: "Roboto", 
-        size: 12,  
-        bold: true,
-        horizontal: 'center'
-    }; 
-    ws.getCell('G9').border = { bottom: {style:'thick', color: {argb:'#FFFFFF'}} };
-
-    ws.getCell('H9').value = 'AM';
-    ws.getCell('H9').alignment = { vertical: 'middle', horizontal: 'center' };
-    ws.getCell('H9').font = {
-        name: "Roboto", 
-        size: 12,  
-        bold: true,
-        horizontal: 'center'
-    }; 
-    ws.getCell('H9').border = { bottom: {style:'thick', color: {argb:'#FFFFFF'}} };
-
-    ws.getCell('I9').value = 'PM';
-    ws.getCell('I9').alignment = { vertical: 'middle', horizontal: 'center' };
-    ws.getCell('I9').font = {
-        name: "Roboto", 
-        size: 12,  
-        bold: true,
-        horizontal: 'center'
-    }; 
-    ws.getCell('I9').border = { bottom: {style:'thick', color: {argb:'#FFFFFF'}} };
-
-    ws.getCell('J9').value = '';
-    ws.getCell('J9').border = { bottom: {style:'thick', color: {argb:'#FFFFFF'}} };
-
-    ws.getCell('K9').value = '';
-    ws.getCell('K9').border = { 
-        bottom: {style:'thick', color: {argb:'#FFFFFF'}},
-        right: {style:'thick', color: {argb:'#FFFFFF'}}, 
-    };
-
-    ws.getRow(8).eachCell( (cell) => {
-        cell.font = { name: "Roboto", size: 12, color: {argb: '000000'} };
-        cell.alignment = { vertical: 'middle', horizontal: 'center' };
-        cell.fill = {
-            type: "pattern",
-	        pattern: "solid",
-            fgColor:{argb:'83909c'},
-            bgColor:{argb:'000000'}
-        };
-    });
-
-    ws.getRow(9).eachCell( (cell) => {
-        cell.font = { name: "Roboto", size: 12,color: {argb: '000000'} };
-        cell.alignment = { vertical: 'middle', horizontal: 'center' };
-        cell.fill = {
-            type: "pattern",
-	        pattern: "solid",
-            fgColor: {argb:'83909c'},
-            //bgColor: {argb:'000000'}
-        };
-    });
-
-    ws.properties.defaultRowHeight = 20;
-
-    ws.columns = [
-        {  key: 'est', width: 8 },
-        {  key: 'fecha', width: 12, style: { numFmt: 'dd/mm/yyyy' } },
-        {  key: 'dia', width: 10 },
-        {  key: 'temp_am', width: 5, style: { numFmt: '#,##'} },
-        {  key: 'temp_pm', width: 5, style: { numFmt: '#,##'} },
-        {  key: 'ox_am', width: 5, style: { numFmt: '#,##'} },
-        {  key: 'ox_pm', width: 5, style: { numFmt: '#,##'} },
-        {  key: 'nivel_am', width: 8, style: { numFmt: '#,##'} },
-        {  key: 'nivel_pm', width: 8, style: { numFmt: '#,##'} },
-        {  key: 'sal', width: 5 },
-        {  key: 'ph', width: 5 }
-    ];
-
-    var days = [ "DOMINGO", "LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO"];
-
-    var j_am = 0;
-    var j_pm = 0;
-    var j_ph = 0;
-    var j_sal = 0;
+    var color = '';
  
+    /**** LLENADO DE CONTENDIO POR ESTANQUE */
     for(var i = 0; i < data.length; i ++){
+        //;
         var ph, sal;
-        prom_ph += parseFloat(data[i].ph);
-        prom_sal += parseFloat(data[i].salinidad);
-                
-        if (data[i].tiempo == 'AM') {
-            j_am += 1;
 
+        j_am += 1;
+        g_am += 1;
+    
+        // EVALUAR QUE EL QUE SIGUE SEA PM Y SEAN DEL MISMO ESTANQUE
+        if(data[i+1] != null){
+            if(data[i+1].tiempo == 'PM' && (data[i+1].codigo == data[i].codigo)){
+                j_pm += 1;
+                g_pm += 1;
+
+                if( parseFloat(data[i].ph).toFixed(2) > 0.00){
+                    j_ph += 1;
+                    g_ph += 1;
+                    ph = parseFloat(data[i].ph).toFixed(2);
+                    prom_ph += parseFloat(data[i].ph);
+                    gen_prom_ph += parseFloat(data[i].ph);
+                } else {
+                    ph = '';
+                }
+
+                if( parseFloat(data[i].salinidad).toFixed(2) > 0.00){
+                    j_sal += 1;
+                    g_sal += 1;
+                    sal = parseFloat(data[i].salinidad).toFixed(2);
+                    prom_sal += parseFloat(data[i].salinidad);
+                    gen_prom_sal += parseFloat(data[i].salinidad);
+                } else {
+                    sal = '';
+                }                
+        
+                // Asignación de valores para llenado de tabla
+                ws.getCell('A'+fila).value = data[i].estanque.codigo;
+                ws.getCell('B'+fila).value = data[i].fecha;
+                ws.getCell('C'+fila).value = days[new Date(data[i].fecha).getDay()];
+                ws.getCell('D'+fila).value = parseFloat(data[i].temperatura).toFixed(2);
+                ws.getCell('E'+fila).value = parseFloat(data[i+1].temperatura).toFixed(2);
+                ws.getCell('F'+fila).value = parseFloat(data[i].oxigeno).toFixed(2);
+                ws.getCell('G'+fila).value = parseFloat(data[i+1].oxigeno).toFixed(2);
+                ws.getCell('H'+fila).value = parseFloat(data[i].nivel_agua).toFixed(2);
+                ws.getCell('I'+fila).value = parseFloat(data[i+1].nivel_agua).toFixed(2);
+                ws.getCell('J'+fila).value = sal;
+                ws.getCell('K'+fila).value = ph;
+                
+
+                if (fila%2==0) {
+                    ws.getCell('A'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'dddddd'}}
+                    ws.getCell('B'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'dddddd'}}
+                    ws.getCell('C'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'dddddd'}}
+                    ws.getCell('D'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'dddddd'}}
+                    ws.getCell('E'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'dddddd'}}
+                    ws.getCell('F'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'dddddd'}}
+                    ws.getCell('G'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'dddddd'}}
+                    ws.getCell('H'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'dddddd'}}
+                    ws.getCell('I'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'dddddd'}}
+                    ws.getCell('J'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'dddddd'}}
+                    ws.getCell('K'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'dddddd'}}
+                    
+                }
+
+                // Agregar estilo a las celdas
+                ws.getCell('A'+fila).font = { name: "Roboto", size: 12};
+                ws.getCell('A'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+                ws.getCell('A'+fila).numFmt = '0.00';
+                ws.getCell('A'+fila).border = {
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+    
+                ws.getCell('B'+fila).font = { name: "Roboto", size: 12};
+                ws.getCell('B'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+                ws.getCell('B'+fila).border = {
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+
+                ws.getCell('C'+fila).font = { name: "Roboto", size: 12};
+                ws.getCell('C'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+                ws.getCell('C'+fila).numFmt = '0.00';
+                ws.getCell('C'+fila).border = {
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+
+                ws.getCell('D'+fila).font = { name: "Roboto", size: 12};
+                ws.getCell('D'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+                ws.getCell('D'+fila).numFmt = '0.00';
+                ws.getCell('D'+fila).border = {
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+
+                ws.getCell('E'+fila).font = { name: "Roboto", size: 12};
+                ws.getCell('E'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+                ws.getCell('E'+fila).numFmt = '0.00';
+                ws.getCell('E'+fila).border = {
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+
+                ws.getCell('F'+fila).font = { name: "Roboto", size: 12};
+                ws.getCell('F'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+                ws.getCell('F'+fila).numFmt = '0.00';
+                ws.getCell('F'+fila).border = {
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+
+                ws.getCell('G'+fila).font = { name: "Roboto", size: 12};
+                ws.getCell('G'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+                ws.getCell('G'+fila).numFmt = '0.00';
+                ws.getCell('G'+fila).border = {
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+
+                ws.getCell('H'+fila).font = { name: "Roboto", size: 12};
+                ws.getCell('H'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+                ws.getCell('H'+fila).numFmt = '0.00';
+                ws.getCell('H'+fila).border = {
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+
+                ws.getCell('I'+fila).font = { name: "Roboto", size: 12};
+                ws.getCell('I'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+                ws.getCell('I'+fila).numFmt = '0.00';
+                ws.getCell('I'+fila).border = {
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+
+                ws.getCell('J'+fila).font = { name: "Roboto", size: 12};
+                ws.getCell('J'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+                ws.getCell('J'+fila).numFmt = '0.00';
+                ws.getCell('J'+fila).border = {
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+
+                ws.getCell('K'+fila).font = { name: "Roboto", size: 12};
+                ws.getCell('K'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+                ws.getCell('K'+fila).numFmt = '0.00';
+                ws.getCell('K'+fila).border = {
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+
+                /** VALIDACIONES DE MINIMOS COLOREAR EN ROJO LO QUE ESTE DEBAJO DEL MÍNIMO */
+
+                    /*** PH */
+                    if(parseFloat(data[i].ph).toFixed(2) > 8.00){
+                        ws.getCell('K'+fila).fill = {
+                            type: 'pattern',
+                            pattern:'solid',
+                            fgColor: {argb:'cd919e'}
+                        }
+
+                        ws.getCell('K'+fila).font = { name: "Roboto", size: 12, bold: true, color: { argb: '6c2927' }};
+                    }
+
+                    /*** TEMPERATURA AM */
+                    if(parseFloat(data[i].temperatura).toFixed(2) < 24.0 || parseFloat(data[i].temperatura).toFixed(2) > 33.0){
+                        ws.getCell('D'+fila).fill = {
+                            type: 'pattern',
+                            pattern:'solid',
+                            fgColor: {argb:'cd919e'}
+                        }
+                    }
+
+                // Sumar a promedios de AM
+                prom_ox_am += parseFloat(data[i].oxigeno);
+                prom_tem_am += parseFloat(data[i].temperatura);
+                prom_niv_am += parseFloat(data[i].nivel_agua);
+                gen_prom_tem_am += parseFloat(data[i].temperatura) ;
+                gen_prom_ox_am += parseFloat(data[i].oxigeno);
+                gen_prom_niv_am += parseFloat(data[i].nivel_agua);
+                
+                
+                // Sumar a promedios de PM
+                prom_ox_pm += parseFloat(data[i+1].oxigeno);
+                prom_tem_pm += parseFloat(data[i+1].temperatura);
+                prom_niv_pm += parseFloat(data[i+1].nivel_agua);
+                gen_prom_tem_pm += parseFloat(data[i+1].temperatura) ;
+                gen_prom_niv_pm += parseFloat(data[i+1].nivel_agua) ;
+                gen_prom_ox_pm += parseFloat(data[i+1].oxigeno) ;
+
+                fila ++;
+            }
+        }else {
             if( parseFloat(data[i].ph).toFixed(2) > 0.00){
                 j_ph += 1;
+                g_ph += 1;
                 ph = parseFloat(data[i].ph).toFixed(2);
+                prom_ph += parseFloat(data[i].ph);
+                gen_prom_ph += parseFloat(data[i].ph);
             } else {
                 ph = '';
             }
 
             if( parseFloat(data[i].salinidad).toFixed(2) > 0.00){
                 j_sal += 1;
+                g_sal += 1;
                 sal = parseFloat(data[i].salinidad).toFixed(2);
+                prom_sal += parseFloat(data[i].salinidad);
+                gen_prom_sal += parseFloat(data[i].salinidad);
             } else {
                 sal = '';
+            }   
+            
+            // Asignación de valores para llenado de tabla
+            ws.getCell('A'+fila).value = data[i].estanque.codigo;
+            ws.getCell('B'+fila).value = data[i].fecha;
+            ws.getCell('C'+fila).value = days[new Date(data[i].fecha).getDay()];
+            ws.getCell('D'+fila).value = parseFloat(data[i].temperatura).toFixed(2);
+            ws.getCell('E'+fila).value = '';
+            ws.getCell('F'+fila).value = parseFloat(data[i].oxigeno).toFixed(2);
+            ws.getCell('G'+fila).value = '';
+            ws.getCell('H'+fila).value = parseFloat(data[i].nivel_agua).toFixed(2);
+            ws.getCell('I'+fila).value = '';
+            ws.getCell('J'+fila).value = sal;
+            ws.getCell('K'+fila).value = ph;
+            
+            // Agregar estilo a las celdas
+            ws.getCell('A'+fila).font = { name: "Roboto", size: 12};
+            ws.getCell('A'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+            ws.getCell('A'+fila).border = {
+                bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                left: {style:'thin', color: {argb:'#FFFFFF'}},
+                top: {style:'thin', color: {argb:'#FFFFFF'}},
+                right: {style:'thin', color: {argb:'#FFFFFF'}}
+            };
+
+            ws.getCell('B'+fila).font = { name: "Roboto", size: 12};
+            ws.getCell('B'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+            ws.getCell('B'+fila).border = {
+                bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                left: {style:'thin', color: {argb:'#FFFFFF'}},
+                top: {style:'thin', color: {argb:'#FFFFFF'}},
+                right: {style:'thin', color: {argb:'#FFFFFF'}}
+            };
+
+            ws.getCell('C'+fila).font = { name: "Roboto", size: 12};
+            ws.getCell('C'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+            ws.getCell('C'+fila).border = {
+                bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                left: {style:'thin', color: {argb:'#FFFFFF'}},
+                top: {style:'thin', color: {argb:'#FFFFFF'}},
+                right: {style:'thin', color: {argb:'#FFFFFF'}}
+            };
+
+            ws.getCell('D'+fila).font = { name: "Roboto", size: 12};
+            ws.getCell('D'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+            ws.getCell('D'+fila).border = {
+                bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                left: {style:'thin', color: {argb:'#FFFFFF'}},
+                top: {style:'thin', color: {argb:'#FFFFFF'}},
+                right: {style:'thin', color: {argb:'#FFFFFF'}}
+            };
+
+
+            /** VALIDACIONES DE MINIMOS COLOREAR EN ROJO LO QUE ESTE DEBAJO DEL MÍNIMO */
+            if(parseFloat(data[i].temperatura).toFixed(2) < 24.0 || parseFloat(data[i].temperatura).toFixed(2) > 33.0){
+                ws.getCell('D'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'cd919e'}
+                }
             }
 
-            let row = ws.addRow(
-                {   est: data[i].estanque.codigo, 
-                    fecha: data[i].fecha,
-                    dia: days[new Date(data[i].fecha).getDay()],
-                    temp_am: parseFloat(data[i].temperatura).toFixed(2),
-                    temp_pm: '',
-                    ox_am: parseFloat(data[i].oxigeno).toFixed(2),
-                    ox_pm: '',
-                    nivel_am: parseFloat(data[i].nivel_agua).toFixed(2),
-                    nivel_pm: '',
-                    sal: sal,
-                    ph: ph
-                }
-            );
-
-            row.eachCell( (cell) => {
-                cell.font = { name: "Roboto", size: 12};
-                cell.alignment = { vertical: 'middle', horizontal: 'center' };
-                cell.border = {
-                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
-                    left: {style:'thin', color: {argb:'#FFFFFF'}},
-                    top: {style:'thin', color: {argb:'#FFFFFF'}},
-                    right: {style:'thin', color: {argb:'#FFFFFF'}}
-                };
-            });
-
+            // Sumar a promedios de AM
             prom_ox_am += parseFloat(data[i].oxigeno);
             prom_tem_am += parseFloat(data[i].temperatura);
             prom_niv_am += parseFloat(data[i].nivel_agua);
-        } else {
-            j_pm += 1;
+            gen_prom_tem_am += parseFloat(data[i].temperatura) ;
+            gen_prom_ox_am += parseFloat(data[i].oxigeno);
+            gen_prom_niv_am += parseFloat(data[i].nivel_agua);
+        }            
 
-            if( parseFloat(data[i].ph).toFixed(2) > 0.00){
-                j_ph += 1;
-                ph = parseFloat(data[i].ph).toFixed(2);
-            } else {
-                ph = '';
-            }
+        /** PROMEDIOS POR ESTANQUE  */
+        if(i < data.length -1){
+            if ((data[i].estanque.codigo != data[i+1].estanque.codigo)){
 
-            if( parseFloat(data[i].salinidad).toFixed(2) > 0.00){
-                j_sal += 1;
-            } else {
-                sal = '';
-            }
-
-           let row =  ws.addRow(
-                {   est: '', 
-                    fecha: '' ,
-                    dia: '',
-                    temp_am: '',
-                    temp_pm: parseFloat(data[i].temperatura).toFixed(2),
-                    ox_am: '',
-                    ox_pm: parseFloat(data[i].oxigeno).toFixed(2),
-                    nivel_am: '',
-                    nivel_pm: parseFloat(data[i].nivel_agua).toFixed(2),
-                    sal: sal,
-                    ph: ph
-                }
-            );
-
-            row.eachCell( (cell) => {
-                cell.font = { name: "Roboto", size: 12 };
-                cell.alignment = { vertical: 'middle', horizontal: 'center' };
-                cell.border = {
+                ws.mergeCells('A'+fila+':C'+fila);
+                ws.getCell('B'+fila).value = 'Promedios ' + data[i].estanque.codigo + ' :';
+                ws.getCell('B'+fila).border = { 
                     bottom: {style:'thin', color: {argb:'#FFFFFF'}},
                     left: {style:'thin', color: {argb:'#FFFFFF'}},
                     top: {style:'thin', color: {argb:'#FFFFFF'}},
                     right: {style:'thin', color: {argb:'#FFFFFF'}}
                 };
-            });
-
-            prom_ox_pm += parseFloat(data[i].oxigeno);
-            prom_tem_pm += parseFloat(data[i].temperatura);
-            prom_niv_pm += parseFloat(data[i].nivel_agua);
-        }
-
-        if(i < data.length -1){
-            if ((data[i].estanque.codigo != data[i+1].estanque.codigo)){
-                // Promedios
-                let row = ws.addRow(
-                    {   
-                        est: 'Promedios: ', 
-                        fecha: '' ,
-                        dia: '',
-                        temp_am: (parseFloat(prom_tem_am).toFixed(2) / parseFloat(j_am)).toFixed(2),
-                        temp_pm: (parseFloat(prom_tem_pm).toFixed(2) / parseFloat(j_pm)).toFixed(2),
-                        ox_am: (parseFloat(prom_ox_am).toFixed(2) / parseFloat(j_am)).toFixed(2),
-                        ox_pm: (parseFloat(prom_ox_pm).toFixed(2) / parseFloat(j_pm)).toFixed(2),
-                        nivel_am: (parseFloat(prom_niv_am).toFixed(2) / parseFloat(j_am)).toFixed(2),
-                        nivel_pm: (parseFloat(prom_niv_pm).toFixed(2) / parseFloat(j_pm)).toFixed(2),
-                        sal: parseFloat((prom_sal).toFixed(2) / parseFloat(j_sal)).toFixed(2),
-                        ph: parseFloat((prom_ph).toFixed(2) / parseFloat(j_ph)).toFixed(2)
-                    }
-                );
-
-                row.fill = {
+                ws.getCell('B'+fila).fill = {
                     type: 'pattern',
                     pattern:'solid',
-                    fgColor: {argb:'83909c'},
-                    bgColor: {argb:'000000'}
-                };
+                    fgColor: {argb:'848484'},
+                }
+                ws.getCell('B'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                }; 
+                ws.getCell('B'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
 
-                row.eachCell( (cell) => {
-                    cell.font = { 
-                        name: "Roboto", 
-                        size: 12 
-                    };
-                    cell.alignment = { vertical: 'middle', horizontal: 'center' };
-                    cell.fill = {
-                        type: "pattern",
-                        pattern: "solid",
-                        fgColor: {argb:'83909c'},
-                        bgColor: {argb:'000000'}
-                    };
-                    cell.border = {
-                        bottom: {style:'thin', color: {argb:'#FFFFFF'}},
-                        left: {style:'thin', color: {argb:'#FFFFFF'}},
-                        top: {style:'thin', color: {argb:'#FFFFFF'}},
-                        right: {style:'thin', color: {argb:'#FFFFFF'}}
-                    };
-                });
+                // TEMPERATURA AM
+                ws.getCell('D'+fila).value = (parseFloat(prom_tem_am).toFixed(2) / parseFloat(j_am)).toFixed(2);
+                ws.getCell('D'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('D'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                }
+                ws.getCell('D'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                };
+                ws.getCell('D'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+                // TEMPERATURA PM
+                ws.getCell('E'+fila).value = (parseFloat(prom_tem_pm).toFixed(2) / parseFloat(j_pm)).toFixed(2);
+                ws.getCell('E'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('E'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                }
+                ws.getCell('E'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                }; 
+                ws.getCell('E'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+
+                // O2 AM
+                ws.getCell('F'+fila).value = (parseFloat(prom_ox_am).toFixed(2) / parseFloat(j_am)).toFixed(2);
+                ws.getCell('F'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('F'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                }
+                ws.getCell('F'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                };
+                ws.getCell('F'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+                // O2 PM
+                ws.getCell('G'+fila).value = (parseFloat(prom_ox_pm).toFixed(2) / parseFloat(j_pm)).toFixed(2);
+                ws.getCell('G'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('G'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                    bgColor: {argb:'000000'}
+                }
+                ws.getCell('G'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                }; 
+                ws.getCell('G'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+
+                // NIVEL AM
+                ws.getCell('H'+fila).value = (parseFloat(prom_niv_am).toFixed(2) / parseFloat(j_am)).toFixed(2);
+                ws.getCell('H'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('H'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                    bgColor: {argb:'000000'}
+                }
+                ws.getCell('H'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                }; 
+                ws.getCell('H'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+
+                // NIVEL PM
+                ws.getCell('I'+fila).value = (parseFloat(prom_niv_pm).toFixed(2) / parseFloat(j_pm)).toFixed(2);
+                ws.getCell('I'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('I'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                    bgColor: {argb:'000000'}
+                }
+                ws.getCell('I'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                }; 
+                ws.getCell('I'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+
+                // SALINIDAD
+                ws.getCell('J'+fila).value = parseFloat((prom_sal).toFixed(2) / parseFloat(j_sal)).toFixed(2);
+                ws.getCell('J'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('J'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                    bgColor: {argb:'000000'}
+                }
+                ws.getCell('J'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                }; 
+                ws.getCell('J'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+
+                // pH
+                ws.getCell('K'+fila).value = parseFloat((prom_ph).toFixed(2) / parseFloat(j_ph)).toFixed(2);
+                ws.getCell('K'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('K'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                    bgColor: {argb:'000000'}
+                }
+                ws.getCell('K'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                }; 
+                ws.getCell('K'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
 
                 // Resetear los promedios
                 prom_ox_am = 0;
@@ -1654,56 +2015,210 @@ function generateConcentradoXLS(data, title, xls_name, fecha_ini, fecha_fin){
                 j_pm = 0;
                 j_ph = 0;
                 j_sal = 0;
+                fila ++;
             }
-        } else if(i == data.length -1){
-            // Promedios
-            let row = ws.addRow(
-                {   
-                    est: 'Promedios: ', 
-                    fecha: '' ,
-                    dia: '',
-                    temp_am: (parseFloat(prom_tem_am).toFixed(2) / parseFloat(j_am)).toFixed(2),
-                    temp_pm: (parseFloat(prom_tem_pm).toFixed(2) / parseFloat(j_pm)).toFixed(2),
-                    ox_am: (parseFloat(prom_ox_am).toFixed(2) / parseFloat(j_am)).toFixed(2),
-                    ox_pm: (parseFloat(prom_ox_pm).toFixed(2) / parseFloat(j_pm)).toFixed(2),
-                    nivel_am: (parseFloat(prom_niv_am).toFixed(2) / parseFloat(j_am)).toFixed(2),
-                    nivel_pm: (parseFloat(prom_niv_pm).toFixed(2) / parseFloat(j_pm)).toFixed(2),
-                    sal: parseFloat((prom_sal).toFixed(2) / parseFloat(j_sal)).toFixed(2),
-                    ph: parseFloat((prom_ph).toFixed(2) / parseFloat(j_ph)).toFixed(2)
-                }
-            );
-
-            row.fill = {
-                type: 'pattern',
-                pattern:'solid',
-                fgColor:{argb:'83909c'},
-                bgColor:{argb:'000000'}
-            };
-
-            row.eachCell( (cell) => {
-                cell.font = { 
-                    name: "Roboto", 
-                    size: 12
-                };
-                cell.alignment = { vertical: 'middle', horizontal: 'center' };
-                cell.fill = {
-                    type: "pattern",
-                    pattern: "solid",
-                    fgColor: {argb:'83909c'},
-                    bgColor: {argb:'000000'}
-                };
-                cell.border = {
+        
+        } else if(i == data.length -1){ /*** PROMEDIOS GENERALES */
+            ws.mergeCells('A'+fila+':C'+fila);
+                ws.getCell('B'+fila).value = 'Promedios del módulo:';
+                ws.getCell('B'+fila).border = { 
                     bottom: {style:'thin', color: {argb:'#FFFFFF'}},
                     left: {style:'thin', color: {argb:'#FFFFFF'}},
                     top: {style:'thin', color: {argb:'#FFFFFF'}},
                     right: {style:'thin', color: {argb:'#FFFFFF'}}
                 };
-            });
+                ws.getCell('B'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                }
+                ws.getCell('B'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                }; 
+                ws.getCell('B'+fila).alignment = { vertical: 'middle', horizontal: 'center' };               
+
+                // TEMPERATURA AM
+                ws.getCell('D'+fila).value = (parseFloat(gen_prom_tem_am).toFixed(2) / parseFloat(g_am)).toFixed(2);
+                ws.getCell('D'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('D'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                }
+                ws.getCell('D'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                };
+                ws.getCell('D'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+                // TEMPERATURA PM
+                ws.getCell('E'+fila).value = (parseFloat(gen_prom_tem_pm).toFixed(2) / parseFloat(g_pm)).toFixed(2);
+                ws.getCell('E'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('E'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                }
+                ws.getCell('E'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                }; 
+                ws.getCell('E'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+
+                // O2 AM
+                ws.getCell('F'+fila).value = (parseFloat(gen_prom_ox_am).toFixed(2) / parseFloat(g_am)).toFixed(2);
+                ws.getCell('F'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('F'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                }
+                ws.getCell('F'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                };
+                ws.getCell('F'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+                // O2 PM
+                ws.getCell('G'+fila).value = (parseFloat(gen_prom_ox_pm).toFixed(2) / parseFloat(g_pm)).toFixed(2);
+                ws.getCell('G'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('G'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                }
+                ws.getCell('G'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                }; 
+                ws.getCell('G'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+
+                // NIVEL AM
+                ws.getCell('H'+fila).value = (parseFloat(gen_prom_niv_am).toFixed(2) / parseFloat(g_am)).toFixed(2);
+                ws.getCell('H'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('H'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                }
+                ws.getCell('H'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    color: {argb: 'FFFFFF'},
+                    horizontal: 'center'
+                }; 
+                ws.getCell('H'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+
+                // NIVEL PM
+                ws.getCell('I'+fila).value = (parseFloat(gen_prom_niv_pm).toFixed(2) / parseFloat(g_pm)).toFixed(2);
+                ws.getCell('I'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('I'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                }
+                ws.getCell('I'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                }; 
+                ws.getCell('I'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+
+                // SALINIDAD
+                ws.getCell('J'+fila).value = parseFloat((gen_prom_sal).toFixed(2) / parseFloat(g_sal)).toFixed(2);
+                ws.getCell('J'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('J'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                }
+                ws.getCell('J'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    color: {argb: 'FFFFFF'},
+                    horizontal: 'center'
+                }; 
+                ws.getCell('J'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
+
+                // pH
+                ws.getCell('K'+fila).value = parseFloat((gen_prom_ph).toFixed(2) / parseFloat(g_ph)).toFixed(2);
+                ws.getCell('K'+fila).border = { 
+                    bottom: {style:'thin', color: {argb:'#FFFFFF'}},
+                    left: {style:'thin', color: {argb:'#FFFFFF'}},
+                    top: {style:'thin', color: {argb:'#FFFFFF'}},
+                    right: {style:'thin', color: {argb:'#FFFFFF'}}
+                };
+                ws.getCell('K'+fila).fill = {
+                    type: 'pattern',
+                    pattern:'solid',
+                    fgColor: {argb:'848484'},
+                }
+                ws.getCell('K'+fila).font = {
+                    name: "Roboto", 
+                    size: 12,  
+                    bold: true,
+                    horizontal: 'center',
+                    color: {argb: 'FFFFFF'}
+                }; 
+                ws.getCell('K'+fila).alignment = { vertical: 'middle', horizontal: 'center' };
 
         }
     }
-
-    ws.properties.defaultRowHeight = 20;
 
     wb.commit().then( function(){
         console.log("XLS terminado.")

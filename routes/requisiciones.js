@@ -3677,8 +3677,6 @@ var mongoose = require('mongoose');
                 nombre_xls = 'requisicionesFecha.xlsx';
                 titulo = 'Fecha ';
 
-                console.log(solicitud.body.fecha);
-
                 var fF = (solicitud.body.fecha).split('-')[0] + '-' + 
                          (solicitud.body.fecha).split('-')[1] + '-';
 
@@ -3687,8 +3685,6 @@ var mongoose = require('mongoose');
                 } else {
                     fF += (solicitud.body.fecha).split('-')[2];
                 }
-
-                console.log(fF);
 
                 Requisiciones.find({ fecha: { $gte: solicitud.body.fecha, $lte: fF }} , (error, requis) =>{
                     if(error){

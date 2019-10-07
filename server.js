@@ -36,7 +36,17 @@ const dbConCloud = "mongodb://llaos-bd:%40Llaos2019@llaos-serv-shard-00-00-y0xgc
 const dbConLocal = "mongodb://localhost:27017/llaosserv";
 
 // Producción
-mongoose.connect(dbConCloud,  { useNewUrlParser: true });
+//mongoose.connect(dbConCloud,  { useNewUrlParser: true , useUnifiedTopology: true});
+
+mongoose
+.connect(dbConCloud, {
+	useUnifiedTopology: true,
+	useNewUrlParser: true,
+})
+.then(() => console.log('DB Connected!'))
+.catch(err => {
+	console.log('DB Connection Error:' `${err.message}`);
+});
 
 // Dev
 //mongoose.connect(dbConLocal,  { useNewUrlParser: true });
