@@ -321,7 +321,7 @@ html(lang="es")
                                         |  Inventarios
                                         span#spanMenuInvetarios.fas.fa-angle-left
                                     ul#subMenuInventarios.nav.nav-second-level.hidden
-                                        if user.unidad_negocio == 'Granja' || user.permisos == 'developer'
+                                        if user.unidad_negocio.nombre == 'LLAOS ACUACULTURA' || user.permisos == 'developer'
                                             li
                                                 a(href='#')#menuGranja
                                                     i.fas.fa-box-open.fa-fw
@@ -612,7 +612,9 @@ html(lang="es")
                             // /.navbar-static-side
             #page-wrapper
                 .container-fluid
-                    //.loader.centrar
+                    //#loader
+                        #load.loader
+                        #loader-back.centrar.loader-container
                     block contenido
             #reports.modal(tabindex='-1', role='dialog')
                 .modal-dialog(role='document')

@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
     Ordenes = mongoose.model('Ordenes');
     Errores = mongoose.model('Errores');
     FechaHora = require('./fechahora');
+    UnidadesNegocio = mongoose.model('UnidadesNegocio');
 
 module.exports = {
     //Método root para solicitar inicio de sesión
@@ -27,8 +28,14 @@ module.exports = {
                     });
                 }else{
                     if(usuario.password == solicitud.body.pass){
-                        solicitud.session.user = usuario;
-                        respuesta.redirect('/home');
+                        UnidadesNegocio.populate(usuario, {path: 'unidad_negocio'}, (error, usuario) => {
+                            if(error){
+                                console.log(error);
+                            } else {
+                                solicitud.session.user = usuario;
+                                respuesta.redirect('/home');
+                            }
+                        });
                     }else{
                         respuesta.render("new_login",{
                             msg: "Error: contraseña incorrecta."

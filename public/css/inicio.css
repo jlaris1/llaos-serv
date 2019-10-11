@@ -25,16 +25,10 @@
   border-bottom: 4px solid #fd7e14;
 }
 
-.loader {
-  border-top: 16px solid #4285F4;
-  border-right: 16px solid  #0F9D58;
-  border-bottom: 16px solid #DB4437;
-  border-left: 16px solid #F4B400;
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s linear infinite;
-}
+/*body {
+  overflow: hidden;
+}*/
+
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
@@ -43,7 +37,7 @@
 
 .centrar
 	{
-		position: absolute;
+    position: absolute;
 		/*nos posicionamos en el centro del navegador*/
 		top:60%;
 		left:65%;
@@ -52,7 +46,35 @@
 		/*indicamos que el margen superior, es la mitad de la altura*/
 		margin-top:-150px;
 		padding:5px;
-	}
+  }
+
+  .loader-container {
+    top: 0;
+    left: 0;
+    width: 4000px;
+    height: 4000px;
+    background: black;
+    z-index: 10;
+    margin-left: -46px;
+    opacity: 0.4;
+    overflow: hidden;
+  }
+
+  .loader {
+    border-top: 16px solid #4285F4;
+    border-right: 16px solid #0F9D58;
+    border-bottom: 16px solid #DB4437;
+    border-left: 16px solid #F4B400;
+    border-radius: 50%;
+    width: 120px;
+    position: absolute;
+    top: 313px;
+    left: 883px;
+    z-index: 150000;
+    height: 120px;
+    opacity: 1 !important;
+    animation: spin 2s linear infinite;
+  }
 
 .label {
   font-size: 95%;
