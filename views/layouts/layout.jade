@@ -321,7 +321,7 @@ html(lang="es")
                                         |  Inventarios
                                         span#spanMenuInvetarios.fas.fa-angle-left
                                     ul#subMenuInventarios.nav.nav-second-level.hidden
-                                        if user.unidad_negocio.nombre == 'LLAOS ACUACULTURA' || user.permisos == 'developer'
+                                        if user.permisos == 'admin' || user.permisos == 'developer'
                                             li
                                                 a(href='#')#menuGranja
                                                     i.fas.fa-box-open.fa-fw
