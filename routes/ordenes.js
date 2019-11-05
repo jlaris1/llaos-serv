@@ -1226,6 +1226,10 @@ module.exports = {
                                 if(error){
                                     console.log(error);
                                 } else {
+                                    if(orden.unidad_negocio === undefined){
+                                        orden.unidad_negocio = '5d2a280814ebab57782d5a46'; // <- setear por defecto la unidad de negocio LLAOS ACUACULTURA.
+                                    }
+
                                     UnidadesNegocio.findById({ "_id": orden.unidad_negocio }, (error, unidad_negocio, next) =>{
                                         if(error) {
                                             console.log(error);
@@ -1253,7 +1257,7 @@ module.exports = {
                                             doc.font('fonts/Roboto-Regular.ttf')
                                             .fontSize(14)
                                             .text("Orden de Compra",{ align: 'right' , width: 290})
-                                            .text("Fecha: "+ orden.fecha + " - Hora: " + orden.hora,{ align: 'right' , width: 290})
+                                            .text("Fecha: "+ FechaHora.obtenerFechaDesdeDate(orden.fecha) + " - Hora: " + orden.hora,{ align: 'right' , width: 290})
                                             
                                             // Serie de la orden I = insumos M = mantenimientos
                                             doc.font('fonts/Roboto-Black.ttf')
