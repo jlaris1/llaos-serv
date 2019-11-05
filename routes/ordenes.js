@@ -1253,7 +1253,7 @@ module.exports = {
                                             doc.font('fonts/Roboto-Regular.ttf')
                                             .fontSize(14)
                                             .text("Orden de Compra",{ align: 'right' , width: 290})
-                                            .text("Fecha: "+ FechaHora.obtenerfecha() + " - Hora: " + FechaHora.obtenerhora(),{ align: 'right' , width: 290})
+                                            .text("Fecha: "+ orden.fecha + " - Hora: " + orden.hora,{ align: 'right' , width: 290})
                                             
                                             // Serie de la orden I = insumos M = mantenimientos
                                             doc.font('fonts/Roboto-Black.ttf')
