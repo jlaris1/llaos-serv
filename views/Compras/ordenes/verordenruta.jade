@@ -126,6 +126,8 @@ block contenido
                 label.labelSta.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{oRuta.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             else if oRuta.estatus == "Cerrada"
                 label.labelSta.label-default &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{oRuta.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+            else if oRuta.estatus == "En Inventario"
+                label.labelSta.label-inventory &nbsp;  #{oRuta.estatus}  &nbsp;
         .col-lg-4.pull-right
             .form-group
                 label | Código Envió

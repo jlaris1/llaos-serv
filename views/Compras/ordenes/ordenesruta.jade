@@ -56,6 +56,8 @@ block contenido
                                 label.label(style="background-color: #ffa500;") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{ord.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             else if ord.estatus == "Cerrada"
                                 label.label.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{ord.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                            else if ord.estatus == "En Inventario"
+                                label.label.label-inventory &nbsp;  #{ord.estatus}  &nbsp;
                             if (new Date(ord.fecha).getMonth() + 1) < 10
                                 if (new Date(ord.fecha).getDate()) < 10
                                     td.text-center #{ '0' + new Date(ord.fecha).getDate()+ '/0' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()}

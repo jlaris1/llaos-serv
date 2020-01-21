@@ -442,7 +442,7 @@ module.exports = {
                                     producto: {},
                                     productos: {},
                                     proveedores: proveedores,
-                                    lugar: solicitud.session.user.unidad_negocio,
+                                    lugar: "", /*/**  Aquí será necesario hacer algo para los diferentes lugares: granja llaos, banamichi, planta, oficina*/
                                     titulo: "Inventarios",
                                     criterios: [
                                         {
@@ -539,12 +539,13 @@ module.exports = {
                         if(error){
                             console.log(error);
                         } else { 
-                            respuesta.render("Inventarios/salida", 
+                            respuesta.render("Inventarios/salida_nueva", 
                                 {
                                     codigo: '',
                                     user: solicitud.session.user,
-                                    producto: {},
-                                    productos: {},
+                                    articulo: {},
+                                    articulos: {},
+                                    articulos_salida: {},
                                     proveedores: proveedores,
                                     titulo: "Inventarios",
                                     criterios: [
@@ -631,12 +632,12 @@ module.exports = {
         };
     },
     //Buscar artículo
-    buscarArticulo: function(solicitud, respuesta){
+    buscarArticulo: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch
             if(solicitud.body.criterio == "codigo"){
-                Productos.findOne( { "codigo": solicitud.body.codigo }, function(error, producto){
+                Productos.findOne( { "codigo": solicitud.body.codigo }, function(error, articulo){
                     if(error){
                         console.log(error);
                     } else {
@@ -653,7 +654,7 @@ module.exports = {
                                                 {
                                                     codigo: solicitud.body.codigo,
                                                     user: solicitud.session.user,
-                                                    producto: producto,
+                                                    producto: articulo,
                                                     productos: {},
                                                     proveedores: proveedores,
                                                     lugar: solicitud.session.user.unidad_negocio,
@@ -687,14 +688,15 @@ module.exports = {
                                         if(error){
                                             console.log(error);
                                         } else { 
-                                            respuesta.render("Inventarios/salida", 
+                                            respuesta.render("Inventarios/salida_nueva", 
                                                 {
                                                     codigo: solicitud.body.codigo,
                                                     user: solicitud.session.user,
-                                                    producto: producto,
-                                                    productos: {},
+                                                    articulo: articulo,
+                                                    articulos: {},
+                                                    articulos_salida: {},
                                                     proveedores: proveedores,
-                                                    lugar: solicitud.session.user.unidad_negocio,
+                                                    lugar: solicitud.session.user.unidad_negocio.nombre,
                                                     titulo: "Inventarios",
                                                     criterios: [
                                                         {
@@ -726,53 +728,101 @@ module.exports = {
                     }
                 });
             } else if(solicitud.body.criterio == "nombre"){
-                Productos.find( { "nombre": { '$regex': solicitud.body.codigo, $options: "i"}}, function(error, productos){
+                Productos.find( { "nombre": { '$regex': solicitud.body.codigo, $options: "i"}}, function(error, articulos){
                     if(error){
                         console.log(error);
                     } else {
-                        Proveedores.find( function(error, proveedores){
-                            if(error){
-                                console.log(error);
-                            } else {
-                                Usuarios.find( function(error, usuarios){
-                                    if(error){
-                                        console.log(error);
-                                    } else { 
-                                        respuesta.render("Inventarios/entrada", 
-                                            {
-                                                codigo: solicitud.body.codigo,
-                                                user: solicitud.session.user,
-                                                producto: {},
-                                                productos: productos,
-                                                proveedores: proveedores,
-                                                lugar: solicitud.session.user.unidad_negocio,
-                                                titulo: "Inventarios",
-                                                criterios: [
-                                                    {
-                                                        val: "",
-                                                        name: ""
-                                                    }
-                                                ],
-                                                piscinas: [
-                                                    {
-                                                        id: 0,
-                                                        nombre: ""
-                                                    }
-                                                ],
-                                                charoleros: [
-                                                    {
-                                                        id: 0,
-                                                        nombre: ""
-                                                    }   
-                                                ],
-                                                usuarios: usuarios,
-                                                ruta: "inventarios"	
-                                            }
-                                        );
-                                    }
-                                });
-                            }
-                        });
+                        if(tipo == 1){
+                            Proveedores.find( function(error, proveedores){
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(error);
+                                        } else { 
+                                            respuesta.render("Inventarios/entrada", 
+                                                {
+                                                    codigo: solicitud.body.codigo,
+                                                    user: solicitud.session.user,
+                                                    producto: {},
+                                                    productos: articulos,
+                                                    proveedores: proveedores,
+                                                    lugar: solicitud.session.user.unidad_negocio,
+                                                    titulo: "Inventarios",
+                                                    criterios: [
+                                                        {
+                                                            val: "",
+                                                            name: ""
+                                                        }
+                                                    ],
+                                                    piscinas: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }
+                                                    ],
+                                                    charoleros: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }   
+                                                    ],
+                                                    usuarios: usuarios,
+                                                    ruta: "inventarios"	
+                                                }
+                                            );
+                                        }
+                                    });
+                                }
+                            });
+                        } else if(tipo == 2){
+                            console.log(articulos);
+                            Proveedores.find( function(error, proveedores){
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(error);
+                                        } else { 
+                                            respuesta.render("Inventarios/salida_nueva", 
+                                                {
+                                                    codigo: solicitud.body.codigo,
+                                                    user: solicitud.session.user,
+                                                    producto: {},
+                                                    articulos: articulos,
+                                                    articulo_salida: {},
+                                                    proveedores: proveedores,
+                                                    lugar: solicitud.session.user.unidad_negocio,
+                                                    titulo: "Inventarios",
+                                                    criterios: [
+                                                        {
+                                                            val: "",
+                                                            name: ""
+                                                        }
+                                                    ],
+                                                    piscinas: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }
+                                                    ],
+                                                    charoleros: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }   
+                                                    ],
+                                                    usuarios: usuarios,
+                                                    ruta: "inventarios"	
+                                                }
+                                            );
+                                        }
+                                    });
+                                }
+                            });
+                        }
                     }
                 });
             };

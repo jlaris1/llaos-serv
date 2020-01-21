@@ -263,7 +263,10 @@ block contenido
                     .input-group
                         span.input-group-addon
                             i.fas.fa-check-square
-                        input#stock.form-control(readonly type="number" name="cantidad" placeholder="Cantidad" value="#{producto.cantidad}"  tabindex="10")
+                        if user.permisos == "admin" || user.permisos == "developer"
+                            input#stock.form-control(type="number" name="cantidad" placeholder="Cantidad" value="#{producto.cantidad}"  tabindex="10")
+                        else
+                            input#stock.form-control(readonly type="number" name="cantidad" placeholder="Cantidad" value="#{producto.cantidad}"  tabindex="10")
             .col-lg-4
                 .form-group
                     label | Costo Stock

@@ -34,6 +34,7 @@ block contenido
     script.
         var articulos = [];
         var articulos_fuera = [];
+        var articulos_originales = [];
 
         $(document).ready( function(){
             $('#subMenuCompras').removeClass('hidden');
@@ -47,7 +48,8 @@ block contenido
             obtenerfecha();
             obtenerhora();
             $('[data-toggle="tooltip"]').tooltip();
-            convetirArray();
+            convertirArrayOriginal();
+            convertirArray();
         });
 
         function obtenerfecha(){
@@ -104,7 +106,7 @@ block contenido
             }
         }
 
-        function convetirArray(){            
+        function convertirArray(){            
             var arr = $('#artis').val().split("},");
 
             for(var i = 0; i < arr.length; i ++){
@@ -122,6 +124,26 @@ block contenido
             }
 
             $("#articulos").val(JSON.stringify(articulos));
+        }
+
+        function convertirArrayOriginal(){            
+            var arr = $('#articulos_originales').val().split("},");
+
+            for(var i = 0; i < arr.length; i ++){
+                var aObj = arr[i].replace(/'/g, '');
+                var obj = new Object();   
+
+                obj.id = ltrim(rtrim(aObj.split(",")[0].split(":")[1]));
+                obj.cantidad = ltrim(rtrim(aObj.split(",")[1].split(":")[1]));
+                obj.unidad = ltrim(rtrim(aObj.split(",")[2].split(":")[1]));
+                obj.codigo = ltrim(rtrim(aObj.split(",")[3].split(":")[1]));
+                obj.descripcion = ltrim(rtrim(aObj.split(",")[4].split(":")[1]));
+                obj.orden = ltrim(rtrim(aObj.split(",")[5].split(":")[1]));
+
+                articulos_originales.push(obj);
+            }
+
+            $("#articulos_or").val(JSON.stringify(articulos_originales));
         }
 
         function eliminarArticulo(index){
@@ -197,6 +219,7 @@ block contenido
                         i.fas.fa-hashtag
                     input#codigo.form-control(readonly type="text" value="#{oRuta.id}")
     form(name="frm" action="/ordenes/ordenruta/inventario" method="post")
+        input(name="ordenId" type="text" value="#{oRuta.id}")
         .row
             .col-lg-12(style="margin-top: 15px;")
                 i.fas.fa-truck(style="margin-right: 10px;")
@@ -249,10 +272,12 @@ block contenido
                 | Artículos en ruta 
                 .divider
 
-            input#return.hidden(name="return")
-            input#articulos_fuera.hidden(name="articulos_fuera")
-            input#artis.hidden(name="arts" value="#{articulos}")
-            input#articulos.hidden(name="articulos")
+            input.hidden#return(name="return")
+            input.hidden#articulos_fuera.hidden(name="articulos_fuera")
+            input.hidden#artis(name="arts" value="#{articulos}")
+            input.hidden#articulos(name="articulos")
+            input.hidden#articulos_or(name="articulos_originales")
+            input.hidden#articulos_originales(value="#{articulosRuta}")
             input.hidden(name="orden_ruta" value="ORD#{oRuta.codigo}")
             table#arts.table.table-striped.table-hover
                 thead 
@@ -285,4 +310,5 @@ block contenido
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-truck-loading.text-success
-                            input(type="submit" value="Entrada a Invetarios" tabindex="8").btn.btn-success.form-control
+                            input(type="submit" value="Realizar" tabindex="8").btn.btn-success.form-control
+  

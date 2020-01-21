@@ -1,0 +1,263 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .labelFol {
+            font-size: 2em; 
+            background-color: black; 
+            color: white; 
+            border-radius: 8px;
+        }
+        .labelSta {
+            margin-left: -20px;
+            color: white;
+            font-size: 2em; 
+            border-radius: 8px;
+        }
+
+        @media (max-width: 1366px) and (min-width: 1366px){
+            .right-padding {
+                margin-right: -100px;
+            }
+        }
+
+        @media (max-width: 1600px) and (min-width: 1600px){
+            .right-padding {
+                margin-right: -170px;
+            }
+        }
+
+        @media (min-width: 1900px){
+            .right-padding {
+                margin-right: -255px;
+            }
+        }
+    script.
+        var articulos = [];
+        var articulos_fuera = [];
+
+        $(document).ready( function(){
+            $('#subMenuCompras').removeClass('hidden');
+            $('#spanMenuCompras').removeClass('fa-angle-left');
+            $('#spanMenuCompras').addClass('fa-angle-down');
+            $('#subMenuOrdenes').removeClass('hidden');
+            $('#spanMenuOrdenes').removeClass('fa-angle-left');
+            $('#spanMenuOrdenes').addClass('fa-angle-down');       
+            $('#arts').dataTable();
+
+            obtenerfecha();
+            obtenerhora();
+            $('[data-toggle="tooltip"]').tooltip();
+            convetirArray();
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        function editarCantidad(index){
+            for(var i=0; i < articulos.lenght; i++){
+                alert(articulos[i]);
+                if(i == index){
+                    $('#cant').val(articulos[i].cantidad);
+                    $('#unid').text(articulos[i].unidad);
+                    $('#codi').text(articulos[i].codigo);
+                    $('#orden').text(articulos[i].orden.serie);
+                }
+            }
+        }
+
+        function convetirArray(){            
+            var arr = $('#artis').val().split("},");
+
+            for(var i = 0; i < arr.length; i ++){
+                var aObj = arr[i].replace(/'/g, '');
+                var obj = new Object();   
+
+                obj.id = ltrim(rtrim(aObj.split(",")[0].split(":")[1]));
+                obj.cantidad = ltrim(rtrim(aObj.split(",")[1].split(":")[1]));
+                obj.unidad = ltrim(rtrim(aObj.split(",")[2].split(":")[1]));
+                obj.codigo = ltrim(rtrim(aObj.split(",")[3].split(":")[1]));
+                obj.descripcion = ltrim(rtrim(aObj.split(",")[4].split(":")[1]));
+                obj.orden = ltrim(rtrim(aObj.split(",")[5].split(":")[1]));
+
+                articulos.push(obj);
+            }
+
+            $("#articulos").val(JSON.stringify(articulos));
+        }
+
+        function eliminarArticulo(index){
+            //alert(index);
+            $("#tr"+index).remove();
+            
+            for(var i=0; i < articulos.length; i ++){
+                if(articulos[i].id == index){
+                    articulos_fuera.push(articulos[i]);
+                    articulos.splice(i, 1);
+                    break;
+                }
+            }
+
+            $('#return').val(articulos_fuera.length);
+            $("#articulos").val(JSON.stringify(articulos));
+            $("#articulos_fuera").val(JSON.stringify(articulos_fuera));
+        }
+
+        function ltrim(stringToTrim) {
+            return stringToTrim.replace(/^\s+/,"");
+        }
+        function rtrim(stringToTrim) {
+            return stringToTrim.replace(/\s+$/,"");
+        }
+
+    //Termina Javascript
+    .row
+        .col-lg-12
+            .col-lg-9
+                h2
+                    i.fas.fa-truck-loading(style="margin-right: 10px;")
+                    |   Salida Inventario
+            .col-lg-3.pull-right(style="margin-top: 25px;")
+                label.labelFol.right-padding
+                    |   &nbsp;&nbsp; SLD0000001 &nbsp;&nbsp;
+    .divider
+    .row
+        .col-lg-6.pull-right.text-right
+            span
+                | Realiza: &nbsp;&nbsp;&nbsp;
+            label
+                i.fas.fa-user
+                |  #{user.nombre}
+        .col-lg-6.pull-left.text-left
+            label#fecha(style="margin-right: 10px;")
+            label#hora
+    .divider
+        
+    form(name="frm" action="/ordenes/ordenruta/inventario" method="post")
+        .row
+            .col-lg-12(style="margin-top: 15px;")
+                i.fas.fa-truck(style="margin-right: 10px;")
+                | Datos de Salida
+                .divider
+        .row
+            .col-lg-6
+                .form-group
+                    label | Solicito:
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-shipping-fast
+                        select#criterio.form-control(required name="criterio" tabindex="3")
+                            option(value="") << Seleccione >>
+                            each u in usuarios
+                                option(value=u.id) #{ u.nombre }
+            .col-lg-6
+                .form-group
+                    label | Área
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-user
+                        //input.form-control(readonly type="text" value="#{oRuta.chofer}")
+
+    form#frm(role="form" method="post" action="/inventarios/buscar/articulo/2")
+        .row
+            .col-lg-12
+                i.fas.fa-search(style="margin-right: 10px;")
+                | Búsqueda
+                .divider
+        .row
+            .col-lg-4
+                .form-group
+                    label | Criterio de búsqueda
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-search-plus
+                        select#criterio.form-control(required name="criterio" tabindex="3")
+                            option(value="") << Seleccione >>
+                            option(value="codigo", selected=("codigo"== criterio)) Código
+                            option(value="nombre",  selected=("nombre"== criterio)) Nombre
+            .col-lg-6#Busca
+                .form-group
+                    label | Buscar
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-search
+                        input#txtBusca.form-control(required type="text" name="codigo" placeholder="Buscar.." value="#{busca}" tabindex="2")
+            .col-lg-2
+                .form-group
+                    label &nbsp;
+                    .input-group
+                        span.input-group-addon.text-success
+                            i.fa.fa-search.text-success
+                        button.form-control.btn.btn-success(type="submit" tabindex="4")
+                            |   Buscar
+    if Object.keys(articulos).length > 0 
+        .row
+            .col-lg-12(style="margin-top: 15px;")
+                i.fas.fa-list-alt(style="margin-right: 10px;")
+                | Artículos encontradas
+                .divider
+        table#orders.table.table-striped.table-hover
+            thead 
+                th Código
+                th Unidad
+                th Nombre
+                th Acciones
+            tbody
+                each a in articulos
+                    tr
+                        td #{a.codigo}
+                        td #{a.unidad}
+                        td #{a.nombre}
+                        td.text-center
+                            a(id="#{a.id}" href="#" data-toggle="tooltip" data-placement="top" title="Agregar" onclick="asignarIdOrden(this.id)")
+                                i.fas.fa-plus-circle.text-success.fa-lg
+    if Object.keys(articulos_salida).length > 0
+
+
+.divider
+.row(style="margin-bottom: 20px;")
+    .col-lg.12
+        .col-lg-2.pull-right
+            .form-group
+                .input-group
+                    span.input-group-addon
+                        i.fas.fa-truck-loading.text-success
+                    input(type="submit" value="Terminar" tabindex="8").btn.btn-success.form-control

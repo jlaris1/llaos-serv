@@ -321,7 +321,7 @@ html(lang="es")
                                         |  Inventarios
                                         span#spanMenuInvetarios.fas.fa-angle-left
                                     ul#subMenuInventarios.nav.nav-second-level.hidden
-                                        if user.permisos == 'admin' || user.permisos == 'developer'
+                                        if user.unidad_negocio.nombre == 'LLAOS ACUACULTURA' ||  user.permisos == 'admin' || user.permisos == 'developer'
                                             li
                                                 a(href='#')#menuGranja
                                                     i.fas.fa-box-open.fa-fw
@@ -340,7 +340,7 @@ html(lang="es")
                                                         a(href='/inventarios/salidas')
                                                             i.fas.fa-sign-out-alt.fa-fw 
                                                             |   Salidas
-                                        if user.unidad_negocio == 'Matriz' || user.permisos == 'developer'
+                                        if user.unidad_negocio.nombre == 'LLAOS ACUACULTURA' || user.permisos == 'developer'
                                             li
                                                 a(href='#')#menuOficina
                                                     i.fas.fa-box-open.fa-fw 
@@ -359,7 +359,7 @@ html(lang="es")
                                                         a(href='/inventarios/salidas')
                                                             i.fas.fa-sign-out-alt.fa-fw 
                                                             |   Salidas
-                                        if user.unidad_negocio == 'Planta' || user.permisos == 'developer'
+                                        if user.unidad_negocio.nombre == 'CRAB' || user.permisos == 'developer'
                                             li
                                                 a(href='#')#menuPlanta
                                                     i.fas.fa-box-open.fa-fw 

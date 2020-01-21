@@ -4146,12 +4146,22 @@ module.exports = {
 			respuesta.redirect("/sesion-expirada");
         }else{ 
            
-            var articulos = JSON.parse(solicitud.body.articulos);
+            console.log(solicitud.body.articulos);
+            console.log(solicitud.body.articulos_fuera);
+            console.log(solicitud.body.return);
+            console.log(solicitud.body.articulos_originales)
+            
+            if(solicitud.body.articulos != 'undefined' && solicitud.body.articulos != '' && solicitud.body.articulos > 0){
+                var articulos = JSON.parse(solicitud.body.articulos);
+            } else {
+                var articulos = JSON.parse(solicitud.body.articulos_originales);
+            }
 
-            if(solicitud.body.return > 0){
+            console.log(articulos);
+
+            if( solicitud.body.return != 'undefined' && solicitud.body.return != '' && solicitud.body.return > 0){
                 var articulos_fuera = JSON.parse(solicitud.body.articulos_fuera);
             }
-            
 
             Ordenes.populate(articulos, {path: 'orden'}, (error, articulos) => {
                 if(error){
@@ -4174,14 +4184,15 @@ module.exports = {
 
                                 var data = {
                                     cantidad: parseFloat(parseFloat(art.cantidad) + parseFloat(producto.cantidad)).toFixed(2),
-                                    orden: art.orden.serie
+                                    orden: art.orden.serie,
+                                    lugar: 'Granja'
                                 }
 
                                 Productos.updateOne({"_id": producto.id}, data, (error, arti) => {
                                     if(error){
                                         console.log(error);
                                     } else {
-                                        console.log(arti);
+                                        //console.log(arti);
                                     }
                                 });
                             }
@@ -4389,7 +4400,17 @@ module.exports = {
                             }
                         });
                     } else {
-                        respuesta.redirect('/ordenes/ordenesruta');
+                        data  = {
+                            estatus: 'En Inventario'
+                        }
+
+                        OrdenesRuta.updateOne({"_id": solicitud.body.ordenId}, data, (error) => {
+                            if(error){
+                                console.log(error)
+                            } else {
+                                respuesta.redirect('/ordenes/ordenesruta');
+                            }
+                        });
                     }
                 }
             });

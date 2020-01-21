@@ -211,6 +211,7 @@ module.exports = function(app){
     inventariosRouter.get('/inventario/entrada', inventarios.abrirEntradaArticulo);
     inventariosRouter.get('/inventario/entrada/:id', inventarios.entradaArticulo);
     inventariosRouter.get('/inventario/salida', inventarios.abrirSalidaArticulo);
+    inventariosRouter.get('/inventario/salida_nueva', inventarios.abrirSalidaArticulo);
     inventariosRouter.get('/inventario/salida/:id', inventarios.salidaArticulo);
     inventariosRouter.post('/buscar/articulo/:tipo', inventarios.buscarArticulo);
     inventariosRouter.post('/registrar/entrada/:id_prod', inventarios.registrarEntrada);

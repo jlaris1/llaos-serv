@@ -37,10 +37,13 @@ block contenido
             h2
                 i.fas.fa-box-open(style="margin-right: 10px;")
                 |   Salidas Inventario #{lugar}
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
-            a.btn.btn-special(href="/inventarios/inventario/salida")
-                i.fas.fa-sign-out-alt
-                |   Salida 
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;").btn-group
+            a.btn.btn-special(href="#")
+                i.fas.fa-file-pdf
+                |   Reportes
+            a.btn.btn-special(href="/inventarios/inventario/salida_nueva")
+                i.fas.fa-sign-in-alt
+                |   Salida
     .divider
     label#lugar.hidden #{lugar}
     .row(style="margin-top: 15px;")

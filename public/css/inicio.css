@@ -88,6 +88,11 @@
   background: #8a8783 !important;
 }
 
+.label-inventory{
+  background: #283142 !important;
+  color: white;
+}
+
 .btn-special {
   background-color: #fac07f;
   color: #fff;
