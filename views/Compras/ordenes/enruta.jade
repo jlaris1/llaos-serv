@@ -5,7 +5,7 @@ block contenido
             font-size: 2em; 
             background-color: black; 
             color: white; 
-            border-radius: 8px;
+            border-radius: 8px 0 0 8px;
         }
 
         .labelSta {
@@ -27,9 +27,7 @@ block contenido
             
             obtenerfecha();
             obtenerhora();
-            $('[data-toggle="tooltip"]').tooltip();
-
-
+            
             if($('#url').text() != ''){
                 url = '../../../../../'+ $('#url').text();
                 window.open(url, 'Download');
@@ -50,8 +48,18 @@ block contenido
                 }
             });
 
+            $('#choferInp').on('keypress', ()=>{
+                $('chofer').val($('chofer').val() + this.value);
+            });
+
+            $('#unidadCmb').on('change', ()=>{
+                //alert(this.value);
+                //$('#unidad').val(this.value);
+            });
+
             $('#orders').dataTable();
             $('#arts').dataTable();
+            $('[data-toggle="tooltip"]').tooltip();
         });
 
         function obtenerfecha(){
@@ -135,6 +143,15 @@ block contenido
             //alert( $('#frm2').prop('action'));
             document.frm2.submit();
         }
+
+        function asignarUnidad(unidad){
+            $('#unidad').val(unidad);
+        }
+
+        function asignarChofer(chofer){
+            $('#chofer').val(chofer);
+        }
+
     //Termina Javascript
     .row
         .col-lg-12
@@ -155,16 +172,17 @@ block contenido
     .divider
     label#url.hidden #{url}
     form#frm(role="form" method="post" action="/ordenes/buscar/orden")
+        input.hidden#chofer(name="chfr" type="text")
+        input.hidden#unidad(name="unid" type="text")
         .row
             .col-lg-12(style="margin-top: 15px;")
                 i.fas.fa-bars(style="margin-right: 10px;")
                 | Datos Orden Ruta
                 .divider
         .row
-            .col-lg-3.pull-left
+            div.btn-group
                 label.labelFol.right-padding
                     |   &nbsp;&nbsp; ORD#{folio} &nbsp;&nbsp;
-            .col-lg-3.pull-left
                 if estatus == "Nueva"
                     label.labelSta.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 else if estatus == "Generada"
@@ -238,7 +256,7 @@ block contenido
                     .input-group
                         span.input-group-addon
                             i.fas.fa-shipping-fast
-                        select.form-control(required name="unidad" tabindex="5")
+                        select#unidadCmb.form-control(required name="unidad" tabindex="5" onchange="asignarUnidad(this.value)")
                             option(value="") << Seleccione >>
                             option(value="Trailer Kenworth", selected=("Trailer Kenworth"== unidad)) Trailer Kenworth
                             option(value="Camión Pasajeros", selected=("Camión Pasajeros"== unidad)) Camión Pasajeros
@@ -251,7 +269,7 @@ block contenido
                     .input-group
                         span.input-group-addon
                             i.fas.fa-user
-                        input.form-control(required type="text" name="chofer" placeholder="Chofer" value="#{chofer}" tabindex="6")
+                        input#choferInp.form-control(required type="text" name="chofer" placeholder="Chofer" value="#{chofer}" tabindex="6" onkeyup="asignarChofer(this.value)")
     if Object.keys(ordenes).length > 0 
         .row
             .col-lg-12(style="margin-top: 15px;")

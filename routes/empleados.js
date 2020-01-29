@@ -14,7 +14,7 @@ var mongoose = require('mongoose'),
 		secure: true,
 		auth: {
 			user: 'sistema@llaos.com',
-			pass: '@Llaos2018'
+			pass: '@SisWeb_2020!a'
 		},
 		tls: {
 			rejectUnauthorized: false
