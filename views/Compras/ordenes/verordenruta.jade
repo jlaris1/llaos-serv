@@ -2,34 +2,25 @@ extends ../../layouts/layout.jade
 block contenido
     style.
         .labelFol {
+            font-weight: 700;
             font-size: 2em; 
             background-color: black; 
-            color: white; 
-            border-radius: 8px;
+            color: white !important; 
+            border-radius: 8px 0 0 8px;
         }
+
         .labelSta {
-            margin-left: -20px;
+            font-weight: 700;
             color: white;
             font-size: 2em; 
-            border-radius: 8px;
-        }
+            border-radius: 0 8px 8px 0;
+        } 
 
-        @media (max-width: 1366px) and (min-width: 1366px){
-            .right-padding {
-                margin-right: -100px;
-            }
-        }
-
-        @media (max-width: 1600px) and (min-width: 1600px){
-            .right-padding {
-                margin-right: -170px;
-            }
-        }
-
-        @media (min-width: 1900px){
-            .right-padding {
-                margin-right: -255px;
-            }
+        a.disabled {
+            /* Make the disabled links grayish*/
+            color: gray;
+            /* And disable the pointer events */
+            pointer-events: none;
         }
     script.
         $(document).ready( function(){
@@ -110,24 +101,28 @@ block contenido
             i.fas.fa-bars(style="margin-right: 10px;")
             | Datos Orden Ruta
             .divider
-    
     .row
-        .col-lg-3.pull-left
-            label.labelFol.right-padding
-                |   &nbsp;&nbsp; ORD#{oRuta.codigo} &nbsp;&nbsp;
-        .col-lg-3.pull-left
+        .btn-group
+            a.btn.labelFol.disabled(href="#")
+                |   ORD#{oRuta.codigo}
             if oRuta.estatus == "Nueva"
-                label.labelSta.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{oRuta.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                a.btn.labelSta.disabled.label-primary(href="#")
+                    |   #{oRuta.estatus}
             else if oRuta.estatus == "Generada"
-                label.labelSta.label-success &nbsp;&nbsp;&nbsp;&nbsp; #{oRuta.estatus} &nbsp;&nbsp;&nbsp;&nbsp;
+                a.btn.labelSta.disabled.label-success(href="#")
+                    |   #{oRuta.estatus}
             else if oRuta.estatus == "Cancelada" 
-                label.labelSta.label-danger &nbsp;&nbsp;&nbsp;&nbsp;#{oRuta.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                a.btn.labelSta.disabled.label-danger(href="#")
+                    |   #{oRuta.estatus}
+            else if oRuta.estatus == "En Ruta"
+                a.btn.labelSta.disabled(href="#" style="background-color: #ffa500;")
+                    |   #{oRuta.estatus}
             else if oRuta.estatus == "Enviada"
-                label.labelSta.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{oRuta.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                a.btn.labelSta.disabled.label-warning(href="#")
+                    |   #{oRuta.estatus}
             else if oRuta.estatus == "Cerrada"
-                label.labelSta.label-default &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{oRuta.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-            else if oRuta.estatus == "En Inventario"
-                label.labelSta.label-inventory &nbsp;  #{oRuta.estatus}  &nbsp;
+                a.btn.labelSta.disabled.label-default(href="#")
+                |   #{oRuta.estatus}
         .col-lg-4.pull-right
             .form-group
                 label | Código Envió

@@ -990,3 +990,8 @@ function reports(){
     });
 /********************** */
 }
+
+// CERRAR ALERT
+function cerrarAlert(){
+    $('#alert').addClass('hidden');
+}

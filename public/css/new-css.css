@@ -1,0 +1,106 @@
+/** Para mostrar como el mdb pro*/
+.mb-4{
+    margin-bottom: 1.5rem !important;
+    margin-top: 1rem !important;
+}
+
+.d-flex {
+    display: flex !important;
+}
+
+.justify-content-between {
+    justify-content: space-between !important;
+}
+
+.mt-3 {
+    margin-top: 1rem !important;
+}
+
+.h4-responsive {
+    font-size: 135%;
+}
+
+.h4-responsive {
+    font-size: 115%;
+}
+
+.blue-text{
+    color: #2196f3 !important;
+}
+
+.mdb-color-darken-3 {
+    background-color: #1c2a48 !important;
+    color: white !important;
+}
+
+.view {
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+}
+
+.card.card-cascade.wider.view.view-cascade {
+    z-index: 2;
+}
+
+.card.card-cascade .view.view-cascade.gradient-card-header {
+    padding: 1.6rem 1rem;
+    color: #fff;
+    text-align: center;
+}
+
+.card {
+    font-weight: 400;
+    border: 0;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),
+                0 2px 10px 0 rgba(0,0,0,0.12),;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: initial;
+    border: 1px solid rgba(0,0,0,0.125);
+    border-radius: .25rem;
+}
+
+.card.card-cascade .view.view-cascade.gradient-card-header .card-header-title {
+    font-weight: 500;
+}
+
+.view-cascade {
+    border-radius: .25rem;
+    box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18),
+                0 4px 15px 0 rgba(0,0,0,0.15);
+}
+
+.blue-gradient {
+    background: linear-gradient(40deg,
+                    #45cafc, #303f9f
+                )!important;
+}
+
+.orange-gradient {
+    background: linear-gradient(40deg,
+                    #dd7206, #ff3700
+                )!important;
+}
+
+.green-gradient {
+    background: linear-gradient(40deg,
+                    #46B746, #1c491c
+                )!important;
+}
+
+.alertDiv { 
+    position:relative; 
+} 
+.alertContent { 
+    position:absolute; 
+    bottom:0; 
+    right:0; 
+} 

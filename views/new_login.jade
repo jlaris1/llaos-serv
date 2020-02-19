@@ -11,28 +11,29 @@ html
         link(rel='stylesheet' href='css/styles.css')
     body
         .container
-            .d-flex.justify-content-center.h-100#card
-                .card
-                    .card-header
-                        .d-flex.justify-content-end.social_icon
-                            .user-img
-                                img(src="imgs/camy.png")
-                    .card-body
-                        form(method="post" action="/inicio")
-                            .input-group.form-group
-                                .input-group-prepend
-                                    span.input-group-text
-                                        i.fas.fa-user
-                                input.form-control(type='text' name="user" placeholder='Usuario')
-                            .input-group.form-group
-                                .input-group-prepend
-                                    span.input-group-text
-                                        i.fas.fa-key
-                                input.form-control(type='password' name="pass" placeholder='Password')
-                            .form-group.text-center
-                                input.btn.login_btn(type='submit', value='Iniciar')
-                    .card-footer    
-                        .d-flex.justify-content-center
-                            a(href='#') ¿Olvidó su contraseña?                       
-            .col-md-4.col-sm-12.col-xs-12.msg.text-center.text-truncate(style="margin-top: -100px;")
-                label(style="margin-top: 5px;") #{ msg }
+            .col-md-12.col-lg-12.col-xs-12
+                .d-flex.justify-content-center.h-100#card
+                    .card
+                        .card-header
+                            .d-flex.justify-content-end.social_icon
+                                .user-img
+                                    img(src="imgs/camy.png")
+                        .card-body
+                            form(method="post" action="/inicio")
+                                .input-group.form-group
+                                    .input-group-prepend
+                                        span.input-group-text
+                                            i.fas.fa-user
+                                    input.form-control(type='text' name="user" placeholder='Usuario')
+                                .input-group.form-group
+                                    .input-group-prepend
+                                        span.input-group-text
+                                            i.fas.fa-key
+                                    input.form-control(type='password' name="pass" placeholder='Password')
+                                .form-group.text-center
+                                    input.btn.login_btn(type='submit', value='Iniciar')
+                        .card-footer    
+                            .d-flex.justify-content-center
+                                a(href='#') ¿Olvidó su contraseña?                       
+                .col-md-4.col-sm-12.col-xs-12.msg.text-center.text-truncate(style="margin-top: -100px;")
+                    label(style="margin-top: 5px;") #{ msg }

@@ -8,7 +8,7 @@ var express = require('express'),
 	cookieParser = require('cookie-parser'),
 	session = require('express-session'),
 	fileUpload = require('express-fileupload'),
-	portHttps = 3000,
+	portHttps = 443,
 	portHttp= 80,
 	//port = 443
 	app = express();
@@ -74,9 +74,9 @@ app.locals.moment = require('moment');
 
 
 /* Middleware para manejo de errores */
-app.use( (err, solicitud, respuest, next) => {
-	res.status(500);
-	res.json({
+app.use( (err, solicitud, respuesta, next) => {
+	respuesta.status(500);
+	respuesta.json({
 	  "error": `${err}`
 	});
 });

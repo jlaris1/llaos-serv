@@ -6,6 +6,8 @@ html(lang="es")
         link(rel="shortcut icon" href="/imgs/icono128.ico")
         link(href="/css/bootstrap.min.css" rel="stylesheet")
         link(href="/css/inicio.css" rel="stylesheet")
+        link(href="/css/form-new.css" rel="stylesheet")
+        link(href="/css/new-css.css" rel="stylesheet")
         link(href="/css/card.css" rel="stylesheet")
         link(href='/fontawesome-free-5.7.2-web/css/all.css' rel='stylesheet' type='text/css')
         link(href='/css/animate.css' rel='stylesheet' type='text/css')
@@ -24,6 +26,9 @@ html(lang="es")
         //script(src="js/chart.js@2.8.0")
         script(src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js")
         script(src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0")
+        script(src="/js/jsbarcode/JsBarcode.all.min.js")
+        script(src="/js/jsbarcode/JsBarcode-master/CODE39.js")
+        script(src="/js/jsbarcode/JsBarcode-master/JsBarcode.js")
         //script(src="https://kit.fontawesome.com/19636afd68.js" crossorigin="anonymous")
     body
         #wrapper
@@ -36,7 +41,7 @@ html(lang="es")
                         span.icon-bar
                         span.icon-bar
                     a.navbar-brand(href='#') 
-                        img(src="/imgs/logo new 1.png", alt="", style="width:130px; margin-top: -12px;")
+                        img(src="/imgs/logo new 2020.png", alt="", style="width:130px; margin-top: -5px;")
                 ul.nav.navbar-top-links.navbar-right
                     // /.dropdown
                     li.dropdown
@@ -324,13 +329,32 @@ html(lang="es")
                                         if user.unidad_negocio.nombre == 'LLAOS ACUACULTURA' ||  user.permisos == 'admin' || user.permisos == 'developer'
                                             li
                                                 a(href='#')#menuGranja
-                                                    i.fas.fa-box-open.fa-fw
+                                                    i.fas.fa-archive.fa-fw
                                                     |  Granja
                                                     span#spanMenuGranja.fas.fa-angle-left
                                                 ul#subMenuGranja.nav.nav-third-level.hidden
                                                     li
                                                         a(href='/inventarios/granja') 
-                                                            i.fas.fa-box-open.fa-fw 
+                                                            i.fas.fa-pallet.fa-fw 
+                                                            |   Inventarios
+                                                    li
+                                                        a(href='/inventarios/entradas')
+                                                            i.fas.fa-sign-in-alt.fa-fw 
+                                                            |   Entradas
+                                                    li
+                                                        a(href='/inventarios/salidas')
+                                                            i.fas.fa-sign-out-alt.fa-fw 
+                                                            |   Salidas
+                                        if user.unidad_negocio.nombre == 'ANCLAR' ||  user.permisos == 'admin' || user.permisos == 'developer'
+                                            li
+                                                a(href='#')#menuBanamichi
+                                                    i.fas.fa-archive.fa-fw
+                                                    |  Banamichi
+                                                    span#spanMenuBanamichi.fas.fa-angle-left
+                                                ul#subMenuBanamichi.nav.nav-third-level.hidden
+                                                    li
+                                                        a(href='/inventarios/banamichi') 
+                                                            i.fas.fa-pallet.fa-fw 
                                                             |   Inventarios
                                                     li
                                                         a(href='/inventarios/entradas')
@@ -343,13 +367,13 @@ html(lang="es")
                                         if user.unidad_negocio.nombre == 'LLAOS ACUACULTURA' || user.permisos == 'developer'
                                             li
                                                 a(href='#')#menuOficina
-                                                    i.fas.fa-box-open.fa-fw 
+                                                    i.fas.fa-archive.fa-fw 
                                                     |   Oficina
                                                     span#spanMenuOficina.fas.fa-angle-left
                                                 ul#subMenuOficina.nav.nav-third-level.hidden
                                                     li
                                                         a(href='/inventarios/oficina') 
-                                                            i.fas.fa-box-open.fa-fw 
+                                                            i.fas.fa-pallet.fa-fw 
                                                             |   Inventarios
                                                     li
                                                         a(href='/inventarios/entradas')
@@ -362,13 +386,13 @@ html(lang="es")
                                         if user.unidad_negocio.nombre == 'CRAB' || user.permisos == 'developer'
                                             li
                                                 a(href='#')#menuPlanta
-                                                    i.fas.fa-box-open.fa-fw 
+                                                    i.fas.fa-archive.fa-fw 
                                                     |   Planta
                                                     span#spanMenuPlanta.fas.fa-angle-left
                                                 ul#subMenuPlanta.nav.nav-third-level.hidden
                                                     li
                                                         a(href='/inventarios/planta') 
-                                                            i.fas.fa-box-open.fa-fw 
+                                                            i.fas.fa-pallet.fa-fw 
                                                             |   Inventarios
                                                     li
                                                         a(href='/inventarios/entradas')
@@ -779,3 +803,10 @@ html(lang="es")
                                     a(href="javascript:reporteXLS()").btn.btn-success.form-control
                                         i.fas.fa-file-excel
                                         |   Reporte XLS
+            // Alertas
+            div#alert.alert.alert-dismissible.hidden.alertContent(role="alert" style="margin-top: 10px;")
+                a(href="javascript:cerrarAlert();" class="close" aria-label="close") &times;
+                span
+                    span#msg1 
+                    strong#msg_alert 
+                    span#msg2

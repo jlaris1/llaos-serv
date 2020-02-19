@@ -2,39 +2,48 @@ extends ../../layouts/layout.jade
 block contenido
     style.
         .labelFol {
-            font-size: 2em; 
+            font-weight: 700;
+            font-size: 1.2em; 
             background-color: black; 
-            color: white; 
-            border-radius: 8px;
+            color: white !important; 
+            border-radius: 8px 0 0 8px;
         }
+
         .labelSta {
-            margin-left: -20px;
+            font-weight: 700;
             color: white;
-            font-size: 2em; 
-            border-radius: 8px;
+            font-size: 1.2em; 
+            border-radius: 0 8px 8px 0;
+        } 
+
+        a.disabled {
+            /* Make the disabled links grayish*/
+            color: gray;
+            /* And disable the pointer events */
+            pointer-events: none;
         }
 
-        @media (max-width: 1366px) and (min-width: 1366px){
-            .right-padding {
-                margin-right: -100px;
-            }
+        .white-skin .btn-primary {
+            color: #fff;
+            background-color: #4285f4!important;
         }
 
-        @media (max-width: 1600px) and (min-width: 1600px){
-            .right-padding {
-                margin-right: -170px;
-            }
+        .btn-small {
+            font-size: 0.7rem;
         }
 
-        @media (min-width: 1900px){
-            .right-padding {
-                margin-right: -255px;
-            }
+        .fa-input {
+            color: #fff;
+        }
+
+        .input-group-addon {
+            background-color: #dd7206; 
+            border: 2px;
         }
     script.
         var articulos = [];
         var articulos_fuera = [];
-        var articulos_originales = [];
+        var id_select;
 
         $(document).ready( function(){
             $('#subMenuCompras').removeClass('hidden');
@@ -43,272 +52,404 @@ block contenido
             $('#subMenuOrdenes').removeClass('hidden');
             $('#spanMenuOrdenes').removeClass('fa-angle-left');
             $('#spanMenuOrdenes').addClass('fa-angle-down');       
-            $('#arts').dataTable();
-
-            obtenerfecha();
-            obtenerhora();
+        
             $('[data-toggle="tooltip"]').tooltip();
-            convertirArrayOriginal();
-            convertirArray();
+            obtenerArticulos();
+
+            $('#cantidadModal').on('hidden.bs.modal', function () {
+                cambiarCantidad();
+                $('#editar_cantidad').addClass('hidden');
+            });
+
         });
+        
+        function obtenerArticulos(){
+            $.getJSON('/ordenes/ordenruta/articulos/' + $('#orden_id').val(), (artis)=>{
+                if(artis.length > 0){   
+                    articulos = artis;
 
-        function obtenerfecha(){
-            var fecha = new Date()
-            var dia = fecha.getDate();
-            var mes = fecha.getMonth()+1;
-            var anio = fecha.getFullYear();
+                    for(let i = 0; i <= articulos.length -1; i ++){
+                        rowCount = $('#arts >tbody >tr').length;
 
-            if(dia < 10){
-                dia = "0"+dia;
-            }
+                        $('#arts > tbody:last').append(
+                        "<tr id='tr" + rowCount + "'>" +
+                        "   <td class='text-center'>"+
+                        "       <div class='d-flex'>"+
+                        "           <a class='btn btn-danger btn-small' style='margin-right: 5px;' href='javascript:eliminarArticulo(\""+articulos[i]._id+"\", \""+rowCount+"\")', data-toggle='tooltip', data-placement='top', title='Eliminar artículo'> "+ 
+                        "               <i class='fas fa-2x fa-minus-circle' style='color: white;'></i>" +
+                        "           </a>" +
+                        "           <a class='btn btn-primary btn-small' href='javascript:editarArticulo(\""+articulos[i]._id+"\");', data-toggle='tooltip', data-placement='top', title='Editar artículo'> "+ 
+                        "               <i class='fas fa-2x fa-edit' style='color: white;'></i>" +
+                        "           </a>" +
+                        "       </div>" +
+                        "   </td> " +
+                        "   <td class='text-center' id='cant"+articulos[i]._id+"'>" + parseFloat(articulos[i].cantidad).toFixed(3) + "</td> " +
+                        "   <td>" + articulos[i].unidad + "</td> " +
+                        "   <td>" + articulos[i].codigo + "</td> " +
+                        "   <td>" + articulos[i].descripcion + "</td> " +
+                        "   <td>" + articulos[i].orden.serie + "</td> " +
+                        "   <td>" + articulos[i].proveedor.nombreEmpresa + "</td> " +
+                        "</tr>")
+                    }
 
-            if(mes < 10){
-                mes = "0"+mes;
-            }
-
-            $('#fecha').text(dia+"/"+mes+"/"+anio);
+                    $("#articulos").val(JSON.stringify(articulos));
+                    $('#arts').dataTable();
+                }               
+            });
         }
 
-        function obtenerhora(){
-            var tiempo = new Date();
-            var horas = tiempo.getHours();
-            var minutos = tiempo.getMinutes();
-            var segundos = tiempo.getSeconds();
-            var dn ="";
-
-            if(horas < 12){
-                dn = "a.m.";
-            }else{
-                dn = "p.m.";
-            }
-
-            if(minutos < 10){
-                minutos = "0"+minutos;
-            }
-
-            if(segundos < 10){
-                segundos = "0"+segundos;
-            }
-                
-            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
-            setTimeout('obtenerhora()',1000);
-        }
-
-        function editarCantidad(index){
-            for(var i=0; i < articulos.lenght; i++){
-                alert(articulos[i]);
-                if(i == index){
-                    $('#cant').val(articulos[i].cantidad);
-                    $('#unid').text(articulos[i].unidad);
-                    $('#codi').text(articulos[i].codigo);
-                    $('#orden').text(articulos[i].orden.serie);
-                }
-            }
-        }
-
-        function convertirArray(){            
-            var arr = $('#artis').val().split("},");
-
-            for(var i = 0; i < arr.length; i ++){
-                var aObj = arr[i].replace(/'/g, '');
-                var obj = new Object();   
-
-                obj.id = ltrim(rtrim(aObj.split(",")[0].split(":")[1]));
-                obj.cantidad = ltrim(rtrim(aObj.split(",")[1].split(":")[1]));
-                obj.unidad = ltrim(rtrim(aObj.split(",")[2].split(":")[1]));
-                obj.codigo = ltrim(rtrim(aObj.split(",")[3].split(":")[1]));
-                obj.descripcion = ltrim(rtrim(aObj.split(",")[4].split(":")[1]));
-                obj.orden = ltrim(rtrim(aObj.split(",")[5].split(":")[1]));
-
-                articulos.push(obj);
-            }
-
-            $("#articulos").val(JSON.stringify(articulos));
-        }
-
-        function convertirArrayOriginal(){            
-            var arr = $('#articulos_originales').val().split("},");
-
-            for(var i = 0; i < arr.length; i ++){
-                var aObj = arr[i].replace(/'/g, '');
-                var obj = new Object();   
-
-                obj.id = ltrim(rtrim(aObj.split(",")[0].split(":")[1]));
-                obj.cantidad = ltrim(rtrim(aObj.split(",")[1].split(":")[1]));
-                obj.unidad = ltrim(rtrim(aObj.split(",")[2].split(":")[1]));
-                obj.codigo = ltrim(rtrim(aObj.split(",")[3].split(":")[1]));
-                obj.descripcion = ltrim(rtrim(aObj.split(",")[4].split(":")[1]));
-                obj.orden = ltrim(rtrim(aObj.split(",")[5].split(":")[1]));
-
-                articulos_originales.push(obj);
-            }
-
-            $("#articulos_or").val(JSON.stringify(articulos_originales));
-        }
-
-        function eliminarArticulo(index){
-            //alert(index);
+        function eliminarArticulo(id, index){
             $("#tr"+index).remove();
-            
-            for(var i=0; i < articulos.length; i ++){
-                if(articulos[i].id == index){
+            $('#aFuera').removeClass('hidden');
+
+            for(let i = 0; i < articulos.length; i++){
+                if(articulos[i]._id == id){
+                    rowCount = $('#arts_fuera >tbody >tr').length;
+
+                    $('#arts_fuera > tbody:last').append(
+                    "<tr id='trF"+articulos[i]._id+"'>" +
+                    "   <td class='text-center'>"+
+                    "       <div>"+
+                    "           <a class='btn btn-success btn-small' style='margin-right: 5px;' href='javascript:regresarArticulo(\""+articulos[i]._id+"\", \""+articulos[i].cantidad+"\")', data-toggle='tooltip', data-placement='top', title='Eliminar artículo'> "+ 
+                    "               <i class='fas fa-2x fa-share fa-flip-horizontal' style='color: white;'></i>" +
+                    "           </a>" +
+                    "       </div>" +
+                    "   </td> " +
+                    "   <td class='text-center'>" + parseFloat(articulos[i].cantidad).toFixed(3) + "</td> " +
+                    "   <td>" + articulos[i].unidad + "</td> " +
+                    "   <td>" + articulos[i].codigo + "</td> " +
+                    "   <td>" + articulos[i].descripcion + "</td> " +
+                    "   <td>" + articulos[i].orden.serie + "</td> " +
+                    "   <td>" + articulos[i].proveedor.nombreEmpresa + "</td> " +
+                    "</tr>");
+
                     articulos_fuera.push(articulos[i]);
                     articulos.splice(i, 1);
                     break;
                 }
             }
 
-            $('#return').val(articulos_fuera.length);
-            $("#articulos").val(JSON.stringify(articulos));
-            $("#articulos_fuera").val(JSON.stringify(articulos_fuera));
+            //$('#return').val(articulos_fuera.length);
+            //$("#articulos").val(JSON.stringify(articulos));
+            //$("#articulos_fuera").val(JSON.stringify(articulos_fuera));
+            $('#arts_fuera').dataTable();
         }
 
-        function ltrim(stringToTrim) {
-            return stringToTrim.replace(/^\s+/,"");
+        function regresarArticulo(id, cantidad) {
+            var articulo;
+            var existe = false;
+
+            $('#trF'+id).remove();
+
+            // Buscar dentro de artículos fuera
+            for(let j=0; j <= articulos_fuera.length - 1; j ++){
+                if(articulos_fuera[j]._id == id){
+                    articulo = articulos_fuera[j];
+                    articulos_fuera.splice(j, 1);
+                    break;
+                }
+            }
+
+            for(let i = 0; i < articulos.length; i++){
+                if(articulos[i]._id == id){
+                    articulos[i].cantidad = (parseFloat(articulos[i].cantidad) + parseFloat(cantidad)).toFixed(3);
+                    $('#cant'+id).html((parseFloat(articulos[i].cantidad).toFixed(3)));
+                    existe = true;
+                    break;
+                }
+            }
+
+            if(existe == false){
+                alert("entro");
+                rowCount = $('#arts >tbody >tr').length;
+
+                $('#arts > tbody:last').append(
+                "<tr id='tr" + rowCount + "'>" +
+                "   <td class='text-center'>"+
+                "       <div class='d-flex'>"+
+                "           <a class='btn btn-danger btn-small' style='margin-right: 5px;' href='javascript:eliminarArticulo(\""+articulo._id+"\", \""+rowCount+"\")', data-toggle='tooltip', data-placement='top', title='Eliminar artículo'> "+ 
+                "               <i class='fas fa-2x fa-minus-circle' style='color: white;'></i>" +
+                "           </a>" +
+                "           <a class='btn btn-primary btn-small' href='javascript:editarArticulo(\""+articulo._id+"\");', data-toggle='tooltip', data-placement='top', title='Editar artículo'> "+ 
+                "               <i class='fas fa-2x fa-edit' style='color: white;'></i>" +
+                "           </a>" +
+                "       </div>" +
+                "   </td> " +
+                "   <td class='text-center' id='cant"+articulo._id+"'>" + parseFloat(articulo.cantidad).toFixed(3) + "</td> " +
+                "   <td>" + articulo.unidad + "</td> " +
+                "   <td>" + articulo.codigo + "</td> " +
+                "   <td>" + articulo.descripcion + "</td> " +
+                "   <td>" + articulo.orden.serie + "</td> " +
+                "   <td>" + articulo.proveedor.nombreEmpresa + "</td> " +
+                "</tr>");
+            }
+
+            if(articulos_fuera.length == 0){
+                $('#aFuera').addClass('hidden');
+            }
+
+            //$('#return').val(articulos_fuera.length);
+            //$("#articulos").val(JSON.stringify(articulos));
+            //$("#articulos_fuera").val(JSON.stringify(articulos_fuera));
         }
-        function rtrim(stringToTrim) {
-            return stringToTrim.replace(/\s+$/,"");
+
+        function realizarEntrada(){
+            $.post( "/ordenes/ordenruta/inventario", {
+                articulos: articulos,
+                articulos_fuera: articulos_fuera,
+                id_orden: $('#orden_id').val(),
+                serie: $('#span_oruta').text()
+
+            }, (data, status) => {
+                console.log(data);
+                console.log(status);
+
+                
+                // Mostrar notificación de guardado correcto 
+                $('#alert').removeClass('alert-warning');
+                $('#alert').addClass('alert-success');
+                $('#alert').removeClass('hidden');
+                $('#msg1').text('Se realizado con ');
+                $('#msg2').text('la entrada a inventario.');
+                $('#msg_alert').text('éxito ');
+                $('#realizar').addClass('disabled');
+                $('#span_estatus').text('En Inventario');
+                //$('#span_estatus').text(data.status);
+
+            }, "json");
+        }
+
+        function editarArticulo(id){
+            $('#editar_cantidad').removeClass('hidden');
+
+            for(let i = 0; i < articulos.length; i++){
+                //alert("id: " + articulos[i]._id + " VS " + "id selec: " + id)
+                if(articulos[i]._id == id){
+                    //console.log(articulos[i])
+                    id_select = articulos[i]._id;
+                    $('#span_codigo').text(articulos[i].codigo);
+                    $('#span_orden').text(articulos[i].orden.serie);
+                    $('#span_descripcion').text(articulos[i].descripcion);
+                    $('#span_proveedor').text(articulos[i].proveedor.nombreEmpresa);
+                    $('#span_cantidad').text(parseFloat(articulos[i].cantidad).toFixed(3));
+                    $('#cantidad').val(articulos[i].cantidad);
+                    $("#cantidad").attr({
+                        "max" : parseFloat(articulos[i].cantidad) - 1,
+                        "min" : 1
+                    });
+                    return;
+                }
+            }
+        }
+
+        function cambiarCantidad(){
+            $('#aFuera').removeClass('hidden');
+            $("#span_cantidad").text(parseFloat($('#cantidad').val()).toFixed(3));
+            $('#cant'+id_select).html(parseFloat($('#cantidad').val()).toFixed(3));
+            var cantidadAnterior;
+            var index;
+            
+            for(let i = 0; i < articulos.length; i++){
+                if(articulos[i]._id == id_select){
+                    var obj = new Object(); 
+                    rowCount = $('#arts_fuera >tbody >tr').length;
+                    nuevaCantidad = (parseFloat(articulos[i].cantidad) - parseFloat($('#cantidad').val())).toFixed(3);
+                    articulos[i].cantidad =  parseFloat($('#cantidad').val());
+
+                    $('#arts_fuera > tbody:last').append(
+                    "<tr id='trF"+articulos[i]._id+"'>" +
+                    "   <td class='text-center'>"+
+                    "       <div>"+
+                    "           <a class='btn btn-success btn-small' style='margin-right: 5px;' href='javascript:regresarArticulo(\""+articulos[i]._id+"\", \""+nuevaCantidad+"\")', data-toggle='tooltip', data-placement='top', title='Eliminar artículo'> "+ 
+                    "               <i class='fas fa-2x fa-share fa-flip-horizontal' style='color: white;'></i>" +
+                    "           </a>" +
+                    "       </div>" +
+                    "   </td> " +
+                    "   <td class='text-center'>" + nuevaCantidad + "</td> " +
+                    "   <td>" + articulos[i].unidad + "</td> " +
+                    "   <td>" + articulos[i].codigo + "</td> " +
+                    "   <td>" + articulos[i].descripcion + "</td> " +
+                    "   <td>" + articulos[i].orden.serie + "</td> " +
+                    "   <td>" + articulos[i].proveedor.nombreEmpresa + "</td> " +
+                    "</tr>");
+
+                    obj._id = articulos[i]._id;
+                    obj.cantidad = nuevaCantidad;
+                    obj.unidad = articulos[i].unidad;
+                    obj.codigo = articulos[i].codigo;
+                    obj.descripcion = articulos[i].descripcion;
+                    obj.orden = articulos[i].orden;
+                    obj.proveedor = articulos[i].proveedor;
+                    obj.ordenRuta = articulos[i].ordenRuta;
+                    obj.requisicion = articulos[i].requisicion;
+
+                    articulos_fuera.push(obj);
+
+                    console.log("articulos originales");
+                    console.log(articulos);
+                    console.log("articulos fuera");
+                    console.log(articulos_fuera);
+                    break;
+                }
+            }
+
+            $('#arts_fuera').dataTable();
         }
 
     //Termina Javascript
-    .row
-        .col-lg-12
-            h2
-                i.fas.fa-truck-loading(style="margin-right: 10px;")
-                |   Entrada a Inventario de Órden Ruta
-            .divider
-    .row
-        .col-lg-6.pull-right.text-right
-            span
-                | Envía: &nbsp;&nbsp;&nbsp;
-            label
-                i.fas.fa-user
-                |  #{user.nombre}
-        .col-lg-6.pull-left.text-left
-            label#fecha(style="margin-right: 10px;")
-            label#hora
-    .divider
-    .row
-        .col-lg-12(style="margin-top: 15px;")
-            i.fas.fa-bars(style="margin-right: 10px;")
-            | Datos Orden Ruta
-            .divider
     
-    .row
-        .col-lg-3.pull-left
-            label.labelFol.right-padding
-                |   &nbsp;&nbsp; ORD#{oRuta.codigo} &nbsp;&nbsp;
-        .col-lg-3.pull-left
-            if oRuta.estatus == "Nueva"
-                label.labelSta.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{oRuta.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            else if oRuta.estatus == "Generada"
-                label.labelSta.label-success &nbsp;&nbsp;&nbsp;&nbsp; #{oRuta.estatus} &nbsp;&nbsp;&nbsp;&nbsp;
-            else if oRuta.estatus == "Cancelada" 
-                label.labelSta.label-danger &nbsp;&nbsp;&nbsp;&nbsp;#{oRuta.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
-            else if oRuta.estatus == "Enviada"
-                label.labelSta.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{oRuta.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            else if oRuta.estatus == "En Ruta"
-                label.labelSta(style="background-color: #ffa500;") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{oRuta.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            else if oRuta.estatus == "Cerrada"
-                label.labelSta.label-default &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{oRuta.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        .col-lg-4.pull-right
-            .form-group
-                label | Código Envió
-                .input-group
-                    span.input-group-addon
-                        i.fas.fa-hashtag
-                    input#codigo.form-control(readonly type="text" value="#{oRuta.id}")
-    form(name="frm" action="/ordenes/ordenruta/inventario" method="post")
-        input(name="ordenId" type="text" value="#{oRuta.id}")
-        .row
-            .col-lg-12(style="margin-top: 15px;")
-                i.fas.fa-truck(style="margin-right: 10px;")
-                | Datos de transportación
-                .divider
-        .row
-            .col-lg-6
-                .form-group
-                    label | Unidad
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-shipping-fast
-                        input.form-control(readonly value="#{oRuta.unidad}")
-            .col-lg-6
-                .form-group
-                    label | Chofer
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-user
-                        input.form-control(readonly type="text" value="#{oRuta.chofer}")
-        //.row
-            .col-lg-12(style="margin-top: 15px;")
-                i.fas.fa-boxes(style="margin-right: 10px;")
-                | Datos en articulo 
-                .divider
-        //.row
-            .col-lg-2
-                .form-group
-                    label | Cantidad
-                    .input-group
-                        input.form-control#cant(type="text" name="cantidad")
-            .col-lg-2
-                .form-group
-                    label | Unidad
-                    .input-group
-                        span#unid
-            .col-lg-2
-                .form-group
-                    label | Codio
-                    .input-group
-                        span#codi
-            .col-lg-5
-                .form-group
-                    label | Descripción
-                    .input-group
-                        span#desc
-        .row
-            .col-lg-12(style="margin-top: 15px;")
-                i.fas.fa-boxes(style="margin-right: 10px;")
-                | Artículos en ruta 
-                .divider
+    //  Título de entrada a orden en ruta
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-truck-loading
+                    |   Entrada a Inventario de Órden Ruta
+                div
+                    a#realizar(href="javascript:realizarEntrada();").btn.btn-success.Ripple-parent
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Realizar").fas.fa-truck-loading
+   
+    // Datos del envío
+    section.mb-4
+        .card
+            .card-body
+                .row
+                    .col-md-6.col-lg-6.col-xs-6.text-left
+                        h4.h4-responsive
+                            small Unidad: 
+                            br
+                            strong
+                                span.blue-text #{oRuta.unidad}
+                        h5.h5-responsive
+                            small Chofer: 
+                            br
+                            strong
+                                span #{oRuta.chofer}
+                    .col-md-6.col-lg-6.col-xs-6.text-right
+                        h4.h4-responsive
+                            small Orden Ruta No.
+                            br
+                            strong
+                                span#span_oruta.blue-text ##{oRuta.codigo}
+                        h5.h5-responsive
+                            small Estatus.
+                            br
+                            strong
+                                span#span_solicita #{oRuta.estatus}
+    
+    // Proceso para Eliminar
+    input.hidden#orden_id(name="ordenId" type="text" value="#{oRuta.id}")
+    //input.hidden#return(name="return")
+    //input.hidden#articulos_fuera.hidden(name="articulos_fuera")
+    //input.hidden#articulos(name="articulos")
 
-            input.hidden#return(name="return")
-            input.hidden#articulos_fuera.hidden(name="articulos_fuera")
-            input.hidden#artis(name="arts" value="#{articulos}")
-            input.hidden#articulos(name="articulos")
-            input.hidden#articulos_or(name="articulos_originales")
-            input.hidden#articulos_originales(value="#{articulosRuta}")
-            input.hidden(name="orden_ruta" value="ORD#{oRuta.codigo}")
-            table#arts.table.table-striped.table-hover
-                thead 
-                    th Cantidad
-                    th Unidad
-                    th Codigo
-                    th Descripción
-                    th Orden
-                    th Proveedor
-                    th Acciones
-                tbody
-                    each art, index in articulosRuta
-                        tr(id="tr#{art.id}")
-                            td.text-right #{parseFloat(art.cantidad).toFixed(3)}
-                            td #{art.unidad}
-                            td #{art.codigo}
-                            td #{art.descripcion}
-                            td #{art.orden.serie}
-                            td #{art.proveedor.nombreEmpresa}
-                            td
-                                //a(href="#" onclick="editarCantidad(this.id)" id="#{art.id}", data-toggle="tooltip", data-placement="top", title="Editar cantidad", style="margin-right: 10px;")
-                                    i.fas.fa-pencil-alt.text-info.fa-lg
-                                a(href="#" onclick="eliminarArticulo(this.id)" id="#{art.id}", data-toggle="tooltip", data-placement="top", title="Eliminar artículo", style="margin-right: 10px;")
-                                    i.fas.fa-minus-circle.text-danger.fa-lg
-        .divider
-        .row(style="margin-bottom: 20px;")
-            .col-lg.12
-                .col-lg-2.pull-right
-                    .form-group
-                        .input-group
-                            span.input-group-addon
-                                i.fas.fa-truck-loading.text-success
-                            input(type="submit" value="Realizar" tabindex="8").btn.btn-success.form-control
-  
+    // Datos para cambio en cantidad
+    section#editar_cantidad.mb-4.hidden
+        .card
+            .card-header.view.view-cascade.gradient-card-header.blue-gradient.mb-3
+                h4.h4-responsive.mb-3(style="font-weight: 700; color: #fff;")
+                    |   Editar cantidad artículo
+            .card-body
+                .row
+                    .col-md-6.col-lg-6.col-xs-6.text-left
+                        h4.h4-responsive
+                            small Codigo: 
+                            br
+                            strong
+                                span#span_codigo.blue-text ######
+                        h5.h5-responsive
+                            small Descrición: 
+                            br
+                            strong
+                                span#span_descripcion ##########
+                        h5.h5-responsive
+                            small Cantidad: 
+                            br
+                            strong
+                                span#span_cantidad ##########
+                            a(data-toggle="modal" href="#cantidadModal" style="margin-left: 10px;").btn.btn-primary.btn-small.blue-gradient
+                                i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Modificar cantidad").fas.fa-2x.fa-sync-alt
+                    .col-md-6.col-lg-6.col-xs-6.text-right
+                        h4.h4-responsive
+                            small Orden No.
+                            br
+                            strong
+                                span#span_orden.blue-text ######
+                        h5.h5-responsive
+                            small Proveedor.
+                            br
+                            strong
+                                span#span_proveedor ##########
+
+    // Artículos para entrada
+    section.mb-4
+        .card
+            .card-header.view.view-cascade.gradient-card-header.blue-gradient.mb-3
+                h4.h4-responsive.mb-3(style="font-weight: 700; color: #fff;")
+                    |   Artículos en Ruta
+            .card-body
+                .table-responsive(style="margin-top: 25px;")
+                    table#arts.table.table-striped.table-hover
+                        thead 
+                            th.text-center
+                                i(style="color: gray;").fas.fa-cog
+                            th Cantidad
+                            th Unidad
+                            th Codigo
+                            th Descripción
+                            th Orden
+                            th Proveedor
+                        tbody
+
+    // Artículos fuera de entrada
+    section#aFuera.mb-4.hidden
+        .card
+            .card-header.view.view-cascade.gradient-card-header.orange-gradient.mb-3
+                h4.h4-responsive.mb-3(style="font-weight: 700; color: #fff;")
+                    |   Artículos fuera
+            .card-body
+                .table-responsive(style="margin-top: 25px;")
+                    table#arts_fuera.table.table-striped.table-hover
+                        thead 
+                            th.text-center
+                                i(style="color: gray;").fas.fa-cog
+                            th Cantidad
+                            th Unidad
+                            th Codigo
+                            th Descripción
+                            th Orden
+                            th Proveedor
+                        tbody
+                                        
+    // Modal modificar cantidad
+    #cantidadModal(class="modal")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
+                    .col-lg-12
+                        i.fa.fas.fa-sort-numeric-down(style="margin-right: 15px;")
+                        label 
+                            strong Modificar cantidad
+                .modal-body()
+                    .card
+                        .card-body
+                            .row
+                                .col-lg-12
+                                    .form-group
+                                        label | Cantidad
+                                        .input-group
+                                            span.input-group-addon.blue-gradient
+                                                i.fas.fa-sort-numeric-down(style="color: #fff;")
+                                            input#cantidad.form-control(type="number" name="cantidad" placeholder="Cantidad" tabindex="2")
+
+                .modal-footer
+                    .text-right
+                        .btn-group
+                            a(data-dismiss="modal").btn.btn-default
+                                i.fa.fas.fa-times-circle()
+                                |   Cerrar
+
+
+                    
+                    
+                    

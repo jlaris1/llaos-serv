@@ -3,6 +3,12 @@ var mongoose = require('mongoose');
     EntradaInventarios = mongoose.model('EntradaInventarios');
     SalidaInventarios = mongoose.model('SalidaInventarios');
     FechaHora = require('./fechahora');
+    Productos = mongoose.model('Productos');
+    Modulos = mongoose.model('Modulos'); 
+    Estanques = mongoose.model('Estanques');
+    OrdenSalida = mongoose.model('OrdenSalida');
+    zf = require('./zfill');
+    chalk = require('chalk');
 
 module.exports = {
     // Abrir inventario de granja
@@ -10,11 +16,11 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch   
-            Inventarios.find( function(error, articulos){
+            Inventarios.find( {"cantidad": {$gte:1}}, function(error, articulos){
                 if(error){
                     consolo.log(error);
                 } else {
-                    Productos.find( function(error, productos){
+                    Productos.find( {"cantidad": {$gte:1}}, function(error, productos){
                         if(error){
                             console.log(error);
                         } else {
@@ -531,49 +537,62 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch
-            Proveedores.find( function(error, proveedores){
+            Usuarios.find( function(error, usuarios){
                 if(error){
                     console.log(error);
-                } else {
-                    Usuarios.find( function(error, usuarios){
+                } else { 
+                    Productos.find((error, productos) => {
                         if(error){
                             console.log(error);
-                        } else { 
-                            respuesta.render("Inventarios/salida_nueva", 
-                                {
-                                    codigo: '',
-                                    user: solicitud.session.user,
-                                    articulo: {},
-                                    articulos: {},
-                                    articulos_salida: {},
-                                    proveedores: proveedores,
-                                    titulo: "Inventarios",
-                                    criterios: [
-                                        {
-                                            val: "",
-                                            name: ""
+                        } else {
+                            Modulos.find({"codigo": {$ne: "NLL"}}, (error, modulos) => {
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    OrdenSalida.find( (error, ordSalida) => {
+                                        if(error){
+                                            console.log(error);
+                                        } else {
+                                            respuesta.render("Inventarios/salida_nueva", 
+                                                {
+                                                    codigo: '',
+                                                    user: solicitud.session.user,
+                                                    piscinas: {},
+                                                    modulos: modulos,
+                                                    articulos_salida: {},
+                                                    numeroOrden: zf.zfill(ordSalida.length + 1, 6),
+                                                    productos: productos,
+                                                    titulo: "Inventarios",
+                                                    criterios: [
+                                                        {
+                                                            val: "",
+                                                            name: ""
+                                                        }
+                                                    ],
+                                                    piscinas: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }
+                                                    ],
+                                                    charoleros: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }   
+                                                    ],
+                                                    usuarios: usuarios,
+                                                    ruta: "inventarios"
+                                                }
+                                            );
                                         }
-                                    ],
-                                    piscinas: [
-                                        {
-                                            id: 0,
-                                            nombre: ""
-                                        }
-                                    ],
-                                    charoleros: [
-                                        {
-                                            id: 0,
-                                            nombre: ""
-                                        }   
-                                    ],
-                                    usuarios: usuarios,
-                                    ruta: "inventarios"
+                                    })
                                 }
-                            );
+                            }).sort({ nombre : 1});
                         }
-                    });  
+                    }).sort({ nombre : 1});
                 }
-            });
+            });  
         };
     },
     // Abrir salida de artículo
@@ -1126,46 +1145,50 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch
-            SalidaInventarios.find( {"lugar": solicitud.session.user.unidad_negocio}, function(error, salidas){
+            // Agregar al find que busque por unidad para hacer generico estó.
+            OrdenSalida.find( (error, ordenes_salida) => {
                 if(error){
-                    console.log(error);
+                    console.log(chalk.bgRed(error));
                 } else {
-                    Productos.populate( salidas, {path: 'producto'} ,function(error, salidas){
-                        if(error){
-                            console.log(error);
+                    Modulos.populate(ordenes_salida, { path: 'modulo'}, (error, ordenes_salida) => {
+                        if(error) {
+                            console.log(chalk.bgRed(error));
                         } else {
-                            Usuarios.find( function(error, usuarios){
-                                if(error){
-                                    console.log(error);
-                                } else { 
-                                    respuesta.render("Inventarios/salidas",
-                                        {
-                                            user: solicitud.session.user,
-                                            salidas: salidas,
-                                            lugar: solicitud.session.user.unidad_negocio,
-                                            titulo: "Inventarios",
-                                            criterios: [
-                                                {
-                                                    val: "",
-                                                    name: ""
-                                                }
-                                            ],
-                                            piscinas: [
-                                                {
-                                                    id: 0,
-                                                    nombre: ""
-                                                }
-                                            ],
-                                            charoleros: [
-                                                {
-                                                    id: 0,
-                                                    nombre: ""
-                                                }   
-                                            ],
-                                            usuarios: usuarios,
-                                            ruta: "inventarios"
+                            Estanques.populate( ordenes_salida, { path: 'piscina'}, (error, ordenes_salida) => {
+                                if(error) {
+                                    console.log(chalk.bgRed(error));
+                                } else {
+                                    Usuarios.find( (error, usuarios) => {
+                                        if(error) {
+                                            console.log(chalk.bgRed(error));
+                                        } else {
+                                            respuesta.render('Inventarios/salidas', {
+                                                user: solicitud.session.user,
+                                                ordenes_salida: ordenes_salida,
+                                                titulo: "Inventarios",
+                                                    criterios: [
+                                                        {
+                                                            val: "",
+                                                            name: ""
+                                                        }
+                                                    ],
+                                                    piscinas: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }
+                                                    ],
+                                                    charoleros: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }   
+                                                    ],
+                                                    usuarios: usuarios,
+                                                    ruta: "inventarios"
+                                            });
                                         }
-                                    );
+                                    });
                                 }
                             });
                         }
@@ -1173,5 +1196,91 @@ module.exports = {
                 }
             });
         };
+    },
+    find: (solicitud, respuesta) => {
+        Estanques.find({$and: [{'modulo': solicitud.params.modulo}, {'codigo': {$ne: 'NLL'}}]}, (error, piscinas) => {
+            if(error){
+                console.log(chalk.bgRed(error));
+            } else {
+                respuesta.json(piscinas);                           
+            }
+        }).sort({ codigo : 1});
+    },
+    registrarNuevaSalida: (solicitud, respuesta) =>{
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{  
+            //console.log(solicitud.body);
+
+            if(solicitud.body.modulo == ""){
+                solicitud.body.modulo = null;
+            }
+
+            if(solicitud.body.piscina == ""){
+                solicitud.body.piscina = null;
+            }
+
+            var ordenSalida = new OrdenSalida(solicitud.body)
+
+            ordenSalida.save( (error, ordSalida)=>{
+                if(error){
+                    console.log(error);
+                } else {
+                    for (let i = 0; i < solicitud.body.articulos.length; i++) {
+                        Productos.findOne({"_id": solicitud.body.articulos[i].articulo.id}, (error, producto) => {
+                            if(error){
+                                console.log(error);
+                            } else {
+                                //console.log(producto);
+        
+                                if(producto.cantidad == NaN){
+                                    producto.cantidad = 0;
+                                    cantidad = 0;
+                                }
+        
+                                var data = {
+                                    cantidad: parseFloat(producto.cantidad).toFixed(2) - parseFloat(parseFloat(solicitud.body.articulos[i].articulo.cantidad)),
+                                    lugar: solicitud.body.lugar_almacen
+                                }
+        
+                                Productos.updateOne({"_id": producto.id}, data, (error) => {
+                                    if(error){
+                                        console.log(chalk.bgRed(error));
+                                    } else {
+                                        if(i == solicitud.body.articulos.length - 1){
+                                            respuesta.json(
+                                                {
+                                                    estatus: 'Guardada',
+                                                    habilitarImpresion: true,
+                                                    idOrden: ordSalida.id
+                                                }
+                                            );
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    },
+    imprimirOrdenSalida: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{ 
+            console.log(solicitud.body);
+
+            OrdenSalida.updateOne({"id": solicitud.body.id}, (error)=>{
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    respuesta.json({
+                        impreso: true,
+                        estatus: 'Generada'
+                    });
+                }
+            });
+        }
     }
 }

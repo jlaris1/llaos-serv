@@ -362,7 +362,7 @@ module.exports = {
                                                                                 "<tr>" +
                                                                                     "<td class='innerpadding borderbottom'>" +
                                                                                     "	Este correo ha sido generado en automático por el sistema" +
-                                                                                    "	llaos 1.0, no responda al mismo ya que no tendrá respuesta" +
+                                                                                    "	llaos 2.0, no responda al mismo ya que no tendrá respuesta" +
                                                                                     "	alguna." +
                                                                                     "<br>" +
                                                                                     "</td>" +
@@ -637,7 +637,7 @@ module.exports = {
                                                                                         "<tr>" +
                                                                                             "<td class='innerpadding borderbottom'>" +
                                                                                             "	Este correo ha sido generado en automático por el sistema" +
-                                                                                            "	llaos 1.0, no responda al mismo ya que no tendrá respuesta" +
+                                                                                            "	llaos 2.0, no responda al mismo ya que no tendrá respuesta" +
                                                                                             "	alguna." +
                                                                                             "<br>" +
                                                                                             "</td>" +

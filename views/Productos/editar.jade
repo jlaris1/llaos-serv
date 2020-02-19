@@ -47,6 +47,13 @@ block contenido
                 }
             });
 
+            var codigo = 'LLAO' +  $('#cod').val();
+
+            $("#barcode").JsBarcode( codigo,{
+                lineColor: "#333333",
+                displayValue: true
+            });
+
             calcularMontos();
         });
 
@@ -142,7 +149,9 @@ block contenido
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-hashtag
-                            input.form-control(required type="text" name="codigo" tabindex="1" value="#{producto.codigo}")
+                            input#cod.form-control(required type="text" name="codigo" tabindex="1" value="#{producto.codigo}")
+            .col-lg-9.text-right
+                canvas#barcode(style="background-color: white; border: solid 5px white; border-radius: 5px;")
         .row
             .col-lg-3
                 .form-group

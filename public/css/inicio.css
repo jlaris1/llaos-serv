@@ -161,8 +161,8 @@
 
 a.disabled {
   /* Make the disabled links grayish*/
-  color: gray;
-  cursor: not-allowed;
+  color: gray !important;
+  cursor: not-allowed !important;
 }
 
 input[type="checkbox"] {

@@ -32,6 +32,18 @@ block contenido
             $('#subMenuProductos').removeClass('hidden');
             $('#spanMenuProductos').removeClass('fa-angle-left');
             $('#spanMenuProductos').addClass('fa-angle-down');
+
+            $("#barcode").JsBarcode("012346789", {lineColor: "#333333", displayValue: true});
+
+            $('#cod').on('keyup', ()=> {
+                var codigo = 'LLAO' +  $('#cod').val();
+
+                $("#barcode").JsBarcode( codigo,{
+                    lineColor: "#333333",
+                    displayValue: true
+                });
+            });
+
         });
 
         function obtenerfecha(){
@@ -126,16 +138,12 @@ block contenido
                         .input-group
                             span.input-group-addon
                                 i.fas.fa-hashtag
-                            input.form-control(required type="text" name="codigo" tabindex="1")
-            .col-lg-9
-                .form-group
-                    label | Nombre
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-box
-                        input.form-control(required type="text" name="nombre" tabindex="2")   
+                            input#cod.form-control(required type="text" name="codigo" tabindex="1")
+            .col-lg-9.text-right
+                canvas#barcode(style="background-color: white; border: solid 5px white; border-radius: 5px;")
+        
         .row
-            .col-lg-3
+            .col-lg-2
                 .form-group
                     label | Unidad
                     .input-group
@@ -159,13 +167,21 @@ block contenido
                             option(value="JUEGO") JUEGO
                             option(value="TON") TONELADA
                             option(value="PAQ") PAQUETE
-            .col-lg-9
+            .col-lg-5
+                .form-group
+                    label | Nombre
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-boxLL
+                        input.form-control(required type="text" name="nombre" tabindex="2")  
+            .col-lg-5
                 .form-group
                     label | Descripción
                     .input-group
                         span.input-group-addon
                             i.fas.fa-bars
                         input.form-control(required type="text" name="descripcion" tabindex="4")
+        
         .row
             .col-lg-4
                 .form-group
@@ -240,34 +256,45 @@ block contenido
                             option(value="Diesel") Diesel
             .col-lg-4
                 .form-group
+                    label | Lugar
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-briefcase
+                        select#unidad_negocio.form-control(required name="unidad_negocio" tabindex="12")
+                            option(value="") << Seleccione >>
+                            each un in unidadesNegocio
+                                option(value=un.id) #{un.nombre}
+            .col-lg-4
+                .form-group
                     label | En Stock
                     .input-group
                         span.input-group-addon
                             i.fas.fa-check-square
-                        input#stock.form-control(type="number" name="cantidad" placeholder="Cantidad" value="0"  tabindex="12")
+                        input#stock.form-control(type="number" name="cantidad" placeholder="Cantidad" value="0"  tabindex="13")
+            
+        .row
             .col-lg-4
                 .form-group
                     label | Costo Stock
                     .input-group
                         span.input-group-addon
                             i.fas.fa-dollar-sign
-                        input#costoStock.form-control(readonly step=".01" type="text" placeholder="Costo Stock" tabindex="13")
-        .row
-            .col-lg-3
+                        input#costoStock.form-control(readonly step=".01" type="text" placeholder="Costo Stock" tabindex="14")
+            .col-lg-4
                 .form-group
                     label | Mínimo
                     .input-group
                         span.input-group-addon
                             i.fas.fa-sort-amount-down
-                        input.form-control(type="number" name="minimo" placeholder="Mínimo" value="0"  tabindex="14")
+                        input.form-control(type="number" name="minimo" placeholder="Mínimo" value="0"  tabindex="15")
             
-            .col-lg-3
+            .col-lg-4
                 .form-group
                     label | Máximo
                     .input-group
                         span.input-group-addon
                             i.fas.fa-sort-amount-up
-                        input.form-control(type="number" name="maximo" placeholder="Máximo" value="0"  tabindex="15")
+                        input.form-control(type="number" name="maximo" placeholder="Máximo" value="0"  tabindex="16")
         .divider
         .row(style="margin-bottom: 30px;")
             .col-lg-2.btn-group.pull-right
@@ -275,4 +302,4 @@ block contenido
                     .input-group
                         span.input-group-addon
                             i.fas.fa-save.text-success
-                        input(type="submit" value="Guardar" tabindex="16").btn.btn-success.form-control
+                        input(type="submit" value="Guardar" tabindex="17").btn.btn-success.form-control

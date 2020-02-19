@@ -50,7 +50,7 @@ utils.inherits(CommentXform, BaseXform, {
       authorId: 0,
     });
     xmlStream.openNode('text');
-    if (model.note.texts) {
+    if (model && model.note && model.note.texts) {
       model.note.texts.forEach(text => {
         this.richTextXform.render(xmlStream, text);
       });
@@ -67,7 +67,10 @@ utils.inherits(CommentXform, BaseXform, {
     switch (node.name) {
       case 'comment':
         this.model = {
-          texts: [],
+          type: 'note',
+          note: {
+            texts: [],
+          },
           ...node.attributes,
         };
         return true;
@@ -89,7 +92,7 @@ utils.inherits(CommentXform, BaseXform, {
       case 'comment':
         return false;
       case 'r':
-        this.model.texts.push(this.parser.model);
+        this.model.note.texts.push(this.parser.model);
         this.parser = undefined;
         return true;
       default:

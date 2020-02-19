@@ -182,6 +182,7 @@ module.exports = function(app){
     ordenesRouter.get('/ordenruta/entrada/:id', ordenes.ordenRutaEntrada);
     ordenesRouter.get('/ordenruta/cerrar/:id', ordenes.cerrarOrdenRuta);
     ordenesRouter.post('/ordenruta/inventario', ordenes.entradaOrdenRuta);
+    ordenesRouter.get('/ordenruta/articulos/:id', ordenes.articulosOrdenRuta);
     //ordenesRouter.post('/report/pdf', ordenes.pdf);
     //ordenesRouter.post('/report/xls', ordenes.xls);
 
@@ -207,7 +208,7 @@ module.exports = function(app){
     inventariosRouter.get('/planta', inventarios.inventarioPlanta);
     inventariosRouter.get('/oficina', inventarios.inventarioOficina);
     inventariosRouter.get('/articulo/new', inventarios.agregarArticuloAlmacen);
-    inventariosRouter.post('/busqueda/producto', inventarios.buscarProducto);
+    inventariosRouter.get('/find/:modulo', inventarios.find);
     inventariosRouter.get('/inventario/entrada', inventarios.abrirEntradaArticulo);
     inventariosRouter.get('/inventario/entrada/:id', inventarios.entradaArticulo);
     inventariosRouter.get('/inventario/salida', inventarios.abrirSalidaArticulo);
@@ -216,6 +217,8 @@ module.exports = function(app){
     inventariosRouter.post('/buscar/articulo/:tipo', inventarios.buscarArticulo);
     inventariosRouter.post('/registrar/entrada/:id_prod', inventarios.registrarEntrada);
     inventariosRouter.post('/registrar/salida/:id_prod', inventarios.registrarSalida);
+    inventariosRouter.post('/registrar/salida/', inventarios.registrarNuevaSalida);
+    inventariosRouter.post('/salida/imprimir', inventarios.imprimirOrdenSalida);
     inventariosRouter.get('/entradas', inventarios.abrirEntradas);
     inventariosRouter.get('/salidas', inventarios.abrirSalidas);
     //inventariosRouter.post('/report/pdf', inventarios.pdf);

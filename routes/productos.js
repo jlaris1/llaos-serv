@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
     Productos = mongoose.model('Productos');
     Proveedores = mongoose.model('Proveedores');
     FechaHora = require('./fechahora');
+    UnidadesNegocio = mongoose.model('UnidadesNegocio');
 
 module.exports = {
     //Método para obtener todos los productos
@@ -96,32 +97,39 @@ module.exports = {
                     Usuarios.find( function(error, usuarios){
                         if(error){
                             console.log(error);
-                        } else { 
-                            respuesta.render("Productos/producto", {
-                                user: solicitud.session.user,
-                                proveedores: proveedores,
-                                titulo: "Productos",
-                                criterios: [
-                                    {
-                                        val: "",
-                                        name: ""
-                                    }
-                                ],
-                                piscinas: [
-                                    {
-                                        id: 0,
-                                        nombre: ""
-                                    }
-                                ],
-                                charoleros: [
-                                    {
-                                        id: 0,
-                                        nombre: ""
-                                    }   
-                                ],
-                                usuarios: usuarios,
-                                ruta: "productos"
-                            });
+                        } else {
+                            UnidadesNegocio.find( (error, unidadesNegocio) => {
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    respuesta.render("Productos/producto", {
+                                        user: solicitud.session.user,
+                                        proveedores: proveedores,
+                                        unidadesNegocio: unidadesNegocio,
+                                        titulo: "Productos",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        usuarios: usuarios,
+                                        ruta: "productos"
+                                    });
+                                }
+                            })
                         }
                     });
                 }

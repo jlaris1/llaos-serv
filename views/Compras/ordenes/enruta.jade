@@ -2,17 +2,26 @@ extends ../../layouts/layout.jade
 block contenido
     style.
         .labelFol {
+            font-weight: 700;
             font-size: 2em; 
             background-color: black; 
-            color: white; 
+            color: white !important; 
             border-radius: 8px 0 0 8px;
         }
 
         .labelSta {
+            font-weight: 700;
             color: white;
             font-size: 2em; 
             border-radius: 0 8px 8px 0;
         } 
+
+        a.disabled {
+            /* Make the disabled links grayish*/
+            color: gray;
+            /* And disable the pointer events */
+            pointer-events: none;
+        }
     script.
         $(document).ready( function(){
             $('#subMenuCompras').removeClass('hidden');
@@ -180,21 +189,28 @@ block contenido
                 | Datos Orden Ruta
                 .divider
         .row
-            div.btn-group
-                label.labelFol.right-padding
-                    |   &nbsp;&nbsp; ORD#{folio} &nbsp;&nbsp;
-                if estatus == "Nueva"
-                    label.labelSta.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                else if estatus == "Generada"
-                    label.labelSta.label-success &nbsp;&nbsp;&nbsp;&nbsp; #{estatus} &nbsp;&nbsp;&nbsp;&nbsp;
-                else if estatus == "Cancelada" 
-                    label.labelSta.label-danger &nbsp;&nbsp;&nbsp;&nbsp;#{estatus}&nbsp;&nbsp;&nbsp;&nbsp;
-                else if estatus == "Enviada"
-                    label.labelSta.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                else if estatus == "Cerrada"
-                    label.labelSta.label-default &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-
-            .col-lg-4.pull-right
+            .d-flex.justify-content-between
+                div
+                    a.btn.labelFol.disabled(href="#")
+                        |   ORD#{folio}
+                    if estatus == "Nueva"
+                        a.btn.labelSta.disabled.label-primary(href="#")
+                            |   #{estatus}
+                    else if estatus == "Generada"
+                        a.btn.labelSta.disabled.label-success(href="#")
+                            |   #{estatus}
+                    else if estatus == "Cancelada" 
+                        a.btn.labelSta.disabled.label-danger(href="#")
+                            |   #{estatus}
+                    else if estatus == "En Ruta"
+                        a.btn.labelSta.disabled(href="#" style="background-color: #ffa500;")
+                            |   #{estatus}
+                    else if estatus == "Enviada"
+                        a.btn.labelSta.disabled.label-warning(href="#")
+                            |   #{estatus}
+                    else if estatus == "Cerrada"
+                        a.btn.labelSta.disabled.label-default(href="#")
+                        |   #{estatus}
                 .form-group
                     label | Código Envió
                     .input-group

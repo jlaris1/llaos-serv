@@ -925,7 +925,7 @@ var mongoose = require('mongoose');
                                                                                 "<tr>" +
                                                                                     "<td class='innerpadding borderbottom'>" +
                                                                                     "	Este correo ha sido generado en automático por el sistema" +
-                                                                                    "	llaos 1.0, no responda al mismo ya que no tendrá respuesta" +
+                                                                                    "	llaos 2.0, no responda al mismo ya que no tendrá respuesta" +
                                                                                     "	alguna, si usted no es un usuario que autoriza Requisiciones" +
                                                                                     "	favor de reportar el insidente al departamento de sistemas." +
                                                                                     "<br>" +
@@ -2291,7 +2291,7 @@ var mongoose = require('mongoose');
                                                                                 "<tr>" +
                                                                                     "<td class='innerpadding borderbottom'>" +
                                                                                     "	Este correo ha sido generado en automático por el sistema" +
-                                                                                    "	llaos 1.0, no responda al mismo ya que no tendrá respuesta" +
+                                                                                    "	llaos 2.0, no responda al mismo ya que no tendrá respuesta" +
                                                                                     "	alguna, si usted no es un usuario que autoriza Requisiciones" +
                                                                                     "	favor de reportar el insidente al departamento de sistemas." +
                                                                                     "<br>" +

@@ -32,41 +32,52 @@ block contenido
         window.onload = function () { 
         }
     //Termina Javascript
-    .row(style="margin-bottom: -5px;")
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12
-            h2
-                i.fas.fa-box-open(style="margin-right: 10px;")
-                |   Salidas Inventario #{lugar}
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;").btn-group
-            a.btn.btn-special(href="#")
-                i.fas.fa-file-pdf
-                |   Reportes
-            a.btn.btn-special(href="/inventarios/inventario/salida_nueva")
-                i.fas.fa-sign-in-alt
-                |   Salida
-    .divider
-    label#lugar.hidden #{lugar}
-    .row(style="margin-top: 15px;")
-        table#salidas.table.table-striped.table-hover
-            thead.thead-dark
-                th Producto
-                th Cantidad
-                th Solicitó
-                th Área
-                th Modulo
-                th Estanque
-                th Fecha
-                th Hora
-                th Entregó
-            tbody
-                each s in salidas
-                    tr 
-                        td #{ s.producto.nombre }
-                        td #{ s.cantidad }
-                        td #{ s.solicitante }
-                        td #{ s.area }
-                        td #{ s.modulo }
-                        td #{ s.estanque }
-                        td #{ s.fecha }
-                        td #{ s.hora }
-                        td #{ s.usuario }
+
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-sign-out-alt
+                    |   Ordenes de Salida
+                div
+                    a(href="/inventarios/inventario/salida" style="margin-right: 5px;").btn.btn-success
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nueva Salida").fas.fa-plus-circle
+                    a(href="#" disabled="true").btn.btn-danger
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Reportes").fas.fa-file-pdf
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                .table-responsive 
+                    table#products.table.table-striped.table-hover
+                        thead
+                            th.text-center
+                                i(style="color: gray;").fas.fa-cog
+                            th.text-center Código
+                            th Almacén
+                            th Unidad
+                            th Solcitó
+                            th Área
+                            th Módulo
+                            th Piscina
+                            th Estatus
+                            th Registro
+                        tbody
+                            each ord in ordenes_salida
+                                tr(scope="row")
+                                    td.d-flex.justify-content-between
+                                        a.btn.btn-info(href="/inventarios/salidas/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Editar" style="margin-right: 5px;")
+                                            i.fas.fa-pencil-alt
+                                        //a.btn.btn-danger(href="productos/producto/eliminar/#{p.id}",data-toggle="tooltip", data-placement="top", title="Eliminar")
+                                            i.fas.fa-times-circle
+                                    td.text-center #{ ord.numero_orden }
+                                    td #{ ord.lugar_almacen }
+                                    td #{ ord.lugar_unidad }
+                                    td #{ ord.solicita }
+                                    td #{ ord.area }
+                                    td #{ ord.modulo.nombre }
+                                    td #{ ord.piscina.nombre }
+                                    td #{ ord.estatus }
+                                    td #{ ord.registro}
+
+
+    
