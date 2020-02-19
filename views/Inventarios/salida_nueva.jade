@@ -631,7 +631,7 @@ block contenido
                                 table#pTable.table.table-hover
                                     thead
                                         th.text-center
-                                            i(style="color: gray;").fas.fa-cog
+                                            i(style="color: #fff;").fas.fa-cog
                                         th.text-center  Codigo
                                         th.text-right   Descripción
                                         th.text-right   Unidad
@@ -643,12 +643,12 @@ block contenido
                                                 td.text-center
                                                     if p.cantidad > 0
                                                         div.btn-group.table-icons
-                                                            a(href="#" id=p.codigo, data-toggle="tooltip", data-placement="top", title="Agregar" onclick="agregarProductoBusqueda(this.id)").btn.btn-success
+                                                            a(href="javascript:agregarProductoBusqueda('#{p.codigo}');" id=p.codigo, data-toggle="tooltip", data-placement="top", title="Agregar").btn.btn-success
                                                                 i(style="color: white;").fas.fa-plus-circle
                                                     else
                                                         div.btn-group.table-icons
                                                             a(href="#").btn.btn-default.disabled
-                                                                i().fas.fa-plus-circle
+                                                                i(style="color: white;").fas.fa-plus-circle
                                                 td.text-center #{p.codigo}
                                                 td.text-center #{p.descripcion}
                                                 td.text-center #{p.unidad}
