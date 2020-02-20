@@ -5,6 +5,10 @@ block contenido
             border: 0;
             border-radius: 2px;
         }
+
+        select option:selected{
+            background-color:#FFF !important
+        }
     script.
         var modu_select = [];
         var autorizador = false;
@@ -55,8 +59,7 @@ block contenido
                 }
             });  
 
-            obtenerModulos();
-            seleccionarModulos();
+            obtenerAreas();
         });
 
         function actualizar(){
@@ -91,38 +94,47 @@ block contenido
         }
 
         function obtenerModulos(){
-           if ($('#areas').val() == "Intensivo"){
-                $('#h_modulo').removeClass('hidden');
-                $('#modulosSal').removeClass('hidden');
-                $('#sel').removeClass('hidden');
-                $('#a').removeClass('hidden');
-                $('#b').removeClass('hidden');
-                $('#ac').addClass('hidden');
-                $('#bc').addClass('hidden');
-                $('#d').addClass('hidden');
-                $('#e').addClass('hidden');
-                $('#reser').removeClass('hidden');
-                $('#module').attr('required', true);
-                seleccionarModulos();
-            } else if ($('#areas').val() == "Semi-intensivo"){
-                $('#modulosSal').removeClass('hidden');
-                $('#h_modulo').removeClass('hidden');
-                $('#sel').removeClass('hidden');
-                $('#a').addClass('hidden');
-                $('#b').addClass('hidden');
-                $('#ac').removeClass('hidden');
-                $('#bc').removeClass('hidden');
-                $('#d').removeClass('hidden');
-                $('#e').removeClass('hidden');
-                $('#reser').removeClass('hidden');
-                $('#module').attr('required', true);
-                seleccionarModulos();
-            } else {
-                $('#h_modulo').addClass('hidden');
-                $('#piscinas').addClass('hidden');
-                $('#modulos').addClass('hidden');
-                $('#module').attr('required', false);
-            }
+            if ($('#areas').val() == "5e4eceea3b139a5224a9ee5a"){
+                    $('#h_modulo').removeClass('hidden');
+                    $('#modulosSal').removeClass('hidden');
+                    $('#sel').removeClass('hidden');
+                    $('#a').removeClass('hidden');
+                    $('#b').removeClass('hidden');
+                    $('#ac').addClass('hidden');
+                    $('#bc').addClass('hidden');
+                    $('#d').addClass('hidden');
+                    $('#e').addClass('hidden');
+                    $('#reser').removeClass('hidden');
+                    $('#module').attr('required', true);
+                    seleccionarModulos();
+                } else {
+                    $('#h_modulo').addClass('hidden');
+                    $('#piscinas').addClass('hidden');
+                    $('#modulos').addClass('hidden');
+                    $('#module').attr('required', false);
+                }
+        }
+
+         function obtenerModulos(seleccionado){
+            if (seleccionado == "5e4eceea3b139a5224a9ee5a"){
+                    $('#h_modulo').removeClass('hidden');
+                    $('#modulosSal').removeClass('hidden');
+                    $('#sel').removeClass('hidden');
+                    $('#a').removeClass('hidden');
+                    $('#b').removeClass('hidden');
+                    $('#ac').addClass('hidden');
+                    $('#bc').addClass('hidden');
+                    $('#d').addClass('hidden');
+                    $('#e').addClass('hidden');
+                    $('#reser').removeClass('hidden');
+                    $('#module').attr('required', true);
+                    seleccionarModulos();
+                } else {
+                    $('#h_modulo').addClass('hidden');
+                    $('#piscinas').addClass('hidden');
+                    $('#modulos').addClass('hidden');
+                    $('#module').attr('required', false);
+                }
         }
 
         function seleccionarModulos(){
@@ -135,11 +147,42 @@ block contenido
             }
         }
 
+        function obtenerAreas(){
+            var seleccionado = $('#id_area').val();
+
+            $.getJSON('/usuarios/find/' + $('#cmbUnidadNeg').val(), (areas)=>{
+                if( areas.length > 0){
+                    $('#areas')
+                        .empty()
+                        .append('<option value=-1> << Seleccione >> </option>');
+                    
+                    for(var i = 0; i < areas.length; i ++){
+                        if(areas[i]._id == seleccionado){
+                            $("#areas")
+                            .append($("<option></option>")
+                            .attr("value", areas[i]._id)
+                            .attr("selected", true)
+                            .text(areas[i].codigo + " - "+ areas[i].nombre));
+                        } else {
+                            $("#areas")
+                            .append($("<option></option>")
+                            .attr("value",areas[i]._id)
+                            .text(areas[i].codigo + " - "+ areas[i].nombre));
+                        }
+
+                        if(i == areas.length -1){
+                            obtenerModulos(seleccionado);
+                        }
+                    }
+                }               
+            });
+        }
+
 
     //Termina Javascript
     
     
-    //  Título de entrada a orden en ruta
+    //  Título
     section.mb-4
         .card
             .card-body.d-flex.justify-content-between
@@ -150,7 +193,7 @@ block contenido
                     a#guardar(href="javascript:actualizar();").btn.btn-success.Ripple-parent.green-gradient
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Realizar").fas.fa-save
     
-    // Opciones de salida
+    // Datos usuario
     section.mb-4
         .card
             .card-body
@@ -236,7 +279,7 @@ block contenido
                             .input-group
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-asterisk(style="color: #fff;")
-                                select.form-control(required id="cmbUnidadNeg" name="unidad_negocio" tabindex="9")
+                                select.form-control(required id="cmbUnidadNeg" name="unidad_negocio" tabindex="9" onchange="obtenerAreas()")
                                     option(value="") << Seleccione >>
                                     each unidad in unidades_negocios
                                         option(value = unidad.id, selected=(unidad.id == usr.unidad_negocio)) #{ unidad.nombre }
@@ -254,25 +297,13 @@ block contenido
                                     option(value="Anclar", selected=('Anclar'== usr.empresa)) Anclar
                 .d-flex.justify-content-between
                     .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                        input.hidden#id_area(type="text" value="#{usr.area}")
                         .form-group
                             label | Área
                             .input-group
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-map-signs.fa-input(style="color: #fff;")
                                 select#areas.form-control(tabindex="2" name="area" onchange="obtenerModulos()")
-                                    option(value=-1) << Seleccione >>
-                                    option(value="Administración - Granja", selected=('Administración - Granja'== '')) Administración - Granja
-                                    option(value="Intensivo", selected=('Intensivo'== usr.area)) Intensivo
-                                    option(value="Semi-intensivo", selected=("Semi-intensivo"== usr.area)) Semi-intensivo
-                                    option(value="Laboratorio", selected=("Laboratorio"== usr.area)) Laboratorio
-                                    option(value="Probioticos", selected=("Probioticos"== usr.area)) Probioticos
-                                    option(value="Taller Mecánico", selected=("Taller Mecánico"== usr.area)) Taller Mecánico
-                                    option(value="Taller Eléctrico", selected=("Tallr Eléctrico"== usr.area)) Taller Eléctrico 
-                                    option(value="Equipo Bombeo", selected=("Equipo Bombeo"== usr.area)) Equipo Bombeo
-                                    option(value="Administración - Matriz", selected=('Administración - Matriz'== usr.area)) Administración - Matriz
-                                    option(value="Planta - Administración", selected=('Planta - Administración'== usr.area)) Planta - Administración
-                                    option(value="Planta - Mantenimiento", selected=('Planta - Mantenimiento'== usr.area)) Planta - Mantenimiento
-                                    option(value="Planta - Proceso", selected=('Planta - Proceso'== usr.area)) Planta - Proceso    
                     .col-lg-6.col-md-6.col-sm-6.col-xs-6#modulosSal.hidden
                         input.hidden#modulos_selec(type="text" value="#{usr.modulo}")
                         .form-group

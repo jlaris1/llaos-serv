@@ -111,13 +111,13 @@ var mongoose = require('mongoose');
                                 if(error){
                                     console.log(error);
                                 } else {
-                                    Areas.find({"_id": solicitud.params.id}, (error, area)=>{
+                                    Areas.findOne({"_id": solicitud.params.id}, (error, area)=>{
                                         if(error){
                                             console.log(error);
                                         } else {
                                             respuesta.render('Administracion/Catalogos/Areas/edit', {
                                                 user: solicitud.session.user,
-                                                titulo: "",
+                                                titulo: "Áreas",
                                                 area: area,
                                                 unidades_negocios: unidades_negocios,
                                                 usuarios: usuarios,

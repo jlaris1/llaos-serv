@@ -56,7 +56,13 @@ app.set("view engine","jade");
 
 // Usos de expresss, utilizar bodyparser y carpetas publicas
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded(
+	{ 	
+		limit: '50mb', 
+		extended: true, 
+		parameterLimit: 1000000
+	}
+));
 app.use(cookieParser());
 app.use(session({
 	secret: "123byuhbsdah12ub",

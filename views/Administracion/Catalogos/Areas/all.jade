@@ -44,9 +44,9 @@ block contenido
                             each area in areas
                                 tr(scope="row")
                                     td.d-flex
-                                        a.btn.btn-info.btn-small(href="catalogos/areas/edit/#{area.id}", data-toggle="tooltip", data-placement="top", title="Editar" style="margin-right: 5px;")
+                                        a.btn.btn-info.btn-small(href="/catalogos/areas/edit/#{area.id}", data-toggle="tooltip", data-placement="top", title="Editar" style="margin-right: 5px;")
                                             i.fas.fa-pencil-alt.fa-2x
-                                        a.btn.btn-danger.btn-small(href="catalogos/areas/delete/#{area.id}",data-toggle="tooltip", data-placement="top", title="Eliminar")
+                                        a.btn.btn-danger.btn-small(href="/catalogos/areas/delete/#{area.id}",data-toggle="tooltip", data-placement="top", title="Eliminar")
                                             i.fas.fa-times-circle.fa-2x
                                     td.text-center #{ area.codigo }
                                     td #{ area.nombre }

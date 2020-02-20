@@ -104,6 +104,7 @@ module.exports = function(app){
     usuariosRouter.post('/usuario', usuarios.guardar);
     usuariosRouter.post('/editar/usuario/:id', usuarios.actualizar);
     usuariosRouter.get('/eliminar/usaurio/:id', usuarios.eliminar);
+    usuariosRouter.get('/find/:unidad', usuarios.findAreas);
     //usuariosRouter.post('/report/pdf', usuarios.pdf);
     //usuariosRouter.post('/report/xls', usuarios.xls);
 
@@ -446,7 +447,7 @@ module.exports = function(app){
     app.use('/catalogos', catalogosRouter);
     catalogosRouter.get('/areas/all', catalogos.allAreas);
     catalogosRouter.get('/areas/new', catalogos.newAreas);
-    catalogosRouter.get('/areas/edit', catalogos.allAreas);
+    catalogosRouter.get('/areas/edit/:id', catalogos.editAreas);
     catalogosRouter.post('/areas/', catalogos.saveAreas);
     catalogosRouter.post('/areas/update/:id', catalogos.updateAreas);
     catalogosRouter.post('/areas/delete/:id', catalogos.deleteAreas);

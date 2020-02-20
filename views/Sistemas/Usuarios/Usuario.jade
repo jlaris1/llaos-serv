@@ -7,6 +7,7 @@ block contenido
         }
     script.
         var autorizador = false;
+        var areas = [];
         
         $(document).ready( function(){          
             $('#spanMenuSistemas').removeClass('fa-angle-left');
@@ -41,7 +42,7 @@ block contenido
                 empresa: $("select[name=empresa]").val(),
                 unidad_negocio: $("select[name=unidad_negocio]").val(),
                 permisos: $("select[name=permisos]").val(),
-                autorizador: $("input[name=autoriza]").val(),
+                autorizador: autorizador,
                 area: $("select[name=area]").val(),
                 modulo: $("select[name=modulo]").val()
 
@@ -93,6 +94,23 @@ block contenido
                 $('#module').attr('required', false);
             }
         }
+
+        function obtenerAreas(){
+            $.getJSON('/usuarios/find/' + $('#cmbUnidadNeg').val(), (areas)=>{
+                if( areas.length > 0){
+                    $('#areas')
+                        .empty()
+                        .append('<option value=-1> << Seleccione >> </option>');
+                    
+                    for(var i = 0; i < areas.length; i ++){
+                        $("#areas")
+                            .append($("<option></option>")
+                            .attr("value",areas[i]._id)
+                            .text(areas[i].codigo + " - "+ areas[i].nombre));
+                    }
+                }               
+            });
+        }
     //Termina Javascript
     
     
@@ -143,7 +161,7 @@ block contenido
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-building(style="color: #fff;")
                                 select.form-control(required id="cmbPermisos" name="permisos" tabindex="4")
-                                    option(value="") << Seleccione >>
+                                    option(value=-1) << Seleccione >>
                                     option(value="usuario") Usuario
                                     option(value="compras") Compras
                                     option(value="almacen_camaron") Almacen Camaron
@@ -186,7 +204,7 @@ block contenido
                             .input-group
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-asterisk(style="color: #fff;")
-                                select.form-control(required id="cmbUnidadNeg" name="unidad_negocio" tabindex="9")
+                                select.form-control(required id="cmbUnidadNeg" name="unidad_negocio" onchange="obtenerAreas()" tabindex="9")
                                     option(value="") << Seleccione >>
                                     each unidad in unidades_negocios
                                         option(value = unidad.id) #{ unidad.nombre }
@@ -209,27 +227,14 @@ block contenido
                             .input-group
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-map-signs.fa-input(style="color: #fff;")
-                                select#areas.form-control(tabindex="2" value="" name="area" onchange="obtenerModulos()")
-                                    option(value=-1) << Seleccione >>
-                                    option(value="Administración - Granja", selected=('Administración - Granja'== '')) Administración - Granja
-                                    option(value="Intensivo", selected=('Intensivo'== '')) Intensivo
-                                    option(value="Semi-intensivo", selected=("Semi-intensivo"== '')) Semi-intensivo
-                                    option(value="Laboratorio", selected=("Laboratorio"== '')) Laboratorio
-                                    option(value="Probioticos", selected=("Probioticos"== '')) Probioticos
-                                    option(value="Taller Mecánico", selected=("Taller Mecánico"== '')) Taller Mecánico
-                                    option(value="Taller Eléctrico", selected=("Tallr Eléctrico"== '')) Taller Eléctrico 
-                                    option(value="Equipo Bombeo", selected=("Equipo Bombeo"== '')) Equipo Bombeo
-                                    option(value="Administración - Matriz", selected=('Administración - Matriz'== '')) Administración - Matriz
-                                    option(value="Planta - Administración", selected=('Planta - Administración'== '')) Planta - Administración
-                                    option(value="Planta - Mantenimiento", selected=('Planta - Mantenimiento'== '')) Planta - Mantenimiento
-                                    option(value="Planta - Proceso", selected=('Planta - Proceso'== '')) Planta - Proceso    
+                                select#areas.form-control(tabindex="11" value="" name="area" onchange="obtenerModulos()")
                     .col-lg-6.col-md-6.col-sm-6.col-xs-6#modulosSal.hidden
                         .form-group
                             label | Modulo
                             .input-group
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-input.fa-map-pin(style="color: #fff;")
-                                select#moduloS.form-control(tabindex="3" name="modulo" multiple)
+                                select#moduloS.form-control(tabindex="12" name="modulo" multiple)
                                     each modulo in modulos
                                         option(value=modulo.id) #{modulo.nombre}
                 

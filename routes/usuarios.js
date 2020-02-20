@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
     Usuarios = mongoose.model('Usuarios');
     UnidadesNegocios = mongoose.model('UnidadesNegocio');
     Modulos = mongoose.model('Modulos');
+    Areas = mongoose.model('Areas');
     
 module.exports = {//HAcen falta try-catch a los metodos
     //Método para obtener todos los usuarios
@@ -58,31 +59,38 @@ module.exports = {//HAcen falta try-catch a los metodos
                                 if(error) {
                                     console.log(error);
                                 } else {
-                                    respuesta.render("Sistemas/Usuarios/Usuario",{
-                                        user: solicitud.session.user,
-                                        titulo: "Usuarios",
-                                        criterios: [
-                                            {
-                                                val: "",
-                                                name: ""
-                                            }
-                                        ],
-                                        piscinas: [
-                                            {
-                                                id: 0,
-                                                nombre: ""
-                                            }
-                                        ],
-                                        charoleros: [
-                                            {
-                                                id: 0,
-                                                nombre: ""
-                                            }   
-                                        ],
-                                        ruta: "usuarios",
-                                        usuarios: usuarios,
-                                        modulos: modulos,
-                                        unidades_negocios: unidades
+                                    Areas.find((error, areas) => {
+                                        if(error) {
+                                            console.log(error);
+                                        } else {
+                                            respuesta.render("Sistemas/Usuarios/Usuario",{
+                                                user: solicitud.session.user,
+                                                areas: areas,
+                                                titulo: "Usuarios",
+                                                criterios: [
+                                                    {
+                                                        val: "",
+                                                        name: ""
+                                                    }
+                                                ],
+                                                piscinas: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }
+                                                ],
+                                                charoleros: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }   
+                                                ],
+                                                ruta: "usuarios",
+                                                usuarios: usuarios,
+                                                modulos: modulos,
+                                                unidades_negocios: unidades
+                                            });
+                                        }
                                     });
                                 }
                             }).sort({ nombre : 1});
@@ -175,8 +183,6 @@ module.exports = {//HAcen falta try-catch a los metodos
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		}else{
-            console.log(solicitud.body);
-
             Usuarios.updateOne({"_id": solicitud.params.id}, solicitud.body, function(error){
                 if(error){
                     console.log(error);
@@ -201,5 +207,18 @@ module.exports = {//HAcen falta try-catch a los metodos
                 }
             });
         };
+    },
+    findAreas: (solicitud, respuesta) =>{
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		}else{
+            Areas.find({"unidad_negocio": solicitud.params.unidad}, (error, areas) =>{
+                if(error){
+                    console.log(error);
+                } else {
+                    respuesta.json(areas);
+                }
+            });
+        }
     }
 }
