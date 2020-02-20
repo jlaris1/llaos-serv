@@ -1,66 +1,37 @@
 extends ../../layouts/layout.jade
-block contenido 
+block contenido
     style.
         a.btn-success {
             border: 0;
             border-radius: 2px;
         }
     script.
-        var modu_select = [];
         var autorizador = false;
-
-        $(document).ready( function(){
-            if($('#chk').text() == 'true'){
-                $('#chkAutorizar').prop('checked', true);
-            } else {
-                $('#chkAutorizar').prop('checked', false);
-            } 
+        
+        $(document).ready( function(){          
+            $('#spanMenuSistemas').removeClass('fa-angle-left');
+            $('#spanMenuSistemas').addClass('fa-angle-down');
+            $('#subMenuSistemas').removeClass('hidden');
+            $('#subMenuUsuarios').removeClass('hidden');
+            $('#spanMenuUsuarios').removeClass('fa-angle-left');
+            $('#spanMenuUsuarios').addClass('fa-angle-down');         
 
             $('#chkAutorizar').checkboxpicker({
                 offLabel: 'No',
                 onLabel: 'Si'
-            }); 
+            });
 
-            $('#chkMostrar').checkboxpicker({
-                offLabel: 'No',
-                onLabel: 'Si'
-            }); 
-
-            $('#subMenuUsuarios').removeClass('hidden');
-            $('#spanMenuUsuarios').removeClass('fa-angle-left');
-            $('#spanMenuUsuarios').addClass('fa-angle-down');
-
-            if( $('#menuSistemas').hasClass('hidden')){
-                $('#subMenuSistemas').addClass('hidden');
-                $('#spanMenuSistemas').removeClass('fa-angle-down');
-                $('#spanMenuSistemas').addClass('fa-angle-left');
-            }    
-
-            $("#chkMostrar").change(function(){
-                if($(this).prop("checked") == true){
-                    $('#conformato').addClass('hidden');
-                    $('#sinformato').removeClass('hidden');
-                }else{
-                    $('#sinformato').addClass('hidden');
-                    $('#conformato').removeClass('hidden');
-                }
-            });       
-
-            
-            $("#chkAutorizar").change(function(){
+             $("#chkAutorizar").change(function(){
                 if($(this).prop("checked") == true){
                     autorizador = true;
                 }else{
                     autorizador = false;
                 }
-            });  
-
-            obtenerModulos();
-            seleccionarModulos();
+            }); 
         });
 
-        function actualizar(){
-            $.post( "/usuarios/editar/usuario/" + $('#id_user').val(), {
+        function guardar(){
+            $.post( "/usuarios/usuario", {
                 nombre: $("input[name=nombre]").val(),
                 correo: $("input[name=correo]").val(),
                 usuario: $("input[name=usuario]").val(),
@@ -70,7 +41,7 @@ block contenido
                 empresa: $("select[name=empresa]").val(),
                 unidad_negocio: $("select[name=unidad_negocio]").val(),
                 permisos: $("select[name=permisos]").val(),
-                autorizador: autorizador,
+                autorizador: $("input[name=autoriza]").val(),
                 area: $("select[name=area]").val(),
                 modulo: $("select[name=modulo]").val()
 
@@ -103,7 +74,6 @@ block contenido
                 $('#e').addClass('hidden');
                 $('#reser').removeClass('hidden');
                 $('#module').attr('required', true);
-                seleccionarModulos();
             } else if ($('#areas').val() == "Semi-intensivo"){
                 $('#modulosSal').removeClass('hidden');
                 $('#h_modulo').removeClass('hidden');
@@ -116,7 +86,6 @@ block contenido
                 $('#e').removeClass('hidden');
                 $('#reser').removeClass('hidden');
                 $('#module').attr('required', true);
-                seleccionarModulos();
             } else {
                 $('#h_modulo').addClass('hidden');
                 $('#piscinas').addClass('hidden');
@@ -124,67 +93,49 @@ block contenido
                 $('#module').attr('required', false);
             }
         }
-
-        function seleccionarModulos(){
-            modu_select = $('#modulos_selec').val().split(",");
-
-            for(let i = 0; i <= modu_select.length -1; i++){               
-                if($('#opt'+modu_select[i]).val() == modu_select[i]){
-                    $('#opt'+modu_select[i]).attr('selected', true);
-                }
-            }
-        }
-
-
     //Termina Javascript
     
     
-    //  Título de entrada a orden en ruta
+    //  Título
     section.mb-4
         .card
             .card-body.d-flex.justify-content-between
                 h4.h4-responsive.mt-3
-                    i.fas.fa-user-edit
-                    |   Actualizar datos usuario
+                    i.fas.fa-user-plus
+                    |   Nuevo usuario
                 div
-                    a#guardar(href="javascript:actualizar();").btn.btn-success.Ripple-parent.green-gradient
+                    a#guardar(href="javascript:guardar();").btn.btn-success.Ripple-parent.green-gradient
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Realizar").fas.fa-save
     
-    // Opciones de salida
+    // Datos del usuario
     section.mb-4
         .card
             .card-body
-                input#id_user(type="text" value="#{usr.id}").hidden
-                div.d-flex.justify-content-between
+                .d-flex.justify-content-between
                     .col-lg-12.col-md-12.col-sm-12.col-xs-12
                         .form-group
                             label | Nombre
                             .input-group
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-user-circle(style="color: #fff;")
-                                input.form-control(required type="text" name="nombre" value="#{usr.nombre}" placeholder="Nombre" tabindex="1")
+                                input.form-control(required type="text" name="nombre" placeholder="Nombre" tabindex="1")
                 div.d-flex.justify-content-between
-                    .col-lg-4.col-md-4.col-sm-4.col-xs-4
+                    .col-lg-6.col-md-6.col-sm-6.col-xs-6
                         .form-group
                             label | Usuario
                             .input-group
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-user(style="color: #fff;")
-                                input.form-control(required type="text" name="usuario" value="#{usr.usuario}" placeholder="Usuario" tabindex="2")
-                    .col-lg-4.col-md-4.col-sm-4.col-xs-4
+                                input.form-control(required type="text" name="usuario" placeholder="Usuario" tabindex="2")
+                    .col-lg-6.col-md-6.col-sm-6.col-xs-6
                         .form-group
                             label | Password
                             .input-group
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-asterisk(style="color: #fff;")
-                                input#conformato.form-control(required type="password" name="password" value="#{usr.password}" placeholder="Password" tabindex="3")
-                                input#sinformato.form-control.hidden(required type="text" name="password" value="#{usr.password}" placeholder="Password" tabindex="3")
-                    .col-lg-4.col-md-4.col-sm-4.col-xs-4(style="margin-top: 25px;")
-                        .form-check
-                            input#chkMostrar(type="checkbox")
-                            label(style="margin-left: 15px;")
-                                |   ¿Mostrar password?
-                div.d-flex.justify-content-between
+                                input.form-control(required type="password" name="password" placeholder="Password" tabindex="3")
+                    
+                .d-flex.justify-content-between
                     .col-lg-6.col-md-6.col-sm-6.col-xs-6
                         .form-group
                             label | Permisos
@@ -192,44 +143,43 @@ block contenido
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-building(style="color: #fff;")
                                 select.form-control(required id="cmbPermisos" name="permisos" tabindex="4")
-                                    option(value=-1) << Seleccione >>
-                                    option(value="usuario", selected=('usuario'== usr.permisos)) usuario
-                                    option(value="compras", selected=('compras'== usr.permisos)) compras
-                                    option(value="admin", selected=('admin'== usr.permisos)) admin
-                                    option(value="almacen_camaron", selected=('almacen_camaron'== usr.permisos)) almacen_camaron
-                                    option(value="owner", selected=('owner'== usr.permisos)) owner
-                                    option(value="master", selected=('master'== usr.permisos)) master
-                                    option(value="externo", selected=('externo'== usr.permisos)) externo
-                                    option(value="developer", selected=('developer'== usr.permisos)) developer
+                                    option(value="") << Seleccione >>
+                                    option(value="usuario") Usuario
+                                    option(value="compras") Compras
+                                    option(value="almacen_camaron") Almacen Camaron
+                                    option(value="admin") Admin
+                                    option(value="master") Master
+                                    option(value="owner") Owner
+                                    option(value="developer") Developer
+                                    option(value="externo") Externo
                     .col-lg-6.col-md-6.col-sm-6.col-xs-6(style="margin-top: 25px;")
-                        label#chk.hidden #{usr.autorizador}
                         .form-check
                             input#chkAutorizar(type="checkbox" name="autoriza" tabindex="5")
                             label(style="margin-left: 15px;")
                                 |   ¿El usuario podrá autorizar requisiciones?
-                div.d-flex.justify-content-between
+                .d-flex.justify-content-between
                     .col-lg-6.col-md-6.col-sm-6.col-xs-6
                         .form-group
                             label | Fecha Nacimiento
                             .input-group
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-calendar(style="color: #fff;")
-                                input#nacimiento.form-control(required type="date" name="nacimiento" value="#{usr.nacimiento}" tabindex="6")
+                                input#nacimiento.form-control(required type="date" name="nacimiento" tabindex="6")
                     .col-lg-6.col-md-6.col-sm-6.col-xs-6
                         .form-group
                             label | Correo
                             .input-group
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-envelope(style="color: #fff;")
-                                input.form-control(required type="mail" name="correo" value="#{usr.correo}" placeholder="Correo" tabindex="7")
-                div.d-flex.justify-content-between
+                                input.form-control(required type="mail" name="correo" placeholder="Correo" tabindex="7")
+                .d-flex.justify-content-between
                     .col-lg-4.col-md-4.col-sm-4.col-xs-4
                         .form-group
                             label | Número Nómina
                             .input-group
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-hashtag(style="color: #fff;")
-                                input.form-control(required type="number" step="1" min="0" name="numero_nomina" value="#{usr.numero_nomina}" placeholder="Número nómina" tabindex="8")
+                                input.form-control(required type="number" step="1" min="0" name="numero_nomina" placeholder="Número nómina" tabindex="8")
                     .col-lg-4.col-md-4.col-sm-4.col-xs-4
                         .form-group
                             label | Unidad de Negocios
@@ -239,7 +189,7 @@ block contenido
                                 select.form-control(required id="cmbUnidadNeg" name="unidad_negocio" tabindex="9")
                                     option(value="") << Seleccione >>
                                     each unidad in unidades_negocios
-                                        option(value = unidad.id, selected=(unidad.id == usr.unidad_negocio)) #{ unidad.nombre }
+                                        option(value = unidad.id) #{ unidad.nombre }
                     .col-lg-4.col-md-4.col-sm-4.col-xs-4
                         .form-group
                             label | Empresa
@@ -247,11 +197,11 @@ block contenido
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-building(style="color: #fff;")
                                 select.form-control(required id="cmbEmpresa" name="empresa" tabindex="10")
-                                    option(value=-1) << Seleccione >>
-                                    option(value="Llaos Acuacultura S.A. de C.V.", selected=('Llaos Acuacultura S.A. de C.V.'== usr.empresa)) Llaos Acuacultura S.A. de C.V.
-                                    option(value="Renegados", selected=('Renegados'== usr.empresa)) Renegados
-                                    option(value="Crap", selected=('Crap'== usr.empresa)) Crap
-                                    option(value="Anclar", selected=('Anclar'== usr.empresa)) Anclar
+                                    option(value="") << Seleccione >>
+                                    option(value="Llaos Acuacultura S.A. de C.V.") Llaos Acuacultura S.A. de C.V.
+                                    option(value="Renegados") Renegados
+                                    option(value="Crap") Crap
+                                    option(value="Anclar") Anclar
                 .d-flex.justify-content-between
                     .col-lg-6.col-md-6.col-sm-6.col-xs-6
                         .form-group
@@ -259,22 +209,21 @@ block contenido
                             .input-group
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-map-signs.fa-input(style="color: #fff;")
-                                select#areas.form-control(tabindex="2" name="area" onchange="obtenerModulos()")
+                                select#areas.form-control(tabindex="2" value="" name="area" onchange="obtenerModulos()")
                                     option(value=-1) << Seleccione >>
                                     option(value="Administración - Granja", selected=('Administración - Granja'== '')) Administración - Granja
-                                    option(value="Intensivo", selected=('Intensivo'== usr.area)) Intensivo
-                                    option(value="Semi-intensivo", selected=("Semi-intensivo"== usr.area)) Semi-intensivo
-                                    option(value="Laboratorio", selected=("Laboratorio"== usr.area)) Laboratorio
-                                    option(value="Probioticos", selected=("Probioticos"== usr.area)) Probioticos
-                                    option(value="Taller Mecánico", selected=("Taller Mecánico"== usr.area)) Taller Mecánico
-                                    option(value="Taller Eléctrico", selected=("Tallr Eléctrico"== usr.area)) Taller Eléctrico 
-                                    option(value="Equipo Bombeo", selected=("Equipo Bombeo"== usr.area)) Equipo Bombeo
-                                    option(value="Administración - Matriz", selected=('Administración - Matriz'== usr.area)) Administración - Matriz
-                                    option(value="Planta - Administración", selected=('Planta - Administración'== usr.area)) Planta - Administración
-                                    option(value="Planta - Mantenimiento", selected=('Planta - Mantenimiento'== usr.area)) Planta - Mantenimiento
-                                    option(value="Planta - Proceso", selected=('Planta - Proceso'== usr.area)) Planta - Proceso    
+                                    option(value="Intensivo", selected=('Intensivo'== '')) Intensivo
+                                    option(value="Semi-intensivo", selected=("Semi-intensivo"== '')) Semi-intensivo
+                                    option(value="Laboratorio", selected=("Laboratorio"== '')) Laboratorio
+                                    option(value="Probioticos", selected=("Probioticos"== '')) Probioticos
+                                    option(value="Taller Mecánico", selected=("Taller Mecánico"== '')) Taller Mecánico
+                                    option(value="Taller Eléctrico", selected=("Tallr Eléctrico"== '')) Taller Eléctrico 
+                                    option(value="Equipo Bombeo", selected=("Equipo Bombeo"== '')) Equipo Bombeo
+                                    option(value="Administración - Matriz", selected=('Administración - Matriz'== '')) Administración - Matriz
+                                    option(value="Planta - Administración", selected=('Planta - Administración'== '')) Planta - Administración
+                                    option(value="Planta - Mantenimiento", selected=('Planta - Mantenimiento'== '')) Planta - Mantenimiento
+                                    option(value="Planta - Proceso", selected=('Planta - Proceso'== '')) Planta - Proceso    
                     .col-lg-6.col-md-6.col-sm-6.col-xs-6#modulosSal.hidden
-                        input.hidden#modulos_selec(type="text" value="#{usr.modulo}")
                         .form-group
                             label | Modulo
                             .input-group
@@ -282,4 +231,4 @@ block contenido
                                     i.fas.fa-input.fa-map-pin(style="color: #fff;")
                                 select#moduloS.form-control(tabindex="3" name="modulo" multiple)
                                     each modulo in modulos
-                                        option(id="opt#{modulo.id}" value=modulo.id, selected=(modulo.id==usr.modulo)) #{modulo.nombre}
+                                        option(value=modulo.id) #{modulo.nombre}

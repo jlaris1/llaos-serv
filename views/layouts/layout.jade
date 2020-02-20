@@ -79,6 +79,7 @@ html(lang="es")
                                             |  Administración
                                             span#spamMenuAdministracion.fas.fa-angle-left
                                         ul#subMenuAdministracion.nav.nav-second-level.hidden
+                                            // PLANTA
                                             li
                                                 a(href='#')#menuAdmPlanta
                                                     i.fas.fa-industry.fa-fw
@@ -117,6 +118,7 @@ html(lang="es")
                                                                 a(href='/tiposcamaron/new/tipocamaron')
                                                                     i.fas.fa-plus-circle.fa-fw 
                                                                     |   Nuevo
+                                            // GRANJA
                                             li
                                                 a(href='#')#menuAdmGranja
                                                     i.fas.fa-globe-americas.fa-fw
@@ -141,6 +143,7 @@ html(lang="es")
                                                                 a(href='/estanque/indicators')
                                                                     i.fas.fa-chart-line.fa-fw
                                                                     |   Indicadores              
+                                            // UNIDADES
                                             li
                                                 a(href='#')#menuUnidades
                                                     i.fas.fa-car-side.fa-fw
@@ -189,7 +192,55 @@ html(lang="es")
                                                                 a(href='/unidades/servicios/new')
                                                                     i.fas.fa-plus-circle.fa-fw
                                                                     |   Nuevo  
-                                           
+                                            // CATALOGOS
+                                            li
+                                                a(href='#')#menuCatalogos
+                                                    i.fas.fa-address-book.fa-fw
+                                                    |   Catalogos
+                                                    span#spanMenuCatalogos.fas.fa-angle-left
+                                                ul#subMenuCatalogos.nav.nav-third-level.hidden
+                                                    li
+                                                        a(href='#')#menuAreas
+                                                            i.fas.fa-map-signs.fa-fw 
+                                                            |   Áreas
+                                                            span#spanMenuAreas.fas.fa-angle-left
+                                                        ul#subMenuAreas.nav.nav-fourth-level.hidden
+                                                            li
+                                                                a(href='/catalogos/areas/all')
+                                                                    i.fas.fa-table.fa-fw
+                                                                    |   Bandeja
+                                                            li
+                                                                a(href='/catalogos/areas/new')
+                                                                    i.fas.fa-plus-circle.fa-fw
+                                                                    |   Nuevo   
+                                                    li
+                                                        a(href='#')#menuCuentas
+                                                            i.fas.fa-file-invoice-dollar.fa-fw 
+                                                            |   Cuentas Conta
+                                                            span#spanMenuCuentas.fas.fa-angle-left
+                                                        ul#subMenuCuentas.nav.nav-fourth-level.hidden
+                                                            li
+                                                                a(href='/catalogos/cuentas/all')
+                                                                    i.fas.fa-table.fa-fw
+                                                                    |   Bandeja
+                                                            li
+                                                                a(href='/catalogos/cuentas/new')
+                                                                    i.fas.fa-plus-circle.fa-fw
+                                                                    |   Nuevo
+                                                    li
+                                                        a(href='#')#menuSubCuentas
+                                                            i.fas.fa-file-invoice.fa-fw 
+                                                            |   Sub-Cuentas Conta
+                                                            span#spanMenuSubCuentas.fas.fa-angle-left
+                                                        ul#subMenuSubCuentas.nav.nav-fourth-level.hidden
+                                                            li
+                                                                a(href='/catalogos/subcuentas/all')
+                                                                    i.fas.fa-table.fa-fw
+                                                                    |   Bandeja
+                                                            li
+                                                                a(href='/catalogos/subcuentas/new')
+                                                                    i.fas.fa-plus-circle.fa-fw
+                                                                    |   Nuevo
                                     // /.nav-second-level
                                 // MENÚ COMPRAS
                                 if user.permisos == "admin" || user.permisos == "developer" || user.permisos == "compras"
@@ -804,9 +855,10 @@ html(lang="es")
                                         i.fas.fa-file-excel
                                         |   Reporte XLS
             // Alertas
-            div#alert.alert.alert-dismissible.hidden.alertContent(role="alert" style="margin-top: 10px;")
-                a(href="javascript:cerrarAlert();" class="close" aria-label="close") &times;
-                span
-                    span#msg1 
-                    strong#msg_alert 
-                    span#msg2
+            #alertDiv.hidden
+                #alert.alert.alert-dismissible.alertContent(role="alert" style="margin-top: 10px;")
+                    a(href="javascript:cerrarAlert();" class="close" aria-label="close") &times;
+                    span
+                        span#msg1 
+                        strong#msg_alert 
+                        span#msg2

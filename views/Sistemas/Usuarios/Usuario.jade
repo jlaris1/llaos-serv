@@ -1,10 +1,14 @@
 extends ../../layouts/layout.jade
 block contenido
+    style.
+        a.btn-success {
+            border: 0;
+            border-radius: 2px;
+        }
     script.
-        $(document).ready( function(){
-            obtenerfecha();
-            obtenerhora();
-            
+        var autorizador = false;
+        
+        $(document).ready( function(){          
             $('#spanMenuSistemas').removeClass('fa-angle-left');
             $('#spanMenuSistemas').addClass('fa-angle-down');
             $('#subMenuSistemas').removeClass('hidden');
@@ -17,194 +21,215 @@ block contenido
                 onLabel: 'Si'
             });
 
-            $('#nacimiento').datetimepicker(
-                {   
-                    format: 'dd-MM-yyyy'
+             $("#chkAutorizar").change(function(){
+                if($(this).prop("checked") == true){
+                    autorizador = true;
+                }else{
+                    autorizador = false;
                 }
-            );
-
+            }); 
         });
 
-        function obtenerfecha(){
-            var fecha = new Date()
-            var dia = fecha.getDate();
-            var mes = fecha.getMonth()+1;
-            var anio = fecha.getFullYear();
+        function guardar(){
+            $.post( "/usuarios/usuario", {
+                nombre: $("input[name=nombre]").val(),
+                correo: $("input[name=correo]").val(),
+                usuario: $("input[name=usuario]").val(),
+                password: $("input[name=password]").val(),
+                nacimiento: $("input[name=nacimiento]").val(),
+                numero_nomina: $("input[name=numero_nomina]").val(),
+                empresa: $("select[name=empresa]").val(),
+                unidad_negocio: $("select[name=unidad_negocio]").val(),
+                permisos: $("select[name=permisos]").val(),
+                autorizador: $("input[name=autoriza]").val(),
+                area: $("select[name=area]").val(),
+                modulo: $("select[name=modulo]").val()
 
-            if(dia < 10){
-                dia = "0"+dia;
-            }
-
-            if(mes < 10){
-                mes = "0"+mes;
-            }
-
-            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
-        }
-
-        function obtenerhora(){
-            var tiempo = new Date();
-            var horas = tiempo.getHours();
-            var minutos = tiempo.getMinutes();
-            var segundos = tiempo.getSeconds();
-            var dn ="";
-
-            if(horas < 12){
-                dn = "a.m.";
-            }else{
-                dn = "p.m.";
-            }
-
-            if(minutos < 10){
-                minutos = "0"+minutos;
-            }
-
-            if(segundos < 10){
-                segundos = "0"+segundos;
-            }
+            }, (data, status) => {
+                //console.log(data);
+                //console.log(status);
                 
-            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
-
-            setTimeout('obtenerhora()',1000);
-            //console.log("un segundo mas...");
+                // Mostrar notificación de guardado correcto 
+                $('#alert').removeClass('alert-warning');
+                $('#alert').addClass('alert-success');
+                $('#alertDiv').removeClass('hidden');
+                $('#msg1').text('Se ha guardado ');
+                $('#msg2').text('el nuevo usuario.');
+                $('#msg_alert').text('éxito ');
+                $('#guardar').addClass('disabled');
+                $('#guardar').attr('link', '');
+            }, "json");
         }
 
-        function zfill(number, width) {
-            var numberOutput = Math.abs(number); /* Valor absoluto del número */
-            var length = number.toString().length; /* Largo del número */ 
-            var zero = "0"; /* String de cero */  
-            
-            if (width <= length) {
-                if (number < 0) {
-                    return ("-" + numberOutput.toString()); 
-                } else {
-                    return numberOutput.toString(); 
-                }
+        function obtenerModulos(){
+           if ($('#areas').val() == "Intensivo"){
+                $('#h_modulo').removeClass('hidden');
+                $('#modulosSal').removeClass('hidden');
+                $('#sel').removeClass('hidden');
+                $('#a').removeClass('hidden');
+                $('#b').removeClass('hidden');
+                $('#ac').addClass('hidden');
+                $('#bc').addClass('hidden');
+                $('#d').addClass('hidden');
+                $('#e').addClass('hidden');
+                $('#reser').removeClass('hidden');
+                $('#module').attr('required', true);
+            } else if ($('#areas').val() == "Semi-intensivo"){
+                $('#modulosSal').removeClass('hidden');
+                $('#h_modulo').removeClass('hidden');
+                $('#sel').removeClass('hidden');
+                $('#a').addClass('hidden');
+                $('#b').addClass('hidden');
+                $('#ac').removeClass('hidden');
+                $('#bc').removeClass('hidden');
+                $('#d').removeClass('hidden');
+                $('#e').removeClass('hidden');
+                $('#reser').removeClass('hidden');
+                $('#module').attr('required', true);
             } else {
-                if (number < 0) {
-                    return ("-" + (zero.repeat(width - length)) + numberOutput.toString()); 
-                } else {
-                    return ((zero.repeat(width - length)) + numberOutput.toString()); 
-                }
+                $('#h_modulo').addClass('hidden');
+                $('#piscinas').addClass('hidden');
+                $('#modulos').addClass('hidden');
+                $('#module').attr('required', false);
             }
         }
-
     //Termina Javascript
-    .row
-        .col-lg-12
-            h2.page-header 
-                i.fas.fa-user-plus(style="margin-right: 10px;")
-                |   Nuevo usuario
-    .row
-        .col-lg-6.pull-right.text-right
-            span
-                | Usuario: &nbsp;&nbsp;&nbsp;
-            label
-                i.fas.fa-user
-                |  #{user.nombre}
-        .col-lg-6.pull-left.text-left
-            label#fecha(style="margin-right: 10px;")
-            label#hora
-    form#frm(role="form" method="post" action="/usuarios/usuario")
-        .row
-            .col-lg-12
-                h4.page-header
-                    | Datos del usuario
-        .row
-            .col-lg-7
-                .form-group
-                    label | Nombre
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-user-circle
-                        input.form-control(required type="text" name="nombre" placeholder="Nombre" tabindex="1")
-            .col-lg-5
-                .form-group
-                    label | Correo
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-envelope
-                        input.form-control(required type="mail" name="correo" placeholder="Correo" tabindex="2")
-        .row
-            .col-lg-4
-                .form-group
-                    label | Usuario
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-user
-                        input.form-control(required type="text" name="usuario" placeholder="Usuario" tabindex="3")
-            .col-lg-4
-                .form-group
-                    label | Password
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-asterisk
-                        input.form-control(required type="password" name="password" placeholder="Password" tabindex="4")
-            .col-lg-4
-                .form-group
-                    label | Fecha Nacimiento
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-calendar
-                        input#nacimiento.form-control(required type="date" name="nacimiento" tabindex="5")
-        .row
-            .col-lg-3
-                .form-group
-                    label | Número Nómina
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-hashtag
-                        input.form-control(required type="number" step="1" min="0" name="numero_nomina" placeholder="Número nómina" tabindex="6")
-            .col-lg-5
-                .form-group
-                    label | Empresa
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-building
-                        select.form-control(required id="cmbEmpresa" name="empresa" tabindex="7")
-                            option(value="") << Seleccione >>
-                            option(value="Llaos Acuacultura S.A. de C.V.") Llaos Acuacultura S.A. de C.V.
-                            option(value="Renegados") Renegados
-                            option(value="Crap") Crap
-                            option(value="Anclar") Anclar
-            .col-lg-4
-                .form-group
-                    label | Unidad de Negocios
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-asterisk
-                        select.form-control(required id="cmbUnidadNeg" name="unidad_negocio" tabindex="8")
-                            option(value="") << Seleccione >>
-                            each unidad in unidades_negocios
-                                option(value = unidad.id) #{ unidad.nombre }
-        .row
-            .col-lg-5
-                .form-group
-                    label | Permisos
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-building
-                        select.form-control(required id="cmbPermisos" name="permisos" tabindex="9")
-                            option(value="") << Seleccione >>
-                            option(value="usuario") Usuario
-                            option(value="compras") Compras
-                            option(value="almacen_camaron") Almacen Camaron
-                            option(value="admin") Admin
-                            option(value="master") Master
-                            option(value="owner") Owner
-                            option(value="developer") Developer
-                            option(value="externo") Externo
-
-            .col-lg-7(style="margin-top: 25px;")
-                .form-check
-                    input#chkAutorizar(type="checkbox" name="autoriza" tabindex="10")
-                    label(style="margin-left: 15px;")
-                        |   ¿El usuario podrá autorizar requisiciones?
-        .divider
-        .row
-            .col-lg-2.pull-right
-                .form-group
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-save.text-success
-                        input(type="submit" value="Guardar" tabindex="11").btn.btn-success.form-control
+    
+    
+    //  Título
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-user-plus
+                    |   Nuevo usuario
+                div
+                    a#guardar(href="javascript:guardar();").btn.btn-success.Ripple-parent.green-gradient
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Realizar").fas.fa-save
+    
+    // Datos del usuario
+    section.mb-4
+        .card
+            .card-body
+                .d-flex.justify-content-between
+                    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                        .form-group
+                            label | Nombre
+                            .input-group
+                                span.input-group-addon.blue-gradient
+                                    i.fas.fa-user-circle(style="color: #fff;")
+                                input.form-control(required type="text" name="nombre" placeholder="Nombre" tabindex="1")
+                div.d-flex.justify-content-between
+                    .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                        .form-group
+                            label | Usuario
+                            .input-group
+                                span.input-group-addon.blue-gradient
+                                    i.fas.fa-user(style="color: #fff;")
+                                input.form-control(required type="text" name="usuario" placeholder="Usuario" tabindex="2")
+                    .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                        .form-group
+                            label | Password
+                            .input-group
+                                span.input-group-addon.blue-gradient
+                                    i.fas.fa-asterisk(style="color: #fff;")
+                                input.form-control(required type="password" name="password" placeholder="Password" tabindex="3")
+                    
+                .d-flex.justify-content-between
+                    .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                        .form-group
+                            label | Permisos
+                            .input-group
+                                span.input-group-addon.blue-gradient
+                                    i.fas.fa-building(style="color: #fff;")
+                                select.form-control(required id="cmbPermisos" name="permisos" tabindex="4")
+                                    option(value="") << Seleccione >>
+                                    option(value="usuario") Usuario
+                                    option(value="compras") Compras
+                                    option(value="almacen_camaron") Almacen Camaron
+                                    option(value="admin") Admin
+                                    option(value="master") Master
+                                    option(value="owner") Owner
+                                    option(value="developer") Developer
+                                    option(value="externo") Externo
+                    .col-lg-6.col-md-6.col-sm-6.col-xs-6(style="margin-top: 25px;")
+                        .form-check
+                            input#chkAutorizar(type="checkbox" name="autoriza" tabindex="5")
+                            label(style="margin-left: 15px;")
+                                |   ¿El usuario podrá autorizar requisiciones?
+                .d-flex.justify-content-between
+                    .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                        .form-group
+                            label | Fecha Nacimiento
+                            .input-group
+                                span.input-group-addon.blue-gradient
+                                    i.fas.fa-calendar(style="color: #fff;")
+                                input#nacimiento.form-control(required type="date" name="nacimiento" tabindex="6")
+                    .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                        .form-group
+                            label | Correo
+                            .input-group
+                                span.input-group-addon.blue-gradient
+                                    i.fas.fa-envelope(style="color: #fff;")
+                                input.form-control(required type="mail" name="correo" placeholder="Correo" tabindex="7")
+                .d-flex.justify-content-between
+                    .col-lg-4.col-md-4.col-sm-4.col-xs-4
+                        .form-group
+                            label | Número Nómina
+                            .input-group
+                                span.input-group-addon.blue-gradient
+                                    i.fas.fa-hashtag(style="color: #fff;")
+                                input.form-control(required type="number" step="1" min="0" name="numero_nomina" placeholder="Número nómina" tabindex="8")
+                    .col-lg-4.col-md-4.col-sm-4.col-xs-4
+                        .form-group
+                            label | Unidad de Negocios
+                            .input-group
+                                span.input-group-addon.blue-gradient
+                                    i.fas.fa-asterisk(style="color: #fff;")
+                                select.form-control(required id="cmbUnidadNeg" name="unidad_negocio" tabindex="9")
+                                    option(value="") << Seleccione >>
+                                    each unidad in unidades_negocios
+                                        option(value = unidad.id) #{ unidad.nombre }
+                    .col-lg-4.col-md-4.col-sm-4.col-xs-4
+                        .form-group
+                            label | Empresa
+                            .input-group
+                                span.input-group-addon.blue-gradient
+                                    i.fas.fa-building(style="color: #fff;")
+                                select.form-control(required id="cmbEmpresa" name="empresa" tabindex="10")
+                                    option(value="") << Seleccione >>
+                                    option(value="Llaos Acuacultura S.A. de C.V.") Llaos Acuacultura S.A. de C.V.
+                                    option(value="Renegados") Renegados
+                                    option(value="Crap") Crap
+                                    option(value="Anclar") Anclar
+                .d-flex.justify-content-between
+                    .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                        .form-group
+                            label | Área
+                            .input-group
+                                span.input-group-addon.blue-gradient
+                                    i.fas.fa-map-signs.fa-input(style="color: #fff;")
+                                select#areas.form-control(tabindex="2" value="" name="area" onchange="obtenerModulos()")
+                                    option(value=-1) << Seleccione >>
+                                    option(value="Administración - Granja", selected=('Administración - Granja'== '')) Administración - Granja
+                                    option(value="Intensivo", selected=('Intensivo'== '')) Intensivo
+                                    option(value="Semi-intensivo", selected=("Semi-intensivo"== '')) Semi-intensivo
+                                    option(value="Laboratorio", selected=("Laboratorio"== '')) Laboratorio
+                                    option(value="Probioticos", selected=("Probioticos"== '')) Probioticos
+                                    option(value="Taller Mecánico", selected=("Taller Mecánico"== '')) Taller Mecánico
+                                    option(value="Taller Eléctrico", selected=("Tallr Eléctrico"== '')) Taller Eléctrico 
+                                    option(value="Equipo Bombeo", selected=("Equipo Bombeo"== '')) Equipo Bombeo
+                                    option(value="Administración - Matriz", selected=('Administración - Matriz'== '')) Administración - Matriz
+                                    option(value="Planta - Administración", selected=('Planta - Administración'== '')) Planta - Administración
+                                    option(value="Planta - Mantenimiento", selected=('Planta - Mantenimiento'== '')) Planta - Mantenimiento
+                                    option(value="Planta - Proceso", selected=('Planta - Proceso'== '')) Planta - Proceso    
+                    .col-lg-6.col-md-6.col-sm-6.col-xs-6#modulosSal.hidden
+                        .form-group
+                            label | Modulo
+                            .input-group
+                                span.input-group-addon.blue-gradient
+                                    i.fas.fa-input.fa-map-pin(style="color: #fff;")
+                                select#moduloS.form-control(tabindex="3" name="modulo" multiple)
+                                    each modulo in modulos
+                                        option(value=modulo.id) #{modulo.nombre}
+                

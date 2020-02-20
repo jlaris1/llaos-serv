@@ -50,6 +50,11 @@ block contenido
             color: #fff;
         }
 
+        a.btn {
+            border: 0;
+            border-radius: 2px;
+        }
+
     script.
         var articulos = [];
         var articulos_salida = [];
@@ -328,7 +333,7 @@ block contenido
             //  Validaciones
             if($('#solicita').val() == -1){
                 $('#alert').addClass('alert-warning');
-                $('#alert').removeClass('hidden');
+                $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Es necesario selecionar ');
                 $('#msg2').text('para poder guardar la orden de salida.');
                 $('#msg_alert').text('un Solicitante ');
@@ -339,7 +344,7 @@ block contenido
 
             if($('#areas').val() == -1){
                 $('#alert').addClass('alert-warning');
-                $('#alert').removeClass('hidden');
+                $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Es necesario selecionar ');
                 $('#msg2').text('para poder guardar la orden de salida.');
                 $('#msg_alert').text('un Área ');
@@ -352,7 +357,7 @@ block contenido
             } else {
                 if($('#moduloS').val() == -1){
                     $('#alert').addClass('alert-warning');
-                    $('#alert').removeClass('hidden');
+                    $('#alertDiv').removeClass('hidden');
                     $('#msg1').text('Es necesario selecionar ');
                     $('#msg2').text('para poder guardar la orden de salida.');
                     $('#msg_alert').text('un Módulo ');
@@ -363,7 +368,7 @@ block contenido
 
                 if($('#estS').val() == -1){
                     $('#alert').addClass('alert-warning');
-                    $('#alert').removeClass('hidden');
+                    $('#alertDiv').removeClass('hidden');
                     $('#msg1').text('Es necesario selecionar ');
                     $('#msg2').text('para poder guardar la orden de salida.');
                     $('#msg_alert').text('una Piscina ');
@@ -375,7 +380,7 @@ block contenido
             
             if(articulos_salida.length < 1){
                 $('#alert').addClass('alert-warning');
-                $('#alert').removeClass('hidden');
+                $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Es necesario selecionar ');
                 $('#msg2').text('para poder guardar la orden de salida.');
                 $('#msg_alert').text('por lo menos un artículo ');
@@ -409,7 +414,7 @@ block contenido
                 // Mostrar notificación de guardado correcto 
                 $('#alert').removeClass('alert-warning');
                 $('#alert').addClass('alert-success');
-                $('#alert').removeClass('hidden');
+                $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Se ha guardado con ');
                 $('#msg2').text('la orden de salida.');
                 $('#msg_alert').text('éxito ');
@@ -439,7 +444,7 @@ block contenido
                 // Mostrar notificación de guardado correcto 
                 $('#alert').removeClass('alert-warning');
                 $('#alert').addClass('alert-success');
-                $('#alert').removeClass('hidden');
+                $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Se imprimió ');
                 $('#msg2').text('la orden de salida.');
                 $('#msg_alert').text('correctamente ');

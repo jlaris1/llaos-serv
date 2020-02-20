@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
     Usuarios = mongoose.model('Usuarios');
     UnidadesNegocios = mongoose.model('UnidadesNegocio');
+    Modulos = mongoose.model('Modulos');
     
 module.exports = {//HAcen falta try-catch a los metodos
     //Método para obtener todos los usuarios
@@ -53,31 +54,38 @@ module.exports = {//HAcen falta try-catch a los metodos
                         if(error){
                             console.log(error);
                         } else {
-                            respuesta.render("Sistemas/Usuarios/Usuario",{
-                                user: solicitud.session.user,
-                                titulo: "Usuarios",
-                                criterios: [
-                                    {
-                                        val: "",
-                                        name: ""
-                                    }
-                                ],
-                                piscinas: [
-                                    {
-                                        id: 0,
-                                        nombre: ""
-                                    }
-                                ],
-                                charoleros: [
-                                    {
-                                        id: 0,
-                                        nombre: ""
-                                    }   
-                                ],
-                                ruta: "usuarios",
-                                usuarios: usuarios,
-                                unidades_negocios: unidades
-                            });
+                            Modulos.find({"codigo": {$ne: "NLL"}}, (error, modulos) => {
+                                if(error) {
+                                    console.log(error);
+                                } else {
+                                    respuesta.render("Sistemas/Usuarios/Usuario",{
+                                        user: solicitud.session.user,
+                                        titulo: "Usuarios",
+                                        criterios: [
+                                            {
+                                                val: "",
+                                                name: ""
+                                            }
+                                        ],
+                                        piscinas: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }
+                                        ],
+                                        charoleros: [
+                                            {
+                                                id: 0,
+                                                nombre: ""
+                                            }   
+                                        ],
+                                        ruta: "usuarios",
+                                        usuarios: usuarios,
+                                        modulos: modulos,
+                                        unidades_negocios: unidades
+                                    });
+                                }
+                            }).sort({ nombre : 1});
                         }
                     });
                 }
@@ -101,34 +109,41 @@ module.exports = {//HAcen falta try-catch a los metodos
                                 if(error){
                                     console.log(error);
                                 } else {
-                                    respuesta.render("Sistemas/Usuarios/editar",
-                                {
-                                    user: solicitud.session.user,
-                                    usr: usuario,
-                                    titulo: "Usuarios",
-                                    criterios: [
-                                        {
-                                            val: "",
-                                            name: ""
+                                    Modulos.find({"codigo": {$ne: "NLL"}}, (error, modulos) => {
+                                        if(error) {
+                                            console.log(error);
+                                        } else {
+                                            respuesta.render("Sistemas/Usuarios/editar",
+                                                {
+                                                    user: solicitud.session.user,
+                                                    usr: usuario,
+                                                    titulo: "Usuarios",
+                                                    criterios: [
+                                                        {
+                                                            val: "",
+                                                            name: ""
+                                                        }
+                                                    ],
+                                                    piscinas: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }
+                                                    ],
+                                                    charoleros: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }   
+                                                    ],
+                                                    ruta: "usuarios",
+                                                    usuarios: usuarios,
+                                                    modulos: modulos,
+                                                    unidades_negocios: unidades
+                                                }
+                                            );
                                         }
-                                    ],
-                                    piscinas: [
-                                        {
-                                            id: 0,
-                                            nombre: ""
-                                        }
-                                    ],
-                                    charoleros: [
-                                        {
-                                            id: 0,
-                                            nombre: ""
-                                        }   
-                                    ],
-                                    ruta: "usuarios",
-                                    usuarios: usuarios,
-                                    unidades_negocios: unidades
-                                }
-                            );
+                                    }).sort({ nombre : 1});
                                 }
                             });
                         }
@@ -138,69 +153,19 @@ module.exports = {//HAcen falta try-catch a los metodos
         };
     },
     // Guardar usuario en bd
-    guardarUsuario: function(solicitud, respuesta){
+    guardar: function(solicitud, respuesta){
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		}else{
-            var autorizador = '';
-
-            if (solicitud.body.autoriza == 'on'){
-                autorizador = true;
-            } else {
-                autorizador = false;
-            }
-
-            var data = {
-                nombre: solicitud.body.nombre,
-                correo: solicitud.body.correo,
-                usuario: solicitud.body.usuario,
-                password: solicitud.body.password,
-                nacimiento: solicitud.body.nacimiento,
-                numero_nomina: solicitud.body.numero_nomina,
-                empresa: solicitud.body.empresa,
-                unidad_negocio: solicitud.body.unidad_negocio,
-                permisos: solicitud.body.permisos,
-                autorizador: autorizador
-            }
-
-            var usuario = new Usuarios(data);
+            var usuario = new Usuarios(solicitud.body);
 
             usuario.save(function(error){
                 if(error){
                     console.log(error);
                 }else{
-                    Usuarios.find( function(error, usuarios){
-                        if(error){
-        
-                        } else {
-                            respuesta.render("Sistemas/Usuarios/usuarios",
-                                { 
-                                    user: solicitud.session.user,
-                                    usuarios: usuarios,
-                                    titulo: "Usuarios",
-                                    criterios: [
-                                        {
-                                            val: "",
-                                            name: ""
-                                        }
-                                    ],
-                                    piscinas: [
-                                        {
-                                            id: 0,
-                                            nombre: ""
-                                        }
-                                    ],
-                                    charoleros: [
-                                        {
-                                            id: 0,
-                                            nombre: ""
-                                        }   
-                                    ],
-                                    ruta: "usuarios"
-                                }
-                            );
-                        }
-                    });	
+                    respuesta.json({
+                        estatus: 'Guardado'
+                    });
                 }
             });
         };
@@ -210,63 +175,14 @@ module.exports = {//HAcen falta try-catch a los metodos
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		}else{
-            var autorizador;
+            console.log(solicitud.body);
 
-            if(solicitud.body.autoriza){
-                autorizador = true;
-            } else {
-                autorizador = false;
-            }
-
-
-            var data = {
-                nombre: solicitud.body.nombre,
-                correo: solicitud.body.correo,
-                usuario: solicitud.body.usuario,
-                password: solicitud.body.password,
-                nacimiento: solicitud.body.nacimiento,
-                numero_nomina: solicitud.body.numero_nomina,
-                empresa: solicitud.body.empresa,
-                unidad_negocio: solicitud.body.unidad_negocio,
-                permisos: solicitud.body.permisos,
-                autorizador: autorizador
-            }
-
-            Usuarios.updateOne({"_id": solicitud.params.id}, data, function(error){
+            Usuarios.updateOne({"_id": solicitud.params.id}, solicitud.body, function(error){
                 if(error){
                     console.log(error);
                 } else {
-                    Usuarios.find( function(error, usuarios){
-                        if(error){
-                            console.log(error);
-                        } else {
-                            respuesta.render("Sistemas/Usuarios/Usuarios",
-                                {
-                                    user: solicitud.session.user,
-                                    usuarios: usuarios,
-                                    titulo: "Usuarios",
-                                    criterios: [
-                                        {
-                                            val: "",
-                                            name: ""
-                                        }
-                                    ],
-                                    piscinas: [
-                                        {
-                                            id: 0,
-                                            nombre: ""
-                                        }
-                                    ],
-                                    charoleros: [
-                                        {
-                                            id: 0,
-                                            nombre: ""
-                                        }   
-                                    ],
-                                    ruta: "usuarios"
-                                }
-                            );
-                        }
+                    respuesta.json({
+                        estatus: 'Actualizado'
                     });
                 }
             });
@@ -281,38 +197,7 @@ module.exports = {//HAcen falta try-catch a los metodos
                 if(error){
                     console.log(error);
                 } else {
-                    Usuarios.find( function(error, usuarios){
-                        if(error){
-                            console.log(error);
-                        } else {
-                            respuesta.render("Sistemas/Usuarios/Usuarios",
-                                {
-                                    user: solicitud.session.user,
-                                    usuarios: usuarios,
-                                    titulo: "Usuarios",
-                                    criterios: [
-                                        {
-                                            val: "",
-                                            name: ""
-                                        }
-                                    ],
-                                    piscinas: [
-                                        {
-                                            id: 0,
-                                            nombre: ""
-                                        }
-                                    ],
-                                    charoleros: [
-                                        {
-                                            id: 0,
-                                            nombre: ""
-                                        }   
-                                    ],
-                                    ruta: "usuarios"
-                                }
-                            );
-                        }
-                    });
+                    respuesta.redirect("/usuarios");
                 }
             });
         };

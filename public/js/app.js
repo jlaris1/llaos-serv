@@ -525,6 +525,61 @@ $(document).ready( function() {
                     $('#spanMenuServicios').addClass('fa-angle-left');
                 }        
             });
+
+            /******************** CATALOGOS */
+                $('#menuCatalogos').click( function(){
+                    if ($('#subMenuCatalogos').hasClass('hidden')) {
+                        $('#subMenuCatalogos').removeClass('hidden');
+                        $('#spanMenuCatalogos').removeClass('fa-angle-left');
+                        $('#spanMenuCatalogos').addClass('fa-angle-down');
+                    }else{
+                        $('#subMenuCatalogos').addClass('hidden');
+                        $('#spanMenuCatalogos').removeClass('fa-angle-down');
+                        $('#spanMenuCatalogos').addClass('fa-angle-left');
+                    }        
+                });
+
+                /***************** ÁREAS */
+                $('#menuAreas').click( function(){
+                    if ($('#subMenuAreas').hasClass('hidden')) {
+                        $('#subMenuAreas').removeClass('hidden');
+                        $('#spanMenuAreas').removeClass('fa-angle-left');
+                        $('#spanMenuAreas').addClass('fa-angle-down');
+                    }else{
+                        $('#subMenuAreas').addClass('hidden');
+                        $('#spanMenuAreas').removeClass('fa-angle-down');
+                        $('#spanMenuAreas').addClass('fa-angle-left');
+                    }        
+                });
+
+                /***************** CUENTAS */
+                $('#menuCuentas').click( function(){
+                    if ($('#subMenuCuentas').hasClass('hidden')) {
+                        $('#subMenuCuentas').removeClass('hidden');
+                        $('#spanMenuCuentas').removeClass('fa-angle-left');
+                        $('#spanMenuCuentas').addClass('fa-angle-down');
+                    }else{
+                        $('#subMenuCuentas').addClass('hidden');
+                        $('#spanMenuCuentas').removeClass('fa-angle-down');
+                        $('#spanMenuCuentas').addClass('fa-angle-left');
+                    }        
+                });
+
+                /***************** CUENTAS */
+                $('#menuSubCuentas').click( function(){
+                    if ($('#subMenuSubCuentas').hasClass('hidden')) {
+                        $('#subMenuSubCuentas').removeClass('hidden');
+                        $('#spanmenuSubCuentas').removeClass('fa-angle-left');
+                        $('#spanmenuSubCuentas').addClass('fa-angle-down');
+                    }else{
+                        $('#subMenuSubCuentas').addClass('hidden');
+                        $('#spanMenuSubCuentas').removeClass('fa-angle-down');
+                        $('#spanMenuSubCuentas').addClass('fa-angle-left');
+                    }        
+                });
+
+
+            /*******************************/
 });
 
 function obtenerfecha(){
@@ -993,5 +1048,5 @@ function reports(){
 
 // CERRAR ALERT
 function cerrarAlert(){
-    $('#alert').addClass('hidden');
+    $('#alertDiv').addClass('hidden');
 }

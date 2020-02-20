@@ -1350,6 +1350,9 @@ module.exports = {
                                                 .text(fmon.FormatMoney(true,parseFloat(pU)), 454, y, {align: 'center', width: 80})
                                                 .text(fmon.FormatMoney(true,parseFloat(art.precio_unitario)), 529, y, {align: 'center', width: 80})
                                                 
+                                                // Revisar iva de los artículos
+                                                //console.log("Articulo: " + art.producto + "codigo: " + art.codigo + " iva: " + art.iva);
+
                                                 iva += parseFloat(art.iva); 
                                             
                                             });

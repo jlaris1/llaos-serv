@@ -25,7 +25,7 @@ block contenido
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Reportes").fas.fa-file-pdf
     section.mb-4
         .card
-            .card-body.d-flex.justify-content-between
+            .card-body
                 .table-responsive 
                     table#products.table.table-striped.table-hover
                         thead
@@ -42,11 +42,11 @@ block contenido
                         tbody
                             each p in productos
                                 tr(scope="row")
-                                    td.d-flex.justify-content-between
-                                        a.btn.btn-info(href="productos/producto/editar/#{p.id}", data-toggle="tooltip", data-placement="top", title="Editar" style="margin-right: 5px;")
-                                            i.fas.fa-pencil-alt
-                                        a.btn.btn-danger(href="productos/producto/eliminar/#{p.id}",data-toggle="tooltip", data-placement="top", title="Eliminar")
-                                            i.fas.fa-times-circle
+                                    td.d-flex
+                                        a.btn.btn-info.btn-small(href="productos/producto/editar/#{p.id}", data-toggle="tooltip", data-placement="top", title="Editar" style="margin-right: 5px;")
+                                            i.fas.fa-pencil-alt.fa-2x
+                                        a.btn.btn-danger.btn-small(href="productos/producto/eliminar/#{p.id}",data-toggle="tooltip", data-placement="top", title="Eliminar")
+                                            i.fas.fa-times-circle.fa-2x
                                     td.text-center #{ p.codigo }
                                     td #{ p.unidad }
                                     td #{ p.nombre }

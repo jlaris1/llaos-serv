@@ -79,6 +79,9 @@ module.exports = function(app){
     var unidad = require('../routes/unidades.js')
     var unidadRouter = express.Router();
 
+    var catalogos = require('../routes/catalogos.js');
+    var catalogosRouter = express.Router();
+
     //Pruebas
     app.get('/pruebita', pruebita.prueba); 
     
@@ -98,8 +101,8 @@ module.exports = function(app){
     usuariosRouter.get('/', usuarios.todos);
     usuariosRouter.get('/new/usuario', usuarios.nuevo);
     usuariosRouter.get('/editar/usuario/:id', usuarios.editar);
-    usuariosRouter.post('/usuario', usuarios.guardarUsuario);//////
-    usuariosRouter.put('/editar/usuario/:id', usuarios.actualizar);
+    usuariosRouter.post('/usuario', usuarios.guardar);
+    usuariosRouter.post('/editar/usuario/:id', usuarios.actualizar);
     usuariosRouter.get('/eliminar/usaurio/:id', usuarios.eliminar);
     //usuariosRouter.post('/report/pdf', usuarios.pdf);
     //usuariosRouter.post('/report/xls', usuarios.xls);
@@ -438,5 +441,27 @@ module.exports = function(app){
     unidadRouter.get('/servicios/new', unidad.newS);
     unidadRouter.post('/servicios/add', unidad.addS);
     //unidadRouter.get('/servicios/view/:id', unidad.viewS);
+
+    // Catalogos
+    app.use('/catalogos', catalogosRouter);
+    catalogosRouter.get('/areas/all', catalogos.allAreas);
+    catalogosRouter.get('/areas/new', catalogos.newAreas);
+    catalogosRouter.get('/areas/edit', catalogos.allAreas);
+    catalogosRouter.post('/areas/', catalogos.saveAreas);
+    catalogosRouter.post('/areas/update/:id', catalogos.updateAreas);
+    catalogosRouter.post('/areas/delete/:id', catalogos.deleteAreas);
+
+    catalogosRouter.get('/cuentas/all', catalogos.allCuentas);
+    catalogosRouter.get('/cuentas/new', catalogos.newCuentas);
+    catalogosRouter.get('/cuentas/edit', catalogos.allCuentas);
+    catalogosRouter.post('/cuentas/', catalogos.saveCuentas);
+    catalogosRouter.post('/cuentas/update/:id', catalogos.updateCuentas);
+
+    catalogosRouter.get('/subcuentas/all', catalogos.allSubCuentas);
+    catalogosRouter.get('/subcuentas/new', catalogos.newSubCuentas);
+    catalogosRouter.get('/subcuentas/edit', catalogos.allSubCuentas);
+    catalogosRouter.post('/subcuentas/', catalogos.saveSubCuentas);
+    catalogosRouter.post('/subcuentas/update/:id', catalogos.updateSubCuentas);
+
 
 } 

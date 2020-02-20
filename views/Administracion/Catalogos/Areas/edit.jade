@@ -1,0 +1,88 @@
+extends ../../../layouts/layout.jade
+block contenido
+    style.
+        a.btn-success {
+            border: 0;
+            border-radius: 2px;
+        }
+    script.
+        var autorizador = false;
+        
+        $(document).ready( function(){     
+            $('#spanMenuAdministracion').removeClass('fa-angle-left');
+            $('#spanMenuAdministracion').addClass('fa-angle-down');
+            $('#subMenuAdministracion').removeClass('hidden');     
+            $('#spanMenuCatalogos').removeClass('fa-angle-left');
+            $('#spanMenuCatalogos').addClass('fa-angle-down');
+            $('#subMenuCatalogos').removeClass('hidden');
+            $('#subMenuAreas').removeClass('hidden');
+            $('#spanMenuAreas').removeClass('fa-angle-left');
+            $('#spanMenuAreas').addClass('fa-angle-down');         
+
+        });
+
+        function guardar(){
+            $.post( "/usuarios/usuario", {
+                nombre: $("input[name=nombre]").val(),
+                unidad_negocio: $("select[name=unidad_negocio]").val(),
+                codigo: $("select[name=codigo]").val(),
+            }, (data, status) => {
+                //console.log(data);
+                //console.log(status);
+                
+                // Mostrar notificación de guardado correcto 
+                $('#alert').removeClass('alert-warning');
+                $('#alert').addClass('alert-success');
+                $('#alertDiv').removeClass('hidden');
+                $('#msg1').text('Se ha guardado ');
+                $('#msg2').text('el nuevo usuario.');
+                $('#msg_alert').text('éxito ');
+                $('#guardar').addClass('disabled');
+                $('#guardar').attr('link', '');
+            }, "json");
+        }
+
+    //Termina Javascript
+    
+    
+    //  Título
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-map-signs
+                    |   Editar área
+                div
+                    a#guardar(href="javascript:guardar();").btn.btn-success.Ripple-parent.green-gradient
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Realizar").fas.fa-save
+    
+    // Datos del catalogo
+    section.mb-4
+        .card
+            .card-body
+                .d-flex.justify-content-between
+                    .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                        .form-group
+                            label | Nombre
+                            .input-group
+                                span.input-group-addon.blue-gradient
+                                    i.fas.fa-user-circle(style="color: #fff;")
+                                input.form-control(required type="text" name="nombre" value="#{area.nombre}"placeholder="Nombre" tabindex="1")
+                .d-flex.justify-content-between
+                    .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                        .form-group
+                            label | Codigo
+                            .input-group
+                                span.input-group-addon.blue-gradient
+                                    i.fas.fa-hashtag(style="color: #fff;")
+                                input.form-control(required type="text" name="codigo" value="#{area.codigo}" placeholder="Código" tabindex="2")
+                    .col-lg-6.col-md-6.col-sm-6.col-xs-6
+                        .form-group
+                            label | Unidad de Negocios
+                            .input-group
+                                span.input-group-addon.blue-gradient
+                                    i.fas.fa-asterisk(style="color: #fff;")
+                                select.form-control(required id="cmbUnidadNeg" name="unidad_negocio" tabindex="3")
+                                    option(value="") << Seleccione >>
+                                    each unidad in unidades_negocios
+                                        option(value = unidad.id, selected=(unidad.id == area.unidad_negocio)) #{ unidad.nombre }

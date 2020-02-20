@@ -92,7 +92,7 @@
 
 .green-gradient {
     background: linear-gradient(40deg,
-                    #46B746, #1c491c
+                    #DCE35B, #45B649
                 )!important;
 }
 
@@ -104,3 +104,7 @@
     bottom:0; 
     right:0; 
 } 
+
+.btn-small {
+    font-size: 0.7rem;
+}

@@ -1,0 +1,54 @@
+extends ../../../layouts/layout.jade
+block contenido
+    style.
+    script.
+        $(document).ready( function() {
+            $('#areas').dataTable();
+
+            $('#spanMenuAdministracion').removeClass('fa-angle-left');
+            $('#spanMenuAdministracion').addClass('fa-angle-down');
+            $('#subMenuAdministracion').removeClass('hidden');     
+            $('#spanMenuCatalogos').removeClass('fa-angle-left');
+            $('#spanMenuCatalogos').addClass('fa-angle-down');
+            $('#subMenuCatalogos').removeClass('hidden');
+            $('#subMenuAreas').removeClass('hidden');
+            $('#spanMenuAreas').removeClass('fa-angle-left');
+            $('#spanMenuAreas').addClass('fa-angle-down');  
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+        //Termina Javascript
+    
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-map-signs
+                    |   Áreas
+                div
+                    a(href="/catalogos/areas/new" style="margin-right: 5px;").btn.btn-success
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nuevo producto").fas.fa-plus-circle
+                    a(href="#" disabled="true").btn.btn-danger
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Reportes").fas.fa-file-pdf
+    section.mb-4
+        .card
+            .card-body
+                .table-responsive
+                    table#areas.table.table-striped.table-hover
+                        thead
+                            th.text-center
+                                i(style="color: gray;").fas.fa-cog
+                            th.text-center Código
+                            th Nombre
+                            th Unidad de Negocio
+                        tbody
+                            each area in areas
+                                tr(scope="row")
+                                    td.d-flex
+                                        a.btn.btn-info.btn-small(href="catalogos/areas/edit/#{area.id}", data-toggle="tooltip", data-placement="top", title="Editar" style="margin-right: 5px;")
+                                            i.fas.fa-pencil-alt.fa-2x
+                                        a.btn.btn-danger.btn-small(href="catalogos/areas/delete/#{area.id}",data-toggle="tooltip", data-placement="top", title="Eliminar")
+                                            i.fas.fa-times-circle.fa-2x
+                                    td.text-center #{ area.codigo }
+                                    td #{ area.nombre }
+                                    td 
+                                        strong #{ area.unidad_negocio.nombre }

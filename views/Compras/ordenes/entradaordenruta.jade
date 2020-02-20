@@ -40,6 +40,11 @@ block contenido
             background-color: #dd7206; 
             border: 2px;
         }
+
+        a.btn {
+            border: 0;
+            border-radius: 2px;
+        }
     script.
         var articulos = [];
         var articulos_fuera = [];
@@ -208,7 +213,7 @@ block contenido
                 // Mostrar notificación de guardado correcto 
                 $('#alert').removeClass('alert-warning');
                 $('#alert').addClass('alert-success');
-                $('#alert').removeClass('hidden');
+                $('#alerDiv').removeClass('hidden');
                 $('#msg1').text('Se realizado con ');
                 $('#msg2').text('la entrada a inventario.');
                 $('#msg_alert').text('éxito ');
@@ -337,11 +342,8 @@ block contenido
                             strong
                                 span#span_solicita #{oRuta.estatus}
     
-    // Proceso para Eliminar
+    // Input id Orden Ruta
     input.hidden#orden_id(name="ordenId" type="text" value="#{oRuta.id}")
-    //input.hidden#return(name="return")
-    //input.hidden#articulos_fuera.hidden(name="articulos_fuera")
-    //input.hidden#articulos(name="articulos")
 
     // Datos para cambio en cantidad
     section#editar_cantidad.mb-4.hidden
