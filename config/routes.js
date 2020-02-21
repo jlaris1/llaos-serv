@@ -386,6 +386,7 @@ module.exports = function(app){
     //estanqueRouter.post('/report/pdf', estanque.pdf);
     //estanqueRouter.post('/report/xls', estanque.xls);
     estanqueRouter.get('/indicators', estanque.indicators);
+    
 
     // Parametros
     app.use('/parametros', parametrosRouter);
@@ -399,6 +400,7 @@ module.exports = function(app){
     parametrosRouter.post('/next', parametros.next);
     parametrosRouter.post('/report/pdf', parametros.pdf);
     parametrosRouter.post('/report/xls', parametros.xls);
+    parametrosRouter.post('/piscinas', parametros.findPiscinas)
     
     // Laboratorios
     app.use('/laboratoriolarvas', laboratoriosRouter);

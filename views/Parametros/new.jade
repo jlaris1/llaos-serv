@@ -10,188 +10,161 @@ block contenido
             background-color: black;
             color: #fff;
         } 
+
+        li {
+            list-style-type: none;
+        }
     script.
         $(document).ready( function(){
-            obtenerfecha();
-            obtenerhora(); 
-
             $('#subMenuParametros').removeClass('hidden');
             $('#spanMenuParametros').removeClass('fa-angle-left');
             $('#spanMenuParametros').addClass('fa-angle-down');
 
-            $('#modulo').on('change', function(){
-                document.frm2.submit();
-            });
-
-            $('#estanques').on('change', function(){
-                $('#est').val(this.value);
-
-                var select=document.getElementById("estanques");
- 
-                // recorremos todos los valores del select
-                for(var i=1; i<select.length; i++){
-                    if(select.options[i].value == this.value){
-                        // seleccionamos el valor que coincide
-                        $("#sig_est").val(select.options[i+1].value);
-                    }
-                }
-            });
-
-            $('#fechaI').on('change', function(){ $('#fec').val(this.value); });
-            $('#tiempo').on('change', function(){ $('#tiem').val(this.value); });
+            mostrarPiscinas();
         });
 
-        function obtenerfecha(){
-            var fecha = new Date()
-            var dia = fecha.getDate();
-            var mes = fecha.getMonth()+1;
-            var anio = fecha.getFullYear();
 
-            if(dia < 10){
-                dia = "0"+dia;
-            }
+        // /parametros/add
+        // /parametros/next
 
-            if(mes < 10){
-                mes = "0"+mes;
-            }
+        function mostrarPiscinas() {
+            var listaModulos = $("#modulos").val().split(",");
 
-            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+            console.log(listaModulos);
+
+            $.post( "/parametros/piscinas", {
+                modulos: listaModulos
+            }, (data) => {
+                if(data.piscinas.length > 0){
+
+                    $('#num_piscinas').text(data.piscinas.length);
+                    
+                    for(var i = 0; i < data.piscinas.length; i ++){
+                        $("#lista_parametros")
+                        .append('<li id="pis'+data.piscinas[i]._id+'"> ' +
+                            '<div class="d-flex">' +
+                                '<div class="col-lg-2 col-md-2 col-xs-12">' +
+                                    '<div class="form-group">' +
+                                        '<label> Temperatura °C </label>' +
+                                        '<input class="form-control" type="text" name="temperatura" placeholder="Temperatura">' + 
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="col-lg-2 col-md-2 col-xs-12">' +
+                                    '<div class="form-group">' +
+                                        '<label> Oxigeno mg/L </label>' +
+                                        '<input class="form-control" type="text" name="Oxigeno" placeholder="Oxigeno">' + 
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="col-lg-2 col-md-2 col-xs-12">' +
+                                    '<div class="form-group">' +
+                                        '<label> Nivel de agua </label>' +
+                                        '<input class="form-control" type="text" name="Nivel de agua" placeholder="Oxigeno">' + 
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="col-lg-2 col-md-2 col-xs-12">' +
+                                    '<div class="form-group">' +
+                                        '<label> Salinidad </label>' +
+                                        '<input class="form-control" type="text" name="Salinidad" placeholder="Salinidad">' + 
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="col-lg-2 col-md-2 col-xs-12">' +
+                                    '<div class="form-group">' +
+                                        '<label> pH </label>' +
+                                        '<input class="form-control" type="text" name="ph" placeholder="pH">' + 
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="col-lg-2 col-md-2 col-xs-12">' +
+                                    '<div class="form-group">' +
+                                        '<label> Tubidez </label>' +
+                                        '<input class="form-control" type="text" name="Tubidez" placeholder="Tubidez">' + 
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</li>');
+                    }
+                }
+
+                if(data.modulos.length > 0 ) {
+                    $("#span_modulos").text("");
+
+                    if(data.modulos.length = 1){
+                        $("#span_modulos").text(data.modulos[0]);
+                    } else {
+                        for(let i = 0; i <= data.modulos.length -1; i++){
+                            $("#span_modulos").text($("#span_modulos").text() + ", " +data.modulos[i]);
+                        }
+                    }
+                }
+
+            }, "json");
+            /**
+                                            '<div class="form-group">' +
+                                    '<label>'+piscinas[i].codigo+'</label>' +
+                                '</div>' +
+            */
+
         }
 
-        function obtenerhora(){
-            var tiempo = new Date();
-            var horas = tiempo.getHours();
-            var minutos = tiempo.getMinutes();
-            var segundos = tiempo.getSeconds();
-            var dn ="";
+    // Inputs funcionamiento
+    input#modulos(value="#{user.modulo}")
 
-            if(horas < 12){
-                dn = "a.m.";
-            }else{
-                dn = "p.m.";
-            }
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-eye-dropper
+                    |   Registro de parámetros
+                div
+                    a#guardar(href="javascript:guardar();").btn.btn-success.Ripple-parent.green-gradient
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Realizar").fas.fa-save
+    // Detalles
+    section.mb-4
+        .card
+            .card-body
+                .row
+                    .col-md-6.col-lg-6.col-xs-6.text-left
+                        h4.h4-responsive
+                            small Módulo(s): 
+                            br
+                            strong
+                                span#span_modulo.blue-text ####
+                            //a(data-toggle="modal" href="#almacenModal" style="margin-left: 10px;").btn.btn-primary.btn-small.blue-gradient
+                                i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Seleccionar almacén").fas.fa-2x.fa-sync-alt
+                        h5.h5-responsive
+                            small Número de piscinas: 
+                            br
+                            strong
+                                span#num_piscinas ###
+                    .col-md-6.col-lg-6.col-xs-6.text-right
+                        //h4.h4-responsive
+                            small Salida No.
+                            br
+                            strong
+                                span.blue-text ##{numeroOrden}
+                        //h5.h5-responsive
+                            small Solicita.
+                            br
+                            strong
+                                span#span_solicita #######
+                        //h5.h5-responsive
+                            small Área.
+                            br
+                            strong
+                                span#span_area #######
+                        //h5.h5-responsive#h_modulo.hidden
+                            small Módulo.
+                            br
+                            strong
+                                span#span_modulo #######
+                        //h5.h5-responsive#h_piscina.hidden
+                            small Piscina.
+                            br
+                            strong
+                                span#span_piscina #######
 
-            if(minutos < 10){
-                minutos = "0"+minutos;
-            }
-
-            if(segundos < 10){
-                segundos = "0"+segundos;
-            }
-                
-            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
-
-            setTimeout('obtenerhora()',1000);
-            //console.log("un segundo mas...");
-        }
-
-        function submit() {
-            document.frm3.submit();
-        }
-    .row(style="margin-bottom: -5px;")
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12
-            h2 
-                i.fas.fa-eye-dropper(style="margin-right: 10px;")
-                |   Registro de Parámetros
-    .divider
-    .row
-        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-right.text-right
-            span
-                | Usuario: 
-            label
-                i.fas.fa-user
-                |  #{user.nombre}
-        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-left.text-left
-            label#fecha(style="margin-right: 10px;")
-            label#hora
-    .divider
-    .row
-        form(role="form" name="frm2" method="post" action="/parametros/find")
-            .col-lg-3
-                .form-group
-                    label | Modulo
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-water
-                        select#modulo.form-control(required name="modulo" tabindex="1")
-                            option(value="") << Seleccione >>
-                            each mod in modulos
-                                option(value="#{mod.id}", selected=(mod.id == modulo)) #{ mod.nombre}
-            .col-lg-3
-                .form-group
-                    label | Piscina
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-water
-                        select#estanques.form-control(name="estanque" tabindex="2")
-                            option(value="") << Seleccione >>
-                            each est in estanques
-                                option(value="#{est.id}", selected=(est.id == estanque.id)) #{ est.codigo}
-            .col-lg-3
-                .form-group
-                    label | Fecha
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-calendar-alt
-                        input#fechaI.form-control(type="date" name="fecha" tabindex="3")
-            .col-lg-3
-                .form-group
-                    label | Tiempo
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-clock
-                        select#tiempo.form-control(name="tiempo" tabindex="4")
-                            option(value="") << Seleccione >>
-                            option(value="AM") AM
-                            option(value="PM") PM
-    form#frm(role="form" method="post" action="/parametros/add")
-        input.hidden(name="modu" value="#{modulo}")
-        input.hidden#fec(required type="date" name="fecha")
-        input#est.hidden(required name="estanque" value="#{estanque.id}")
-        input#tiem.hidden(required name="tiempo")
-        .row
-            .col-lg-12
-                .panel.panel-primary
-                    .panel-heading
-                        i.fas.fa-vial
-                    .panel-body
-                        .col-lg-1.col-md-1.col-sm-1.col-sm-offset-0.col-md-offset-0.col-lg-offset-0
-                        .col-lg-2.col-md-2.col-xs-12
-                            .form-group
-                                label | Temperatura (°C)
-                                input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="5")
-                        .col-lg-2.col-md-2.col-xs-12
-                            .form-group
-                                label | Oxigeno (mg/L)
-                                input.form-control(type="text" value="#{parametro.oxigeno}" name="oxigeno" placeholder="# Necro" tabindex="6")
-                        .col-lg-2.col-md-2.col-xs-12
-                            .form-group
-                                label | Nivel de Agua
-                                input.form-control(type="text" value="#{parametro.nivel_agua}" name="nivel_agua" placeholder="# Necro" tabindex="7")
-                        .col-lg-2.col-md-2.col-xs-12
-                            .form-group
-                                label | Salinidad
-                                input.form-control(type="text" value="#{parametro.salinidad}" name="salinidad" placeholder="# Necro" tabindex="8")
-                        .col-lg-2.col-md-2.col-xs-12
-                            .form-group
-                                label | pH
-                                input.form-control(type="text" value="#{parametro.ph}" name="ph" placeholder="# Necro" tabindex="9")
-                        
-        .divider
-        .row  
-            .col-lg-2.col-md-4.col-xs-6.pull-right( style="margin-left: 15px;")
-                .form-group
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-plus-circle.text-success
-                        input(type="submit" value="Agregar" tabindex="8").btn.btn-success.form-control
-    form(action="/parametros/next" method="post" name="frm3")
-        input.hidden(name="mod" value="#{modulo}")
-        input#sig_est.hidden(name="estanque_siguiente" value="#{siguiente_estanque.id}")  
-        .col-lg-2.col-md-4.col-xs-6.pull-right(style="margin-top: -49px; margin-right: 170px;")
-            .form-group
-                .input-group
-                    span.input-group-addon
-                        i.fas.fa-arrow-circle-right.text-primary
-                    a(tabindex="9" style="color: white;" onclick="submit()").btn.btn-primary.form-control
-                        | Siguiente Piscina 
+    section.mb-4
+        .panel.panel-primary
+            .panel-heading
+                i.fas.fa-vial
+            .panel-body
+                ul#lista_parametros

@@ -147,54 +147,32 @@ module.exports = {
         if (solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else {
-            Modulos.find( function(error, modulos){
+            Usuarios.find( function(error, usuarios){
                 if(error){
                     console.log(chalk.bgRed(error));
-                } else {
-                    Usuarios.find( function(error, usuarios){
-                        if(error){
-                            console.log(chalk.bgRed(error));
-                        } else { 
-                            respuesta.render('Parametros/new', {
-                                user: solicitud.session.user,
-                                modulos: modulos,
-                                usuarios: usuarios,
-                                modulo: '',
-                                estanque: {
-                                    id: 0
-                                },
-                                estanques: {},
-                                parametro: {
-                                    oxigeno: 0,
-                                    ph: 0,
-                                    salinidad: 0,
-                                    temperatura: 0,
-                                    nivel_agua: 0,
-                                },
-                                siguiente_estanque: {
-                                    id: 0
-                                },
-                                titulo: "",
-                                criterios: [
-                                    {
-                                        val: "",
-                                        name: ""
-                                    },
-                                ],
-                                piscinas: [
-                                    {
-                                        id: 0,
-                                        nombre: ""
-                                    }
-                                ],
-                                charoleros: [
-                                    {
-                                        id: 0,
-                                        nombre: ""
-                                    }   
-                                ],
-                            });
-                        }
+                } else { 
+                    respuesta.render('Parametros/new', {
+                        user: solicitud.session.user,
+                        usuarios: usuarios,
+                        titulo: "",
+                        criterios: [
+                            {
+                                val: "",
+                                name: ""
+                            },
+                        ],
+                        piscinas: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }
+                        ],
+                        charoleros: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }   
+                        ],
                     });
                 }
             });
@@ -976,6 +954,28 @@ module.exports = {
                                     });
                                 }
                             })
+                        }
+                    });
+                }
+            });
+        }
+    },
+    findPiscinas: (solicitud, respuesta) => {
+        if (solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else { 
+            Estanques.find({"modulo": {$in: solicitud.body.modulos}}, (error, piscinas) => {
+                if(error){
+                    console.log(error);
+                } else {
+                    Modulos.find({"_id": { $in: solicitud.body.modulos }},{ nombre: 1 }, (error, modulos) => {
+                        if(error) {
+                            console.log(error);
+                        } else {
+                            respuesta.json({
+                                piscinas: piscinas,
+                                modulos: modulos
+                            });
                         }
                     });
                 }
