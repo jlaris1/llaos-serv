@@ -28,10 +28,10 @@ block contenido
                             "<tr id='tr" + rowCount + "'>" +
                             "   <td class='text-center'>"+
                             "       <div class='d-flex'>"+
-                            "           <a class='btn btn-danger btn-small' style='margin-right: 5px;' href='/productos/producto/eliminar/', data-toggle='tooltip', data-placement='top', title='Eliminar producto'> "+ 
+                            "           <a class='btn btn-danger btn-small' style='margin-right: 5px;' href='/productos/producto/eliminar/"+productos[i]._id+"', data-toggle='tooltip', data-placement='top', title='Eliminar producto'> "+ 
                             "               <i class='fas fa-2x fa-minus-circle' style='color: white;'></i>" +
                             "           </a>" +
-                            "           <a class='btn btn-primary btn-small' href='/productos/producto/editar/', data-toggle='tooltip', data-placement='top', title='Editar producto'> "+ 
+                            "           <a class='btn btn-primary btn-small' href='/productos/producto/editar/"+productos[i]._id+"', data-toggle='tooltip', data-placement='top', title='Editar producto'> "+ 
                             "               <i class='fas fa-2x fa-edit' style='color: white;'></i>" +
                             "           </a>" +
                             "       </div>" +

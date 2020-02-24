@@ -47,6 +47,10 @@ block contenido
             margin-bottom: 5px;
             border: 1px solid #2d6e99;
         }
+
+        .margin-div2 {
+            margin-right: 10px;
+        }
     script.
         var nutricion = [];
         var cambiar_tiempo = true;
@@ -260,13 +264,13 @@ block contenido
                                     '<input class="form-control" type="text" id="aj_'+data.piscinas[i].codigo+'" name="ajuste'+data.piscinas[i].codigo+'" placeholder="% Ajuste" onkeyup="siguienteRacion(this.id)">' + 
                                 '</div>' +
                             '</div>' +
-                            '<div style="margin-top: -10px;">' +
+                            '<div style="margin-top: -10px;" class="text-right">' +
                                 '<label> Código: </label>' +
-                                '<label class="margin-div blue-text" id="cod'+data.piscinas[i].codigo+'" name"cod'+data.piscinas[i].codigo+'"></label>' +
+                                '<label class="margin-div2 blue-text" id="cod'+data.piscinas[i].codigo+'" name"cod'+data.piscinas[i].codigo+'"></label>' +
                                 '<label> Suma: </label>' +
-                                '<label class="margin-div blue-text" id="suma'+data.piscinas[i].codigo+'" name"suma'+data.piscinas[i].codigo+'"></label>' +
+                                '<label class="margin-div2 blue-text" id="suma'+data.piscinas[i].codigo+'" name"suma'+data.piscinas[i].codigo+'"></label>' +
                                 '<label> Kg Siguiente ración: </label>' +
-                                '<label class="margin-div blue-text" id="kg_sig'+data.piscinas[i].codigo+'" name"kg_sig'+data.piscinas[i].codigo+'"></label>' +
+                                '<label class="margin-div2 blue-text" id="kg_sig'+data.piscinas[i].codigo+'" name"kg_sig'+data.piscinas[i].codigo+'"></label>' +
                             '</div>' +
                             '<hr>'+
                         '</li>');
