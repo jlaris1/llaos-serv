@@ -11,26 +11,64 @@ block contenido
             color: #fff;
         } 
 
-        li {
+        ul {
+            padding: 0;
             list-style-type: none;
         }
+
+        .center-middle {
+           margin-top: 13px;
+        }
+
+        .margin-div {
+            margin-right: 5px;
+        }
+
+         .btn-small {
+            font-size: 0.5rem;
+        }
+
+        .input-group-addon {
+            background-color: #dd7206; 
+            border: 2px;
+        }
+
+        .fa-input {
+            color: #fff;
+        }
+
+        a.btn {
+            border: 0;
+            border-radius: 2px;
+        }
+
+        .divider-special {
+            
+        }
+
+        hr {
+            margin-top: -5px;
+            margin-bottom: 5px;
+            border: 1px solid #2d6e99;
+        }
     script.
+        var cambiar_tiempo = true;
+        var parametros = [];
+        var hora;
+
         $(document).ready( function(){
             $('#subMenuParametros').removeClass('hidden');
             $('#spanMenuParametros').removeClass('fa-angle-left');
             $('#spanMenuParametros').addClass('fa-angle-down');
 
             mostrarPiscinas();
+            obtenerFecha();
+            obtenerHora();
         });
 
-
-        // /parametros/add
-        // /parametros/next
-
         function mostrarPiscinas() {
+            abrirLoader();
             var listaModulos = $("#modulos").val().split(",");
-
-            console.log(listaModulos);
 
             $.post( "/parametros/piscinas", {
                 modulos: listaModulos
@@ -42,72 +80,174 @@ block contenido
                     for(var i = 0; i < data.piscinas.length; i ++){
                         $("#lista_parametros")
                         .append('<li id="pis'+data.piscinas[i]._id+'"> ' +
-                            '<div class="d-flex">' +
-                                '<div class="col-lg-2 col-md-2 col-xs-12">' +
-                                    '<div class="form-group">' +
-                                        '<label> Temperatura °C </label>' +
-                                        '<input class="form-control" type="text" name="temperatura" placeholder="Temperatura">' + 
-                                    '</div>' +
+                            '<div class="d-flex justify-content-between">' +
+                                '<input type="text" name="idPis'+data.piscinas[i].codigo+'" value="'+data.piscinas[i]._id+'" class="hidden">'+
+                                '<div class="center-middle">' +
+                                    '<i class="fas fa-water" style="margin-right: 1px; color: #2d6e99"></i>' +
+                                    '<label>'+data.piscinas[i].codigo+'</label>' +
+                                '</div>'+
+                                '<div class="form-group margin-div">' +
+                                    '<label> Temperatura °C </label>' +
+                                    '<input class="form-control" type="text" name="temperatura'+data.piscinas[i].codigo+'" placeholder="Temperatura">' + 
                                 '</div>' +
-                                '<div class="col-lg-2 col-md-2 col-xs-12">' +
-                                    '<div class="form-group">' +
-                                        '<label> Oxigeno mg/L </label>' +
-                                        '<input class="form-control" type="text" name="Oxigeno" placeholder="Oxigeno">' + 
-                                    '</div>' +
+                                '<div class="form-group margin-div">' +
+                                    '<label> Oxigeno mg/L </label>' +
+                                    '<input class="form-control" type="text" name="oxigeno'+data.piscinas[i].codigo+'" placeholder="Oxigeno">' + 
                                 '</div>' +
-                                '<div class="col-lg-2 col-md-2 col-xs-12">' +
-                                    '<div class="form-group">' +
-                                        '<label> Nivel de agua </label>' +
-                                        '<input class="form-control" type="text" name="Nivel de agua" placeholder="Oxigeno">' + 
-                                    '</div>' +
+                                '<div class="form-group margin-div">' +
+                                    '<label> Nivel de agua </label>' +
+                                    '<input class="form-control" type="text" name="nivel_agua'+data.piscinas[i].codigo+'" placeholder="Nivel agua">' + 
                                 '</div>' +
-                                '<div class="col-lg-2 col-md-2 col-xs-12">' +
-                                    '<div class="form-group">' +
-                                        '<label> Salinidad </label>' +
-                                        '<input class="form-control" type="text" name="Salinidad" placeholder="Salinidad">' + 
-                                    '</div>' +
+                                '<div class="form-group margin-div">' +
+                                    '<label> Salinidad </label>' +
+                                    '<input class="form-control" type="text" name="salinidad'+data.piscinas[i].codigo+'" placeholder="Salinidad">' + 
                                 '</div>' +
-                                '<div class="col-lg-2 col-md-2 col-xs-12">' +
-                                    '<div class="form-group">' +
-                                        '<label> pH </label>' +
-                                        '<input class="form-control" type="text" name="ph" placeholder="pH">' + 
-                                    '</div>' +
+                                '<div class="form-group margin-div">' +
+                                    '<label> pH </label>' +
+                                    '<input class="form-control" type="text" name="ph'+data.piscinas[i].codigo+'" placeholder="pH">' + 
                                 '</div>' +
-                                '<div class="col-lg-2 col-md-2 col-xs-12">' +
-                                    '<div class="form-group">' +
-                                        '<label> Tubidez </label>' +
-                                        '<input class="form-control" type="text" name="Tubidez" placeholder="Tubidez">' + 
-                                    '</div>' +
+                                '<div class="form-group margin-div">' +
+                                    '<label> Tubidez </label>' +
+                                    '<input class="form-control" id="'+data.piscinas[i].codigo+'" type="text" name="turbidez'+data.piscinas[i].codigo+'" placeholder="Tubidez" onblur="registrarParametro(this.id)">' + 
                                 '</div>' +
                             '</div>' +
+                            '<hr>'+
                         '</li>');
                     }
                 }
 
                 if(data.modulos.length > 0 ) {
                     $("#span_modulos").text("");
-
-                    if(data.modulos.length = 1){
-                        $("#span_modulos").text(data.modulos[0]);
-                    } else {
-                        for(let i = 0; i <= data.modulos.length -1; i++){
-                            $("#span_modulos").text($("#span_modulos").text() + ", " +data.modulos[i]);
+                    $("#span_modulos").text(data.modulos[0].nombre);
+                    
+                    if(data.modulos.length > 1){
+                        for(let i = 1; i <= data.modulos.length -1; i++){
+                            $("#span_modulos").text($("#span_modulos").text() + ", " +data.modulos[i].nombre);
                         }
                     }
                 }
-
             }, "json");
-            /**
-                                            '<div class="form-group">' +
-                                    '<label>'+piscinas[i].codigo+'</label>' +
-                                '</div>' +
-            */
+            cerrarLoader()
+        }
 
+        function obtenerFecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio + " - ");
+        }
+
+        function obtenerHora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if (horas < 12) {
+                if(cambiar_tiempo == true) {
+                    $("#span_tiempo").text("AM");
+                }
+                dn = "a.m.";
+            } else {
+                if(cambiar_tiempo == true) {
+                    $("#span_tiempo").text("PM");
+                }
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            hora = horas+":"+minutos+":"+segundos;
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        function asignarTiempo(){
+            cambiar_tiempo = false;
+            $('#span_tiempo').text($('#select_tiempo').val());
+        }
+
+        function registrarParametro(id){
+            var obj = new Object()
+            obj.estanque = $("input[name=idPis"+id+"]").val();
+            obj.temperatura = $("input[name=temperatura"+id+"]").val()  == "" ? 0 : $("input[name=temperatura"+id+"]").val() ;
+            obj.oxigeno = $("input[name=oxigeno"+id+"]").val() == "" ? 0 : $("input[name=oxigeno"+id+"]").val();
+            obj.nivel_agua = $("input[name=nivel_agua"+id+"]").val() == null || $("input[name=nivel_agua"+id+"]").val() == "" ? null : $("input[name=nivel_agua"+id+"]").val();
+            obj.salinidad = $("input[name=salinidad"+id+"]").val() == null || $("input[name=salinidad"+id+"]").val() == "" ? null : $("input[name=salinidad"+id+"]").val();
+            obj.ph = $("input[name=ph"+id+"]").val() == "" ? 0 : $("input[name=ph"+id+"]").val();
+            obj.turbidez = $("input[name=turbidez"+id+"]").val() == "" || $("input[name=turbidez"+id+"]").val() == null ? null : $("input[name=turbidez"+id+"]").val();
+            obj.hora = hora;
+            obj.tiempo = $('span_tiempo').text();
+            obj.parametrista = $('#user').val();
+
+            if( obj.temperatura == 0 &&
+               obj.oxigeno == 0 &&
+               obj.nivel_agua == null &&
+               obj.salinidad == null &&
+               obj.ph == 0 &&
+               obj.turbidez == null ) { 
+                   console.log(" Nose mandará a registrar piscina: " + id);
+               } else {
+                   parametros.push(obj);
+               }
+        }
+
+        function guardarRegistros(){
+            abrirLoader();
+
+            if(parametros.length == 0) {
+                $('#alert').removeClass('alert-success');
+                $('#alert').addClass('alert-warning');
+                $('#alertDiv').removeClass('hidden');
+                $('#msg1').text('Es necesario ingresar ');
+                $('#msg2').text('en al menos una piscina');
+                $('#msg_alert').text('parámetros ');
+                $('#loader').addClass('hidden');
+                return;
+            }
+
+            $.post( "/parametros/add", {
+                parametros: parametros
+            }, (data) => {
+                //console.log(data);
+                $('#span_estatus').text(data.estatus);
+                
+                // Mostrar notificación de guardado correcto 
+                $('#alert').removeClass('alert-warning');
+                $('#alert').addClass('alert-success');
+                $('#alertDiv').removeClass('hidden');
+                $('#msg1').text('Se ha realizado con ');
+                $('#msg2').text('el registro de parámetros');
+                $('#msg_alert').text('éxito ');
+                $('#guardar').addClass('disabled');
+            }, "json");
+            $('#loader').addClass('hidden');
+
+            cerrarLoader();
         }
 
     // Inputs funcionamiento
-    input#modulos(value="#{user.modulo}")
+    input.hidden#modulos(value="#{user.modulo}")
+    input.hidden#user(value="#{user._id}")
 
+    // Título
     section.mb-4
         .card
             .card-body.d-flex.justify-content-between
@@ -115,8 +255,9 @@ block contenido
                     i.fas.fa-eye-dropper
                     |   Registro de parámetros
                 div
-                    a#guardar(href="javascript:guardar();").btn.btn-success.Ripple-parent.green-gradient
+                    a#guardar(href="javascript:guardarRegistros();").btn.btn-success.Ripple-parent.green-gradient
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Realizar").fas.fa-save
+    
     // Detalles
     section.mb-4
         .card
@@ -127,7 +268,7 @@ block contenido
                             small Módulo(s): 
                             br
                             strong
-                                span#span_modulo.blue-text ####
+                                span#span_modulos.blue-text ####
                             //a(data-toggle="modal" href="#almacenModal" style="margin-left: 10px;").btn.btn-primary.btn-small.blue-gradient
                                 i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Seleccionar almacén").fas.fa-2x.fa-sync-alt
                         h5.h5-responsive
@@ -136,21 +277,24 @@ block contenido
                             strong
                                 span#num_piscinas ###
                     .col-md-6.col-lg-6.col-xs-6.text-right
-                        //h4.h4-responsive
-                            small Salida No.
+                        h4.h4-responsive
+                            small Fecha.
                             br
                             strong
-                                span.blue-text ##{numeroOrden}
-                        //h5.h5-responsive
-                            small Solicita.
+                                span#fecha.blue-text
+                                span#hora.blue-text
+                        h5.h5-responsive
+                            small Captura para
                             br
                             strong
-                                span#span_solicita #######
-                        //h5.h5-responsive
-                            small Área.
+                                a(data-toggle="modal" href="#tiempoModal" style="margin-right: 5px; margin-top: 2px;").btn.btn-primary.btn-small.blue-gradient
+                                    i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Cambiar tiempo").fas.fa-2x.fa-sync-alt
+                                span#span_tiempo(style="margin-top: 5px;")
+                        h5.h5-responsive
+                            small Estatus.
                             br
                             strong
-                                span#span_area #######
+                                span#span_estatus Nuevo
                         //h5.h5-responsive#h_modulo.hidden
                             small Módulo.
                             br
@@ -162,9 +306,42 @@ block contenido
                             strong
                                 span#span_piscina #######
 
+    // Captura de datos
     section.mb-4
         .panel.panel-primary
             .panel-heading
                 i.fas.fa-vial
             .panel-body
                 ul#lista_parametros
+    
+    // Modal Seleccionar tiempo
+    #tiempoModal(class="modal")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
+                    .col-lg-12
+                        i.fa.fas.fa-sync-alt(style="margin-right: 15px;")
+                        label 
+                            strong Seleccionar tiempo
+                .modal-body()
+                    .card
+                        .card-body
+                            .row
+                                .col-lg-12
+                                    .form-group
+                                        label | Tiempo
+                                        .input-group
+                                            span.input-group-addon.blue-gradient
+                                                i.fas.fa-hourglass-half.fa-input
+                                            select#select_tiempo.form-control(required name="tiempo" tabindex="1" value="" onchange="asignarTiempo()")
+                                                option(value="") << Seleccione >>
+                                                option(value="AM") AM
+                                                option(value="PM") PM
+
+                .modal-footer
+                    .text-right
+                        .btn-group
+                            a(data-dismiss="modal").btn.btn-default
+                                i.fa.fas.fa-times-circle()
+                                |   Cerrar
+

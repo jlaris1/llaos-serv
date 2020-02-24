@@ -77,7 +77,7 @@ block contenido
                                     td.text-center #{ new Date(med.fecha).getDate()+ '/' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
                             td #{ med.hora }
                             td #{ med.tiempo }
-                            td #{ med.parametrista.nombre }
+                            //td #{ med.parametrista.nombre }
                             td
                                 a(href="/parametros/edit/#{med.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px; color: #057e95;")
                                     i.fas.fa-pencil-alt.fa-lg

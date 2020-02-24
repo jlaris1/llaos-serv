@@ -42,7 +42,7 @@ html(lang="es")
                         span.icon-bar
                     a.navbar-brand(href='#') 
                         img(src="/imgs/logo new 2020.png", alt="", style="width:130px; margin-top: -5px;")
-                ul.nav.navbar-top-links.navbar-right
+                ul#menu.nav.navbar-top-links.navbar-right
                     // /.dropdown
                     li.dropdown
                         a.dropdown-toggle(data-toggle='dropdown', href='#')
@@ -685,11 +685,17 @@ html(lang="es")
                                                 |   Nueva Cotización
                             // /.sidebar-collapse
                             // /.navbar-static-side
+            // Alertas 
+            #alertDiv.hidden
+                #alert.alert.alert-dismissible.alert-content.alert-success(role="alert" style="margin-top: 10px;")
+                    a(href="javascript:cerrarAlert();" class="close" aria-label="close") &times;
+                    span
+                        span#msg1 ##
+                        strong#msg_alert ###
+                        span#msg2 ##
             #page-wrapper
                 .container-fluid
-                    //#loader
-                        #load.loader
-                        #loader-back.centrar.loader-container
+                    
                     block contenido
             #reports.modal(tabindex='-1', role='dialog')
                 .modal-dialog(role='document')
@@ -854,11 +860,13 @@ html(lang="es")
                                     a(href="javascript:reporteXLS()").btn.btn-success.form-control
                                         i.fas.fa-file-excel
                                         |   Reporte XLS
-            // Alertas
-            #alertDiv.hidden
-                #alert.alert.alert-dismissible.alertContent(role="alert" style="margin-top: 10px;")
-                    a(href="javascript:cerrarAlert();" class="close" aria-label="close") &times;
-                    span
-                        span#msg1 
-                        strong#msg_alert 
-                        span#msg2
+
+        // Loader
+        #loading.modal-loader
+            #div.ventana-loader(style="font-size: 2em;")
+                div.d-flex
+                    #i.loader2(style="margin-right: 10px;")
+                    div.d-flex.justify.content-between
+                        div Cargando 
+                        div(style="margin-top:-29px;").p-animated ...
+            #div-back.alert-fade(style="background: black; opacity: 0.4; overflow: hidden;")

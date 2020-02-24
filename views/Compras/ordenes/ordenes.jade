@@ -22,107 +22,113 @@ block contenido
 
             
         });
-    .row(style="margin-bottom: -5px;")
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12
-            h2
-                i.fas.fa-shopping-cart(style="margin-right: 10px;")
-                |   Órdenes de Compra
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
-            a.btn.btn-special(href="/ordenes/compras/new/orden", style="margin-right: 5px;")
-                i.fas.fa-cart-plus
-                |   Nueva orden
-            if user.permisos == "compras" || user.permisos == "developer"
-                a.btn.btn-special(href="/ordenes/enruta")
-                        i.fas.fa-truck-loading
-                        |   Órdenes En Ruta
-            a.btn.btn-special(href="/ordenes/old", style="margin-left: 5px;")
-                i.fas.fa-glasses.fa-lg
-                |   Órdenes Viejas  
-    .divider
-    .row
-        label#url.hidden #{url}
-        table#orders.table.table-striped.table-hover
-            thead.thead-dark
-                th(scope="col").text-center
-                    |   # Serie
-                th(scope="col")
-                    |   Proveedor
-                th(scope="col")
-                    |   Estatus
-                th(scope="col")
-                    |   Fecha
-                th(scope="col")
-                    |   Acciones
-            tbody
-                each ord in orders
-                    tr(scope="row")
-                        td.text-center #{ord.serie}
-                        each prov in proveedores
-                            if prov.id == ord.proveedor
-                                td #{prov.nombreEmpresa}
-                        td
-                            if ord.estatus == "Nueva"
-                                label.label.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{ord.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            else if ord.estatus == "Generada"
-                                label.label.label-success &nbsp;&nbsp;&nbsp;&nbsp; #{ord.estatus} &nbsp;&nbsp;&nbsp;&nbsp;
-                            else if ord.estatus == "Cancelada" 
-                                label.label.label-danger &nbsp;&nbsp;&nbsp;&nbsp;#{ord.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
-                            else if ord.estatus == "Enviada"
-                                label.label.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{ord.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            else if ord.estatus == "En Ruta"
-                                label.label(style="background-color: #ffa500;") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{ord.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            else if ord.estatus == "Cerrada"
-                                label.label.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{ord.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        if (new Date(ord.fecha).getMonth() + 1) < 10
-                                td.text-center #{ new Date(ord.fecha).getDate()+ '/0' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()}- #{ord.hora}
-                        else
-                            td.text-center #{ new Date(ord.fecha).getDate()+ '/' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()} - #{ord.hora}         
-                        td
-                            if ord.estatus == "Cerrada"
-                                a.disabled(href="/ordenes/orden/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Ver detalles", style="margin-right: 5px;")
-                                    i.fas.fa-eye.text-default.fa-lg
-                            else
-                                a(href="/ordenes/orden/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Ver detalles", style="margin-right: 5px;")
-                                    i.fas.fa-eye.text-primary.fa-lg
-                            if ord.estatus == "Cancelada"
-                                a.disabled(href="/ordenes/orden/cancelar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Cancelar", style="margin-right: 5px;")
-                                    i.fas.fa-times-circle.text-default.fa-lg
-                            else
-                                a(href="/ordenes/orden/cancelar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Cancelar", style="margin-right: 5px;")
-                                    i.fas.fa-times-circle.text-danger.fa-lg
-                            if ord.estatus != "Nueva"
-                                a.disabled(href="/ordenes/orden/generar/pdf/#{ord.id}/1", data-toggle="tooltip", data-placement="top", title="Generar PDF", style="margin-right: 5px;")
-                                    i.fas.fa-file-pdf.text-default.fa-lg
-                            else
-                                a(href="/ordenes/orden/generar/pdf/#{ord.id}/1", data-toggle="tooltip", data-placement="top", title="Generar PDF", style="margin-right: 5px; color: #cf394f;")
-                                    i.fas.fa-file-pdf.fa-lg
-                            if ord.estatus != "Generada"
-                                a.disabled(href="/ordenes/orden/enviar/#{ord.id}/1", data-toggle="tooltip", data-placement="top", title="Enviar", style="margin-right: 5px;")
-                                    i.fas.fa-envelope.text-default.fa-lg
-                            else
-                                a(href="/ordenes/orden/enviar/#{ord.id}/1", data-toggle="tooltip", data-placement="top", title="Enviar", style="margin-right: 5px; color: #F5D870;")
-                                    i.fas.fa-envelope.fa-lg
-                            if ord.estatus == "Enviada"
-                                a(href="/ordenes/orden/enruta/#{ord.id}", data-toggle="tooltip", data-placement="top", title="En Ruta", style="margin-right: 5px;")
-                                    i.fas.fa-shipping-fast.text-success.fa-lg
-                            else
-                                a.disabled(href="/ordenes/orden/enruta/#{ord.id}", data-toggle="tooltip", data-placement="top", title="En Ruta", style="margin-right: 5px;")
-                                    i.fas.fa-shipping-fast.text-default.fa-lg
-                            if ord.estatus == "En Ruta"
-                                a(href="/ordenes/orden/cerrar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Cerrar", style="margin-right: 5px; color: #000000;")
-                                    i.fas.fa-lock.fa-lg
-                            else
-                                a.disabled(href="/ordenes/orden/cerrar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Cerrar", style="margin-right: 5px;")
-                                    i.fas.fa-lock.text-default.fa-lg
-                            if ord.estatus == "Cancelada" || ord.estatus == "Cerrada"
-                                a.disabled(href="/ordenes/orden/editar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px;")
-                                    i.fas.fa-pencil-alt.text-default.fa-lg
-                            else
-                                a(href="/ordenes/orden/editar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px; color: #057e95;")
-                                    i.fas.fa-pencil-alt.fa-lg
-                            if ord.estatus == "Cerrada"
-                                a.disabled(href="/ordenes/orden/eliminar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Eliminar")
-                                    i.fas.fa-minus-circle.text-default.fa-lg
-                            else
-                                a(href="/ordenes/orden/eliminar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Eliminar")
-                                    i.fas.fa-minus-circle.text-danger.fa-lg
+        
+    // Inputs mandejo
+    label#url.hidden #{url}
+
+    // Título
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-shopping-cart
+                    |   Órdenes de Compra
+                div
+                    a(href="/ordenes/compras/new/orden" style="margin-right: 5px;").btn.btn-success
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nueva orden").fas.fa-plus-circle
+                    a(href="/ordenes/enruta" style="margin-right: 5px;").btn.btn-primary
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nueva orden en ruta").fas.fa-truck-loading
+                    a(href="/ordenes/old" style="margin-right: 5px;").btn.btn-info
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Órdenes versión anterior").fas.fa-glasses
+                    a(href="#reports" disabled="true" data-toggle="modal" data-target="#reports").btn.btn-danger
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Reportes").fas.fa-file-pdf
+
+    // Tabla - contenido
+    section.mb-4
+        .card
+            .table-responsive(style="margin-top: 10px;")
+                table#orders.table.table-striped.table-hover
+                    thead.thead-dark
+                        th(scope="col").text-center
+                            |   # Serie
+                        th(scope="col")
+                            |   Proveedor
+                        th(scope="col")
+                            |   Estatus
+                        th(scope="col")
+                            |   Fecha
+                        th(scope="col")
+                            |   Acciones
+                    tbody
+                        each ord in orders
+                            tr(scope="row")
+                                td.text-center #{ord.serie}
+                                each prov in proveedores
+                                    if prov.id == ord.proveedor
+                                        td #{prov.nombreEmpresa}
+                                td
+                                    if ord.estatus == "Nueva"
+                                        label.label.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{ord.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    else if ord.estatus == "Generada"
+                                        label.label.label-success &nbsp;&nbsp;&nbsp;&nbsp; #{ord.estatus} &nbsp;&nbsp;&nbsp;&nbsp;
+                                    else if ord.estatus == "Cancelada" 
+                                        label.label.label-danger &nbsp;&nbsp;&nbsp;&nbsp;#{ord.estatus}&nbsp;&nbsp;&nbsp;&nbsp;
+                                    else if ord.estatus == "Enviada"
+                                        label.label.label-warning &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{ord.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    else if ord.estatus == "En Ruta"
+                                        label.label(style="background-color: #ffa500;") &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{ord.estatus} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    else if ord.estatus == "Cerrada"
+                                        label.label.label-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{ord.estatus}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                if (new Date(ord.fecha).getMonth() + 1) < 10
+                                        td.text-center #{ new Date(ord.fecha).getDate()+ '/0' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()}
+                                else
+                                    td.text-center #{ new Date(ord.fecha).getDate()+ '/' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()}       
+                                td
+                                    if ord.estatus == "Cerrada"
+                                        a.disabled(href="/ordenes/orden/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Ver detalles", style="margin-right: 5px;")
+                                            i.fas.fa-eye.text-default.fa-lg
+                                    else
+                                        a(href="/ordenes/orden/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Ver detalles", style="margin-right: 5px;")
+                                            i.fas.fa-eye.text-primary.fa-lg
+                                    if ord.estatus == "Cancelada"
+                                        a.disabled(href="/ordenes/orden/cancelar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Cancelar", style="margin-right: 5px;")
+                                            i.fas.fa-times-circle.text-default.fa-lg
+                                    else
+                                        a(href="/ordenes/orden/cancelar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Cancelar", style="margin-right: 5px;")
+                                            i.fas.fa-times-circle.text-danger.fa-lg
+                                    if ord.estatus != "Nueva"
+                                        a.disabled(href="/ordenes/orden/generar/pdf/#{ord.id}/1", data-toggle="tooltip", data-placement="top", title="Generar PDF", style="margin-right: 5px;")
+                                            i.fas.fa-file-pdf.text-default.fa-lg
+                                    else
+                                        a(href="/ordenes/orden/generar/pdf/#{ord.id}/1", data-toggle="tooltip", data-placement="top", title="Generar PDF", style="margin-right: 5px; color: #cf394f;")
+                                            i.fas.fa-file-pdf.fa-lg
+                                    if ord.estatus != "Generada"
+                                        a.disabled(href="/ordenes/orden/enviar/#{ord.id}/1", data-toggle="tooltip", data-placement="top", title="Enviar", style="margin-right: 5px;")
+                                            i.fas.fa-envelope.text-default.fa-lg
+                                    else
+                                        a(href="/ordenes/orden/enviar/#{ord.id}/1", data-toggle="tooltip", data-placement="top", title="Enviar", style="margin-right: 5px; color: #F5D870;")
+                                            i.fas.fa-envelope.fa-lg
+                                    if ord.estatus == "Enviada"
+                                        a(href="/ordenes/orden/enruta/#{ord.id}", data-toggle="tooltip", data-placement="top", title="En Ruta", style="margin-right: 5px;")
+                                            i.fas.fa-shipping-fast.text-success.fa-lg
+                                    else
+                                        a.disabled(href="/ordenes/orden/enruta/#{ord.id}", data-toggle="tooltip", data-placement="top", title="En Ruta", style="margin-right: 5px;")
+                                            i.fas.fa-shipping-fast.text-default.fa-lg
+                                    if ord.estatus == "En Ruta"
+                                        a(href="/ordenes/orden/cerrar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Cerrar", style="margin-right: 5px; color: #000000;")
+                                            i.fas.fa-lock.fa-lg
+                                    else
+                                        a.disabled(href="/ordenes/orden/cerrar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Cerrar", style="margin-right: 5px;")
+                                            i.fas.fa-lock.text-default.fa-lg
+                                    if ord.estatus == "Cancelada" || ord.estatus == "Cerrada"
+                                        a.disabled(href="/ordenes/orden/editar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px;")
+                                            i.fas.fa-pencil-alt.text-default.fa-lg
+                                    else
+                                        a(href="/ordenes/orden/editar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px; color: #057e95;")
+                                            i.fas.fa-pencil-alt.fa-lg
+                                    if ord.estatus == "Cerrada"
+                                        a.disabled(href="/ordenes/orden/eliminar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Eliminar")
+                                            i.fas.fa-minus-circle.text-default.fa-lg
+                                    else
+                                        a(href="/ordenes/orden/eliminar/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Eliminar")
+                                            i.fas.fa-minus-circle.text-danger.fa-lg

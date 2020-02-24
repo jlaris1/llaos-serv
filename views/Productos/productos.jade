@@ -2,15 +2,69 @@ extends ../layouts/layout.jade
 block contenido
     style.
     script.
+        /** YA CARGO TODO ***/
         $(document).ready( function() {
-            $('#products').dataTable();
-
             $('#subMenuProductos').removeClass('hidden');
             $('#spanMenuProductos').removeClass('fa-angle-left');
             $('#spanMenuProductos').addClass('fa-angle-down');
             $('[data-toggle="tooltip"]').tooltip();
-        })
-        //Termina Javascript
+            cargarProductos();
+        });
+
+        function cargarProductos(){
+            $.ajax({
+                type: 'GET',
+                url: '/productos/all',
+                data: {},
+                beforeSend: function() {
+                    abrirLoader();
+                },
+                success: function(productos) {
+                    if(productos.length > 0){   
+                        for(let i = 0; i <= productos.length -1; i ++){
+                            rowCount = $('#products >tbody >tr').length;
+
+                            $('#products > tbody:last').append(
+                            "<tr id='tr" + rowCount + "'>" +
+                            "   <td class='text-center'>"+
+                            "       <div class='d-flex'>"+
+                            "           <a class='btn btn-danger btn-small' style='margin-right: 5px;' href='/productos/producto/eliminar/', data-toggle='tooltip', data-placement='top', title='Eliminar producto'> "+ 
+                            "               <i class='fas fa-2x fa-minus-circle' style='color: white;'></i>" +
+                            "           </a>" +
+                            "           <a class='btn btn-primary btn-small' href='/productos/producto/editar/', data-toggle='tooltip', data-placement='top', title='Editar producto'> "+ 
+                            "               <i class='fas fa-2x fa-edit' style='color: white;'></i>" +
+                            "           </a>" +
+                            "       </div>" +
+                            "   </td> " +
+                            "   <td class='text-center'>" + productos[i].codigo + "</td> " +
+                            "   <td>" + productos[i].unidad + "</td> " +
+                            "   <td>" + productos[i].nombre + "</td> " +
+                            "   <td> " +
+                                    "<strong>" + productos[i].proveedor.nombreEmpresa + "</strong>" +
+                            "   </td> " +
+                            "   <td>" + parseFloat(productos[i].precioUnitario).toFixed(2) + "</td> " +
+                            "   <td>" + parseFloat(productos[i].iva).toFixed(2) + "</td> " +
+                            "   <td>" + parseFloat(productos[i].precioNeto).toFixed(2)+ "</td> " +
+                            "   <td>" + productos[i].moneda + "</td> " +
+                            "</tr>")
+                        }
+
+                        $('#products').dataTable({
+                            responsive: true
+                        });
+                        cerrarLoader();
+                    }
+                },
+                error: function(xhr) { // if error occured
+                    //alert("Error occured.please try again");
+                    //$(placeholder).append(xhr.statusText + xhr.responseText);
+                    //$(placeholder).removeClass('loading');
+                },
+                complete: function() {
+                },
+                dataType: 'json'
+            });
+        }
     
     section.mb-4
         .card
@@ -25,35 +79,19 @@ block contenido
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Reportes").fas.fa-file-pdf
     section.mb-4
         .card
-            .card-body
-                .table-responsive 
-                    table#products.table.table-striped.table-hover
-                        thead
-                            th.text-center
-                                i(style="color: gray;").fas.fa-cog
-                            th.text-center Código
-                            th Unidad
-                            th Nombre
-                            th Proveedor
-                            th Precio
-                            th IVA
-                            th Precio Neto
-                            th Moneda
-                        tbody
-                            each p in productos
-                                tr(scope="row")
-                                    td.d-flex
-                                        a.btn.btn-info.btn-small(href="productos/producto/editar/#{p.id}", data-toggle="tooltip", data-placement="top", title="Editar" style="margin-right: 5px;")
-                                            i.fas.fa-pencil-alt.fa-2x
-                                        a.btn.btn-danger.btn-small(href="productos/producto/eliminar/#{p.id}",data-toggle="tooltip", data-placement="top", title="Eliminar")
-                                            i.fas.fa-times-circle.fa-2x
-                                    td.text-center #{ p.codigo }
-                                    td #{ p.unidad }
-                                    td #{ p.nombre }
-                                    td 
-                                        strong #{ p.proveedor.nombreEmpresa }
-                                    td #{ parseFloat(p.precioUnitario).toFixed(2)}
-                                    td #{ parseFloat(p.iva).toFixed(2) }
-                                    td #{ parseFloat( p.precioNeto).toFixed(2) }
-                                    td #{ p.moneda }
+            .table-responsive(style="margin-top: 10px;") 
+                table#products.table.table-striped.table-hover
+                    thead
+                        th.text-center
+                            i(style="color: gray;").fas.fa-cog
+                        th.text-center Código
+                        th Unidad
+                        th Nombre
+                        th Proveedor
+                        th Precio
+                        th IVA
+                        th Precio Neto
+                        th Moneda
+                    tbody
+                            
                                     

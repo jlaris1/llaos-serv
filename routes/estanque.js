@@ -17,13 +17,13 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{
-            Estanques.find( function(error, estanques){
+            Estanques.find({"codigo": {$ne: "NLL"}}, function(error, estanques){
                 if(error){
                     console.log(error);
                 } else {
                     Modulos.populate(estanques, { path: 'modulo'}, function(error, estanques){
                         if(error){
-                            console.log(error);
+                            console.log(error);por 
                         } else {
                             TiposModulos.populate(estanques, { path: 'tipo'}, function(error, estanques){
                                 if(error){

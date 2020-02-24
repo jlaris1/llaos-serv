@@ -31,46 +31,55 @@ block contenido
 
         window.onload = function () { 
         }
-    //Termina Javascript
-    .row(style="margin-bottom: -5px;")
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12
-            h2
-                i.fas.fa-box-open(style="margin-right: 10px;")
-                |   Inventario #{lugar}
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
-            a.btn.btn-special(href="/inventarios/inventario/entrada", style="margin-right: 5px;")
-                i.fas.fa-sign-in-alt
-                |   Entrada
-            a.btn.btn-special(href="/inventarios/inventario/salida")
-                i.fas.fa-sign-out-alt
-                |   Salida
-    .divider
-    label#lugar.hidden #{lugar}     
-    .row(style="margin-top: 15px;")
-        table#inventario.table.table-striped.table-hover
-            thead
-                th Código
-                th Nombre
-                th Unidad
-                th Cantidad
-                th Mínimo
-                th Máximo
-                th Orden
-                th Factura
-                th Acciones
-            tbody
-                each p in productos
-                    tr 
-                        td #{p.codigo}
-                        td #{p.nombre}
-                        td #{p.unidad}
-                        td #{p.cantidad}
-                        td #{p.minimo}
-                        td #{p.maximo}
-                        td #{p.orden}
-                        td #{p.factura}
-                        td
-                            a.mright(href="/inventarios/inventario/entrada/#{p.id}", data-toggle="tooltip", data-placement="top", title="Entrada")
-                                    i.fas.fa-sign-in-alt.text-success.fa-lg
-                            a.mright(href="/inventarios/inventario/salida/#{p.id}", data-toggle="tooltip", data-placement="top", title="Salida")
-                                    i.fas.fa-sign-out-alt.text-primary.fa-lg
+    //Termina Javascript    
+        
+    // Inputs mandejo
+    label#url.hidden #{url}
+    label#lugar.hidden #{lugar}  
+
+    // Título
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-box-open
+                    |   Inventario
+                div
+                    a(href="/inventarios/inventario/entrada" style="margin-right: 5px;").btn.btn-success
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nueva entrada").fas.fa-sign-in-alt
+                    a(href="/inventarios/inventario/salida" style="margin-right: 5px;").btn.btn-primary
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nueva salida").fas.fa-sign-out-alt
+                    a(href="#reports" disabled="true" data-toggle="modal" data-target="#reports").btn.btn-danger
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Reportes").fas.fa-file-pdf
+
+    // Tabla - contenido
+    section.mb-4
+        .card
+            .table-responsive(style="margin-top: 10px;")
+                table#inventario.table.table-striped.table-hover
+                    thead
+                        th Código
+                        th Nombre
+                        th Unidad
+                        th Cantidad
+                        th Mínimo
+                        th Máximo
+                        th Orden
+                        th Factura
+                        th Acciones
+                    tbody
+                        each p in productos
+                            tr 
+                                td #{p.codigo}
+                                td #{p.nombre}
+                                td #{p.unidad}
+                                td #{p.cantidad}
+                                td #{p.minimo}
+                                td #{p.maximo}
+                                td #{p.orden}
+                                td #{p.factura}
+                                td
+                                    a.mright(href="/inventarios/inventario/entrada/#{p.id}", data-toggle="tooltip", data-placement="top", title="Entrada")
+                                            i.fas.fa-sign-in-alt.text-success.fa-lg
+                                    a.mright(href="/inventarios/inventario/salida/#{p.id}", data-toggle="tooltip", data-placement="top", title="Salida")
+                                            i.fas.fa-sign-out-alt.text-primary.fa-lg

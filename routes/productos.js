@@ -10,6 +10,42 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{//Agregar try-catch
+            Usuarios.find( function(error, usuarios){
+                if(error){
+                    console.log(error);
+                } else { 
+                    respuesta.render("Productos/productos",{
+                        user: solicitud.session.user,
+                        titulo: "Productos",
+                        criterios: [
+                            {
+                                val: "",
+                                name: ""
+                            }
+                        ],
+                        piscinas: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }
+                        ],
+                        charoleros: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }   
+                        ],
+                        usuarios: usuarios,
+                        ruta: "productos"
+                    });
+                }
+            });
+        };
+    },
+    all: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{//Agregar try-catch
             Productos.find(function (error, productos){
                 if(error){
                     console.log(error);
@@ -47,38 +83,8 @@ module.exports = {
                                     prod.almacen = '';
                                 }
                             });
-
-                            Usuarios.find( function(error, usuarios){
-                                if(error){
-                                    console.log(error);
-                                } else { 
-                                    respuesta.render("Productos/productos",{
-                                        user: solicitud.session.user,
-                                        productos: productos,
-                                        titulo: "Productos",
-                                        criterios: [
-                                            {
-                                                val: "",
-                                                name: ""
-                                            }
-                                        ],
-                                        piscinas: [
-                                            {
-                                                id: 0,
-                                                nombre: ""
-                                            }
-                                        ],
-                                        charoleros: [
-                                            {
-                                                id: 0,
-                                                nombre: ""
-                                            }   
-                                        ],
-                                        usuarios: usuarios,
-                                        ruta: "productos"
-                                    });
-                                }
-                            });
+                            
+                            respuesta.json(productos);
                         }
                     });
                 }

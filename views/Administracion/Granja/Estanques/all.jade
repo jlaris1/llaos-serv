@@ -18,38 +18,44 @@ block contenido
             $('#spanMenuEstanques').addClass('fa-angle-down');
             $('#estanques').dataTable();
         });
+    // Termina script
+    
+    // Título
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-water
+                    |   Piscinas
+                div
+                    a(href="/estanque/new" style="margin-right: 5px;").btn.btn-success
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nuevo producto").fas.fa-plus-circle
+                    a(href="#" disabled="true").btn.btn-danger
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Reportes").fas.fa-file-pdf
 
-    .row(style="margin-bottom: -5px;")
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12
-            h2 
-                i.fas.fa-water(style="margin-right: 10px;")
-                |   Piscinas
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
-            a.btn.btn-special(href="/estanque/new")
-                i.fas.fa-plus-circle
-                |   Nuevo
-    .divider
-    .row
-        .table-responsive
-            table#estanques.table.table-striped.table-hover
-                thead
-                    th Código
-                    th Nombre
-                    th Modulo
-                    th Tipo de Piscina
-                    th Acciones
-                tbody
-                    each e in estanques
-                        tr
-                            td #{ e.codigo }
-                            td #{ e.nombre }
-                            td #{ e.modulo.nombre }
-                            td #{ e.tipo.nombre }
-                            td.text-center
-                                a(href="/estanque/detail/#{e.id}", data-toggle="tooltip", data-placement="top", title="Ver Detalle", style="margin-right: 15px;")
-                                    i.fas.fa-eye.text-info.fa-lg
-                                a(href="/estanque/edit/#{e.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 15px;")
-                                    i.fas.fa-pencil-alt.text-info.fa-lg
-                                a(data-toggle="tooltip" href="/estanque/delete/#{e.id}" title="Eliminar")
-                                    i.fas.fa-minus-circle.text-danger.fa-lg
+    // Tabla - contenido
+    section.mb-4
+        .card
+            .table-responsive(style="margin-top: 10px;") 
+                table#estanques.table.table-striped.table-hover
+                    thead
+                        th Código
+                        th Nombre
+                        th Modulo
+                        th Tipo de Piscina
+                        th Acciones
+                    tbody
+                        each e in estanques
+                            tr
+                                td #{ e.codigo }
+                                td #{ e.nombre }
+                                td #{ e.modulo.nombre }
+                                td #{ e.tipo.nombre }
+                                td.text-center
+                                    a(href="/estanque/detail/#{e.id}", data-toggle="tooltip", data-placement="top", title="Ver Detalle", style="margin-right: 15px;")
+                                        i.fas.fa-eye.text-info.fa-lg
+                                    a(href="/estanque/edit/#{e.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 15px;")
+                                        i.fas.fa-pencil-alt.text-info.fa-lg
+                                    a(data-toggle="tooltip" href="/estanque/delete/#{e.id}" title="Eliminar")
+                                        i.fas.fa-minus-circle.text-danger.fa-lg
 

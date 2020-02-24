@@ -234,10 +234,13 @@ block contenido
 
         /* Eliminar producto seleccionado*/
         function eliminarProducto(id){
-           $('#articulos tbody').empty();
+           //$('#articulos tbody').empty();
 
             articulos_salida.splice(id, 1);
-            articulos_salida.forEach( function(vta){
+
+            $('#tr'+ id).remove();
+
+            /*articulos_salida.forEach( function(vta){
                 var rowCount = $('#articulos >tbody >tr').length;
 
                 vta.rowCount = rowCount;
@@ -257,7 +260,7 @@ block contenido
                     "   <td id='cant" + rowCount + "' class='text-center'>" + vta.cantidad + "</td> " +
                     "</tr>"
                 );
-            });
+            });*/
 
             $("#articulos_salida").val(JSON.stringify(articulos_salida));
         }
@@ -275,7 +278,7 @@ block contenido
                     "<tr id='tr" + rowCount + "'>" +
                     "   <td class='text-center'>"+
                     "       <div class='btn-group table-icons'>"+
-                    "           <a id='" + rowCount + "' class='btn btn-danger btn-small' href='#', data-toggle='tooltip', data-placement='top', title='Eliminar' onclick='eliminarProducto(this.id)'> "+ 
+                    "           <a id='" + rowCount + "' class='btn btn-danger btn-small' data-toggle='tooltip', data-placement='top', title='Eliminar' href='javascript:eliminarProducto(" + rowCount + ")'> "+ 
                     "               <i class='fas fa-2x fa-minus-circle' style='color: white;'></i>" +
                     "           </a>" +
                     "       </div>" +

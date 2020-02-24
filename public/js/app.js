@@ -580,6 +580,10 @@ $(document).ready( function() {
 
 
             /*******************************/
+
+           
+
+
 });
 
 function obtenerfecha(){
@@ -1049,4 +1053,17 @@ function reports(){
 // CERRAR ALERT
 function cerrarAlert(){
     $('#alertDiv').addClass('hidden');
+}
+
+
+// Abrir loader
+function abrirLoader(){
+    $(".modal-loader").fadeIn("300");
+    console.log("Loader cargando...");
+}
+
+// Cerrar loader
+function cerrarLoader(){
+    $(".modal-loader").fadeOut("300");
+    console.log("Loader cerrado...");
 }

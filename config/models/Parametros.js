@@ -5,14 +5,18 @@ var mongoose = require('mongoose'),
 var parametrosSchemaJSON = {
     oxigeno: String,
     ph: String,
-    salinidad: String,
+    salinidad: { type:String , default: null},
     temperatura: String,
-    nivel_agua: String,
+    nivel_agua: { type:String , default: null},
     estanque: { type: Schema.ObjectId, ref: "Estanques" },
-    fecha: Date,
+    fecha: { type: Date, default: new Date()},
     hora: String,
     tiempo: String,
-    parametrista: String
+    parametrista: { type: Schema.ObjectId, ref: "Usuarios"},
+    turbidez: { type:String , default: null},
+    anio: {
+        type: String, default: new Date().getFullYear()
+    }
 }
 
 var parametrosSchema = new Schema(parametrosSchemaJSON);

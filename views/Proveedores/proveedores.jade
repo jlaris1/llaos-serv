@@ -16,37 +16,47 @@ block contenido
             }
         })
     //Termina Javascript
-    .row(style="margin-bottom: -5px;")
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12
-            h2
-                i.fas.fa-shipping-fast(style="margin-right: 10px;")
-                |   Proveedores
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;") 
-            a.btn.btn-special(href="/proveedores/new/proveedor")
-                i.fas.fa-plus-circle
-                |   Nuevo
-    .divider
-    .row
-        table#proveedores.table.table-striped.table-hover
-            thead
-                th.text-center Código
-                th Nombre
-                th Razón Social
-                th Teléfono
-                th Vendedor
-                th Celular
-                th Acciones
-            tbody
-                each p in proveedores
-                    tr
-                        td.text-center #{ p.codigo }
-                        td #{ p.nombreEmpresa }
-                        td #{ p.razonSocial }
-                        td #{ p.telefono }
-                        td #{ p.nombreVendedor }
-                        td #{ p.celular }
-                        td
-                            a(href="/proveedores/editar/proveedor/#{p.id}", title="Editar", style="margin-right: 15px;")
-                                i.fas.fa-pencil-alt.text-info.fa-lg
-                            a(href="/proveedores/eliminar/proveedor/#{p.id}", title="Eliminar")
-                                i.fas.fa-minus-circle.text-danger.fa-lg
+    
+    // Inputs mandejo
+    label#url.hidden #{url}
+
+    // Título
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-shipping-fast
+                    |   Proveedores
+                div
+                    a(href="/proveedores/new/proveedor" style="margin-right: 5px;").btn.btn-success
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nuevo proveedor").fas.fa-plus-circle
+                    a(href="#reports" disabled="true" data-toggle="modal" data-target="#reports").btn.btn-danger
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Reportes").fas.fa-file-pdf
+
+    // Tabla - contenido
+    section.mb-4
+        .card
+            .table-responsive(style="margin-top: 10px;")
+                table#proveedores.table.table-striped.table-hover
+                    thead
+                        th.text-center Código
+                        th Nombre
+                        th Razón Social
+                        th Teléfono
+                        th Vendedor
+                        th Celular
+                        th Acciones
+                    tbody
+                        each p in proveedores
+                            tr
+                                td.text-center #{ p.codigo }
+                                td #{ p.nombreEmpresa }
+                                td #{ p.razonSocial }
+                                td #{ p.telefono }
+                                td #{ p.nombreVendedor }
+                                td #{ p.celular }
+                                td
+                                    a(href="/proveedores/editar/proveedor/#{p.id}", title="Editar", style="margin-right: 15px;")
+                                        i.fas.fa-pencil-alt.text-info.fa-lg
+                                    a(href="/proveedores/eliminar/proveedor/#{p.id}", title="Eliminar")
+                                        i.fas.fa-minus-circle.text-danger.fa-lg

@@ -262,110 +262,28 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else { 
-            var data = {
-                oxigeno: solicitud.body.oxigeno,
-                ph: solicitud.body.ph,
-                salinidad: solicitud.body.salinidad,
-                temperatura: solicitud.body.temperatura,
-                nivel_agua: solicitud.body.nivel_agua,
-                estanque: solicitud.body.estanque,
-                //fecha: new Date( fecha.getTime() + Math.abs(fecha.getTimezoneOffset()*60000))
-                //fecha: new Date(solicitud.body.fecha),
-                fecha: new Date( new Date(solicitud.body.fecha).getTime() + Math.abs( new Date(solicitud.body.fecha).getTimezoneOffset()*60000)),
-                tiempo: solicitud.body.tiempo,
-                hora: FechaHora.obtenerhora(),
-                parametrista: solicitud.session.user
-            }
+            //console.log(solicitud.body);
 
-            var parametro = new Parametros(data);
-
-            parametro.save( function(error){
-                if(error){
-                    console.log(chalk.bgRed(error));
-                } else {
-                    Modulos.find( function(error, modulos){
+            if( solicitud.body.parametros != undefined && solicitud.body.parametros.length > 0){
+                for(let i=0; i <= solicitud.body.parametros.length -1; i++){
+                    var parametro = new Parametros(solicitud.body.parametros[i]);
+    
+                    parametro.save( (error)=>{
                         if(error){
                             console.log(chalk.bgRed(error));
                         } else {
-                            Estanques.find({'modulo': solicitud.body.modu}, function(error, estanques){
-                                if(error){
-                                    respuesta.redirect("/sesion-expirada");
-                                    console.log(chalk.bgRed(error));
-                                } else {
-        
-                                    var estanque = {};
-                                    var siguiente_estanque  = {};
-
-                                    for (let i = 0; i < estanques.length; i++) {
-                                        if(estanques[i].id == solicitud.body.estanque ){
-                                            if(i>0){
-
-                                                if(i == estanques.length - 1){
-                                                    estanque =  estanques[estanques.length-1];
-                                                    siguiente_estanque = estanques[0];
-                                                } else {
-                                                    if(i == estanques.length - 2){
-                                                        estanque = estanques[i+1];
-                                                        siguiente_estanque = estanques[0];
-                                                    } else {
-                                                        estanque = estanques[i+1];
-                                                        siguiente_estanque = estanques[i+2];
-                                                    }
-                                                }
-                                            } else {
-                                                estanque = estanques[i+1];
-                                                siguiente_estanque = estanques[i+2];
-                                            }
-                                        }
-                                    }
-        
-                                    Usuarios.find( function(error, usuarios){
-                                        if(error){
-                                            console.log(chalk.bgRed(error));
-                                        } else {
-                                            respuesta.render('Parametros/new', {
-                                                user: solicitud.session.user,
-                                                modulos: modulos,
-                                                modulo: solicitud.body.modu, 
-                                                estanques: estanques,
-                                                estanque: estanque,
-                                                usuarios: usuarios,
-                                                siguiente_estanque: siguiente_estanque,
-                                                parametro: {
-                                                    oxigeno: 0,
-                                                    ph: 0,
-                                                    salinidad: 0,
-                                                    temperatura: 0,
-                                                    nivel_agua: 0,
-                                                },
-                                                titulo: "",
-                                                criterios: [
-                                                    {
-                                                        val: "",
-                                                        name: ""
-                                                    },
-                                                ],
-                                                piscinas: [
-                                                    {
-                                                        id: 0,
-                                                        nombre: ""
-                                                    }
-                                                ],
-                                                charoleros: [
-                                                    {
-                                                        id: 0,
-                                                        nombre: ""
-                                                    }   
-                                                ],
-                                            });
-                                        }
-                                    });
-                                }
-                            }).sort({ codigo : 1});
+                            if(i == solicitud.body.parametros.length -1 ){
+                                respuesta.json({
+                                    estatus: 'Registrado'
+                                });
+                            }
                         }
                     });
+    
                 }
-            });
+            } else {
+                console.log("no guardar llego todo en 0's");
+            }
         }
     },
     update: function(solicitud, respuesta){
@@ -972,14 +890,14 @@ module.exports = {
                         if(error) {
                             console.log(error);
                         } else {
-                            respuesta.json({
+                           respuesta.json({
                                 piscinas: piscinas,
                                 modulos: modulos
                             });
                         }
                     });
                 }
-            });
+            }).sort({ codigo : 1});
         }
     }
 }

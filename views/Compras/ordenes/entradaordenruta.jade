@@ -208,18 +208,18 @@ block contenido
             }, (data, status) => {
                 console.log(data);
                 console.log(status);
+                $('#span_estatus').text(data.status);
 
                 
                 // Mostrar notificación de guardado correcto 
                 $('#alert').removeClass('alert-warning');
                 $('#alert').addClass('alert-success');
-                $('#alerDiv').removeClass('hidden');
+                $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Se realizado con ');
                 $('#msg2').text('la entrada a inventario.');
                 $('#msg_alert').text('éxito ');
                 $('#realizar').addClass('disabled');
-                $('#span_estatus').text('En Inventario');
-                //$('#span_estatus').text(data.status);
+                // $('#span_estatus').text('En Inventario');
 
             }, "json");
         }

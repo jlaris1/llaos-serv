@@ -122,6 +122,7 @@ module.exports = function(app){
     //Productos
     app.use('/productos', productosRouter);
     productosRouter.get('/', productos.todos);
+    productosRouter.get('/all', productos.all);
     productosRouter.get('/new/producto', productos.nuevo);
     productosRouter.get('/producto/editar/:id', productos.editar);
     productosRouter.post('/producto', productos.guardar);
