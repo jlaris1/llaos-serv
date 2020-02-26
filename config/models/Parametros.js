@@ -9,7 +9,7 @@ var parametrosSchemaJSON = {
     temperatura: String,
     nivel_agua: { type:String , default: null},
     estanque: { type: Schema.ObjectId, ref: "Estanques" },
-    fecha: { type: Date, default: new Date()},
+    fecha: { type: Date, default: new Date().toLocaleDateString("es-MX")},
     hora: String,
     tiempo: String,
     parametrista: { type: Schema.ObjectId, ref: "Usuarios"},

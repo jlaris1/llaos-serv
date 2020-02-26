@@ -10,6 +10,7 @@ var nutricionSchemaJSON = {
     kg_racion: String,
     porcent_ajuste: String,
     suma: String,
+    tiempo: String,
     codigo_racion: String,
     siguiente_racion: String,
     estanque: { type: Schema.ObjectId, ref: "Estanques" },

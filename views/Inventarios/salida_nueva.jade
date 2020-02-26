@@ -116,7 +116,7 @@ block contenido
                5 utilidad: String,
                6 pUtilidad: String,
                7 pVenta: String,
-               8 existencia: String
+               12 existencia: String
             */
 
             for(var i = 0; i < arr.length; i ++){
@@ -127,7 +127,7 @@ block contenido
                 obj.descripcion = aObj.split(",")[3].split(":")[1];
                 obj.unidad = aObj.split(",")[2].split(":")[1];
                 obj.precioUnitario = aObj.split(",")[7].split(":")[1];
-                obj.cantidad = aObj.split(",")[8].split(":")[1];
+                obj.cantidad = aObj.split(",")[12].split(":")[1];
 
                 productos.push(obj);
                 obj = new Object();
@@ -221,57 +221,28 @@ block contenido
             $('#lugar_almacen').val($( "#almacen option:selected" ).val());
         }
 
-        /* Agregar producto desde la búsqueda*/
+        /* Agregar producto desde la búsqueda */
         function agregarProductoBusqueda(valor){
             productos.forEach( function(p){
                 //alert(p.codigo + ' vs ' + valor );
-                if(p.codigo == valor){
+                if(p.id == valor){
                     //alert(p.codigo + ' vs ' + valor );
                     registrarArticulo(p, $('#cantidad').val());
                 }
             });
         }
 
-        /* Eliminar producto seleccionado*/
+        /* Eliminar producto seleccionado */
         function eliminarProducto(id){
-           //$('#articulos tbody').empty();
-
             articulos_salida.splice(id, 1);
 
             $('#tr'+ id).remove();
-
-            /*articulos_salida.forEach( function(vta){
-                var rowCount = $('#articulos >tbody >tr').length;
-
-                vta.rowCount = rowCount;
-                
-                $('#articulos > tbody:last').append(
-                    "<tr id='tr" + rowCount + "'>" +
-                    "   <td class='text-center'>"+
-                    "       <div class='btn-group table-icons'>"+
-                    "           <a id='" + rowCount + "' class='btn btn-danger btn-small' href='#', data-toggle='tooltip', data-placement='top', title='Eliminar' onclick='eliminarProducto(this.id)'> "+ 
-                    "               <i class='fas fa-minus-circle' style='color: white;'></i>" +
-                    "           </a>" +
-                    "       </div>" +
-                    "   </td> " +
-                    "   <td id='codi" + rowCount + "' class='text-center'>" + vta.codigo + "</td> " +
-                    "   <td id='des" + rowCount + "' class='text-right'>" + vta.descripcion + "</td> " +
-                    "   <td id='uni" + rowCount + "' class='text-center'>" + vta.unidad + "</td> " +
-                    "   <td id='cant" + rowCount + "' class='text-center'>" + vta.cantidad + "</td> " +
-                    "</tr>"
-                );
-            });*/
-
             $("#articulos_salida").val(JSON.stringify(articulos_salida));
         }
 
         /* Agregar el producto a la tabla de salidas */
         function registrarArticulo(registro, cantidad){
-            var importe = 0.00;
-
-            if(existeProducto(registro, cantidad)){
-                importe = prod.pVenta;    
-            } else {
+            if(existeProducto(registro, cantidad)){} else {
                 rowCount = $('#articulos >tbody >tr').length;
 
                 $('#articulos > tbody:last').append(
@@ -287,6 +258,7 @@ block contenido
                     "   <td id='des" + rowCount + "' class='text-right'>" + registro.descripcion + "</td> " +
                     "   <td id='uni" + rowCount + "' class='text-center'>" + registro.unidad + "</td> " +
                     "   <td id='cant" + rowCount + "' class='text-center'>" + cantidad + "</td> " +
+                    "   <td id='stock" + rowCount + "' class='text-center'>" + parseFloat(registro.cantidad).toFixed(2) + "</td> " +
                     "</tr>"
                 );
 
@@ -308,22 +280,16 @@ block contenido
             $('#cantidad').val('1.00');
         }
 
-        /* Si el producto existe agregar uno más o cantidad ingresada al total del mismo*/
+        /* Si el producto existe agregar uno más o cantidad ingresada al total del mismo */
         function existeProducto(producto, cantidad){
-            for(var i=0; i < articulos_salida.length; i ++){
-                if(articulos_salida[i].codigo == producto.codigo){
-                    console.log(" Entre en " + articulos_salida[i].codigo + " VS " + producto.codigo);
-                    console.log(articulos_salida[i]);
-                    console.log($('#articulos').html());
+            //console.log(articulos_salida);
+            for(var i=0; i <= articulos_salida.length -1; i ++){
+                //console.log(" Entre en " + articulos_salida[i].articulo.id + " VS " + producto.id);
+                if(articulos_salida[i].articulo.id == producto.id){
+                    //console.log(articulos_salida[i]);
 
-                    articulos_salida[i].cantidad = (parseFloat(articulos_salida[i].cantidad) + parseFloat(cantidad)).toFixed(2);
-                    //articulos_salida[i].importe = (parseFloat(articulos_salida[i].cantidad) * parseFloat(articulos_salida[i].pVenta)).toFixed(2);
-                    
-                    //$("#cant" + articulos_salida[i].rowCount).text(articulos_salida[i].cantidad);
-                    //$("#imp" + articulos_salida[i].rowCount).text(articulos_salida[i].importe);
-
-                    prod = articulos_salida[i];
-
+                    articulos_salida[i].articulo.cantidad = (parseFloat(articulos_salida[i].articulo.cantidad) + parseFloat(cantidad)).toFixed(2);                   
+                    $("#cant" + articulos_salida[i].articulo.rowCount).text(articulos_salida[i].articulo.cantidad);
                     $('#articulos_salida').val(JSON.stringify(articulos_salida));
                     return true;
                 }
@@ -335,7 +301,7 @@ block contenido
         function guardarSalida(){
             //  Validaciones
             if($('#solicita').val() == -1){
-                $('#alert').addClass('alert-warning');
+                $('#alert').addClass('warning');
                 $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Es necesario selecionar ');
                 $('#msg2').text('para poder guardar la orden de salida.');
@@ -346,7 +312,7 @@ block contenido
             }
 
             if($('#areas').val() == -1){
-                $('#alert').addClass('alert-warning');
+                $('#alert').addClass('warning');
                 $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Es necesario selecionar ');
                 $('#msg2').text('para poder guardar la orden de salida.');
@@ -359,7 +325,7 @@ block contenido
             if($('#modulos').hasClass('hidden')){
             } else {
                 if($('#moduloS').val() == -1){
-                    $('#alert').addClass('alert-warning');
+                    $('#alert').addClass('warning');
                     $('#alertDiv').removeClass('hidden');
                     $('#msg1').text('Es necesario selecionar ');
                     $('#msg2').text('para poder guardar la orden de salida.');
@@ -370,7 +336,7 @@ block contenido
                 }   
 
                 if($('#estS').val() == -1){
-                    $('#alert').addClass('alert-warning');
+                    $('#alert').addClass('warning');
                     $('#alertDiv').removeClass('hidden');
                     $('#msg1').text('Es necesario selecionar ');
                     $('#msg2').text('para poder guardar la orden de salida.');
@@ -382,7 +348,7 @@ block contenido
             }
             
             if(articulos_salida.length < 1){
-                $('#alert').addClass('alert-warning');
+                $('#alert').addClass('warning');
                 $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Es necesario selecionar ');
                 $('#msg2').text('para poder guardar la orden de salida.');
@@ -415,8 +381,8 @@ block contenido
                 }
                 
                 // Mostrar notificación de guardado correcto 
-                $('#alert').removeClass('alert-warning');
-                $('#alert').addClass('alert-success');
+                $('#alert').removeClass('warning');
+                $('#alert').addClass('success');
                 $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Se ha guardado con ');
                 $('#msg2').text('la orden de salida.');
@@ -429,6 +395,13 @@ block contenido
         function imprimirOrden(){
             $('#imprimir').addClass('disabled');
             $('#terminar').removeClass('disabled');
+
+            /*** Enviar la descarga **/
+            /*if($('#url').text() != ''){
+                url = '../../../../../'+ $('#url').text();
+                window.open(url, 'Download');
+                $('#url').text('');
+            }*/
             
             var data = {
                 estatus: 'Generada',
@@ -454,10 +427,8 @@ block contenido
 
             }, "json");
         }
-
     //Termina Javascript
-
-    input#productos(name="productos" value="#{productos}").hidden
+   
 
     // Inputs para funcionar
     input#articulos_salida.hidden(name="articulos_salida" ).hidden
@@ -469,8 +440,7 @@ block contenido
     input#piscina_salida(type="text" name="piscina").hidden
     input#numero_orden(type="text" name="numero_orden" value="#{numeroOrden}").hidden
     input#id_orden(tyep="text" name="orden_id").hidden
-
-    //form(name="frm" method="post" action="/inventarios/registrar/salida")  
+    input#productos(name="productos" value="#{productos}").hidden
 
     // Titulo y botones
     section.mb-4
@@ -484,7 +454,7 @@ block contenido
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Busca producto").fas.fa-search
                     a#guardar(href="javascript:guardarSalida();").btn.btn-success.green-gradient.btn-margin
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Guardar Salida").fas.fa-save
-                    a#imprimir(href="javascript:imprimirOrden();").btn.btn-info.btn-margin.disabled
+                    a#imprimir(href="javascript:imprimirOrden();").btn.btn-info.btn-margin
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Imprimir").fas.fa-print
                     a#terminar(href="javascript:finalizarOrden();").btn.btn-primary.disabled
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Finalizar").fas.fa-stamp
@@ -614,6 +584,7 @@ block contenido
                             th Descripcion
                             th Unidad
                             th Cantidad
+                            th Stock actual
                         tbody
 
     // Modal para seleccion de productos
@@ -651,7 +622,7 @@ block contenido
                                                 td.text-center
                                                     if p.cantidad > 0
                                                         div.btn-group.table-icons
-                                                            a(href="javascript:agregarProductoBusqueda('#{p.codigo}');" id=p.codigo, data-toggle="tooltip", data-placement="top", title="Agregar").btn.btn-success
+                                                            a(href="javascript:agregarProductoBusqueda('#{p.id}');" data-toggle="tooltip", data-placement="top", title="Agregar").btn.btn-success
                                                                 i(style="color: white;").fas.fa-plus-circle
                                                     else
                                                         div.btn-group.table-icons

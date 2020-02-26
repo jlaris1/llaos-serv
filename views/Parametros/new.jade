@@ -194,7 +194,7 @@ block contenido
             obj.ph = $("input[name=ph"+id+"]").val() == "" ? 0 : $("input[name=ph"+id+"]").val();
             obj.turbidez = $("input[name=turbidez"+id+"]").val() == "" || $("input[name=turbidez"+id+"]").val() == null ? null : $("input[name=turbidez"+id+"]").val();
             obj.hora = hora;
-            obj.tiempo = $('span_tiempo').text();
+            obj.tiempo = $('#span_tiempo').text();
             obj.parametrista = $('#user').val();
 
             if( obj.temperatura == 0 &&

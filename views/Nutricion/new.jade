@@ -55,10 +55,11 @@ block contenido
         var nutricion = [];
         var cambiar_tiempo = true;
         var hora;
+        var tamaño_suma = [];
 
         $(document).ready( function(){
-            obtenerfecha();
-            obtenerhora(); 
+            obtenerFecha();
+            obtenerHora(); 
 
             $('#subMenuNutricion').removeClass('hidden');
             $('#spanMenuNutricion').removeClass('fa-angle-left');
@@ -122,101 +123,42 @@ block contenido
             setTimeout('obtenerhora()',1000);
         }
 
-        function sumarCodigo(idS){
+        function sumarCodigo(idS, num_charola){
             var id = idS.split("_")[1];
-
-            var charola_1 = $('input[name="charola1'+id+'"]').val() == "" ? parseFloat(0) : parseFloat($('input[name="charola1'+id+'"]').val());
-            var charola_2 = $('input[name="charola2'+id+'"]').val() == "" ? parseFloat(0) : parseFloat($('input[name="charola2'+id+'"]').val());
-            var charola_3 = $('input[name="charola3'+id+'"]').val() == "" ? parseFloat(0) : parseFloat($('input[name="charola3'+id+'"]').val());
-            var charola_4 = $('input[name="charola4'+id+'"]').val() == "" ? parseFloat(0) : parseFloat($('input[name="charola4'+id+'"]').val());
-
+            var dividir = 0.00;
             var suma = 0.00;
             var codigo_racion = 0.00;
+            //  tamaño_suma.includes()
 
-            suma += charola_1 === NaN ? 0 : charola_1;
-            suma += charola_2 === NaN ? 0 : charola_2;
-            suma += charola_3 === NaN ? 0 : charola_3;
-            suma += charola_4 === NaN ? 0 : charola_4;
+            if(parseFloat($('input[name="charola'+num_charola+''+id+'"]').val()) < 0 || parseFloat($('input[name="charola'+num_charola+''+id+'"]').val()) > 0) {
+                $('#alert').removeClass('success');
+                $('#alert').addClass('warning');
+                $('#alertDiv').removeClass('hidden');
+                $('#msg1').text('Se adminten solo cantidades ');
+                $('#msg2').text('revise la charola ' + num_charola);
+                $('#msg_alert').text('de 0 a 2 ');
+                // focus charola.
+                $('input[name="charola'+num_charola+''+id+'"]').focus();
+                return;
+            }
 
+            var charola_1 = $('input[name="charola1'+id+'"]').val() == "" ? null : parseFloat($('input[name="charola1'+id+'"]').val());
+            var charola_2 = $('input[name="charola2'+id+'"]').val() == "" ? null : parseFloat($('input[name="charola2'+id+'"]').val());
+            var charola_3 = $('input[name="charola3'+id+'"]').val() == "" ? null : parseFloat($('input[name="charola3'+id+'"]').val());
+            var charola_4 = $('input[name="charola4'+id+'"]').val() == "" ? null : parseFloat($('input[name="charola4'+id+'"]').val());           
 
-            console.log(suma);
+            dividir += charola_1 == null ? 0 : 1;
+            dividir += charola_2 == null ? 0 : 1;
+            dividir += charola_3 == null ? 0 : 1;
+            dividir += charola_4 == null ? 0 : 1;
+           
+            suma += charola_1 == null ? 0 : charola_1;
+            suma += charola_2 == null ? 0 : charola_2;
+            suma += charola_3 == null ? 0 : charola_3;
+            suma += charola_4 == null ? 0 : charola_4;
+
             $('#suma'+id).text(suma);
-            //$('#sum').val(suma);
-
-            switch(suma){
-                case 1:
-                    $('#cod'+id).text(0.17);
-                    $('#cod_rad').val(0.17);
-                    break;
-                case 2:
-                    $('#cod'+id).text(0.33);
-                    $('#cod_rad').val(0.33);
-                    break;
-                case 3:
-                    $('#cod'+id).text(0.50);
-                    $('#cod_rad').val(0.50);
-                    break;
-                case 4:
-                    $('#cod'+id).text(0.67);
-                    $('#cod_rad').val(0.67);
-                    break;
-                case 5:
-                    $('#cod'+id).text(0.83);
-                    $('#cod_rad').val(0.83);
-                    break;
-                case 6:
-                    $('#cod'+id).text(1.00);
-                    $('#cod_rad').val(1.00);
-                    break;
-                case 7:
-                    $('#cod'+id).text(1.17);
-                    $('#cod_rad').val(1.17);
-                    break;
-                case 8:
-                    $('#cod'+id).text(1.33);
-                    $('#cod_rad').val(1.33);
-                    break;
-                case 9:
-                    $('#cod'+id).text(1.50);
-                    $('#cod_rad').val(1.50);
-                    break;
-                case 10:
-                    $('#cod'+id).text(1.67);
-                    $('#cod_rad').val(1.67);
-                    break;
-                case 11:
-                    $('#cod'+id).text(1.83);
-                    $('#cod_rad').val(1.83);
-                    break;
-                case 12:
-                    $('#cod'+id).text(2.00);
-                    $('#cod_rad').val(2.00);
-                    break;
-                case 13:
-                    $('#cod'+id).text(2.17);
-                    $('#cod_rad').val(2.17);
-                    break;
-                case 14:
-                    $('#cod'+id).text(2.33);
-                    $('#cod_rad').val(2.33);
-                    break;
-                case 15:
-                    $('#cod'+id).text(2.50);
-                    $('#cod_rad').val(2.50);
-                    break;
-                case 16:
-                    $('#cod'+id).text(2.67);
-                    $('#cod_rad').val(2.67);
-                    break;
-                case 17:
-                    $('#cod'+id).text(2.83);
-                    $('#cod_rad').val(2.83);
-                    break;
-                case 18:
-                    $('#cod'+id).text(3.00);
-                    $('#cod_rad').val(3.00);
-                    break;
-            }   
+            $('#cod'+id).text(parseFloat(suma/dividir).toFixed(2));
         }
 
         function mostrarPiscinas() {
@@ -241,19 +183,19 @@ block contenido
                                 '</div>'+
                                 '<div class="form-group margin-div">' +
                                     '<label> Charola 1 </label>' +
-                                    '<input class="form-control" type="text" id="c1_'+data.piscinas[i].codigo+'" name="charola1'+data.piscinas[i].codigo+'" placeholder="Charola 1" onblur="sumarCodigo(this.id)">' + 
+                                    '<input class="form-control" type="text" id="c1_'+data.piscinas[i].codigo+'" name="charola1'+data.piscinas[i].codigo+'" placeholder="Charola 1" onblur="sumarCodigo(this.id,1)">' + 
                                 '</div>' +
                                 '<div class="form-group margin-div">' +
                                     '<label> Charola 2 </label>' +
-                                    '<input class="form-control" type="text" id="c2_'+data.piscinas[i].codigo+'" name="charola2'+data.piscinas[i].codigo+'" placeholder="Charola 2" onblur="sumarCodigo(this.id)">' + 
+                                    '<input class="form-control" type="text" id="c2_'+data.piscinas[i].codigo+'" name="charola2'+data.piscinas[i].codigo+'" placeholder="Charola 2" onblur="sumarCodigo(this.id,2)">' + 
                                 '</div>' +
                                 '<div class="form-group margin-div">' +
                                     '<label> Charola 3 </label>' +
-                                    '<input class="form-control" type="text" id="c3_'+data.piscinas[i].codigo+'" name="charola3'+data.piscinas[i].codigo+'" placeholder="Charola 3" onblur="sumarCodigo(this.id)">' + 
+                                    '<input class="form-control" type="text" id="c3_'+data.piscinas[i].codigo+'" name="charola3'+data.piscinas[i].codigo+'" placeholder="Charola 3" onblur="sumarCodigo(this.id,3)">' + 
                                 '</div>' +
                                 '<div class="form-group margin-div">' +
                                     '<label> Charola 4 </label>' +
-                                    '<input class="form-control" type="text" id="c4_'+data.piscinas[i].codigo+'" name="charola4'+data.piscinas[i].codigo+'" placeholder="Charola 4" onblur="sumarCodigo(this.id)">' + 
+                                    '<input class="form-control" type="text" id="c4_'+data.piscinas[i].codigo+'" name="charola4'+data.piscinas[i].codigo+'" placeholder="Charola 4" onblur="sumarCodigo(this.id,4)">' + 
                                 '</div>' +
                                 '<div class="form-group margin-div">' +
                                     '<label> Kg ración </label>' +
@@ -261,7 +203,7 @@ block contenido
                                 '</div>' +
                                 '<div class="form-group margin-div">' +
                                     '<label> % Ajuste </label>' +
-                                    '<input class="form-control" type="text" id="aj_'+data.piscinas[i].codigo+'" name="ajuste'+data.piscinas[i].codigo+'" placeholder="% Ajuste" onkeyup="siguienteRacion(this.id)">' + 
+                                    '<input class="form-control" type="text" id="aj_'+data.piscinas[i].codigo+'" name="ajuste'+data.piscinas[i].codigo+'" placeholder="% Ajuste" onkeyup="siguienteRacion(this.id)" onblur="registrarParametro(this.id)">' + 
                                 '</div>' +
                             '</div>' +
                             '<div style="margin-top: -10px;" class="text-right">' +
@@ -295,18 +237,84 @@ block contenido
             }, "json");
         }
 
-        function guardar(){
-            // /nutricion/add
+        function guardarRegistros(){
+            abrirLoader();
+
+            if(nutricion.length == 0) {
+                $('#alert').removeClass('alert-success');
+                $('#alert').addClass('alert-warning');
+                $('#alertDiv').removeClass('hidden');
+                $('#msg1').text('Es necesario ingresar ');
+                $('#msg2').text('en al menos una piscina');
+                $('#msg_alert').text('parámetros ');
+                $('#loader').addClass('hidden');
+                return;
+            }
+
+            $.post( "/nutricion/add", {
+                nutricion: nutricion
+            }, (data) => {
+                //console.log(data);
+                $('#span_estatus').text(data.estatus);
+                
+                // Mostrar notificación de guardado correcto 
+                $('#alert').removeClass('alert-warning');
+                $('#alert').addClass('alert-success');
+                $('#alertDiv').removeClass('hidden');
+                $('#msg1').text('Se ha realizado con ');
+                $('#msg2').text('el registro de parámetros');
+                $('#msg_alert').text('éxito ');
+                $('#guardar').addClass('disabled');
+            }, "json");
+
+            $('#loader').addClass('hidden');
+
+            cerrarLoader();
         }
 
         function siguienteRacion(idS) {
             var id = idS.split("_")[1];
-            console.log(idS)
+
             var kg = $('input[name="racion'+id+'"]').val() == "" ? parseFloat(0) : parseFloat($('input[name="racion'+id+'"]').val());
             var kg_sig = kg * ( 1.0 + parseFloat(parseFloat($('input[name="ajuste'+id+'"]').val()) / 100));
-            $('#kg_sig'+id).text(kg_sig);       
-            console.log($('input[name="racion'+id+'"]').val());
-            console.log("Kg: " + kg + "  kg_sig: " + kg_sig);    
+            $('#kg_sig'+id).text(parseFloat(kg_sig).toFixed(2));       
+        }
+
+        function registrarParametro(idS){
+            var id = idS.split("_")[1];
+            var obj = new Object()
+
+            obj.charola_1 = $("input[name=charola1"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola1"+id+"]").val();
+            obj.charola_2 = $("input[name=charola2"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola2"+id+"]").val();
+            obj.charola_3 = $("input[name=charola3"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola3"+id+"]").val();
+            obj.charola_4 = $("input[name=charola4"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola4"+id+"]").val();
+            obj.kg_racion = $("input[name=racion"+id+"]").val() == "" ? parseFloat(0) : $("input[name=racion"+id+"]").val();
+            obj.porcent_ajuste = $("input[name=ajuste"+id+"]").val() == "" ? parseFloat(0) : $("input[name=ajuste"+id+"]").val();
+            obj.codigo_racion = $("#cod" + id).text();
+            obj.suma = $("#suma" + id).text();
+            obj.siguiente_racion = $("#kg_sig" + id ).text();
+            obj.estanque = $("input[name=idPis"+id+"]").val();
+            obj.hora = hora;
+            obj.tiempo = $("#span_tiempo").text();
+            obj.charolero = $('#user').val();
+
+            if( obj.charola_1 == 0 &&
+               obj.charola_2 == 0 &&
+               obj.charola_3 == 0 &&
+               obj.charola_4 == 0 &&
+               obj.kg_racion == 0 &&
+               obj.porcent_ajuste == 0 ) { 
+                   console.log(" Nose mandará a registrar piscina: " + id);
+               } else {
+                   nutricion.push(obj);
+               }
+
+            console.log(nutricion);
+        }
+
+        function asignarTiempo(){
+            cambiar_tiempo = false;
+            $('#span_tiempo').text($('#select_tiempo').val());
         }
 
     // Termina javascript
@@ -337,8 +345,6 @@ block contenido
                             br
                             strong
                                 span#span_modulos.blue-text ####
-                            //a(data-toggle="modal" href="#almacenModal" style="margin-left: 10px;").btn.btn-primary.btn-small.blue-gradient
-                                i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Seleccionar almacén").fas.fa-2x.fa-sync-alt
                         h5.h5-responsive
                             small Número de piscinas: 
                             br
@@ -380,4 +386,37 @@ block contenido
             .panel-heading
                 i.fas.fa-vial
             .panel-body
-                ul#lista_nutricion             
+                ul#lista_nutricion   
+
+    // Modal Seleccionar tiempo
+    #tiempoModal(class="modal")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
+                    .col-lg-12
+                        i.fa.fas.fa-sync-alt(style="margin-right: 15px;")
+                        label 
+                            strong Seleccionar tiempo
+                .modal-body()
+                    .card
+                        .card-body
+                            .row
+                                .col-lg-12
+                                    .form-group
+                                        label | Tiempo
+                                        .input-group
+                                            span.input-group-addon.blue-gradient
+                                                i.fas.fa-hourglass-half.fa-input
+                                            select#select_tiempo.form-control(required name="tiempo" tabindex="1" value="" onchange="asignarTiempo()")
+                                                option(value="") << Seleccione >>
+                                                option(value="AM") AM
+                                                option(value="PM") PM
+
+                .modal-footer
+                    .text-right
+                        .btn-group
+                            a(data-dismiss="modal").btn.btn-default
+                                i.fa.fas.fa-times-circle()
+                                |   Cerrar
+
+          

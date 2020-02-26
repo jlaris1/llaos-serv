@@ -685,22 +685,13 @@ html(lang="es")
                                                 |   Nueva Cotización
                             // /.sidebar-collapse
                             // /.navbar-static-side
-            // Alertas 
-            #alertDiv.hidden
-                #alert.alert.alert-dismissible.alert-content.alert-success(role="alert" style="margin-top: 10px;")
-                    a(href="javascript:cerrarAlert();" class="close" aria-label="close") &times;
-                    span
-                        span#msg1 ##
-                        strong#msg_alert ###
-                        span#msg2 ##
             #page-wrapper
                 .container-fluid
-                    
                     block contenido
             #reports.modal(tabindex='-1', role='dialog')
                 .modal-dialog(role='document')
                     .modal-content
-                        .modal-header.modal-header-style
+                        .modal-header(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
                             h3.modal-title Reportes #{titulo}
                             button.close(type='button', data-dismiss='modal', aria-label='Close' style="margin-top: -40px;")
                                 span(aria-hidden='true') ×
@@ -714,7 +705,7 @@ html(lang="es")
                                         .form-group
                                             label | Criterio
                                             .input-group
-                                                span.input-group-addon
+                                                span.input-group-addon(style="color: #FFF;").blue-gradient
                                                     i.fas.fa-search-plus
                                                 select#criterio.form-control(name="criterio" tabindex="2" value="")
                                                     option(value="") << Seleccione >>
@@ -726,7 +717,7 @@ html(lang="es")
                                         .form-group
                                             label | Áreas
                                             .input-group
-                                                span.input-group-addon
+                                                span.input-group-addon(style="color: #FFF;").blue-gradient
                                                     i.fas.fa-map-signs
                                                 select#area.form-control(name="area" tabindex="3" value="")
                                                     option(value="") << Seleccione >>
@@ -746,7 +737,7 @@ html(lang="es")
                                         .form-group
                                             label | Modulo
                                             .input-group
-                                                span.input-group-addon
+                                                span.input-group-addon(style="color: #FFF;").blue-gradient
                                                     i.fas.fa-map-pin
                                                 select#modulo.form-control(name="modulo" tabindex="3")
                                                     option(value="") << Seleccione >>
@@ -761,7 +752,7 @@ html(lang="es")
                                         .form-group
                                             label | Estatus
                                             .input-group
-                                                span.input-group-addon
+                                                span.input-group-addon(style="color: #FFF;").blue-gradient
                                                     i.fas.fa-stamp
                                                 select#estatus.form-control(name="estatus" tabindex="3")
                                                     option(value="") << Seleccione >>
@@ -775,14 +766,14 @@ html(lang="es")
                                         .form-group
                                             label | Fecha 
                                             .input-group
-                                                span.input-group-addon
+                                                span.input-group-addon(style="color: #FFF;").blue-gradient
                                                     i.fas.fa-calendar
                                                 input#fecha.form-control(type="date" name="fecha" tabindex="3")
                                     .col-lg-6#responsables.hidden
                                         .form-group
                                             label | Responsables
                                             .input-group
-                                                span.input-group-addon
+                                                span.input-group-addon(style="color: #FFF;").blue-gradient
                                                     i.fas.fa-users
                                                 select#responsable.form-control(name="responsable" tabindex="2" value="")
                                                     option(value="") << Seleccione >>
@@ -793,7 +784,7 @@ html(lang="es")
                                         .form-group
                                             label | Solicitantes
                                             .input-group
-                                                span.input-group-addon
+                                                span.input-group-addon(style="color: #FFF;").blue-gradient
                                                     i.fas.fa-users
                                                 select#solicitante.form-control(name="solicitante" tabindex="2" value="")
                                                     option(value="") << Seleccione >>
@@ -803,7 +794,7 @@ html(lang="es")
                                         .form-group
                                             label#labelCombos 
                                             .input-group
-                                                span.input-group-addon
+                                                span.input-group-addon(style="color: #FFF;").blue-gradient
                                                     i.fab.fa-searchengin
                                                 select#combo.form-control(name="combo" tabindex="2")
                                                     option(value="0") << Seleccione >>
@@ -811,14 +802,14 @@ html(lang="es")
                                         .form-group
                                             label#labelInputs 
                                             .input-group
-                                                span.input-group-addon
+                                                span.input-group-addon(style="color: #FFF;").blue-gradient
                                                     i.fas.fa-asterisk
                                                 input#input.form-control(type="text" name="input" tabindex="2")
                                     .col-lg-6#piscinas.hidden
                                         .form-group
                                             label | Piscinas
                                             .input-group
-                                                span.input-group-addon
+                                                span.input-group-addon(style="color: #FFF;").blue-gradient
                                                     i.fas.fa-water
                                                 select#piscina.form-control(name="piscina" tabindex="3" value="")
                                                     option(value="") << Seleccione >>
@@ -828,7 +819,7 @@ html(lang="es")
                                         .form-group
                                             label#label_charo | Charoleros
                                             .input-group
-                                                span.input-group-addon
+                                                span.input-group-addon(style="color: #FFF;").blue-gradient
                                                     i.fas.fa-user-circle
                                                 select#charolero.form-control(name="charolero" tabindex="3" value="")
                                                     option(value="") << Seleccione >>
@@ -839,14 +830,14 @@ html(lang="es")
                                         .form-group
                                             label | Fecha Inicio
                                             .input-group
-                                                span.input-group-addon
+                                                span.input-group-addon(style="color: #FFF;").blue-gradient
                                                     i.far.fa-calendar-alt
                                                 input#fInicio.form-control(type="date" name="fechaInicio" tabindex="3")
                                     .col-lg-6#fechaFin.hidden
                                         .form-group
                                             label | Fecha Fin
                                             .input-group
-                                                span.input-group-addon
+                                                span.input-group-addon(style="color: #FFF;").blue-gradient
                                                     i.fas.fa-calendar-alt
                                                 input#fFin.form-control(type="date" name="fechaFin" tabindex="4")            
                         .modal-footer
@@ -860,6 +851,15 @@ html(lang="es")
                                     a(href="javascript:reporteXLS()").btn.btn-success.form-control
                                         i.fas.fa-file-excel
                                         |   Reporte XLS
+        
+        // Alertas 
+        #alertDiv.hidden
+            #alert.alert-content.oaerror.success(role="alert" style="margin-top: 10px;")
+                a(href="javascript:cerrarAlert();" class="close" aria-label="close") &times;
+                span
+                    span#msg1 ##
+                    strong#msg_alert ###
+                    span#msg2 ##
 
         // Loader
         #loading.modal-loader

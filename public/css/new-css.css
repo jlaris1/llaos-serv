@@ -186,3 +186,58 @@
     }
 }
 
+
+/*** ALERTAS ***/
+.error-notice {
+    margin: 5px 5px; /* Making sure to keep some distance from all side */
+  }
+  
+  .oaerror {
+    width: 30%; /* Configure it fit in your design  */
+    margin: 0 auto; /* Centering Stuff */
+    background-color: #FFFFFF; /* Default background */
+    padding: 20px;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+    margin: 0 auto;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+  }
+  
+  .danger {
+    border-left-color: #d9534f; /* Left side border color */
+    background-color: rgba(217, 83, 79, 0.8); /* Same color as the left border with reduced alpha to 0.1 */
+  }
+  
+  .danger strong {
+    color:  #d9534f;
+  }
+  
+  .warning {
+    border-left-color: #df8a13;
+    background-color: rgba(240, 173, 78, 1);
+  }
+  
+  .warning strong {
+    color: #df8a13;
+  }
+  
+  .info {
+    border-left-color: #244c58;
+    background-color: rgba(91, 192, 222, 1);
+  }
+  
+  .info strong {
+    color: #244c58;
+  }
+  
+  .success {
+    border-left-color: #2b542c;
+    background-color: rgba(124, 171, 126, 0.1);
+  }
+  
+  .success strong {
+    color: #2b542c;
+  }
+ 

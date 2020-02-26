@@ -10,77 +10,74 @@ block contenido
 
             if($('#url').text() != ''){
                 url = '../../reports/parametros/'+ $('#url').text();
+                console.log(url);
                 window.open(url, 'Download');
                 $('#url').text('');
             }
         });
-        //Termina Javascript
+    //Termina Javascript
 
-    .row(style="margin-bottom: -5px;")
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12
-            h2
-                i.fas.fa-eye-dropper(style="margin-right: 10px;")
-                |   Parámetros
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
-            a.btn.btn-special(href="/parametros/new", style="margin-right: 5px;")
-                i.fas.fa-plus-circle
-                |   Nuevo
-            if user.permisos != "usuario"
-                a.btn.btn-special(href="#reports" data-toggle="modal" data-target="#reports" style="margin-right: 5px;")
-                    i.fas.fa-file-pdf
-                    |   Reportes
-    .divider
+    // Inputs funcionamiento
     label#url.hidden #{url}
-    .row
-        .table-responsive   
-            table#mediciones.table.table-striped.table-hover
-                thead
-                    th Est.
-                    th Oxigeno (mg/L)
-                    th pH
-                    th Salinidad (ppm)
-                    th Temperatura (°C)
-                    th Nivel Agua
-                    th Fecha
-                    th Hora
-                    th Tiempo
-                    th Parametrista
-                    th Acciones
-                tbody
-                    each med in mediciones
-                        tr
-                            td #{ med.estanque.codigo }
-                            if med.oxigeno < 4 
-                                td.text-danger
-                                    i.fas.fa-exclamation-circle.text-danger &nbsp;
-                                    b #{ parseFloat(med.oxigeno).toFixed(2) }
-                            else
-                                td #{ parseFloat(med.oxigeno).toFixed(2) }
-                            if med.ph < 7
-                                td.text-danger
-                                    i.fas.fa-exclamation-circle.text-danger &nbsp;
-                                    b #{ parseFloat(med.ph).toFixed(2) }
-                            else
-                                td #{ parseFloat(med.ph).toFixed(2) }
-                            td #{ parseFloat(med.salinidad).toFixed(2) }
-                            td #{ parseFloat(med.temperatura).toFixed(2) }
-                            td #{ parseFloat(med.nivel_agua).toFixed(2) }
-                            if (new Date(med.fecha).getMonth() + 1) < 10
-                                if (new Date(med.fecha).getDate()) < 10
-                                    td.text-center #{ '0' + new Date(med.fecha).getDate()+ '/0' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
-                                else         
-                                    td.text-center #{ new Date(med.fecha).getDate()+ '/0' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
-                            else
-                                if (new Date(med.fecha).getDate()) < 10
-                                    td.text-center #{ '0' + new Date(med.fecha).getDate()+ '/' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
-                                else 
-                                    td.text-center #{ new Date(med.fecha).getDate()+ '/' + (new Date(med.fecha).getMonth() + 1)+ '/' + new Date(med.fecha).getFullYear()}
-                            td #{ med.hora }
-                            td #{ med.tiempo }
-                            //td #{ med.parametrista.nombre }
-                            td
-                                a(href="/parametros/edit/#{med.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px; color: #057e95;")
-                                    i.fas.fa-pencil-alt.fa-lg
-                                a(href="/parametros/delete/#{med.id}", data-toggle="tooltip", data-placement="top", title="Eliminar", style="margin-right: 5px;")
-                                    i.fas.fa-minus-circle.fa-lg.text-danger
-                                
+    
+    // Título
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-eye-dropper
+                    |   Parámetros
+                div
+                    a(href="/parametros/new" style="margin-right: 5px;").btn.btn-success
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nuevo producto").fas.fa-plus-circle
+                    a(href="#reports" data-toggle="modal" data-target="#reports").btn.btn-danger
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Reportes").fas.fa-file-pdf
+   
+    // Datos
+    section.mb-4
+        .card
+            .table-responsive(style="margin-top: 10px;") 
+                table#mediciones.table.table-striped.table-hover
+                    thead
+                        th.text-center
+                                i(style="color: gray;").fas.fa-cog
+                        th Pis.
+                        th Oxigeno (mg/L)
+                        th pH
+                        th Salinidad (ppm)
+                        th Temperatura (°C)
+                        th Nivel Agua
+                        th Fecha
+                        th Hora
+                        th Tiempo
+                        th Parametrista
+                    tbody
+                        each med in mediciones
+                            tr  
+                                td
+                                    .d-flex
+                                        a(href="/parametros/edit/#{med.id}", data-toggle="tooltip", data-placement="top", title="Editar", style="margin-right: 5px; color: #FFF;").btn.btn-primary.btn-small
+                                            i.fas.fa-pencil-alt.fa-2x
+                                        a(href="/parametros/delete/#{med.id}", data-toggle="tooltip", data-placement="top", title="Eliminar", style="margin-right: 5px;").btn.btn-danger.btn-small
+                                            i.fas.fa-minus-circle.fa-2x
+                                td #{ med.estanque.codigo }
+                                if med.oxigeno < 4 
+                                    td.text-danger
+                                        i.fas.fa-exclamation-circle.text-danger &nbsp;
+                                        b #{ parseFloat(med.oxigeno).toFixed(2) }
+                                else
+                                    td #{ parseFloat(med.oxigeno).toFixed(2) }
+                                if med.ph < 7
+                                    td.text-danger
+                                        i.fas.fa-exclamation-circle.text-danger &nbsp;
+                                        b #{ parseFloat(med.ph).toFixed(2) }
+                                else
+                                    td #{ parseFloat(med.ph).toFixed(2) }
+                                td #{ parseFloat(med.salinidad).toFixed(2) }
+                                td #{ parseFloat(med.temperatura).toFixed(2) }
+                                td #{ parseFloat(med.nivel_agua).toFixed(2) }
+                                td.text-center #{ med.fecha.toLocaleDateString("es-MX") }
+                                td  #{ med.hora }
+                                td  #{ med.tiempo }
+                                td  #{ med.parametrista.nombre }
+                            

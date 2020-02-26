@@ -16,60 +16,54 @@ block contenido
                 $('#url').text('');
             }
         });
-        //Termina Javascript
+    //Termina Javascript
 
-    .row(style="margin-bottom: -5px;")
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12
-            h2
-                i.fas.fa-seedling(style="margin-right: 10px;")
-                |   Nutrición
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12.text-right(style="margin-top: 25px;")
-            a.btn.btn-special(href="/nutricion/new", style="margin-right: 5px;")
-                i.fas.fa-plus-circle
-                |   Nueva
-            if user.permisos != "usuario"
-                a.btn.btn-special(href="#reports" data-toggle="modal" data-target="#reports" style="margin-right: 5px;")
-                    i.fas.fa-file-pdf
-                    |   Reportes
-    .divider
+    // Inputs funcionamiento
     label#url.hidden #{url}
-    .row
-        .table-responsive   
-            table#nutricion.table.table-striped.table-hover
-                thead
-                    th Estanque
-                    th Charola 1
-                    th Charola 2
-                    th Charola 3
-                    th Charola 4
-                    th Kg Ración
-                    th % Ajuste
-                    th Suma
-                    th Código Ración
-                    th Kg Sig. Ración
-                    th Charolero
-                    th Fecha
-                tbody
-                    each nut in nutricion
-                        tr  
-                            td.text-center #{ nut.estanque.codigo }
-                            td.text-center #{ nut.charola_1 }
-                            td.text-center #{ nut.charola_2 }
-                            td.text-center #{ nut.charola_3 }
-                            td.text-center #{ nut.charola_4 }
-                            td.text-center #{ parseFloat(nut.kg_racion).toFixed(2) }
-                            td.text-center #{ parseFloat(nut.porcent_ajuste).toFixed(2) }
-                            td.text-center #{ parseFloat(nut.suma).toFixed(2) }
-                            td.text-center #{ nut.codigo_racion }
-                            td.text-center #{ nut.siguiente_racion }
-                            td.text-center #{ nut.charolero.nombre }
-                            if (new Date(nut.fecha).getMonth() + 1) < 10
-                                if (new Date(nut.fecha).getDate()) < 10
-                                    td.text-center #{ '0' + new Date(nut.fecha).getDate()+ '/0' + (new Date(nut.fecha).getMonth() + 1)+ '/' + new Date(nut.fecha).getFullYear()}
-                                else         
-                                    td.text-center #{ new Date(nut.fecha).getDate()+ '/0' + (new Date(nut.fecha).getMonth() + 1)+ '/' + new Date(nut.fecha).getFullYear()}
-                            else
-                                if (new Date(nut.fecha).getDate()) < 10
-                                    td.text-center #{ '0' + new Date(nut.fecha).getDate()+ '/' + (new Date(nut.fecha).getMonth() + 1)+ '/' + new Date(nut.fecha).getFullYear()}
-                                else 
-                                    td.text-center #{ new Date(nut.fecha).getDate()+ '/' + (new Date(nut.fecha).getMonth() + 1)+ '/' + new Date(nut.fecha).getFullYear()}
+    
+    // Título
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-seedling
+                    |   Nutrición
+                div
+                    a(href="/nutricion/new" style="margin-right: 5px;").btn.btn-success
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nuevo producto").fas.fa-plus-circle
+                    a(href="#reports" data-toggle="modal" data-target="#reports").btn.btn-danger
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Reportes").fas.fa-file-pdf
+   
+    // Datos
+    section.mb-4
+        .card
+            .table-responsive(style="margin-top: 10px;") 
+                table#nutricion.table.table-striped.table-hover
+                    thead
+                        th Piscina
+                        th Charola 1
+                        th Charola 2
+                        th Charola 3
+                        th Charola 4
+                        th Kg Ración
+                        th % Ajuste
+                        th Suma
+                        th Código Ración
+                        th Sig. Ración
+                        th Charolero
+                        th Fecha
+                    tbody
+                        each nut in nutricion
+                            tr  
+                                td.text-center #{ nut.estanque.codigo }
+                                td.text-center #{ nut.charola_1 }
+                                td.text-center #{ nut.charola_2 }
+                                td.text-center #{ nut.charola_3 }
+                                td.text-center #{ nut.charola_4 }
+                                td.text-center #{ parseFloat(nut.kg_racion).toFixed(2) }
+                                td.text-center #{ parseFloat(nut.porcent_ajuste).toFixed(2) }
+                                td.text-center #{ parseFloat(nut.suma).toFixed(2) }
+                                td.text-center #{ nut.codigo_racion }
+                                td.text-center #{ nut.siguiente_racion }
+                                td.text-center #{ nut.charolero.nombre }
+                                td #{nut.fecha}

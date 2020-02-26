@@ -83,8 +83,8 @@ module.exports = function(app){
     var catalogosRouter = express.Router();
 
     //Pruebas
-    app.get('/pruebita', pruebita.prueba); 
-    
+    //app.get('/pruebita', pruebita.prueba); 
+    app.get('/pruebita', inventarios.imprimirOrdenSalida);
     //Errores
     app.get('error-inesperado', errores.errorInesperado);
     app.get('/error-inicio/:user', errores.errorInicio);

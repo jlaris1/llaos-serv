@@ -48,7 +48,7 @@ block contenido
         .card
             .card-body.d-flex.justify-content-between
                 .table-responsive 
-                    table#products.table.table-striped.table-hover
+                    table#salidas.table.table-striped.table-hover
                         thead
                             th.text-center
                                 i(style="color: gray;").fas.fa-cog
@@ -65,19 +65,19 @@ block contenido
                             each ord in ordenes_salida
                                 tr(scope="row")
                                     td.d-flex.justify-content-between
-                                        a.btn.btn-info(href="/inventarios/salidas/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Editar" style="margin-right: 5px;")
-                                            i.fas.fa-pencil-alt
+                                        a.btn.btn-info.btn-small(href="/inventarios/salidas/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Editar" style="margin-right: 5px;")
+                                            i.fas.fa-pencil-alt.fa-input.fa-2x
                                         //a.btn.btn-danger(href="productos/producto/eliminar/#{p.id}",data-toggle="tooltip", data-placement="top", title="Eliminar")
                                             i.fas.fa-times-circle
                                     td.text-center #{ ord.numero_orden }
                                     td #{ ord.lugar_almacen }
-                                    td #{ ord.lugar_unidad }
-                                    td #{ ord.solicita }
+                                    td #{ ord.lugar_unidad.nombre }
+                                    td #{ ord.solicita.nombre }
                                     td #{ ord.area }
-                                    td #{ ord.modulo.nombre }
-                                    td #{ ord.piscina.nombre }
+                                    td #{ ord.modulo == null ? '' : ord.modulo.nombre }
+                                    td #{ ord.piscina == null ? '' : ord.piscina.nombre }
                                     td #{ ord.estatus }
-                                    td #{ ord.registro}
+                                    td #{ ord.registro.toLocaleString("ex-Mx")}
 
 
     

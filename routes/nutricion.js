@@ -204,36 +204,25 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		}else{ 
-            var fecha = new Date();
+            console.log(solicitud.body);
 
-            var data = {
-                charola_1: solicitud.body.charola_1,
-                charola_2: solicitud.body.charola_2,
-                charola_3: solicitud.body.charola_3,
-                charola_4: solicitud.body.charola_4,
-                kg_racion: solicitud.body.kg_racion,
-                porcent_ajuste: solicitud.body.porcent_ajuste,
-                siguiente_racion: solicitud.body.siguiente_racion,
-                suma: solicitud.body.suma,
-                codigo_racion: (parseFloat(solicitud.body.codigo_racion)).toFixed(2),
-                estanque: solicitud.body.estanque,
-                //fecha: new Date( fecha.getTime() + Math.abs(fecha.getTimezoneOffset()*60000)),
-                fecha: new Date( solicitud.body.fecha.getTime() + Math.abs(solicitud.body.fecha.getTimezoneOffset()*60000)),
-                hora: FechaHora.obtenerhora(),
-                charolero: solicitud.session.user._id
+            for(let i = 0; i <= solicitud.body.nutricion.length -1; i++){
+                nutricion = new Nutricion(solicitud.body.nutricion[i]);
+
+                nutricion.save( function(error){
+                    if(error){
+                        console.log(chalk.bgRed(error));
+                    } else {
+                        if(i == solicitud.body.nutricion.length -1){
+                            respuesta.json(
+                                {
+                                    estatus: 'Guardado'
+                                }
+                            );
+                        }
+                    }
+                });
             }
-
-            console.log(chalk.bgGreen(data));
-
-            nutricion = new Nutricion(data);
-
-            nutricion.save( function(error){
-                if(error){
-                    console.log(chalk.bgRed(error));
-                } else {
-                    respuesta.redirect('/nutricion/all');
-                }
-            })
         }
     },
     pdf: function(solicitud, respuesta){
@@ -522,19 +511,7 @@ function generatePdf(data, title, search, pdf_name){
         .text(dat.suma, 494, y, {align: 'center', width: 70 })
         .text(dat.codigo_racion, 564, y, {align: 'center', width: 70 })
         .text(dat.siguiente_racion, 637, y, {align: 'center', width: 70 })
-        if ((new Date(dat.fecha).getMonth() + 1) < 10) {
-            if ((new Date(dat.fecha).getDate()) < 10) {
-                doc.text('0' + new Date(dat.fecha).getDate()+ '/0' + (new Date(dat.fecha).getMonth() + 1)+ '/' + new Date(dat.fecha).getFullYear(), 704, y, {align: 'center', width: 70 });
-            } else {
-                doc.text(new Date(dat.fecha).getDate()+ '/0' + (new Date(dat.fecha).getMonth() + 1)+ '/' + new Date(dat.fecha).getFullYear(), 704, y, {align: 'center', width: 70 });
-            }
-        } else {
-            if ((new Date(dat.fecha).getDate()) < 10) {
-                doc.text('0' + new Date(dat.fecha).getDate()+ '/' + (new Date(dat.fecha).getMonth() + 1)+ '/' + new Date(dat.fecha).getFullYear(), 704, y, {align: 'center', width: 70 });
-            } else {
-                doc.text(new Date(dat.fecha).getDate()+ '/' + (new Date(dat.fecha).getMonth() + 1)+ '/' + new Date(dat.fecha).getFullYear(), 704, y, {align: 'center', width: 70 });
-            }
-        }
+        .text(dat.fecha, 704, y, {align: 'center', width: 70 });
 
         prom_charola_1 += dat.charola_1;
         prom_charola_2 += dat.charola_2;
@@ -559,15 +536,15 @@ function generatePdf(data, title, search, pdf_name){
     doc.font('fonts/Roboto-Black.ttf')
     .text("Promedios: ", 15, y + 15, { align: 'left', width: 55 })
     doc.font('fonts/Roboto-Regular.ttf')
-    .text((prom_charola_1 / data.length).toFixed(2), 67, y + 15, {align: 'center', width: 70})
-    .text((prom_charola_2 / data.length).toFixed(2), 137, y + 15, {align: 'center', width: 70})
-    .text((prom_charola_3 / data.length).toFixed(2), 207, y + 15, {align: 'center', width: 70})
-    .text((prom_charola_4 / data.length).toFixed(2), 277, y + 15, {align: 'center', width: 70})
-    .text((prom_kg_racion / data.length).toFixed(2), 347, y + 15, {align: 'center', width: 70})
-    .text((prom_porcent_ajuste / data.length).toFixed(2), 417, y + 15, {align: 'center', width: 70})
-    .text((prom_suma / data.length).toFixed(2), 494, y + 15, {align: 'center', width: 70})
-    .text((prom_codigo_racion / data.length).toFixed(2), 564, y + 15, {align: 'center', width: 70})
-    .text((prom_siguiente_racion / data.length).toFixed(2), 637, y + 15, {align: 'center', width: 70})
+    .text((prom_charola_1 / (data.length - 1)).toFixed(2), 67, y + 15, {align: 'center', width: 70})
+    .text((prom_charola_2 / (data.length - 1)).toFixed(2), 137, y + 15, {align: 'center', width: 70})
+    .text((prom_charola_3 / (data.length - 1)).toFixed(2), 207, y + 15, {align: 'center', width: 70})
+    .text((prom_charola_4 / (data.length - 1)).toFixed(2), 277, y + 15, {align: 'center', width: 70})
+    .text((prom_kg_racion / (data.length - 1)).toFixed(2), 347, y + 15, {align: 'center', width: 70})
+    .text((prom_porcent_ajuste / (data.length - 1)).toFixed(2), 417, y + 15, {align: 'center', width: 70})
+    .text((prom_suma / (data.length - 1)).toFixed(2), 494, y + 15, {align: 'center', width: 70})
+    .text((prom_codigo_racion / (data.length - 1)).toFixed(2), 564, y + 15, {align: 'center', width: 70})
+    .text((prom_siguiente_racion / (data.length - 1)).toFixed(2), 637, y + 15, {align: 'center', width: 70})
 
     console.log(file_path);
     

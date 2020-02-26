@@ -262,7 +262,7 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else { 
-            //console.log(solicitud.body);
+            console.log(solicitud.body);
 
             if( solicitud.body.parametros != undefined && solicitud.body.parametros.length > 0){
                 for(let i=0; i <= solicitud.body.parametros.length -1; i++){
@@ -706,25 +706,6 @@ module.exports = {
                             }
                         });
                 });
-           
-                /*Parametros.find( { 
-                    $and: [
-                        {fecha: { $gte: new Date(solicitud.body.fecha).toISOString() }},
-                        {fecha: { $lte: new Date(solicitud.body.fecha).toISOString() }}
-                    ]}, function(error, parametros){
-                    if(error){
-                        console.log(chalk.bgRed(error));
-                    } else {
-                        console.log(parametros);
-                        Estanques.populate(parametros, {path: 'estanque'}, function(error, parametros){
-                            if(error){
-                                console.log(chalk.bgRed(error));
-                            } else {
-                                
-                            }
-                        });
-                    }
-                });*/
             } else if (column == 'fechas'){
                 fechaInicio = new Date(solicitud.body.fechaInicio).getFullYear() + '-' +
                             (new Date(solicitud.body.fechaInicio).getMonth() + 1) +  '-' +
@@ -773,21 +754,25 @@ module.exports = {
                             if(error){
                                 console.log(chalk.bgRed(error));
                                 respuesta.sendStatus(501);
-                            } else {                                
+                            } else {             
+                                
+                                // Un día menos del que quieran el reporte y un día más
                                 Parametros.find(
-                                    {$and: [
+                                    { $and: [
                                         { estanque: { $in: estanques }},
                                         { fecha: {
                                             $gte: solicitud.body.fechaInicio,
                                             $lte: solicitud.body.fechaFin
-                                        }}
+                                        }},
+                                        { salinidad: { $ne: "" }},
+                                        { nivel_agua: { $ne: "" }},
+                                        { turbidez: { $ne: "" }}
                                     ]
                                 }, (error, parametros) => {
                                     if(error){
                                         console.log(chalk.bgRed(error));
                                         respuesta.sendStatus(417);
                                     } else {
-                                        
                                         Estanques.populate(parametros, { path: 'estanque' }, function(error, parametros){
                                             if(error){
                                                 console.log(chalk.bgRed(error));
@@ -1144,8 +1129,6 @@ function generateConcentradoXLS(data, title, xls_name, fecha_ini, fecha_fin){
     var gen_prom_sal = 0;
     var gen_prom_ph = 0;
 
-
-
     var options = {
         filename:  file_path + '/' + xls_name ,
         useStyles: true,
@@ -1417,6 +1400,22 @@ function generateConcentradoXLS(data, title, xls_name, fecha_ini, fecha_fin){
         j_am += 1;
         g_am += 1;
     
+        /**
+         * salinidad: '25',
+            nivel_agua: '125',
+            fecha: 2020-02-24T07:00:00.000Z,
+            turbidez: '25',
+            anio: '2020',
+            _id: 5e541077e5669157d46dc3ed,
+            estanque: 5cae39fb6865d612ecabb09d,
+            temperatura: '24.5',
+            oxigeno: '2',
+            ph: '7',
+            hora: '11:05:05',
+            tiempo: '',
+            parametrista: 5ad7c044eea0fd1424fdfd97
+         */
+
         // EVALUAR QUE EL QUE SIGUE SEA PM Y SEAN DEL MISMO ESTANQUE
         if(data[i+1] != null){
             if(data[i+1].tiempo == 'PM' && (data[i+1].codigo == data[i].codigo)){
