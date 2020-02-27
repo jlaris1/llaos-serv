@@ -423,6 +423,7 @@ module.exports = function(app){
     nutricionRouter.post('/find', nutricion.find);
     nutricionRouter.post('/report/pdf', nutricion.pdf);
     //nutricionRouter.post('/report/xls', nutricion.xls);
+    nutricionRouter.post('/piscinas', nutricion.piscinas)
 
     // Recepción Larva
 

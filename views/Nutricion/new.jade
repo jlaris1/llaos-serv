@@ -56,6 +56,7 @@ block contenido
         var cambiar_tiempo = true;
         var hora;
         var tamaño_suma = [];
+        var lista_nutricion = [];
 
         $(document).ready( function(){
             obtenerFecha();
@@ -130,7 +131,7 @@ block contenido
             var codigo_racion = 0.00;
             //  tamaño_suma.includes()
 
-            if(parseFloat($('input[name="charola'+num_charola+''+id+'"]').val()) < 0 || parseFloat($('input[name="charola'+num_charola+''+id+'"]').val()) > 0) {
+            if(parseFloat($('input[name="charola'+num_charola+''+id+'"]').val()) < 0 || parseFloat($('input[name="charola'+num_charola+''+id+'"]').val()) > 2) {
                 $('#alert').removeClass('success');
                 $('#alert').addClass('warning');
                 $('#alertDiv').removeClass('hidden');
@@ -165,7 +166,7 @@ block contenido
             abrirLoader();
             var listaModulos = $("#modulos").val().split(",");
 
-            $.post( "/parametros/piscinas", {
+            $.post( "/nutricion/piscinas", {
                 modulos: listaModulos
             }, (data) => {
                 if(data.piscinas.length > 0){
@@ -176,43 +177,57 @@ block contenido
                         $("#lista_nutricion")
                         .append('<li id="pis'+data.piscinas[i]._id+'"> ' +
                             '<div class="d-flex justify-content-between">' +
-                                '<input type="text" name="idPis'+data.piscinas[i].codigo+'" value="'+data.piscinas[i]._id+'" class="hidden">'+
+                                '<input type="text" id="idPis'+data.piscinas[i]._id+'" name="idPis'+data.piscinas[i]._id+'" value="'+data.piscinas[i]._id+'" class="hidden">'+
                                 '<div class="center-middle">' +
                                     '<i class="fas fa-water" style="margin-right: 1px; color: #2d6e99"></i>' +
                                     '<label>'+data.piscinas[i].codigo+'</label>' +
                                 '</div>'+
                                 '<div class="form-group margin-div">' +
                                     '<label> Charola 1 </label>' +
-                                    '<input class="form-control" type="text" id="c1_'+data.piscinas[i].codigo+'" name="charola1'+data.piscinas[i].codigo+'" placeholder="Charola 1" onblur="sumarCodigo(this.id,1)">' + 
+                                    '<input class="form-control" type="text" id="c1_'+data.piscinas[i]._id+'" name="charola1'+data.piscinas[i]._id+'" placeholder="Charola 1" onblur="sumarCodigo(this.id,1)">' + 
                                 '</div>' +
                                 '<div class="form-group margin-div">' +
                                     '<label> Charola 2 </label>' +
-                                    '<input class="form-control" type="text" id="c2_'+data.piscinas[i].codigo+'" name="charola2'+data.piscinas[i].codigo+'" placeholder="Charola 2" onblur="sumarCodigo(this.id,2)">' + 
+                                    '<input class="form-control" type="text" id="c2_'+data.piscinas[i]._id+'" name="charola2'+data.piscinas[i]._id+'" placeholder="Charola 2" onblur="sumarCodigo(this.id,2)">' + 
                                 '</div>' +
                                 '<div class="form-group margin-div">' +
                                     '<label> Charola 3 </label>' +
-                                    '<input class="form-control" type="text" id="c3_'+data.piscinas[i].codigo+'" name="charola3'+data.piscinas[i].codigo+'" placeholder="Charola 3" onblur="sumarCodigo(this.id,3)">' + 
+                                    '<input class="form-control" type="text" id="c3_'+data.piscinas[i]._id+'" name="charola3'+data.piscinas[i]._id+'" placeholder="Charola 3" onblur="sumarCodigo(this.id,3)">' + 
                                 '</div>' +
                                 '<div class="form-group margin-div">' +
                                     '<label> Charola 4 </label>' +
-                                    '<input class="form-control" type="text" id="c4_'+data.piscinas[i].codigo+'" name="charola4'+data.piscinas[i].codigo+'" placeholder="Charola 4" onblur="sumarCodigo(this.id,4)">' + 
+                                    '<input class="form-control" type="text" id="c4_'+data.piscinas[i]._id+'" name="charola4'+data.piscinas[i]._id+'" placeholder="Charola 4" onblur="sumarCodigo(this.id,4)">' + 
                                 '</div>' +
                                 '<div class="form-group margin-div">' +
                                     '<label> Kg ración </label>' +
-                                    '<input class="form-control" type="text" name="racion'+data.piscinas[i].codigo+'" placeholder="Kg ración">' + 
+                                    '<input class="form-control" type="text" name="racion'+data.piscinas[i]._id+'" placeholder="Kg ración">' + 
                                 '</div>' +
                                 '<div class="form-group margin-div">' +
                                     '<label> % Ajuste </label>' +
-                                    '<input class="form-control" type="text" id="aj_'+data.piscinas[i].codigo+'" name="ajuste'+data.piscinas[i].codigo+'" placeholder="% Ajuste" onkeyup="siguienteRacion(this.id)" onblur="registrarParametro(this.id)">' + 
+                                    '<input class="form-control" type="text" id="aj_'+data.piscinas[i]._id+'" name="ajuste'+data.piscinas[i]._id+'" placeholder="% Ajuste" onkeyup="siguienteRacion(this.id)" onblur="registrarParametro(this.id)">' + 
                                 '</div>' +
                             '</div>' +
                             '<div style="margin-top: -10px;" class="text-right">' +
+                                '<label> R1: </label>' +
+                                '<label class="margin-div2 blue-text" id="r1'+data.piscinas[i]._id+'" name"r1'+data.piscinas[i]._id+'"></label>' +
+                                '<label> R2: </label>' +
+                                '<label class="margin-div2 blue-text" id="r2'+data.piscinas[i]._id+'" name"r2'+data.piscinas[i]._id+'"></label>' +
+                                '<label> R3: </label>' +
+                                '<label class="margin-div2 blue-text" id="r3'+data.piscinas[i]._id+'" name"3'+data.piscinas[i]._id+'"></label>' +
+                                '<label> R4: </label>' +
+                                '<label class="margin-div2 blue-text" id="r4'+data.piscinas[i]._id+'" name"r4'+data.piscinas[i]._id+'"></label>' +
+                                '<label> R5: </label>' +
+                                '<label class="margin-div2 blue-text" id="r5'+data.piscinas[i]._id+'" name"r5'+data.piscinas[i]._id+'"></label>' +
+                                '<label> Kg día: </label>' +
+                                '<label class="margin-div2 blue-text" id="kg_dia'+data.piscinas[i]._id+'" name"kg_dia'+data.piscinas[i]._id+'"></label>' +
+                                '<label> Kg acumulado: </label>' +
+                                '<label class="margin-div2 blue-text" id="kg_acumu'+data.piscinas[i]._id+'" name"kg_acumu'+data.piscinas[i]._id+'"></label>' +
                                 '<label> Código: </label>' +
-                                '<label class="margin-div2 blue-text" id="cod'+data.piscinas[i].codigo+'" name"cod'+data.piscinas[i].codigo+'"></label>' +
+                                '<label class="margin-div2 blue-text" id="cod'+data.piscinas[i]._id+'" name"cod'+data.piscinas[i]._id+'"></label>' +
                                 '<label> Suma: </label>' +
-                                '<label class="margin-div2 blue-text" id="suma'+data.piscinas[i].codigo+'" name"suma'+data.piscinas[i].codigo+'"></label>' +
+                                '<label class="margin-div2 blue-text" id="suma'+data.piscinas[i]._id+'" name"suma'+data.piscinas[i]._id+'"></label>' +
                                 '<label> Kg Siguiente ración: </label>' +
-                                '<label class="margin-div2 blue-text" id="kg_sig'+data.piscinas[i].codigo+'" name"kg_sig'+data.piscinas[i].codigo+'"></label>' +
+                                '<label class="margin-div2 blue-text" id="kg_sig'+data.piscinas[i]._id+'" name"kg_sig'+data.piscinas[i]._id+'"></label>' +
                             '</div>' +
                             '<hr>'+
                         '</li>');
@@ -234,6 +249,32 @@ block contenido
                         }
                     }
                 }
+
+               if(data.lista_nutricion.length > 0){
+                    for(var i=0; i <= data.lista_nutricion.length -1 ; i++){
+                        if(data.lista_nutricion[i].estanque == $('#idPis'+data.lista_nutricion[i].estanque).val()){
+                            var id = data.lista_nutricion[i].estanque;
+
+                            var r1 = data.lista_nutricion[i] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i].kg_racion).toFixed(2);
+                            var r2 = data.lista_nutricion[i + 1] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 1].kg_racion).toFixed(2);
+                            var r3 = data.lista_nutricion[i + 2] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 2].kg_racion).toFixed(2);
+                            var r4 = data.lista_nutricion[i + 3] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 3].kg_racion).toFixed(2);
+                            var r5 = data.lista_nutricion[i + 4] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 4].kg_racion).toFixed(2);
+
+                            var suma = parseFloat(r1) + parseFloat(r2) + parseFloat(r3) + parseFloat(r4) + parseFloat(r5);
+
+                            $('#r1'+id).text(r1);
+                            $('#r2'+id).text(r2);
+                            $('#r3'+id).text(r3);
+                            $('#r4'+id).text(r4);
+                            $('#r5'+id).text(r5);
+                            $('#kg_dia'+id).text(suma);
+
+                            i += 4;
+                        }
+                    }
+               }
+
             }, "json");
         }
 

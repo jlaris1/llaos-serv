@@ -427,7 +427,51 @@ module.exports = {
             });
         }
     },
-    xls: function(solicitud, respuesta){}
+    xls: function(solicitud, respuesta){
+
+    },
+    piscinas: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else { 
+            Estanques.find({"modulo": {$in: solicitud.body.modulos}}, (error, piscinas) => {
+                if(error){
+                    console.log(error);
+                } else {
+                    Modulos.find({"_id": { $in: solicitud.body.modulos }},{ nombre: 1 }, (error, modulos) => {
+                        if(error) {
+                            console.log(error);
+                        } else {
+                            var anio = new Date().getFullYear();
+                            var mes =  new Date().getMonth()+1 <= 9 ? '0' + (new Date().getMonth()+1) : (new Date().getMonth()+1);
+                            var dia = new Date().getDate()+1 <= 9 ? '0' + new Date().getDate() : new Date().getDate();
+                            var fecha = anio +'-'+ mes +'-'+ dia;
+
+                            Nutricion.find(
+                               { $and: [
+                                    { estanque: { $in: piscinas }},
+                                    { fecha: {
+                                        $gte: fecha,
+                                        $lte: fecha
+                                    }}
+                                ]
+                            }, (error, lista_nutricion) => {
+                                if(error){
+                                    console.log(chalk.bgRed(error));
+                                } else {
+                                    respuesta.json({
+                                        piscinas: piscinas,
+                                        modulos: modulos,
+                                        lista_nutricion: lista_nutricion
+                                    });
+                                }
+                            }).sort({ estanque : 1, hora: 1});
+                        }
+                    });
+                }
+            }).sort({ codigo : 1});
+        }
+    }
 }
 
 function generatePdf(data, title, search, pdf_name){

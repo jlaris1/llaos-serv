@@ -1282,11 +1282,8 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{ 
-            generatePDF("algo")
-
-
-            /*console.log(solicitud.body);
-
+            generatePDF(solicitud.body);
+            /*
             OrdenSalida.updateOne({"id": solicitud.body.id}, (error)=>{
                 if(error){
                     console.log(chalk.bgRed(error));
@@ -1301,7 +1298,7 @@ module.exports = {
     }
 }
 
-function generatePDF(datos){
+function generatePDF(data){
     // CONSTRUIR PDF
     doc = new pdf({
         // Establecer tamaño de hoja
@@ -1309,7 +1306,7 @@ function generatePDF(datos){
     });
 
     var file_path = './files/salidas/';
-    var pdf_name = 'orden_salida.pdf'
+    var pdf_name = 'orden_salida_'+data.numero_orden+'.pdf'
     
     // Logo empresa
     doc.image('./public/imgs/logo llaos.jpg', 65, 5 ,{width: 100})
@@ -1317,99 +1314,73 @@ function generatePDF(datos){
     // Nombre empresa y rfc
     doc.font('fonts/Roboto-Black.ttf')
     .fontSize(14)
-    .text('ORDEN SALIDA', 67, 55, { width: 100 })
-    .text('No. #000001', 140, 70, {width: 100 })
+    .text('ORDEN SALIDA', 67, 52, { width: 100 })
+    .text('No. #' + data.numero_orden , 140, 70, {width: 100 })
     
 
     // Nombre formato, fecha y hora de creación
     doc.font('fonts/Roboto-Regular.ttf')
     .fontSize(11)
-    .text("Fecha: "+ FechaHora.obtenerfecha() + " " + FechaHora.obtenerhora(), 5, 90, { align: 'left' , width: 150})
-    /*                                                                                                
+    .text("Fecha: "+ FechaHora.obtenerfecha() + " " + FechaHora.obtenerhora(), 5, 90, { align: 'left' , width: 200})
+                                                                                                   
     // Encabezados tabla
     doc.lineWidth(25)
     doc.lineCap('butt')
     .fillColor("blue")
-    .moveTo(15, 150)
-    .lineTo(780, 150)
+    .moveTo(0, 130)
+    .lineTo(240, 130)
     .stroke()
     
-    doc.fontSize(10)
-    .fill('white')
-    .text("Est.", 17, 143, {align: 'center', width: 45})
-    .text("Oxigeno", 67, 143,  {align: 'center', width: 70})
-    .text("pH", 137, 143, {align: 'center', width: 70})
-    .text("Salinidad", 207, 143, {align: 'center', width: 70})
-    .text("Temperatura", 277, 143, {align: 'center', width: 70})
-    .text("Nivel Agua", 347, 143, {align: 'center', width: 70})
-    .text("Tiempo", 417, 143, {align: 'center', width: 70})
-    //.text("", 494, 143, {align: 'center', width: 70})
-    .text("Parametrista", 564, 143, {align: 'center', width: 70})
-    .text("Fecha", 637, 143, {align: 'center', width: 70})
-    .text("Hora", 704, 143, {align: 'center', width: 70})
     
-    // Llenado de tabla
-    var y = 155;
+    doc.fontSize(11)
+    .fill('white')
+    .text("Cant.", 5, 122, {align: 'center', width: 30})
+    .text("Código", 40, 122,  {align: 'center', width: 60})
+    .text("Desc", 100, 122, {align: 'center', width: 140})
 
-    data.forEach( function(dat) {                                                  
+    var y = 130;
+
+    // Llenado de datos
+    doc.fillColor('black')
+    .fontSize(10)
+
+    data.articulos.forEach( (articulo) =>{
         y += 10;
 
-        if (y > 525){
-            y = 15;
-            doc.addPage()
-            .text("")
-        }
-
-        doc.fillColor('black')
-        .text(dat.estanque.codigo, 10, y, {align: 'center', width: 45 })
-        .text(parseFloat(dat.oxigeno).toFixed(2), 67, y,  {align: 'center', width: 70 })
-        .text(parseFloat(dat.ph).toFixed(2), 137, y, {align: 'center', width: 70 })
-        .text(parseFloat(dat.salinidad).toFixed(2), 207, y, {align: 'center', width: 70 })
-        .text(parseFloat(dat.temperatura).toFixed(2), 277, y, {align: 'center', width: 70 })
-        .text(parseFloat(dat.nivel_agua).toFixed(2), 347, y, {align: 'center', width: 70 })
-        .text(dat.tiempo, 417, y, {align: 'center', width: 70 })
-        .text(dat.parametrista.nombre, 447, y, {align: 'center', width: 200 })
-        //.text("", 564, y, {align: 'center', width: 70 })
-        if ((new Date(dat.fecha).getMonth() + 1) < 10) {
-            if ((new Date(dat.fecha).getDate()) < 10) {
-                doc.text('0' + new Date(dat.fecha).getDate()+ '/0' + (new Date(dat.fecha).getMonth() + 1)+ '/' + new Date(dat.fecha).getFullYear(), 637, y, {align: 'center', width: 70 });
-            } else {
-                doc.text(new Date(dat.fecha).getDate()+ '/0' + (new Date(dat.fecha).getMonth() + 1)+ '/' + new Date(dat.fecha).getFullYear(), 637, y, {align: 'center', width: 70 });
-            }
-        } else {
-            if ((new Date(dat.fecha).getDate()) < 10) {
-                doc.text('0' + new Date(dat.fecha).getDate()+ '/' + (new Date(dat.fecha).getMonth() + 1)+ '/' + new Date(dat.fecha).getFullYear(), 637, y, {align: 'center', width: 70 });
-            } else {
-                doc.text(new Date(dat.fecha).getDate()+ '/' + (new Date(dat.fecha).getMonth() + 1)+ '/' + new Date(dat.fecha).getFullYear(), 637, y, {align: 'center', width: 70 });
-            }
-        }
-        doc.text(dat.hora, 704, y, {align: 'center', width: 70 })
-
-        prom_ox += parseFloat(dat.oxigeno);
-        prom_ph += parseFloat(dat.ph);
-        prom_sal += parseFloat(dat.salinidad);
-        prom_tem += parseFloat(dat.temperatura);
-        prom_niv += parseFloat(dat.nivel_agua);
-        
+        doc.text(articulo.articulo.cantidad, 5, y, {align: 'left', width: 30, height: 20   })
+        .text(articulo.articulo.codigo, 40, y,  {align: 'left', width: 60, height: 20 })
+        .text(articulo.articulo.descripcion, 100, y, {align: 'left', width: 120, height: 20 })
     });
 
-    // Promedios
-    doc.lineWidth(2)
+    // Final de artículos salida
+     doc.lineWidth(2)
+     doc.lineCap('butt')
+     .moveTo(0, y + 15)
+     .lineTo(240, y + 15)
+     .stroke()
+
+    // Nombre y firma del solicitante
+    doc.lineWidth(1)
     doc.lineCap('butt')
-    .moveTo(15, y + 15)
-    .lineTo(780, y + 15)
+    .moveTo(10, y + 55)
+    .lineTo(220, y + 55)
     .stroke()
-    
-    doc.font('fonts/Roboto-Black.ttf')
-    .text("Promedios: ", 15, y + 15, { align: 'left', width: 55 })
-    doc.font('fonts/Roboto-Regular.ttf')
-    .text((prom_ox / data.length).toFixed(2), 67, y + 15,  {align: 'center', width: 70 })
-    .text((prom_ph / data.length).toFixed(2), 137, y + 15, {align: 'center', width: 70 })
-    .text((prom_sal / data.length).toFixed(2), 207, y + 15, {align: 'center', width: 70 })
-    .text((prom_tem / data.length).toFixed(2), 277, y + 15, {align: 'center', width: 70 })
-    .text((prom_niv / data.length).toFixed(2), 347, y + 15, {align: 'center', width: 70 })
-    */        
-    
+    .fontSize(11)
+
+    //data.solicita,
+    .text(data.solicita,5, y + 55, {align: 'center', width: 225})
+
+    //  Consentimiento
+     doc.font('fonts/Roboto-Regular.ttf')
+     .fontSize(9)
+     .text('* Doy mi consentimiento que todo lo solicitado en la orden fue requerido y me fue entregado. Para los efectos que esto puediera ocasionar', 5, y + 115, {align: 'center', width: 225})
+
+    // Nota final
+    .font('fonts/Roboto-Black.ttf')
+    .text('Generado en automático por Sistema Llaos 2.0 - ' + new Date().getFullYear(), 5, y + 175, {align: 'center', width: 225})
+
+
+
 
     doc.pipe(fs.createWriteStream(file_path+pdf_name)).on('finish', function (error){
         if(error){

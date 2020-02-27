@@ -393,7 +393,7 @@ block contenido
 
         /* Imprimir orden salida */
         function imprimirOrden(){
-            $('#imprimir').addClass('disabled');
+            //$('#imprimir').addClass('disabled');
             $('#terminar').removeClass('disabled');
 
             /*** Enviar la descarga **/
@@ -409,11 +409,20 @@ block contenido
             }
 
             $.post( "/inventarios/salida/imprimir", {
+                lugar_almacen: $('#span_almacen').text(),
+                lugar_unidad: $('#span_unidad').text(),
+                solicita: $('#span_solicita').text(),
+                area: $('#span_area').text(),
+                modulo: $('#span_modulo').text(),
+                piscina: $('#span_piscina').text(),
+                articulos: articulos_salida,
+                estatus: 'Guardada',
+                numero_orden: $('#numero_orden').val()
             }, (data, status) => {
                 $('#estatus').text(data.estatus);
                 
                 if(data.habilitarImpresion == true){
-                    $('#imprimir').addClass('disabled');
+                    //$('#imprimir').addClass('disabled');
                     $('#terminar').removeClass('disabled');
                 }
                 
