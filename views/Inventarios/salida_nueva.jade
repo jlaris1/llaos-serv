@@ -421,8 +421,11 @@ block contenido
             }, (data, status) => {
                 $('#estatus').text(data.estatus);
                 
+                var url = '../../salidas/'+ data.url;
+                window.open(url, 'Download');
+
                 if(data.habilitarImpresion == true){
-                    //$('#imprimir').addClass('disabled');
+                    $('#imprimir').addClass('disabled');
                     $('#terminar').removeClass('disabled');
                 }
                 

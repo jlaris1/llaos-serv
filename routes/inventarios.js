@@ -1282,9 +1282,14 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{ 
-            generatePDF(solicitud.body);
-            /*
-            OrdenSalida.updateOne({"id": solicitud.body.id}, (error)=>{
+            respuesta.json({
+                url: generatePDF(solicitud.body),
+                impreso: true,
+                estatus: 'Generada'
+            });
+
+
+            /*OrdenSalida.updateOne({"id": solicitud.body.id}, (error)=>{
                 if(error){
                     console.log(chalk.bgRed(error));
                 } else {
