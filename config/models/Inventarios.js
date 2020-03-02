@@ -68,7 +68,7 @@ var ordenSalidaSchemaJSON = {
             }
         }
     ],
-    registro: { type: Date, default: new Date(Date.now).toLocaleDateString("es-MX", {dateStyle: 'short'}) },
+    registro: { type: Date, default: Date.now },
     estatus: String
 }
 
