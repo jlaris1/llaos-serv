@@ -431,6 +431,32 @@ block contenido
 
             }, "json");
         }
+
+        /* Finalizar orden de salida */
+        function finalizarSalida(){           
+            var data = {
+                estatus: 'Finalizada',
+                id: $('#id_orden').val()
+            }
+
+            $.post( "/inventarios/salida/finalizar", data , (data, status) => {
+                $('#estatus').text(data.estatus);
+                
+                if(data.finalizo == true){
+                    $('#terminar').addClass('disabled');
+                }
+                
+                // Mostrar notificación de guardado correcto 
+                $('#alert').removeClass('alert-warning');
+                $('#alert').addClass('alert-success');
+                $('#alertDiv').removeClass('hidden');
+                $('#msg1').text('Se finalizó ');
+                $('#msg2').text('la orden de salida.');
+                $('#msg_alert').text('correctamente ');
+
+            }, "json");
+        }
+        
     //Termina Javascript
    
 
@@ -460,7 +486,7 @@ block contenido
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Guardar Salida").fas.fa-save
                     a#imprimir(href="javascript:imprimirOrden();").btn.btn-info.btn-margin
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Imprimir").fas.fa-print
-                    a#terminar(href="javascript:finalizarOrden();").btn.btn-primary.disabled
+                    a#terminar(href="javascript:finalizarSalida();").btn.btn-primary.disabled
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Finalizar").fas.fa-stamp
     
     // Opciones de salida
@@ -585,7 +611,7 @@ block contenido
                             th.text-center
                                 i.fas.fa-cog
                             th Código
-                            th Descripcion
+                            th Descripción
                             th Unidad
                             th Cantidad
                             th Stock actual

@@ -84,7 +84,7 @@ module.exports = function(app){
 
     //Pruebas
     //app.get('/pruebita', pruebita.prueba); 
-    app.get('/pruebita', inventarios.imprimirOrdenSalida);
+    //app.get('/pruebita', inventarios.imprimirOrdenSalida);
     //Errores
     app.get('error-inesperado', errores.errorInesperado);
     app.get('/error-inicio/:user', errores.errorInicio);
@@ -224,8 +224,10 @@ module.exports = function(app){
     inventariosRouter.post('/registrar/salida/:id_prod', inventarios.registrarSalida);
     inventariosRouter.post('/registrar/salida/', inventarios.registrarNuevaSalida);
     inventariosRouter.post('/salida/imprimir', inventarios.imprimirOrdenSalida);
+    inventariosRouter.post('/salida/finalizar', inventarios.finalizar);
     inventariosRouter.get('/entradas', inventarios.abrirEntradas);
     inventariosRouter.get('/salidas', inventarios.abrirSalidas);
+    inventariosRouter.get('/salidas/ver/:id', inventarios.verOrdenSalida);
     //inventariosRouter.post('/report/pdf', inventarios.pdf);
     //inventariosRouter.post('/report/xls', inventarios.xls);
 

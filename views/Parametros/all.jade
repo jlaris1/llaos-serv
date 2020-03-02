@@ -49,6 +49,7 @@ block contenido
                         th Salinidad (ppm)
                         th Temperatura (°C)
                         th Nivel Agua
+                        th Turbidez
                         th Fecha
                         th Hora
                         th Tiempo
@@ -75,9 +76,10 @@ block contenido
                                         b #{ parseFloat(med.ph).toFixed(2) }
                                 else
                                     td #{ parseFloat(med.ph).toFixed(2) }
-                                td #{ parseFloat(med.salinidad).toFixed(2) }
+                                td #{ med.salinidad == "" ? "" : parseFloat(med.salinidad).toFixed(2) }
                                 td #{ parseFloat(med.temperatura).toFixed(2) }
-                                td #{ parseFloat(med.nivel_agua).toFixed(2) }
+                                td #{ med.nivel_agua == "" ? "" : parseFloat(med.nivel_agua).toFixed(2) }
+                                td #{ med.turbidez == "" ? "" : parseFloat(med.turbidez).toFixed(2) }
 
                                 - var date = new Date(med.fecha);
                                 - date.setDate(date.getDate() + 1);

@@ -1288,7 +1288,6 @@ module.exports = {
                 estatus: 'Generada'
             });
 
-
             /*OrdenSalida.updateOne({"id": solicitud.body.id}, (error)=>{
                 if(error){
                     console.log(chalk.bgRed(error));
@@ -1299,6 +1298,83 @@ module.exports = {
                     });
                 }
             });*/
+        }
+    },
+    finalizar: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{ 
+            var data = {
+                estatus: 'Finalizada'
+            }
+
+            console.log(solicitud.body);
+
+            OrdenSalida.updateOne({"_id": solicitud.body.id}, data, (error) => {
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    respuesta.json({
+                        finalizo: true,
+                        estatus: 'Finalizada'
+                    });
+                }
+            });
+        }
+    },
+    verOrdenSalida: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{ 
+            OrdenSalida.findOne({"_id": solicitud.params.id}, (error, orden_salida) => {
+                if(error) {
+                    console.log(chalk.bgRed(error));
+                } else {
+                    UnidadesNegocio.populate(orden_salida, {path: 'lugar_unidad'}, (error, orden_salida) => {
+                        if(error) {
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            Usuarios.populate(orden_salida, {path: 'solicita'}, (error, orden_salida) => {
+                                if(error) { 
+                                    console.log(chalk.bgRed(error));
+                                } else {
+                                    Usuarios.find( (error, usuarios) => {
+                                        if(error){
+                                            console.log(error);
+                                        } else { 
+                                            respuesta.render("Inventarios/ver_salida",{
+                                                user: solicitud.session.user,
+                                                usuarios: usuarios,
+                                                orden_salida: orden_salida,
+                                                titulo: "Orden Salida",
+                                                criterios: [
+                                                    {
+                                                        val: "",
+                                                        name: ""
+                                                    }
+                                                ],
+                                                piscinas: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }
+                                                ],
+                                                charoleros: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }   
+                                                ],
+                                                ruta: "salidas"
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
         }
     }
 }

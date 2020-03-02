@@ -1,0 +1,273 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .labelFol {
+            font-weight: 700;
+            font-size: 2em; 
+            background-color: black; 
+            color: white !important; 
+            border-radius: 8px 0 0 8px;
+        }
+
+        .labelSta {
+            font-weight: 700;
+            color: white;
+            font-size: 2em; 
+            border-radius: 0 8px 8px 0;
+        } 
+
+        a.disabled {
+            /* Make the disabled links grayish*/
+            color: gray !important;
+            background-color: gray !important;
+            /* And disable the pointer events */
+            pointer-events: none !important;
+        }
+
+        .btn-margin {
+            margin-right: 5px;
+        }
+
+        .btn-default {
+            color: #4a4a4a !important;
+            background-color: #f9f9f9 !important;
+        }
+
+        .btn-default:hover {
+            background-color: #aeaeae !important;
+        }
+
+        .btn-small {
+            font-size: 0.7rem;
+        }
+
+        .input-group-addon {
+            background-color: #dd7206; 
+            border: 2px;
+        }
+
+        .fa-input {
+            color: #fff;
+        }
+
+        a.btn {
+            border: 0;
+            border-radius: 2px;
+        }
+
+    script.
+        var articulos = [];
+        var habilitaImpresion = true;
+
+        $(document).ready( function(){
+            $('#subMenuInventarios').removeClass('hidden');
+            $('#spanMenuInventarios').removeClass('fa-angle-left');
+            $('#spanMenuInventarios').addClass('fa-angle-down');
+            $('#subMenuGranja').removeClass('hidden');
+            $('#spanMenuGranja').removeClass('fa-angle-left');
+            $('#spanMenuGranja').addClass('fa-angle-down');   
+            
+            arrayArticulos();
+
+            $('[data-toggle="tooltip"]').tooltip();
+        });  
+
+        function arrayArticulos(){
+            var obj = new Object();
+            var artObj = new Object();
+
+            var arr = $('#articulos').val().split("},  _");
+
+            for(var i = 0; i < arr.length; i ++){
+                artObj = new Object();
+                var aObj = arr[i].replace(/'/g, '');
+
+                if(aObj.split(",")[0].split(":")[0] == "{  articulo"){
+                    obj.codigo = ltrim(aObj.split(",")[1].split(":")[1]);
+                    obj.descripcion = aObj.split(",")[2].split(":")[1];
+                    obj.unidad = aObj.split(",")[3].split(":")[1];
+                    obj.cantidad = aObj.split(",")[4].split(":")[1];
+
+                    artObj.articulo = obj;                    
+
+                    articulos.push(artObj);
+                }
+                
+                obj = new Object();
+            }
+        }
+
+        function ltrim(stringToTrim) {
+            return stringToTrim.replace(/^\s+/,"");
+        }
+
+        function rtrim(stringToTrim) {
+            return stringToTrim.replace(/\s+$/,"");
+        }
+
+        /* Imprimir orden salida */
+        function imprimirOrden(){
+            $('#terminar').removeClass('disabled');
+            
+            var data = {
+                estatus: 'Generada',
+                id: $('#id_orden').val()
+            }
+
+            $.post( "/inventarios/salida/imprimir", {
+                lugar_almacen: $('#span_almacen').text(),
+                lugar_unidad: $('#span_unidad').text(),
+                solicita: $('#span_solicita').text(),
+                area: $('#span_area').text(),
+                modulo: $('#span_modulo').text(),
+                piscina: $('#span_piscina').text(),
+                articulos: articulos,
+                estatus: 'Guardada',
+                numero_orden: $('#numero_orden').val()
+            }, (data, status) => {
+                $('#estatus').text(data.estatus);
+                
+                var url = '../../../../salidas/'+ data.url;
+                window.open(url, 'Download');
+
+                if(data.impreso == true){
+                    $('#imprimir').addClass('disabled');
+                    $('#terminar').removeClass('disabled');
+                }
+                
+                // Mostrar notificación de guardado correcto 
+                $('#alert').removeClass('alert-warning');
+                $('#alert').addClass('alert-success');
+                $('#alertDiv').removeClass('hidden');
+                $('#msg1').text('Se imprimió ');
+                $('#msg2').text('la orden de salida.');
+                $('#msg_alert').text('correctamente ');
+
+            }, "json");
+        }
+
+        /* Finalizar orden de salida */
+        function finalizarSalida(){           
+            var data = {
+                estatus: 'Finalizada',
+                id: $('#id_orden').val()
+            }
+
+            $.post( "/inventarios/salida/finalizar", data , (data, status) => {
+                $('#estatus').text(data.estatus);
+                
+                if(data.finalizo == true){
+                    $('#terminar').addClass('disabled');
+                    $('#imprimir').addClass('disabled');
+                }
+                
+                // Mostrar notificación de guardado correcto 
+                $('#alert').removeClass('alert-warning');
+                $('#alert').addClass('alert-success');
+                $('#alertDiv').removeClass('hidden');
+                $('#msg1').text('Se finalizó ');
+                $('#msg2').text('la orden de salida.');
+                $('#msg_alert').text('correctamente ');
+
+            }, "json");
+        }   
+    //Termina Javascript
+
+    // Inputs funcionamiento
+    input#id_orden(type="text" value="#{orden_salida.id}").hidden
+    input#articulos(type="text" value="#{orden_salida.articulos}").hidden
+    input#numero_orden(type="text" value="#{orden_salida.numero_orden}").hidden
+   
+    // Titulo y botones
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-sign-out-alt
+                    |   Salida Inventario
+                div
+                    if orden_salida.estatus == "Nueva" || orden_salida.estatus == "Guardada"
+                        a#imprimir(href="javascript:imprimirOrden();").btn.btn-info.btn-margin
+                            i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Imprimir").fas.fa-print
+                        a#terminar(href="javascript:finalizarSalida();").btn.btn-primary
+                            i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Finalizar").fas.fa-stamp
+
+    // Detalles de salida
+    section.mb-4
+        .card
+            .card-body
+                .row
+                    .col-md-6.col-lg-6.col-xs-6.text-left
+                        h4.h4-responsive
+                            small Almancén: 
+                            br
+                            strong
+                                span#span_almacen.blue-text #{orden_salida.lugar_almacen}
+                            //a(data-toggle="modal" href="#almacenModal" style="margin-left: 10px;").btn.btn-primary.btn-small.blue-gradient
+                                i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Seleccionar almacén").fas.fa-2x.fa-sync-alt
+                        h5.h5-responsive
+                            small Unidad: 
+                            br
+                            strong
+                                span #{orden_salida.lugar_unidad.nombre}
+                        h5.h5-responsive
+                            small Realiza:
+                            br
+                            strong
+                                span #{user.nombre}
+                        h5.h5-responsive
+                            small Estatus:
+                            br
+                            strong
+                                span#estatus #{orden_salida.estatus}
+                    .col-md-6.col-lg-6.col-xs-6.text-right
+                        h4.h4-responsive
+                            small Salida No.
+                            br
+                            strong
+                                span.blue-text ##{orden_salida.numero_orden}
+                        h5.h5-responsive
+                            small Solicita.
+                            br
+                            strong
+                                span#span_solicita #{orden_salida.solicita.nombre}
+                        h5.h5-responsive
+                            small Área.
+                            br
+                            strong
+                                span#span_area #{orden_salida.area}
+                        h5.h5-responsive#h_modulo.hidden
+                            small Módulo.
+                            br
+                            strong
+                                span#span_modulo #{orden_salida.modulo}
+                        h5.h5-responsive#h_piscina.hidden
+                            small Piscina.
+                            br
+                            strong
+                                span#span_piscina #{orden_salida.piscina}
+
+    // Tabla de artículos
+    section.mb-4
+        .card
+            .card-header.view.view-cascade.gradient-card-header.blue-gradient.mb-3
+                h4.h4-responsive.mb-3(style="font-weight: 700; color: #fff;")
+                    i(style="margin-right: 10px").fas.fa-table
+                    |   Artículos en Salida
+            .card-body
+                .table-responsive(style="margin-top: 5px;")
+                    table#articulos.table.table-hover
+                        thead.blue-gradient(style="color: #fff")
+                            th Código
+                            th Descripción
+                            th Unidad
+                            th Cantidad
+                            //th Stock actual
+                        tbody
+                            each art in orden_salida.articulos
+                                tr
+                                    td #{art.articulo.codigo}
+                                    td #{art.articulo.descripcion}
+                                    td #{art.articulo.unidad}
+                                    td #{art.articulo.cantidad}
+                                    //td #{p.}

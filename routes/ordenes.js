@@ -4139,10 +4139,6 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{ 
-           
-            //console.log(solicitud.body.articulos.length);
-            //console.log(solicitud.body.articulos_fuera);
-
             var data = {
                 estatus: 'En Inventario'
             }
@@ -4151,240 +4147,244 @@ module.exports = {
                 if(error){
                     console.log(error);
                 } else {
-                    for(let i = 0; i <= solicitud.body.articulos.length - 1; i++){
-                        //console.log(solicitud.body.articulos[0]);
-
-                        /*** Agragar el id del producto para no buscar por código */
-                        Productos.findOne({"codigo": solicitud.body.articulos[i].codigo}, (error, producto) => {
-                            if(error){
-                                console.log(error);
-                            } else {
-                                //console.log(producto);
-
-                                if(producto.cantidad == NaN){
-                                    producto.cantidad = 0;
-                                }
-        
-                                var data = {
-                                    cantidad: parseFloat(producto.cantidad) + parseFloat(solicitud.body.articulos[i].cantidad),
-                                    //lugar: solicitud.body.lugar_almacen
-                                }
-        
-                                Productos.updateOne({"_id": producto.id}, data, (error) => {
-                                    if(error){
-                                        console.log(chalk.bgRed(error));
-                                    } else {
-                                        if(i == solicitud.body.articulos.length - 1){
-                                            if(solicitud.body.articulos_fuera != undefined && solicitud.body.articulos_fuera.length > 0) {
-                                                //console.log(solicitud.body.articulos_fuera);
-                                                
-                                                var contenidoTabla = "";
-
-                                                solicitud.body.articulos_fuera.forEach( (af) => {
-                                                    contenidoTabla += "<tr>" + 
-                                                            "<td>" +  parseFloat(af.cantidad).toFixed(3) + "</td>" +
-                                                            "<td>" +  af.unidad + "</td>" +
-                                                            "<td>" +  af.codigo + "</td>" +
-                                                            "<td>" +  af.descripcion + "</td>" +
-                                                            "<td>" +  af.orden.serie + "</td>" +
-                                                    "</tr>" 
-                                                });
-                                    
-                                                var mailOptions = {
-                                                    from: 'Llaos Sist 1.0 <sistema@llaos.com>',
-                                                    //to: 'flopez@llaos.com',
-                                                    to: 'jcuamea@llaos.com',
-                                                    cc: 'davilar@llaos.com',
-                                                    bcc: 'flopez@llaos.com',
-                                                    subject: 'Artículos no encontrados en orden en ruta ' + solicitud.body.serie,
-                                                    html: "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>"+
-                                                                "<html xmlns='http://www.w3.org/1999/xhtml'>" +
-                                                                    "<head>" +
-                                                                        "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />" +
-                                                                        "<title>Requisiciones LLaos 1.0</title>" +
-                                                                        "<style type='text/css'>" +
-                                                                            "body {margin: 0; padding: 0; min-width: 100%!important;}" +
-                                                                            ".content {width: 100%; max-width: 600px;}" +
-                                                                            "@media only screen and (min-device-width: 601px) {" +
-                                                                            "	.content {width: 600px !important;}" +
-                                                                            "	.header {padding: 40px 30px 20px 30px;}" +
-                                                                            "}" +
-                                                                            "@media only screen and (min-device-width: 601px) {" +
-                                                                            "	.content {width: 600px !important;}" +
-                                                                            "	.col425 {width: 425px!important;}" +
-                                                                            "	.col380 {width: 380px!important;}" +
-                                                                            "}" +
-                                                                            "@media only screen and (max-width: 550px), screen and (max-device-width: 550px) {" +
-                                                                            "	body[yahoo] .buttonwrapper {background-color: transparent!important;}" +
-                                                                            "	body[yahoo] .button a {background-color: #e05443; padding: 15px 15px 13px!important; display: block!important;}" +
-                                                                            "}" +
-                                                                            ".col425 {width: 425px!important;}" +
-                                                                            ".subhead {font-size: 15px; color: #ffffff; font-family: sans-serif; letter-spacing: 10px;}" +
-                                                                            ".h1 {font-size: 33px; line-height: 38px; font-weight: bold;}" +
-                                                                            ".h1, .h2, .bodycopy {color: #153643; font-family: sans-serif;}" +
-                                                                            ".innerpadding {padding: 30px 30px 30px 30px; text-align: justify;}" +
-                                                                            ".borderbottom {border-bottom: 1px solid #f2eeed; text-align: justify;}" +
-                                                                            ".h2 {padding: 0 0 15px 0; font-size: 24px; line-height: 28px; font-weight: bold;}" +
-                                                                            ".bodycopy {font-size: 16px; line-height: 22px;  text-align: justify;}" +
-                                                                            ".button {text-align: center; font-size: 18px; font-family: sans-serif; font-weight: bold; padding: 0 30px 0 30px;}" +
-                                                                            ".button a {color: #ffffff; text-decoration: none;}" +
-                                                                            ".footer {padding: 20px 30px 15px 30px;}" +
-                                                                            ".footercopy {font-family: sans-serif; font-size: 14px; color: #ffffff;}" +
-                                                                            ".footercopy a {color: #ffffff; text-decoration: underline;}" +
-                                                                        "</style>" +
-                                                                    "</head>" +
-                                                                    "<body yahoo bgcolor='#f6f8f1'>" +
-                                                                        "<table width='100%' bgcolor='#f6f8f1' border='0' cellpadding='0' cellspacing='0'>" +
-                                                                            "<tr>" +
-                                                                                "<td>" +
-                                                                                    "<!--[if (gte mso 9)|(IE)]>" +
-                                                                                    "<table width='600' align='center' cellpadding='0' cellspacing='0' border='0'>" +
-                                                                                        "<tr>" +
-                                                                                            "<td>" +
-                                                                                                "<![endif]-->" +
-                                                                                                "<table class='content' align='center' cellpadding='0' cellspacing='0' border='0'>" +
-                                                                                                    "<!-- HEADER -->" +
-                                                                                                    "<tr>" +
-                                                                                                        "<td class='header' bgcolor='#c7d8a7'>" +
-                                                                                                            "<table width='70' align='left' border='0' cellpadding='0' cellspacing='0'>" +
-                                                                                                                "<tr>" +
-                                                                                                                    "<td height='70' style='padding: 0 20px 20px 0;'>" +
-                                                                                                                        "<img src='cid:unique@headerMail' width='70' height='70' border='0' alt='' / >" +
-                                                                                                                    "</td>" +
-                                                                                                                "</tr>" +
-                                                                                                            "</table>" +
-                                                                                                            "<!--[if (gte mso 9)|(IE)]>" +
-                                                                                                            "<table width='425' align='left' cellpadding='0' cellspacing='0' border='0'>" +
-                                                                                                                "<tr>" +
-                                                                                                                    "<td>" +
-                                                                                                                    "<![endif]-->" +
-                                                                                                                        "<table class='col425' align='left' border='0' cellpadding='0' cellspacing='0' style='width: 100%; max-width: 425px;'>" +
-                                                                                                                            "<tr>" +
-                                                                                                                                "<td height='70'>" +
-                                                                                                                                    "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
-                                                                                                                                        "<tr>" +
-                                                                                                                                            "<td class='subhead' style='padding: 0 0 0 3px;'>" +
-                                                                                                                                            "	LLAOS 2.0" +
-                                                                                                                                            "</td>" +
-                                                                                                                                        "</tr>" +
-                                                                                                                                        "<tr>" +
-                                                                                                                                            "<td class='h1' style='padding: 5px 0 0 0;'>" +
-                                                                                                                                            "	Ordenes en Ruta" +
-                                                                                                                                            "</td>" +
-                                                                                                                                        "</tr>" +
-                                                                                                                                    "</table>" +
-                                                                                                                                "</td>" +
-                                                                                                                            "</tr>" +
-                                                                                                                        "</table>" + 
-                                                                                                                    "<!--[if (gte mso 9)|(IE)]>" +
-                                                                                                                    "</td>" +
-                                                                                                                "</tr>" +
-                                                                                                            "</table>" +
-                                                                                                            "<![endif]-->" +
-                                                                                                        "</td>" +
-                                                                                                    "</tr>" +
-                                                                                                    "<!-- CONTENIDO 1 -->" +
-                                                                                                    "<tr>" +
-                                                                                                        "<td class='innerpadding borderbottom'>" +
-                                                                                                            "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
-                                                                                                                "<tr>" +
-                                                                                                                    "<td class='h2'>" +
-                                                                                                                    "	Estimado Usuario:" +
-                                                                                                                    "</td>" +
-                                                                                                                "</tr>" +
-                                                                                                                "<tr>" +
-                                                                                                                    "<td class='bodycopy'>" +
-                                                                                                                    "   El área de almacen en Granja realizó la entrada de los artículos enviados en la orden en ruta " + solicitud.body.serie + ", " + 
-                                                                                                                    "   encontrando inconsistencias en la misma ya que los siguientes artículos no venían dentro de la unidad." +
-                                                                                                                    "</td>" +
-                                                                                                                "</tr>" +
-                                                                                                            "</table>" +
-                                                                                                        "</td>" +
-                                                                                                    "</tr>" +
-                                                                                                    "<tr>" +
-                                                                                                        "<td class='innerpadding borderbottom'>" +
-                                                                                                            "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
-                                                                                                                "<tr>" +
-                                                                                                                    "<th> Cantidad </th>" +
-                                                                                                                    "<th> Unidad </th>" +
-                                                                                                                    "<th> Código </th>" +
-                                                                                                                    "<th> Descripción </th>" +
-                                                                                                                    "<th> Orden </th>" +
-                                                                                                                "</tr>" +
-                                                                                                                contenidoTabla +
-                                                                                                            "</table>" +
-                                                                                                        "</td>" +
-                                                                                                    "</tr>" +
-                                                                                                    "<!-- CONTENIDO 3 -->" +
-                                                                                                    "<tr>" +
-                                                                                                        "<td class='innerpadding borderbottom'>" +
-                                                                                                        "	Este correo ha sido generado en automático por el sistema" +
-                                                                                                        "	llaos 2.0, no responda al mismo ya que no tendrá respuesta" +
-                                                                                                        "	alguna, si usted no es un usuario que autoriza Requisiciones" +
-                                                                                                        "	favor de reportar el insidente al departamento de sistemas." +
-                                                                                                        "<br>" +
-                                                                                                        "<br>" +
-                                                                                                        "	Cualquier problema con el sistema" +
-                                                                                                        "	favor de reportar al Departamento de Sistemas." +
-                                                                                                        "</td>" +
-                                                                                                    "</tr>" +
-                                                                                                    "<!-- FOOTER -->" +
-                                                                                                    "<tr>" +
-                                                                                                        "<td class='footer' bgcolor='#44525f'>" +
-                                                                                                            "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
-                                                                                                                "<tr>" +
-                                                                                                                    "<td align='center' class='footercopy'>" +
-                                                                                                                    "	&reg; Llaos Acuacultura S.A. de C.V. " + new Date().getFullYear() + 
-                                                                                                                    "</td>" +
-                                                                                                                "</tr>" +
-                                                                                                            "</table>" +
-                                                                                                        "</td>" +
-                                                                                                    "</tr>" +
-                                                                                                "</table>" +
-                                                                                                "<!--[if (gte mso 9)|(IE)]>" +
-                                                                                            "</td>" +
-                                                                                        "</tr>" +
-                                                                                    "</table>" +
-                                                                                    "<![endif]-->" +
-                                                                                "</td>" +
-                                                                            "</tr>" +
-                                                                        "</table>" +
-                                                                    "</body>" +
-                                                                "</html>",
-                                                    attachments:[
-                                                        {
-                                                            fileName: 'mail.png',
-                                                            path: './public/imgs/mail.png',
-                                                            cid: 'unique@headerMail'
-                                                        }
-                                                    ]
-                                                }
-                                    
-                                                smtpTransport.sendMail(mailOptions, function(error,res){
-                                                    if(error){
-                                                        console.log(error);
-                                                    }else{
-                                                        console.log("Correo enviado!");
-                                                        respuesta.json(
+                    if(solicitud.body.articulos != undefined){
+                        for(let i = 0; i <= solicitud.body.articulos.length - 1; i++){
+                            //console.log(solicitud.body.articulos[0]);
+    
+                            /*** Agragar el id del producto para no buscar por código */
+                            Productos.findOne({"codigo": solicitud.body.articulos[i].codigo}, (error, producto) => {
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    //console.log(producto);
+    
+                                    if(producto.cantidad == NaN){
+                                        producto.cantidad = 0;
+                                    }
+            
+                                    var data = {
+                                        cantidad: parseFloat(producto.cantidad) + parseFloat(solicitud.body.articulos[i].cantidad),
+                                        //lugar: solicitud.body.lugar_almacen
+                                    }
+            
+                                    Productos.updateOne({"_id": producto.id}, data, (error) => {
+                                        if(error){
+                                            console.log(chalk.bgRed(error));
+                                        } else {
+                                            if(i == solicitud.body.articulos.length - 1){
+                                                if(solicitud.body.articulos_fuera != undefined && solicitud.body.articulos_fuera.length > 0) {
+                                                    //console.log(solicitud.body.articulos_fuera);
+                                                    
+                                                    var contenidoTabla = "";
+    
+                                                    solicitud.body.articulos_fuera.forEach( (af) => {
+                                                        contenidoTabla += "<tr>" + 
+                                                                "<td>" +  parseFloat(af.cantidad).toFixed(3) + "</td>" +
+                                                                "<td>" +  af.unidad + "</td>" +
+                                                                "<td>" +  af.codigo + "</td>" +
+                                                                "<td>" +  af.descripcion + "</td>" +
+                                                                "<td>" +  af.orden.serie + "</td>" +
+                                                        "</tr>" 
+                                                    });
+                                        
+                                                    var mailOptions = {
+                                                        from: 'Llaos Sist 1.0 <sistema@llaos.com>',
+                                                        //to: 'flopez@llaos.com',
+                                                        to: 'jcuamea@llaos.com',
+                                                        cc: 'davilar@llaos.com',
+                                                        bcc: 'flopez@llaos.com',
+                                                        subject: 'Artículos no encontrados en orden en ruta ' + solicitud.body.serie,
+                                                        html: "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>"+
+                                                                    "<html xmlns='http://www.w3.org/1999/xhtml'>" +
+                                                                        "<head>" +
+                                                                            "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />" +
+                                                                            "<title>Requisiciones LLaos 1.0</title>" +
+                                                                            "<style type='text/css'>" +
+                                                                                "body {margin: 0; padding: 0; min-width: 100%!important;}" +
+                                                                                ".content {width: 100%; max-width: 600px;}" +
+                                                                                "@media only screen and (min-device-width: 601px) {" +
+                                                                                "	.content {width: 600px !important;}" +
+                                                                                "	.header {padding: 40px 30px 20px 30px;}" +
+                                                                                "}" +
+                                                                                "@media only screen and (min-device-width: 601px) {" +
+                                                                                "	.content {width: 600px !important;}" +
+                                                                                "	.col425 {width: 425px!important;}" +
+                                                                                "	.col380 {width: 380px!important;}" +
+                                                                                "}" +
+                                                                                "@media only screen and (max-width: 550px), screen and (max-device-width: 550px) {" +
+                                                                                "	body[yahoo] .buttonwrapper {background-color: transparent!important;}" +
+                                                                                "	body[yahoo] .button a {background-color: #e05443; padding: 15px 15px 13px!important; display: block!important;}" +
+                                                                                "}" +
+                                                                                ".col425 {width: 425px!important;}" +
+                                                                                ".subhead {font-size: 15px; color: #ffffff; font-family: sans-serif; letter-spacing: 10px;}" +
+                                                                                ".h1 {font-size: 33px; line-height: 38px; font-weight: bold;}" +
+                                                                                ".h1, .h2, .bodycopy {color: #153643; font-family: sans-serif;}" +
+                                                                                ".innerpadding {padding: 30px 30px 30px 30px; text-align: justify;}" +
+                                                                                ".borderbottom {border-bottom: 1px solid #f2eeed; text-align: justify;}" +
+                                                                                ".h2 {padding: 0 0 15px 0; font-size: 24px; line-height: 28px; font-weight: bold;}" +
+                                                                                ".bodycopy {font-size: 16px; line-height: 22px;  text-align: justify;}" +
+                                                                                ".button {text-align: center; font-size: 18px; font-family: sans-serif; font-weight: bold; padding: 0 30px 0 30px;}" +
+                                                                                ".button a {color: #ffffff; text-decoration: none;}" +
+                                                                                ".footer {padding: 20px 30px 15px 30px;}" +
+                                                                                ".footercopy {font-family: sans-serif; font-size: 14px; color: #ffffff;}" +
+                                                                                ".footercopy a {color: #ffffff; text-decoration: underline;}" +
+                                                                            "</style>" +
+                                                                        "</head>" +
+                                                                        "<body yahoo bgcolor='#f6f8f1'>" +
+                                                                            "<table width='100%' bgcolor='#f6f8f1' border='0' cellpadding='0' cellspacing='0'>" +
+                                                                                "<tr>" +
+                                                                                    "<td>" +
+                                                                                        "<!--[if (gte mso 9)|(IE)]>" +
+                                                                                        "<table width='600' align='center' cellpadding='0' cellspacing='0' border='0'>" +
+                                                                                            "<tr>" +
+                                                                                                "<td>" +
+                                                                                                    "<![endif]-->" +
+                                                                                                    "<table class='content' align='center' cellpadding='0' cellspacing='0' border='0'>" +
+                                                                                                        "<!-- HEADER -->" +
+                                                                                                        "<tr>" +
+                                                                                                            "<td class='header' bgcolor='#c7d8a7'>" +
+                                                                                                                "<table width='70' align='left' border='0' cellpadding='0' cellspacing='0'>" +
+                                                                                                                    "<tr>" +
+                                                                                                                        "<td height='70' style='padding: 0 20px 20px 0;'>" +
+                                                                                                                            "<img src='cid:unique@headerMail' width='70' height='70' border='0' alt='' / >" +
+                                                                                                                        "</td>" +
+                                                                                                                    "</tr>" +
+                                                                                                                "</table>" +
+                                                                                                                "<!--[if (gte mso 9)|(IE)]>" +
+                                                                                                                "<table width='425' align='left' cellpadding='0' cellspacing='0' border='0'>" +
+                                                                                                                    "<tr>" +
+                                                                                                                        "<td>" +
+                                                                                                                        "<![endif]-->" +
+                                                                                                                            "<table class='col425' align='left' border='0' cellpadding='0' cellspacing='0' style='width: 100%; max-width: 425px;'>" +
+                                                                                                                                "<tr>" +
+                                                                                                                                    "<td height='70'>" +
+                                                                                                                                        "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
+                                                                                                                                            "<tr>" +
+                                                                                                                                                "<td class='subhead' style='padding: 0 0 0 3px;'>" +
+                                                                                                                                                "	LLAOS 2.0" +
+                                                                                                                                                "</td>" +
+                                                                                                                                            "</tr>" +
+                                                                                                                                            "<tr>" +
+                                                                                                                                                "<td class='h1' style='padding: 5px 0 0 0;'>" +
+                                                                                                                                                "	Ordenes en Ruta" +
+                                                                                                                                                "</td>" +
+                                                                                                                                            "</tr>" +
+                                                                                                                                        "</table>" +
+                                                                                                                                    "</td>" +
+                                                                                                                                "</tr>" +
+                                                                                                                            "</table>" + 
+                                                                                                                        "<!--[if (gte mso 9)|(IE)]>" +
+                                                                                                                        "</td>" +
+                                                                                                                    "</tr>" +
+                                                                                                                "</table>" +
+                                                                                                                "<![endif]-->" +
+                                                                                                            "</td>" +
+                                                                                                        "</tr>" +
+                                                                                                        "<!-- CONTENIDO 1 -->" +
+                                                                                                        "<tr>" +
+                                                                                                            "<td class='innerpadding borderbottom'>" +
+                                                                                                                "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
+                                                                                                                    "<tr>" +
+                                                                                                                        "<td class='h2'>" +
+                                                                                                                        "	Estimado Usuario:" +
+                                                                                                                        "</td>" +
+                                                                                                                    "</tr>" +
+                                                                                                                    "<tr>" +
+                                                                                                                        "<td class='bodycopy'>" +
+                                                                                                                        "   El área de almacen en Granja realizó la entrada de los artículos enviados en la orden en ruta " + solicitud.body.serie + ", " + 
+                                                                                                                        "   encontrando inconsistencias en la misma ya que los siguientes artículos no venían dentro de la unidad." +
+                                                                                                                        "</td>" +
+                                                                                                                    "</tr>" +
+                                                                                                                "</table>" +
+                                                                                                            "</td>" +
+                                                                                                        "</tr>" +
+                                                                                                        "<tr>" +
+                                                                                                            "<td class='innerpadding borderbottom'>" +
+                                                                                                                "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
+                                                                                                                    "<tr>" +
+                                                                                                                        "<th> Cantidad </th>" +
+                                                                                                                        "<th> Unidad </th>" +
+                                                                                                                        "<th> Código </th>" +
+                                                                                                                        "<th> Descripción </th>" +
+                                                                                                                        "<th> Orden </th>" +
+                                                                                                                    "</tr>" +
+                                                                                                                    contenidoTabla +
+                                                                                                                "</table>" +
+                                                                                                            "</td>" +
+                                                                                                        "</tr>" +
+                                                                                                        "<!-- CONTENIDO 3 -->" +
+                                                                                                        "<tr>" +
+                                                                                                            "<td class='innerpadding borderbottom'>" +
+                                                                                                            "	Este correo ha sido generado en automático por el sistema" +
+                                                                                                            "	llaos 2.0, no responda al mismo ya que no tendrá respuesta" +
+                                                                                                            "	alguna, si usted no es un usuario que autoriza Requisiciones" +
+                                                                                                            "	favor de reportar el insidente al departamento de sistemas." +
+                                                                                                            "<br>" +
+                                                                                                            "<br>" +
+                                                                                                            "	Cualquier problema con el sistema" +
+                                                                                                            "	favor de reportar al Departamento de Sistemas." +
+                                                                                                            "</td>" +
+                                                                                                        "</tr>" +
+                                                                                                        "<!-- FOOTER -->" +
+                                                                                                        "<tr>" +
+                                                                                                            "<td class='footer' bgcolor='#44525f'>" +
+                                                                                                                "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
+                                                                                                                    "<tr>" +
+                                                                                                                        "<td align='center' class='footercopy'>" +
+                                                                                                                        "	&reg; Llaos Acuacultura S.A. de C.V. " + new Date().getFullYear() + 
+                                                                                                                        "</td>" +
+                                                                                                                    "</tr>" +
+                                                                                                                "</table>" +
+                                                                                                            "</td>" +
+                                                                                                        "</tr>" +
+                                                                                                    "</table>" +
+                                                                                                    "<!--[if (gte mso 9)|(IE)]>" +
+                                                                                                "</td>" +
+                                                                                            "</tr>" +
+                                                                                        "</table>" +
+                                                                                        "<![endif]-->" +
+                                                                                    "</td>" +
+                                                                                "</tr>" +
+                                                                            "</table>" +
+                                                                        "</body>" +
+                                                                    "</html>",
+                                                        attachments:[
                                                             {
-                                                                estatus: 'En Inventario'
+                                                                fileName: 'mail.png',
+                                                                path: './public/imgs/mail.png',
+                                                                cid: 'unique@headerMail'
                                                             }
-                                                        );
+                                                        ]
                                                     }
-                                                    smtpTransport.close();
-                                                });
-                                            } else {
-                                                respuesta.json(
-                                                    {
-                                                        estatus: 'En Inventario'
-                                                    }
-                                                );
+                                        
+                                                    smtpTransport.sendMail(mailOptions, function(error,res){
+                                                        if(error){
+                                                            console.log(error);
+                                                        }else{
+                                                            console.log("Correo enviado!");
+                                                            respuesta.json(
+                                                                {
+                                                                    estatus: 'En Inventario'
+                                                                }
+                                                            );
+                                                        }
+                                                        smtpTransport.close();
+                                                    });
+                                                } else {
+                                                    respuesta.json(
+                                                        {
+                                                            estatus: 'En Inventario'
+                                                        }
+                                                    );
+                                                }
                                             }
                                         }
-                                    }
-                                });
-                            }
-                        });
+                                    });
+                                }
+                            });
+                        }
+                    } else {
+                        respuesta.json({estatus: 'En Inventario'});
                     }
                 }
             });

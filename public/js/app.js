@@ -144,12 +144,12 @@ $(document).ready( function() {
     $('#menuInventarios').click( function(){
         if ($('#subMenuInventarios').hasClass('hidden')) {
             $('#subMenuInventarios').removeClass('hidden');
-            $('#spanMenuInvetarios').removeClass('fa-angle-left');
-            $('#spanMenuInvetarios').addClass('fa-angle-down');
+            $('#spanMenuInventarios').removeClass('fa-angle-left');
+            $('#spanMenuInventarios').addClass('fa-angle-down');
         }else{
             $('#subMenuInventarios').addClass('hidden');
-            $('#spanMenuInvetarios').removeClass('fa-angle-down');
-            $('#spanMenuInvetarios').addClass('fa-angle-left');
+            $('#spanMenuInventarios').removeClass('fa-angle-down');
+            $('#spanMenuInventarios').addClass('fa-angle-left');
         }        
     });
 

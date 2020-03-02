@@ -8,13 +8,13 @@ block contenido
         $(document).ready( function(){
             
             $('#subMenuInventarios').removeClass('hidden');
-            $('#spanMenuInvetarios').removeClass('fa-angle-left');
-            $('#spanMenuInvetarios').addClass('fa-angle-down');
+            $('#spanMenuInventarios').removeClass('fa-angle-left');
+            $('#spanMenuInventarios').addClass('fa-angle-down');
            
             if($('#lugar').text() == 'Granja'){
                 $('#subMenuGranja').removeClass('hidden');
                 $('#spanMenuGranja').removeClass('fa-angle-left');
-                $('#spanMenuGranja').addClass('fa-angle-down');
+                $('#spanMenuGranja').addClass('fa-angle-down');   
             } else if($('#lugar').text() == 'Planta'){
                 $('#subMenuPlanta').removeClass('hidden');
                 $('#spanMenuPlanta').removeClass('fa-angle-left');
@@ -65,17 +65,15 @@ block contenido
                             each ord in ordenes_salida
                                 tr(scope="row")
                                     td.d-flex.justify-content-between
-                                        a.btn.btn-info.btn-small(href="/inventarios/salidas/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Editar" style="margin-right: 5px;")
-                                            i.fas.fa-pencil-alt.fa-input.fa-2x
-                                        //a.btn.btn-danger(href="productos/producto/eliminar/#{p.id}",data-toggle="tooltip", data-placement="top", title="Eliminar")
-                                            i.fas.fa-times-circle
+                                        a.btn.btn-warning.btn-small(href="/inventarios/salidas/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Editar" style="margin-right: 5px;")
+                                            i.fas.fa-eye.fa-input.fa-2x
                                     td.text-center #{ ord.numero_orden }
                                     td #{ ord.lugar_almacen }
                                     td #{ ord.lugar_unidad.nombre }
                                     td #{ ord.solicita.nombre }
                                     td #{ ord.area }
                                     td #{ ord.modulo == null ? '' : ord.modulo.nombre }
-                                    td #{ ord.piscina == null ? '' : ord.piscina.nombre }
+                                    td #{ ord.piscina == null ? '' : ord.piscina.codigo }
                                     td #{ ord.estatus }
                                     td #{ ord.registro.toLocaleString("ex-Mx")}
 
