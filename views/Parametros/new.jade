@@ -53,6 +53,7 @@ block contenido
         }
     script.
         var cambiar_tiempo = true;
+        var cambiar_fecha = false;
         var parametros = [];
         var hora;
 
@@ -243,6 +244,14 @@ block contenido
             cerrarLoader();
         }
 
+        function asignarFecha(){
+            cambiar_fecha = true;
+
+            parametros.forEach( n => {
+                n.fecha = $('#fecha_new').val();
+            });
+        }
+
     // Inputs funcionamiento
     input.hidden#modulos(value="#{user.modulo}")
     input.hidden#user(value="#{user._id}")
@@ -269,8 +278,6 @@ block contenido
                             br
                             strong
                                 span#span_modulos.blue-text ####
-                            //a(data-toggle="modal" href="#almacenModal" style="margin-left: 10px;").btn.btn-primary.btn-small.blue-gradient
-                                i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Seleccionar almacén").fas.fa-2x.fa-sync-alt
                         h5.h5-responsive
                             small Número de piscinas: 
                             br
@@ -281,6 +288,9 @@ block contenido
                             small Fecha.
                             br
                             strong
+                                if(user.permisos == 'developer')
+                                    a(data-toggle="modal" href="#fechaModal" style="margin-right: 5px; margin-top: 2px;").btn.btn-primary.btn-small.blue-gradient
+                                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Cambiar fecha").fas.fa-2x.fa-sync-alt
                                 span#fecha.blue-text
                                 span#hora.blue-text
                         h5.h5-responsive
@@ -345,3 +355,31 @@ block contenido
                                 i.fa.fas.fa-times-circle()
                                 |   Cerrar
 
+    // Modal seleccionar fecha
+    #fechaModal(class="modal")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
+                    .col-lg-12
+                        i.fa.fas.fa-sync-alt(style="margin-right: 15px;")
+                        label 
+                            strong Seleccionar tiempo
+                .modal-body()
+                    .card
+                        .card-body
+                            .row
+                                .col-lg-12
+                                    .form-group
+                                        label | Tiempo
+                                        .input-group
+                                            span.input-group-addon.blue-gradient
+                                                i.fas.fa-calendar(style="color: #fff;")
+                                            input#fecha_new.form-control(type="date" name="fecha_new" tabindex="6" onblur="asignarFecha()")
+                .modal-footer
+                    .text-right
+                        .btn-group
+                            a(data-dismiss="modal").btn.btn-default
+                                i.fa.fas.fa-times-circle()
+                                |   Cerrar
+
+               

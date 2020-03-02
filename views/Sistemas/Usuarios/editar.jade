@@ -94,6 +94,7 @@ block contenido
         }
 
         function obtenerModulos(){
+            alert($('#areas').val());
             if ($('#areas').val() == "5e4eceea3b139a5224a9ee5a"){
                     $('#h_modulo').removeClass('hidden');
                     $('#modulosSal').removeClass('hidden');
@@ -115,7 +116,7 @@ block contenido
                 }
         }
 
-         function obtenerModulos(seleccionado){
+         function obtenerModuloSeleccionado(seleccionado){
             if (seleccionado == "5e4eceea3b139a5224a9ee5a"){
                     $('#h_modulo').removeClass('hidden');
                     $('#modulosSal').removeClass('hidden');
@@ -171,7 +172,7 @@ block contenido
                         }
 
                         if(i == areas.length -1){
-                            obtenerModulos(seleccionado);
+                            obtenerModuloSeleccionado(seleccionado);
                         }
                     }
                 }               

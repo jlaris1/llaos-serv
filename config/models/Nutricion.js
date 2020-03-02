@@ -14,7 +14,7 @@ var nutricionSchemaJSON = {
     codigo_racion: String,
     siguiente_racion: String,
     estanque: { type: Schema.ObjectId, ref: "Estanques" },
-    fecha: { type: Date, default: new Date().toLocaleDateString("es-MX")},
+    fecha: { type: Date, default: new Date().toLocaleDateString("es-MX", {dateStyle: 'short'})},
     hora: String,
     charolero: { type: Schema.ObjectId, ref: "Usuarios" }
 }

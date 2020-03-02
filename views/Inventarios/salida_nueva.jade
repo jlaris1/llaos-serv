@@ -393,15 +393,7 @@ block contenido
 
         /* Imprimir orden salida */
         function imprimirOrden(){
-            //$('#imprimir').addClass('disabled');
             $('#terminar').removeClass('disabled');
-
-            /*** Enviar la descarga **/
-            /*if($('#url').text() != ''){
-                url = '../../../../../'+ $('#url').text();
-                window.open(url, 'Download');
-                $('#url').text('');
-            }*/
             
             var data = {
                 estatus: 'Generada',
@@ -424,7 +416,7 @@ block contenido
                 var url = '../../salidas/'+ data.url;
                 window.open(url, 'Download');
 
-                if(data.habilitarImpresion == true){
+                if(data.impreso == true){
                     $('#imprimir').addClass('disabled');
                     $('#terminar').removeClass('disabled');
                 }

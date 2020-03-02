@@ -2,8 +2,6 @@ extends ../layouts/layout.jade
 block contenido
     script.
         $(document).ready( function() { 
-            $('[data-toggle="tooltip"]').tooltip();
-
             $('#subMenuNutricion').removeClass('hidden');
             $('#spanMenuNutricion').removeClass('fa-angle-left');
             $('#spanMenuNutricion').addClass('fa-angle-down');
@@ -15,6 +13,8 @@ block contenido
                 window.open(url, 'Download');
                 $('#url').text('');
             }
+
+            $('[data-toggle="tooltip"]').tooltip();
         });
     //Termina Javascript
 
@@ -30,7 +30,7 @@ block contenido
                     |   Nutrición
                 div
                     a(href="/nutricion/new" style="margin-right: 5px;").btn.btn-success
-                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nuevo producto").fas.fa-plus-circle
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nuevo registro de nutrición").fas.fa-plus-circle
                     a(href="#reports" data-toggle="modal" data-target="#reports").btn.btn-danger
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Reportes").fas.fa-file-pdf
    
@@ -66,4 +66,7 @@ block contenido
                                 td.text-center #{ nut.codigo_racion }
                                 td.text-center #{ nut.siguiente_racion }
                                 td.text-center #{ nut.charolero.nombre }
-                                td #{nut.fecha}
+
+                                - var date = new Date(nut.fecha);
+                                - date.setDate(date.getDate() + 1);
+                                td #{date.toLocaleDateString("es-MX",{dateStyle: 'short'})}

@@ -182,14 +182,11 @@ module.exports = {
         if (solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else {
-            var estanque = {};
-            var siguiente_estanque = {};
-
             Parametros.findById({"_id": solicitud.params.id}, function(error, parametro){
                 if(error){
                     console.log(chalk.bgRed(error));
                 } else {
-                    Modulos.find( function(error, modulos){
+                    Estanques.populate(parametro, {path: 'estanque'}, (error, parametro) => {
                         if(error){
                             console.log(chalk.bgRed(error));
                         } else {
@@ -197,56 +194,39 @@ module.exports = {
                                 if(error){
                                     console.log(chalk.bgRed(error));
                                 } else { 
-                                    Estanques.find( function(error, estanques){
+                                    Modulos.populate(parametro, {path: 'estanque.modulo'}, (error, parametro) => {
                                         if(error){
                                             console.log(chalk.bgRed(error));
                                         } else {
-                                            for(var i = 0; i < estanques.length; i ++){
-                                                if(estanques[i].id == parametro.estanque){
-                                                    if(i == estanques.length - 1 ){
-                                                        estanque = estanques[i];
-                                                        siguiente_estanque = estanques[0];
-                                                        break;
-                                                    } else if (i == estanques.length -2){
-                                                        estanque = estanques[i];
-                                                        siguiente_estanque = estanques[i+1];
-                                                        break;
-                                                    } else {
-                                                        estanque = estanques[i];
-                                                        siguiente_estanque = estanques[i+1];
-                                                        break;
-                                                    }
+                                            Usuarios.populate(parametro, {path: 'parametrista'}, (error, parametro) => {
+                                                if(error) {
+                                                    console.log(chalk.bgRed(error));
+                                                } else {
+                                                    respuesta.render('Parametros/edit', {
+                                                        user: solicitud.session.user,
+                                                        usuarios: usuarios,
+                                                        parametro: parametro,
+                                                        titulo: "",
+                                                        criterios: [
+                                                            {
+                                                                val: "",
+                                                                name: ""
+                                                            },
+                                                        ],
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ],
+                                                    });
                                                 }
-                                            }
-
-                                            respuesta.render('Parametros/edit', {
-                                                user: solicitud.session.user,
-                                                modulos: modulos,
-                                                usuarios: usuarios,
-                                                modulo: estanque.modulo,
-                                                estanque: estanque,
-                                                estanques: estanques,
-                                                parametro: parametro,
-                                                siguiente_estanque: siguiente_estanque,
-                                                titulo: "",
-                                                criterios: [
-                                                    {
-                                                        val: "",
-                                                        name: ""
-                                                    },
-                                                ],
-                                                piscinas: [
-                                                    {
-                                                        id: 0,
-                                                        nombre: ""
-                                                    }
-                                                ],
-                                                charoleros: [
-                                                    {
-                                                        id: 0,
-                                                        nombre: ""
-                                                    }   
-                                                ],
                                             });
                                         }
                                     });
@@ -290,28 +270,15 @@ module.exports = {
         if (solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else {
-            var data  = {
-                oxigeno: solicitud.body.oxigeno,
-                ph: solicitud.body.ph,
-                salinidad: solicitud.body.salinidad,
-                temperatura: solicitud.body.temperatura,
-                nivel_agua: solicitud.body.nivel_agua,
-                estanque: solicitud.body.estanque,
-                //fecha: new Date( fecha.getTime() + Math.abs(fecha.getTimezoneOffset()*60000))
-                //fecha: new Date(solicitud.body.fecha),
-                fecha: new Date( new Date(solicitud.body.fecha).getTime() + Math.abs( new Date(solicitud.body.fecha).getTimezoneOffset()*60000)),
-                tiempo: solicitud.body.tiempo,
-                hora: FechaHora.obtenerhora(),
-                parametrista: solicitud.session.user
-            }
+            console.log(solicitud.body)
 
-            Parametros.updateOne({"_id": solicitud.body.id}, data, function(error){
+            /*Parametros.updateOne({"_id": solicitud.body.id}, data, function(error){
                 if(error){
                     console.log(chalk.bgRed(error));
                 } else {
-                    respuesta.redirect('/parametros/all');
+                    respuesta.json({estatus: 'Actualizado'});
                 }
-            });
+            });*/
         }
     },
     delete: function(solicitud, respuesta){

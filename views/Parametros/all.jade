@@ -14,6 +14,8 @@ block contenido
                 window.open(url, 'Download');
                 $('#url').text('');
             }
+
+            $('[data-toggle="tooltip"]').tooltip();
         });
     //Termina Javascript
 
@@ -76,7 +78,11 @@ block contenido
                                 td #{ parseFloat(med.salinidad).toFixed(2) }
                                 td #{ parseFloat(med.temperatura).toFixed(2) }
                                 td #{ parseFloat(med.nivel_agua).toFixed(2) }
-                                td.text-center #{ med.fecha.toLocaleDateString("es-MX") }
+
+                                - var date = new Date(med.fecha);
+                                - date.setDate(date.getDate() + 1);
+                                td #{date.toLocaleDateString("es-MX",{dateStyle: 'short'})}
+
                                 td  #{ med.hora }
                                 td  #{ med.tiempo }
                                 td  #{ med.parametrista.nombre }

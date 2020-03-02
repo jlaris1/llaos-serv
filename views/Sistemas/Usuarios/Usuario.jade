@@ -63,7 +63,7 @@ block contenido
         }
 
         function obtenerModulos(){
-           if ($('#areas').val() == "Intensivo"){
+           if ($('#areas').val() == "5e4eceea3b139a5224a9ee5a"){
                 $('#h_modulo').removeClass('hidden');
                 $('#modulosSal').removeClass('hidden');
                 $('#sel').removeClass('hidden');
@@ -75,23 +75,12 @@ block contenido
                 $('#e').addClass('hidden');
                 $('#reser').removeClass('hidden');
                 $('#module').attr('required', true);
-            } else if ($('#areas').val() == "Semi-intensivo"){
-                $('#modulosSal').removeClass('hidden');
-                $('#h_modulo').removeClass('hidden');
-                $('#sel').removeClass('hidden');
-                $('#a').addClass('hidden');
-                $('#b').addClass('hidden');
-                $('#ac').removeClass('hidden');
-                $('#bc').removeClass('hidden');
-                $('#d').removeClass('hidden');
-                $('#e').removeClass('hidden');
-                $('#reser').removeClass('hidden');
-                $('#module').attr('required', true);
             } else {
                 $('#h_modulo').addClass('hidden');
                 $('#piscinas').addClass('hidden');
                 $('#modulos').addClass('hidden');
                 $('#module').attr('required', false);
+                 $('#modulosSal').addClass('hidden');
             }
         }
 

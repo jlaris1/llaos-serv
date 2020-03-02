@@ -10,38 +10,64 @@ block contenido
             background-color: black;
             color: #fff;
         } 
+
+        ul {
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .center-middle {
+           margin-top: 13px;
+        }
+
+        .margin-div {
+            margin-right: 5px;
+        }
+
+         .btn-small {
+            font-size: 0.5rem;
+        }
+
+        .input-group-addon {
+            background-color: #dd7206; 
+            border: 2px;
+        }
+
+        .fa-input {
+            color: #fff;
+        }
+
+        a.btn {
+            border: 0;
+            border-radius: 2px;
+        }
+
+        hr {
+            margin-top: -5px;
+            margin-bottom: 5px;
+            border: 1px solid #2d6e99;
+        }
+
+        .margin-div2 {
+            margin-right: 10px;
+        }
     script.
+        var hora;
+        var cambiar_tiempo = true;
+        var cambiar_fecha = false;
+
         $(document).ready( function(){
-            obtenerfecha();
-            obtenerhora(); 
+            obtenerFecha();
+            obtenerHora(); 
 
             $('#subMenuParametros').removeClass('hidden');
             $('#spanMenuParametros').removeClass('fa-angle-left');
             $('#spanMenuParametros').addClass('fa-angle-down');
 
-            $('#modulo').on('change', function(){
-                document.frm2.submit();
-            });
-
-            $('#estanques').on('change', function(){
-                $('#est').val(this.value);
-
-                var select=document.getElementById("estanques");
- 
-                // recorremos todos los valores del select
-                for(var i=1; i<select.length; i++){
-                    if(select.options[i].value == this.value){
-                        // seleccionamos el valor que coincide
-                        $("#sig_est").val(select.options[i+1].value);
-                    }
-                }
-            });
-
-            $('#fechaI').on('change', function(){ $('#fec').val(this.value); });
-            $('#tiempo').on('change', function(){ $('#tiem').val(this.value); });
+            $('[data-toggle="tooltip"]').tooltip();
         });
 
-        function obtenerfecha(){
+        function obtenerFecha(){
             var fecha = new Date()
             var dia = fecha.getDate();
             var mes = fecha.getMonth()+1;
@@ -55,19 +81,25 @@ block contenido
                 mes = "0"+mes;
             }
 
-            $("#fecha").text(dia+"/"+mes+"/"+anio+"    ");
+            $('#fecha').text(dia+"/"+mes+"/"+anio + " - ");
         }
 
-        function obtenerhora(){
+        function obtenerHora(){
             var tiempo = new Date();
             var horas = tiempo.getHours();
             var minutos = tiempo.getMinutes();
             var segundos = tiempo.getSeconds();
             var dn ="";
 
-            if(horas < 12){
+            if (horas < 12) {
+                if(cambiar_tiempo == true) {
+                    $("#span_tiempo").text("AM");
+                }
                 dn = "a.m.";
-            }else{
+            } else {
+                if(cambiar_tiempo == true) {
+                    $("#span_tiempo").text("PM");
+                }
                 dn = "p.m.";
             }
 
@@ -79,127 +111,201 @@ block contenido
                 segundos = "0"+segundos;
             }
                 
+            hora = horas+":"+minutos+":"+segundos;
             $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
-
             setTimeout('obtenerhora()',1000);
-            //console.log("un segundo mas...");
         }
 
-        function submit() {
-            document.frm3.submit();
+        function actualizarParametro() {
+            abrirLoader();
+
+            $.post( "/parametros/update", {
+                id: $("#id_param").val(),
+                estanque: $("#est").val(),
+                temperatura: $("input[name=temperatura]").val()  == "" ? 0 : $("input[name=temperatura]").val() ,
+                oxigeno: $("input[name=oxigeno]").val() == "" ? 0 : $("input[name=oxigeno]").val(),
+                nivel_agua: $("input[name=nivel_agua]").val() == null || $("input[name=nivel_agua]").val() == "" ? null : $("input[name=nivel_agua]").val(),
+                salinidad: $("input[name=salinidad]").val() == null || $("input[name=salinidad]").val() == "" ? null : $("input[name=salinidad]").val(),
+                ph: $("input[name=ph]").val() == "" ? 0 : $("input[name=ph]").val(),
+                turbidez: $("input[name=turbidez]").val() == "" || $("input[name=turbidez]").val() == null ? null : $("input[name=turbidez]").val(),
+                hora: hora,
+                tiempo: $('#span_tiempo').text(),
+                parametrista: $('#user').val(),
+                fecha: $('#span_fecha').text(),
+                anio: $('#span_anio').text()
+            }, (data) => {
+                //console.log(data);
+                                
+                // Mostrar notificación de guardado correcto 
+                $('#alert').removeClass('warning');
+                $('#alert').addClass('success');
+                $('#alertDiv').removeClass('hidden');
+                $('#msg1').text('Se ha realizado con ');
+                $('#msg2').text('el registro de parámetros');
+                $('#msg_alert').text('éxito ');
+                $('#guardar').addClass('disabled');
+            }, "json");
+
+            $('#loader').addClass('hidden');
+
+            cerrarLoader();
         }
-    .row(style="margin-bottom: -5px;")
-        .col-lg-6.col-md-6.col-sm-6.col-xs-12
-            h2 
-                i.fas.fa-eye-dropper(style="margin-right: 10px;")
-                |   Edición de Parámetros
-    .divider
-    .row
-        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-right.text-right
-            span
-                | Usuario: 
-            label
-                i.fas.fa-user
-                |  #{user.nombre}
-        .col-lg-6.col-md-6.col-sm-6.col-xs-6.pull-left.text-left
-            label#fecha(style="margin-right: 10px;")
-            label#hora
-    .divider
-    .row
-        form(role="form" name="frm2" method="post" action="/parametros/find")
-            .col-lg-3
-                .form-group
-                    label | Modulo
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-water
-                        select#modulo.form-control(required name="modulo" tabindex="1")
-                            option(value="") << Seleccione >>
-                            each mod in modulos
-                                option(value="#{mod.id}", selected=(mod.id == modulo)) #{ mod.nombre}
-            .col-lg-3
-                .form-group
-                    label | Piscina
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-water
-                        select#estanques.form-control(name="estanque" tabindex="2")
-                            option(value="") << Seleccione >>
-                            each est in estanques
-                                option(value="#{est.id}", selected=(est.id == estanque.id)) #{ est.codigo}
-            .col-lg-3
-                .form-group
-                    label | Fecha
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-calendar-alt
-                        //input#fechaI.form-control(type="date" value="2013-01-08" name="fecha" tabindex="3")
-                        if (new Date(parametro.fecha).getMonth() + 1) < 10
-                            input#fechaI.form-control(type="date" value="#{new Date(parametro.fecha).getFullYear() + '-0' + (new Date(parametro.fecha).getMonth() + 1)+ '-' + new Date(parametro.fecha).getDate()}" name="fecha" tabindex="3")
-                        else
-                            input#fechaI.form-control(type="date" value="#{new Date(parametro.fecha).getFullYear() + '-' + (new Date(parametro.fecha).getMonth() + 1)+ '-' + new Date(parametro.fecha).getDate()}" name="fecha" tabindex="3")
-            .col-lg-3
-                .form-group
-                    label | Tiempo
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-clock
-                        select#tiempo.form-control(name="tiempo" tabindex="4")
-                            option(value="") << Seleccione >>
-                            option(value="AM", selected=("AM" == parametro.tiempo)) AM
-                            option(value="PM", selected=("PM" == parametro.tiempo)) PM
-    form#frm(role="form" method="post" action="/parametros/update?_method=put")
-        input.hidden(name="id" value="#{parametro.id}")
-        input.hidden(name="modu" value="#{modulo}")
-        if (new Date(parametro.fecha).getMonth() + 1) < 10
-            input#fec.hidden(type="date" value="#{new Date(parametro.fecha).getFullYear() + '-0' + (new Date(parametro.fecha).getMonth() + 1)+ '-' + new Date(parametro.fecha).getDate()}" name="fecha" tabindex="3")
-        else
-            input#fec.hidden(type="date" value="#{new Date(parametro.fecha).getFullYear() + '-' + (new Date(parametro.fecha).getMonth() + 1)+ '-' + new Date(parametro.fecha).getDate()}" name="fecha" tabindex="3")
-        input#est.hidden(required name="estanque" value="#{estanque.id}")
-        input#tiem.hidden(required name="tiempo" value="#{parametro.tiempo}")
-        .row
-            .col-lg-12
-                .panel.panel-primary
-                    .panel-heading
-                        i.fas.fa-vial
-                    .panel-body
-                        .col-lg-1.col-md-1.col-sm-1.col-sm-offset-0.col-md-offset-0.col-lg-offset-0
-                        .col-lg-2.col-md-2.col-xs-12
-                            .form-group
-                                label | Temperatura (°C)
-                                input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="# Necro" tabindex="5")
-                        .col-lg-2.col-md-2.col-xs-12
-                            .form-group
-                                label | Oxigeno (mg/L)
-                                input.form-control(type="text" value="#{parametro.oxigeno}" name="oxigeno" placeholder="# Necro" tabindex="6")
-                        .col-lg-2.col-md-2.col-xs-12
-                            .form-group
-                                label | Nivel de Agua
-                                input.form-control(type="text" value="#{parametro.nivel_agua}" name="nivel_agua" placeholder="# Necro" tabindex="7")
-                        .col-lg-2.col-md-2.col-xs-12
-                            .form-group
-                                label | Salinidad
-                                input.form-control(type="text" value="#{parametro.salinidad}" name="salinidad" placeholder="# Necro" tabindex="8")
-                        .col-lg-2.col-md-2.col-xs-12
-                            .form-group
-                                label | pH
-                                input.form-control(type="text" value="#{parametro.ph}" name="ph" placeholder="# Necro" tabindex="9")
-                        
-        .divider
-        .row  
-            .col-lg-2.col-md-4.col-xs-6.pull-right( style="margin-left: 15px;")
-                .form-group
-                    .input-group
-                        span.input-group-addon
-                            i.fas.fa-plus-circle.text-success
-                        input(type="submit" value="Actualizar" tabindex="8").btn.btn-success.form-control
-    //form(action="/parametros/next" method="post" name="frm3")
-        input.hidden(name="mod" value="#{modulo}")
-        input#sig_est.hidden(name="estanque_siguiente" value="#{siguiente_estanque.id}")  
-        .col-lg-2.col-md-4.col-xs-6.pull-right(style="margin-top: -49px; margin-right: 170px;")
-            .form-group
-                .input-group
-                    span.input-group-addon
-                        i.fas.fa-arrow-circle-right.text-primary
-                    a(tabindex="9" style="color: white;" onclick="submit()").btn.btn-primary.form-control
-                        | Siguiente Piscina 
+
+        function asignarFecha(){
+            cambiar_fecha = true;
+        }
+    
+    // Inputs funcionamiento
+    input#id_param.hidden(name="id" value="#{parametro.id}")
+    input#est.hidden(name="estanque" value="#{parametro.estanque.id}")
+    input#user.hidden(value="#{parametro.parametrista.id}")
+
+    // Título
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-eye-dropper
+                    |  Edición de parámetros
+                div
+                    a#guardar(href="javascript:actualizarParametro();").btn.btn-success.Ripple-parent.green-gradient
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Realizar").fas.fa-save
+    
+    // Detalles
+    section.mb-4
+        .card
+            .card-body
+                .row
+                    .col-md-6.col-lg-6.col-xs-6.text-left
+                        h4.h4-responsive
+                            small Módulo: 
+                            br
+                            strong
+                                span#span_modulos.blue-text #{parametro.estanque.modulo.nombre}
+                        h5.h5-responsive
+                            small Piscina: 
+                            br
+                            strong
+                                span#span_piscinas #{parametro.estanque.codigo}
+                        h5.h5-responsive
+                            small Fecha - Hora: 
+                            br
+                            strong
+                                - var date = new Date(parametro.fecha);
+                                - date.setDate(date.getDate() + 1);
+                                span#span_fecha_hora #{date.toLocaleDateString("es-MX",{dateStyle: 'short'})} - #{parametro.hora}
+                                span.hidden#span_fecha #{date.toLocaleDateString("es-MX",{dateStyle: 'short'})}
+                                span.hidden#span_anio #{date.getFullYear()}
+                    .col-md-6.col-lg-6.col-xs-6.text-right
+                        h4.h4-responsive
+                            small Fecha.
+                            br
+                            strong
+                                if(user.permisos == 'developer')
+                                    a(data-toggle="modal" href="#fechaModal" style="margin-right: 5px; margin-top: 2px;").btn.btn-primary.btn-small.blue-gradient
+                                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Cambiar fecha").fas.fa-2x.fa-sync-alt
+                                span#fecha.blue-text
+                                span#hora.blue-text
+                        h5.h5-responsive
+                            small Captura para
+                            br
+                            strong
+                                a(data-toggle="modal" href="#tiempoModal" style="margin-right: 5px; margin-top: 2px;" tabindex="7").btn.btn-primary.btn-small.blue-gradient
+                                    i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Cambiar tiempo").fas.fa-2x.fa-sync-alt
+                                span#span_tiempo(style="margin-top: 5px;") #{parametro.tiempo}
+                        h5.h5-responsive
+                            small Estatus.
+                            br
+                            strong
+                                span#span_estatus Guardado 
+                        h5.h5-responsive
+                            small Registrado por:
+                            br
+                            strong
+                                span #{parametro.parametrista.nombre}     
+    
+    // Datos de captura                        
+    section.mb-4
+        .panel.panel-primary
+            .panel-heading
+                i.fas.fa-vial
+            .panel-body
+                .d-flex.justify-content-between
+                    .form-group.margin-div
+                        label | Temperatura (°C)
+                        input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="Temperatura" tabindex="1")
+                    .form-group.margin-div
+                        label | Oxigeno (mg/L)
+                        input.form-control(type="text" value="#{parametro.oxigeno}" name="oxigeno" placeholder="Oxigeno" tabindex="2")
+                    .form-group.margin-div
+                        label | Nivel de Agua
+                        input.form-control(type="text" value="#{parametro.nivel_agua}" name="nivel_agua" placeholder="Nivel agua" tabindex="3")
+                    .form-group.margin-div
+                        label | Salinidad
+                        input.form-control(type="text" value="#{parametro.salinidad}" name="salinidad" placeholder="Salinidad" tabindex="4")
+                    .form-group.margin-div
+                        label | pH
+                        input.form-control(type="text" value="#{parametro.ph}" name="ph" placeholder="pH" tabindex="5")
+                    .form-group.margin-div
+                        label | Turbidez
+                        input.form-control(type="text" value="#{parametro.turbidez}" name="turbidez" placeholder="Turbidez" tabindex="6")
+
+    // Modal Seleccionar tiempo
+    #tiempoModal(class="modal")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
+                    .col-lg-12
+                        i.fa.fas.fa-sync-alt(style="margin-right: 15px;")
+                        label 
+                            strong Seleccionar tiempo
+                .modal-body()
+                    .card
+                        .card-body
+                            .row
+                                .col-lg-12
+                                    .form-group
+                                        label | Tiempo
+                                        .input-group
+                                            span.input-group-addon.blue-gradient
+                                                i.fas.fa-hourglass-half.fa-input
+                                            select#select_tiempo.form-control(required name="tiempo" tabindex="1" value="" onchange="asignarTiempo()")
+                                                option(value="") << Seleccione >>
+                                                option(value="AM") AM
+                                                option(value="PM") PM
+
+                .modal-footer
+                    .text-right
+                        .btn-group
+                            a(data-dismiss="modal").btn.btn-default
+                                i.fa.fas.fa-times-circle()
+                                |   Cerrar
+
+    // Modal seleccionar fecha
+    #fechaModal(class="modal")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
+                    .col-lg-12
+                        i.fa.fas.fa-sync-alt(style="margin-right: 15px;")
+                        label 
+                            strong Seleccionar tiempo
+                .modal-body()
+                    .card
+                        .card-body
+                            .row
+                                .col-lg-12
+                                    .form-group
+                                        label | Tiempo
+                                        .input-group
+                                            span.input-group-addon.blue-gradient
+                                                i.fas.fa-calendar(style="color: #fff;")
+                                            input#fecha_new.form-control(type="date" name="fecha_new" tabindex="6" onblur="asignarFecha()")
+                .modal-footer
+                    .text-right
+                        .btn-group
+                            a(data-dismiss="modal").btn.btn-default
+                                i.fa.fas.fa-times-circle()
+                                |   Cerrar
+
+               

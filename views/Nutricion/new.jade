@@ -54,6 +54,7 @@ block contenido
     script.
         var nutricion = [];
         var cambiar_tiempo = true;
+        var cambiar_fecha = false;
         var hora;
         var tamaño_suma = [];
         var lista_nutricion = [];
@@ -66,13 +67,12 @@ block contenido
             $('#spanMenuNutricion').removeClass('fa-angle-left');
             $('#spanMenuNutricion').addClass('fa-angle-down');
 
+            var today = new Date();
+            document.getElementById("fecha_new").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+        
             mostrarPiscinas();
-
-            $('input[type=text]').on('keydown', function(e) {
-                if (e.which == 13) {
-                    e.preventDefault();
-                }
-            });
+            
+            $('[data-toggle="tooltip"]').tooltip();
         });
 
         function obtenerFecha(){
@@ -131,13 +131,13 @@ block contenido
             var codigo_racion = 0.00;
             //  tamaño_suma.includes()
 
-            if(parseFloat($('input[name="charola'+num_charola+''+id+'"]').val()) < 0 || parseFloat($('input[name="charola'+num_charola+''+id+'"]').val()) > 2) {
+            if(parseFloat($('input[name="charola'+num_charola+''+id+'"]').val()) < 0 || parseFloat($('input[name="charola'+num_charola+''+id+'"]').val()) > 3) {
                 $('#alert').removeClass('success');
                 $('#alert').addClass('warning');
                 $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Se adminten solo cantidades ');
                 $('#msg2').text('revise la charola ' + num_charola);
-                $('#msg_alert').text('de 0 a 2 ');
+                $('#msg_alert').text('de 0 a 3 ');
                 // focus charola.
                 $('input[name="charola'+num_charola+''+id+'"]').focus();
                 return;
@@ -173,7 +173,8 @@ block contenido
 
                     $('#num_piscinas').text(data.piscinas.length);
                     
-                    for(var i = 0; i < data.piscinas.length; i ++){
+                    for(var i = 0; i <= data.piscinas.length - 1; i ++){
+                        /** Contrucción de piscinas*/
                         $("#lista_nutricion")
                         .append('<li id="pis'+data.piscinas[i]._id+'"> ' +
                             '<div class="d-flex justify-content-between">' +
@@ -232,6 +233,12 @@ block contenido
                             '<hr>'+
                         '</li>');
 
+                        /** Obtener el acumulado de cada una de las piscinas y agregarlo */
+                        $.post( "/nutricion/acumulado", {
+                            id: data.piscinas[i]._id
+                        }, (datos) => {
+                            $('#kg_acumu'+datos.id).text(datos.kg_acumulados);
+                        });
 
                         if(i == data.piscinas.length -1){
                             cerrarLoader();
@@ -250,30 +257,55 @@ block contenido
                     }
                 }
 
-               if(data.lista_nutricion.length > 0){
+                if(data.lista_nutricion.length > 0){
                     for(var i=0; i <= data.lista_nutricion.length -1 ; i++){
-                        if(data.lista_nutricion[i].estanque == $('#idPis'+data.lista_nutricion[i].estanque).val()){
-                            var id = data.lista_nutricion[i].estanque;
+                        for(var j=0; j <= data.piscinas.length - 1; j ++){
+                            if(data.lista_nutricion[i] != undefined && data.lista_nutricion[i].estanque == $('#idPis'+data.piscinas[j]._id).val()){
+                                var contador = 0;
+                                var id = data.lista_nutricion[i].estanque;
+                                var r1  = parseFloat(0);
+                                var r2 = parseFloat(0);
+                                var r3 = parseFloat(0);
+                                var r4 = parseFloat(0);
+                                var r5 = parseFloat(0);
 
-                            var r1 = data.lista_nutricion[i] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i].kg_racion).toFixed(2);
-                            var r2 = data.lista_nutricion[i + 1] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 1].kg_racion).toFixed(2);
-                            var r3 = data.lista_nutricion[i + 2] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 2].kg_racion).toFixed(2);
-                            var r4 = data.lista_nutricion[i + 3] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 3].kg_racion).toFixed(2);
-                            var r5 = data.lista_nutricion[i + 4] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 4].kg_racion).toFixed(2);
+                                r1 = data.lista_nutricion[i] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i].kg_racion).toFixed(2);
+                                contador += 1;
 
-                            var suma = parseFloat(r1) + parseFloat(r2) + parseFloat(r3) + parseFloat(r4) + parseFloat(r5);
+                                if(data.lista_nutricion[i + 1] != undefined && data.lista_nutricion[i + 1].estanque == $('#idPis'+data.piscinas[j]._id).val()){
+                                    r2 = data.lista_nutricion[i + 1] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 1].kg_racion).toFixed(2);
+                                    contador += 1;
+                                }
 
-                            $('#r1'+id).text(r1);
-                            $('#r2'+id).text(r2);
-                            $('#r3'+id).text(r3);
-                            $('#r4'+id).text(r4);
-                            $('#r5'+id).text(r5);
-                            $('#kg_dia'+id).text(suma);
+                                if(data.lista_nutricion[i + 2] != undefined && data.lista_nutricion[i + 2].estanque == $('#idPis'+data.piscinas[j]._id).val()){
+                                    r3 = data.lista_nutricion[i + 2] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 2].kg_racion).toFixed(2);
+                                    contador += 1;
+                                }
 
-                            i += 4;
+                                if(data.lista_nutricion[i + 3] != undefined && data.lista_nutricion[i + 3].estanque == $('#idPis'+data.piscinas[j]._id).val()){
+                                    r4 = data.lista_nutricion[i + 3] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 3].kg_racion).toFixed(2);
+                                    contador += 1;
+                                }
+
+                                if(data.lista_nutricion[i + 4] != undefined && data.lista_nutricion[i + 4].estanque == $('#idPis'+data.piscinas[j]._id).val()){
+                                    r5 = data.lista_nutricion[i + 4] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 4].kg_racion).toFixed(2);
+                                    contador += 1;
+                                }
+
+                                var suma = parseFloat(r1) + parseFloat(r2) + parseFloat(r3) + parseFloat(r4) + parseFloat(r5);
+
+                                $('#r1'+id).text(r1);
+                                $('#r2'+id).text(r2);
+                                $('#r3'+id).text(r3);
+                                $('#r4'+id).text(r4);
+                                $('#r5'+id).text(r5);
+                                
+                                $('#kg_dia'+id).text(parseFloat(suma).toFixed(2));
+                                i += contador;
+                            }
                         }
                     }
-               }
+                }
 
             }, "json");
         }
@@ -282,25 +314,27 @@ block contenido
             abrirLoader();
 
             if(nutricion.length == 0) {
-                $('#alert').removeClass('alert-success');
-                $('#alert').addClass('alert-warning');
+                $('#alert').removeClass('success');
+                $('#alert').addClass('warning');
                 $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Es necesario ingresar ');
                 $('#msg2').text('en al menos una piscina');
                 $('#msg_alert').text('parámetros ');
                 $('#loader').addClass('hidden');
+                cerrarLoader();
                 return;
             }
 
             $.post( "/nutricion/add", {
-                nutricion: nutricion
+                nutricion: nutricion,
+                cambiar_fecha: cambiar_fecha
             }, (data) => {
                 //console.log(data);
                 $('#span_estatus').text(data.estatus);
                 
                 // Mostrar notificación de guardado correcto 
-                $('#alert').removeClass('alert-warning');
-                $('#alert').addClass('alert-success');
+                $('#alert').removeClass('warning');
+                $('#alert').addClass('success');
                 $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Se ha realizado con ');
                 $('#msg2').text('el registro de parámetros');
@@ -324,38 +358,89 @@ block contenido
         function registrarParametro(idS){
             var id = idS.split("_")[1];
             var obj = new Object()
+            
+            if(existeRegistro(id)){ } else {
+                obj.charola_1 = $("input[name=charola1"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola1"+id+"]").val();
+                obj.charola_2 = $("input[name=charola2"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola2"+id+"]").val();
+                obj.charola_3 = $("input[name=charola3"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola3"+id+"]").val();
+                obj.charola_4 = $("input[name=charola4"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola4"+id+"]").val();
+                obj.kg_racion = $("input[name=racion"+id+"]").val() == "" ? parseFloat(0) : $("input[name=racion"+id+"]").val();
+                obj.porcent_ajuste = $("input[name=ajuste"+id+"]").val() == "" ? parseFloat(0) : $("input[name=ajuste"+id+"]").val();
+                obj.codigo_racion = $("#cod" + id).text();
+                obj.suma = $("#suma" + id).text();
+                obj.siguiente_racion = $("#kg_sig" + id ).text();
+                obj.estanque = $("input[name=idPis"+id+"]").val();
+                obj.hora = hora;
 
-            obj.charola_1 = $("input[name=charola1"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola1"+id+"]").val();
-            obj.charola_2 = $("input[name=charola2"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola2"+id+"]").val();
-            obj.charola_3 = $("input[name=charola3"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola3"+id+"]").val();
-            obj.charola_4 = $("input[name=charola4"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola4"+id+"]").val();
-            obj.kg_racion = $("input[name=racion"+id+"]").val() == "" ? parseFloat(0) : $("input[name=racion"+id+"]").val();
-            obj.porcent_ajuste = $("input[name=ajuste"+id+"]").val() == "" ? parseFloat(0) : $("input[name=ajuste"+id+"]").val();
-            obj.codigo_racion = $("#cod" + id).text();
-            obj.suma = $("#suma" + id).text();
-            obj.siguiente_racion = $("#kg_sig" + id ).text();
-            obj.estanque = $("input[name=idPis"+id+"]").val();
-            obj.hora = hora;
-            obj.tiempo = $("#span_tiempo").text();
-            obj.charolero = $('#user').val();
+                if(cambiar_fecha == true) {
+                    obj.fecha = $('#fecha_new').val();
+                }
 
-            if( obj.charola_1 == 0 &&
-               obj.charola_2 == 0 &&
-               obj.charola_3 == 0 &&
-               obj.charola_4 == 0 &&
-               obj.kg_racion == 0 &&
-               obj.porcent_ajuste == 0 ) { 
-                   console.log(" Nose mandará a registrar piscina: " + id);
-               } else {
-                   nutricion.push(obj);
-               }
+                obj.tiempo = $("#span_tiempo").text();
+                obj.charolero = $('#user').val();
 
-            console.log(nutricion);
+                if( obj.charola_1 == 0 &&
+                obj.charola_2 == 0 &&
+                obj.charola_3 == 0 &&
+                obj.charola_4 == 0 &&
+                obj.kg_racion == 0 &&
+                obj.porcent_ajuste == 0 ) { 
+                    console.log(" Nose mandará a registrar piscina: " + id);
+                } else {
+                    nutricion.push(obj);
+                }
+
+                console.log(nutricion);
+            }
+        }
+
+        function existeRegistro(id){
+            var obj = new Object();
+
+            for(var i=0; i <= nutricion.length -1; i ++){    
+                if(nutricion[i].estanque == id){
+                    obj.charola_1 = $("input[name=charola1"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola1"+id+"]").val();
+                    obj.charola_2 = $("input[name=charola2"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola2"+id+"]").val();
+                    obj.charola_3 = $("input[name=charola3"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola3"+id+"]").val();
+                    obj.charola_4 = $("input[name=charola4"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola4"+id+"]").val();
+                    obj.kg_racion = $("input[name=racion"+id+"]").val() == "" ? parseFloat(0) : $("input[name=racion"+id+"]").val();
+                    obj.porcent_ajuste = $("input[name=ajuste"+id+"]").val() == "" ? parseFloat(0) : $("input[name=ajuste"+id+"]").val();
+                    obj.codigo_racion = $("#cod" + id).text();
+                    obj.suma = $("#suma" + id).text();
+                    obj.siguiente_racion = $("#kg_sig" + id ).text();
+                    obj.estanque = $("input[name=idPis"+id+"]").val();
+                    obj.hora = hora;
+                    obj.tiempo = $("#span_tiempo").text();
+                    obj.charolero = $('#user').val();
+
+                        if( obj.charola_1 == 0 &&
+                            obj.charola_2 == 0 &&
+                            obj.charola_3 == 0 &&
+                            obj.charola_4 == 0 &&
+                            obj.kg_racion == 0 &&
+                            obj.porcent_ajuste == 0 ) { 
+                                console.log(" Nose mandará a registrar piscina: " + id);
+                        } else {
+                            nutricion[i] =  obj;
+                        }
+
+                        return true;
+                }
+            }
+            return false;
         }
 
         function asignarTiempo(){
             cambiar_tiempo = false;
             $('#span_tiempo').text($('#select_tiempo').val());
+        }
+
+        function asignarFecha(){
+            cambiar_fecha = true;
+
+            nutricion.forEach( n => {
+                n.fecha = $('#fecha_new').val();
+            });
         }
 
     // Termina javascript
@@ -396,6 +481,9 @@ block contenido
                             small Fecha.
                             br
                             strong
+                                if(user.permisos == 'developer')
+                                    a(data-toggle="modal" href="#fechaModal" style="margin-right: 5px; margin-top: 2px;").btn.btn-primary.btn-small.blue-gradient
+                                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Cambiar fecha").fas.fa-2x.fa-sync-alt
                                 span#fecha.blue-text
                                 span#hora.blue-text
                         h5.h5-responsive
@@ -460,4 +548,33 @@ block contenido
                                 i.fa.fas.fa-times-circle()
                                 |   Cerrar
 
-          
+     // Modal Seleccionar tiempo
+   
+    // Modal seleccionar fecha
+    #fechaModal(class="modal")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
+                    .col-lg-12
+                        i.fa.fas.fa-sync-alt(style="margin-right: 15px;")
+                        label 
+                            strong Seleccionar tiempo
+                .modal-body()
+                    .card
+                        .card-body
+                            .row
+                                .col-lg-12
+                                    .form-group
+                                        label | Tiempo
+                                        .input-group
+                                            span.input-group-addon.blue-gradient
+                                                i.fas.fa-calendar(style="color: #fff;")
+                                            input#fecha_new.form-control(type="date" name="fecha_new" tabindex="6" onblur="asignarFecha()")
+                .modal-footer
+                    .text-right
+                        .btn-group
+                            a(data-dismiss="modal").btn.btn-default
+                                i.fa.fas.fa-times-circle()
+                                |   Cerrar
+
+               

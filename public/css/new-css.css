@@ -233,11 +233,12 @@
   }
   
   .success {
-    border-left-color: #2b542c;
-    background-color: rgba(124, 171, 126, 0.1);
+    border-left-color: #196730;
+    color: #fff;
+    background-color: rgba(94, 148, 110, 1);
   }
   
   .success strong {
-    color: #2b542c;
+    color: #196730;
   }
  

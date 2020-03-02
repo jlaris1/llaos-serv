@@ -203,10 +203,19 @@ module.exports = {
     add: function(solicitud, respuesta){
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
-		}else{ 
-            console.log(solicitud.body);
-
+		}else{
+            //console.log(solicitud.body.cambiar_fecha);
+            //console.log("fecha new : " + solicitud.body.fecha_new);
+            //console.log("fecha short: " + new Date(solicitud.body.fecha_new).toLocaleDateString("es-MX", {dateStyle: 'short'}));
+            
             for(let i = 0; i <= solicitud.body.nutricion.length -1; i++){
+                
+                if(solicitud.body.cambiar_fecha == true){
+                    solicitud.body.nutricion[i].fecha =  solicitud.body.fecha_new;
+                }
+
+                console.log(solicitud.body.nutricion[i]);
+
                 nutricion = new Nutricion(solicitud.body.nutricion[i]);
 
                 nutricion.save( function(error){
@@ -250,7 +259,7 @@ module.exports = {
                                         console.log(chalk.bgRed(error));
                                     } else {                                                                            
                                         nutricion.forEach( function(n){
-                                            search = n.estanque.nombre;
+                                            search = n.estanque.codigo;
                                         });
 
                                         generatePdf(nutricion, title, search, pdf_name);
@@ -447,6 +456,9 @@ module.exports = {
                             var dia = new Date().getDate()+1 <= 9 ? '0' + new Date().getDate() : new Date().getDate();
                             var fecha = anio +'-'+ mes +'-'+ dia;
 
+                            //console.log(fecha);
+
+                            /** Reciones del día */                            
                             Nutricion.find(
                                { $and: [
                                     { estanque: { $in: piscinas }},
@@ -459,17 +471,44 @@ module.exports = {
                                 if(error){
                                     console.log(chalk.bgRed(error));
                                 } else {
+                                    //console.log(lista_nutricion);
+
                                     respuesta.json({
                                         piscinas: piscinas,
                                         modulos: modulos,
                                         lista_nutricion: lista_nutricion
                                     });
                                 }
-                            }).sort({ estanque : 1, hora: 1});
+                            }).sort({ estanque : 1, fecha: 1, hora: 1});
                         }
                     });
                 }
             }).sort({ codigo : 1});
+        }
+    },
+    acumulado: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		} else { 
+            Nutricion.find(
+                { "estanque": solicitud.body.id },
+                { kg_racion: 1 , _id: 0, estanque: 1}
+                , (error, kg_acumulados) => {
+                    if(error){
+                        console.log(chalk.bgRed(error));
+                    } else {
+                        var suma = 0;
+                        
+                        kg_acumulados.forEach( kg => {
+                            suma+= parseFloat(kg.kg_racion);
+                        })
+                        
+                        respuesta.json({
+                            id: solicitud.body.id,
+                            kg_acumulados: suma.toFixed(2)
+                        });
+                }
+            });
         }
     }
 }
@@ -544,6 +583,9 @@ function generatePdf(data, title, search, pdf_name){
         total = total + 1;
         y += 10;
 
+        var date = new Date(dat.fecha);
+        date.setDate(date.getDate() + 1);
+
         doc.fillColor('black')
         .text(dat.estanque.codigo, 10, y, {align: 'center', width: 45 })
         .text(dat.charola_1, 67, y,  {align: 'center', width: 70 })
@@ -555,17 +597,17 @@ function generatePdf(data, title, search, pdf_name){
         .text(dat.suma, 494, y, {align: 'center', width: 70 })
         .text(dat.codigo_racion, 564, y, {align: 'center', width: 70 })
         .text(dat.siguiente_racion, 637, y, {align: 'center', width: 70 })
-        .text(dat.fecha, 704, y, {align: 'center', width: 70 });
+        .text(date.toLocaleDateString("es-MX",{dateStyle: 'short'}), 704, y, {align: 'center', width: 70 });
 
-        prom_charola_1 += dat.charola_1;
-        prom_charola_2 += dat.charola_2;
-        prom_charola_3 += dat.charola_3;
-        prom_charola_4 += dat.charola_4;
-        prom_kg_racion += dat.kg_racion;
-        prom_porcent_ajuste += dat.porcent_ajuste;
-        prom_suma += dat.suma;
-        prom_codigo_racion += dat.codigo_racion;
-        prom_siguiente_racion += dat.siguiente_racion;
+        prom_charola_1 += parseFloat(dat.charola_1);
+        prom_charola_2 += parseFloat(dat.charola_2);
+        prom_charola_3 += parseFloat(dat.charola_3);
+        prom_charola_4 += parseFloat(dat.charola_4);
+        prom_kg_racion += parseFloat(dat.kg_racion);
+        prom_porcent_ajuste += parseFloat(dat.porcent_ajuste);
+        prom_suma += parseFloat(dat.suma);
+        prom_codigo_racion += parseFloat(dat.codigo_racion);
+        prom_siguiente_racion += parseFloat(dat.siguiente_racion);
         
     
     });

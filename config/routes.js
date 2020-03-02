@@ -395,7 +395,7 @@ module.exports = function(app){
     parametrosRouter.get('/new', parametros.new);
     parametrosRouter.get('/edit/:id', parametros.edit);
     parametrosRouter.post('/add', parametros.add );
-    parametrosRouter.put('/update', parametros.update );
+    parametrosRouter.post('/update', parametros.update );
     parametrosRouter.get('/delete/:id', parametros.delete);
     parametrosRouter.post('/find', parametros.find);
     parametrosRouter.post('/next', parametros.next);
@@ -423,7 +423,8 @@ module.exports = function(app){
     nutricionRouter.post('/find', nutricion.find);
     nutricionRouter.post('/report/pdf', nutricion.pdf);
     //nutricionRouter.post('/report/xls', nutricion.xls);
-    nutricionRouter.post('/piscinas', nutricion.piscinas)
+    nutricionRouter.post('/piscinas', nutricion.piscinas);
+    nutricionRouter.post('/acumulado', nutricion.acumulado);
 
     // Recepción Larva
 
