@@ -38,7 +38,7 @@ block contenido
             .card-body.d-flex.justify-content-between
                 h4.h4-responsive.mt-3
                     i.fas.fa-sign-out-alt
-                    |   Ordenes de Salida
+                    |   Órdenes de Salida
                 div
                     a(href="/inventarios/inventario/salida" style="margin-right: 5px;").btn.btn-success
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nueva Salida").fas.fa-plus-circle
@@ -75,7 +75,7 @@ block contenido
                                     td #{ ord.modulo == null ? '' : ord.modulo.nombre }
                                     td #{ ord.piscina == null ? '' : ord.piscina.codigo }
                                     td #{ ord.estatus }
-                                    td #{ ord.registro.toLocaleString("ex-Mx")}
-
+                                    td #{ ord.registro.toLocaleDateString("es-MX",{dateStyle: 'short'})}
+                                 
 
     
