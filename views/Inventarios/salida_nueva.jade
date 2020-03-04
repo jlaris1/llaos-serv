@@ -122,18 +122,18 @@ block contenido
             for(var i = 0; i < arr.length; i ++){
                 var aObj = arr[i].replace(/'/g, '');
 
-                obj.id = ltrim(aObj.split(",")[0].split(":")[1]);
-                obj.codigo = ltrim(aObj.split(",")[1].split(":")[1]);
-                obj.descripcion = aObj.split(",")[3].split(":")[1];
-                obj.unidad = aObj.split(",")[2].split(":")[1];
-                obj.precioUnitario = aObj.split(",")[7].split(":")[1];
-                obj.cantidad = aObj.split(",")[12].split(":")[1];
+                obj.id = ltrim(aObj.split(",")[1].split(":")[1]);
+                obj.codigo = ltrim(aObj.split(",")[2].split(":")[1]);
+                obj.descripcion = aObj.split(",")[4].split(":")[1];
+                obj.unidad = aObj.split(",")[3].split(":")[1];
+                obj.precioUnitario = aObj.split(",")[6].split(":")[1];
+                obj.cantidad = aObj.split(",")[13].split(":")[1];
 
                 productos.push(obj);
                 obj = new Object();
             }
 
-            //alert(productos)
+            //alert(productos[0])
         }
 
         function eliminarArticulo(index){
@@ -226,7 +226,7 @@ block contenido
             productos.forEach( function(p){
                 //alert(p.codigo + ' vs ' + valor );
                 if(p.id == valor){
-                    //alert(p.codigo + ' vs ' + valor );
+                    alert(p.codigo + ' vs ' + valor );
                     registrarArticulo(p, $('#cantidad').val());
                 }
             });
