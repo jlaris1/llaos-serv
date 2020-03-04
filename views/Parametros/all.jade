@@ -6,7 +6,9 @@ block contenido
             $('#subMenuParametros').removeClass('hidden');
             $('#spanMenuParametros').removeClass('fa-angle-left');
             $('#spanMenuParametros').addClass('fa-angle-down');
-            $('#mediciones').dataTable();
+            $('#mediciones').dataTable(
+                {"fecha": [[ 0, "desc" ]]}
+            );
 
             if($('#url').text() != ''){
                 url = '../../reports/parametros/'+ $('#url').text();

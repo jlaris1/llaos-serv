@@ -1,0 +1,882 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .round {
+            border-radius: 5px !important;
+            -moz-border-radius: 5px !important;
+            -webkit-border-radius: 5px !important;
+        }
+        thead {
+            background-color: black;
+            color: #fff;
+        } 
+
+        ul {
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .center-middle {
+           margin-top: 13px;
+        }
+
+        .margin-div {
+            margin-right: 5px;
+        }
+
+         .btn-small {
+            font-size: 0.5rem;
+        }
+
+        .input-group-addon {
+            background-color: #dd7206; 
+            border: 2px;
+        }
+
+        .fa-input {
+            color: #fff;
+        }
+
+        a.btn {
+            border: 0;
+            border-radius: 2px;
+        }
+
+        hr {
+            margin-top: -5px;
+            margin-bottom: 5px;
+            border: 1px solid #2d6e99;
+        }
+
+        .margin-div2 {
+            margin-right: 10px;
+        }
+    script.
+        var alimentos = [];
+        var insumos = [];
+        var cambiar_tiempo = false;
+        var cambiar_fecha = false;
+        var numero_piscinas = parseFloat(0);
+
+        $(document).ready( function(){
+            obtenerFecha();
+            obtenerHora(); 
+
+            $('#subMenuNutricion').removeClass('hidden');
+            $('#spanMenuNutricion').removeClass('fa-angle-left');
+            $('#spanMenuNutricion').addClass('fa-angle-down');
+
+            obtenerAlimentos();
+            obtenerInsumos();
+            mostrarPiscinas();
+
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        function obtenerFecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio + " - ");
+        }
+
+        function obtenerHora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if (horas < 12) {
+                if(cambiar_tiempo == true) {
+                    $("#span_tiempo").text("AM");
+                }
+                dn = "a.m.";
+            } else {
+                if(cambiar_tiempo == true) {
+                    $("#span_tiempo").text("PM");
+                }
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            hora = horas+":"+minutos+":"+segundos;
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        function obtenerAlimentos() {
+            abrirLoader();
+
+            $.getJSON('/nutricion/alimento', (data)=>{
+                if(data.alimento != undefined && data.alimento.length > 0){
+                    alimentos = data.alimento;
+
+                    $('#alimento_1')
+                            .empty()
+                            .append('<option value=-1> << Seleccione >> </option>');
+
+                    $('#alimento_2')
+                            .empty()
+                            .append('<option value=-1> << Seleccione >> </option>');
+
+                    $('#alimento_3')
+                            .empty()
+                            .append('<option value=-1> << Seleccione >> </option>');
+                        
+                    for(var i = 0; i <= data.alimento.length - 1; i ++){
+                        $("#alimento_1")
+                            .append($("<option></option>")
+                            .attr("value",data.alimento[i]._id)
+                            .text(data.alimento[i].nombre));
+
+                        $("#alimento_2")
+                            .append($("<option></option>")
+                            .attr("value",data.alimento[i]._id)
+                            .text(data.alimento[i].nombre));
+
+                        $("#alimento_3")
+                            .append($("<option></option>")
+                            .attr("value",data.alimento[i]._id)
+                            .text(data.alimento[i].nombre));
+                            
+                    }
+                }               
+            });
+
+            $('#loader').addClass('hidden');
+
+            cerrarLoader();
+        }
+
+        function obtenerInsumos() {
+            abrirLoader();
+
+            $.getJSON('/nutricion/insumos', (data)=>{
+                if(data.insumo != undefined && data.insumo.length > 0){
+                    insumos = data.insumo;
+
+                    $('#insumo_1')
+                            .empty()
+                            .append('<option value=-1> << Seleccione >> </option>');
+
+                    $('#insumo_2')
+                            .empty()
+                            .append('<option value=-1> << Seleccione >> </option>');
+
+                    $('#insumo_3')
+                            .empty()
+                            .append('<option value=-1> << Seleccione >> </option>');
+                    
+                    $('#insumo_4')
+                            .empty()
+                            .append('<option value=-1> << Seleccione >> </option>');
+                    
+                    $('#insumo_5')
+                            .empty()
+                            .append('<option value=-1> << Seleccione >> </option>');
+
+                    $('#insumo_6')
+                            .empty()
+                            .append('<option value=-1> << Seleccione >> </option>');
+                    
+                    $('#insumo_7')
+                            .empty()
+                            .append('<option value=-1> << Seleccione >> </option>');
+
+                    $('#insumo_8')
+                            .empty()
+                            .append('<option value=-1> << Seleccione >> </option>');
+
+                    $('#insumo_9')
+                            .empty()
+                            .append('<option value=-1> << Seleccione >> </option>');
+
+                    $('#insumo_10')
+                            .empty()
+                            .append('<option value=-1> << Seleccione >> </option>');
+                        
+                    for(var i = 0; i <= data.insumo.length - 1; i ++){
+                        $("#insumo_1")
+                            .append($("<option></option>")
+                            .attr("value",data.insumo[i]._id)
+                            .text(data.insumo[i].nombre));
+
+                        $("#insumo_2")
+                            .append($("<option></option>")
+                            .attr("value",data.insumo[i]._id)
+                            .text(data.insumo[i].nombre));
+
+                        $("#insumo_3")
+                            .append($("<option></option>")
+                            .attr("value",data.insumo[i]._id)
+                            .text(data.insumo[i].nombre));
+
+                        $("#insumo_4")
+                            .append($("<option></option>")
+                            .attr("value",data.insumo[i]._id)
+                            .text(data.insumo[i].nombre));
+
+                        $("#insumo_5")
+                            .append($("<option></option>")
+                            .attr("value",data.insumo[i]._id)
+                            .text(data.insumo[i].nombre));
+
+                        $("#insumo_6")
+                            .append($("<option></option>")
+                            .attr("value",data.insumo[i]._id)
+                            .text(data.insumo[i].nombre));
+
+                        $("#insumo_7")
+                            .append($("<option></option>")
+                            .attr("value",data.insumo[i]._id)
+                            .text(data.insumo[i].nombre));
+
+                        $("#insumo_8")
+                            .append($("<option></option>")
+                            .attr("value",data.insumo[i]._id)
+                            .text(data.insumo[i].nombre));
+
+                        $("#insumo_9")
+                            .append($("<option></option>")
+                            .attr("value",data.insumo[i]._id)
+                            .text(data.insumo[i].nombre));
+
+                        $("#insumo_10")
+                            .append($("<option></option>")
+                            .attr("value",data.insumo[i]._id)
+                            .text(data.insumo[i].nombre));
+                            
+                    }
+                }               
+            });
+
+            $('#loader').addClass('hidden');
+
+            cerrarLoader();
+        }
+
+        function mostrarPiscinas() {
+            abrirLoader();
+            var listaModulos = $("#modulos").val().split(",");
+
+            $.post( "/nutricion/piscinas", {
+                modulos: listaModulos
+            }, (data) => {
+                if(data.piscinas.length > 0){
+
+                    $('#num_piscinas').text(data.piscinas.length);
+                    numero_piscinas = parseFloat(data.piscinas.length);
+                }
+
+                if(data.modulos.length > 0 ) {
+                    $("#span_modulos").text("");
+                    $("#span_modulos").text(data.modulos[0].nombre);
+                    
+                    if(data.modulos.length > 1){
+                        for(let i = 1; i <= data.modulos.length -1; i++){
+                            $("#span_modulos").text($("#span_modulos").text() + ", " +data.modulos[i].nombre);
+                        }
+                    }
+                }
+            }, "json");
+            cerrarLoader();
+        }
+
+        function asignarFecha(){
+            cambiar_fecha = true;
+        }
+
+        function obtenerCostos(){
+            /*** ID's alimentos */ 
+            var id_1 = $('#alimento_1').val() != null ? $('#alimento_1').val() : null;
+            var id_2 = $('#alimento_2').val() != null ? $('#alimento_2').val() : null;
+            var id_3 = $('#alimento_3').val() != null ? $('#alimento_3').val() : null;
+
+            /*** ID's insumos */
+            var id_i_1 = $('#insumo_1').val() != null ? $('#insumo_1').val() : null;
+            var id_i_2 = $('#insumo_2').val() != null ? $('#insumo_2').val() : null;
+            var id_i_3 = $('#insumo_3').val() != null ? $('#insumo_3').val() : null;
+            var id_i_4 = $('#insumo_4').val() != null ? $('#insumo_4').val() : null;
+            var id_i_5 = $('#insumo_5').val() != null ? $('#insumo_5').val() : null;
+            var id_i_6 = $('#insumo_6').val() != null ? $('#insumo_6').val() : null;
+            var id_i_7 = $('#insumo_7').val() != null ? $('#insumo_7').val() : null;
+            var id_i_8 = $('#insumo_8').val() != null ? $('#insumo_8').val() : null;
+            var id_i_9 = $('#insumo_9').val() != null ? $('#insumo_9').val() : null;
+            var id_i_10 = $('#insumo_10').val() != null ? $('#insumo_10').val() : null;
+
+            /*** Cantidades alimentos */
+            var cantidad_1 = $('#input_alimento_1').val() != "" ? parseFloat($('#input_alimento_1').val()) : parseFloat(0);
+            var cantidad_2 = $('#input_alimento_2').val() != "" ? parseFloat($('#input_alimento_2').val()) : parseFloat(0);
+            var cantidad_3 = $('#input_alimento_3').val() != "" ? parseFloat($('#input_alimento_3').val()) : parseFloat(0);
+
+            /*** Cantidades insumos */
+            var cantidad_i_1 = $('#input_insumo_1').val() != "" ? parseFloat($('#input_insumo_1').val()) : parseFloat(0);
+            var cantidad_i_2 = $('#input_insumo_2').val() != "" ? parseFloat($('#input_insumo_2').val()) : parseFloat(0);
+            var cantidad_i_3 = $('#input_insumo_3').val() != "" ? parseFloat($('#input_insumo_3').val()) : parseFloat(0);
+            var cantidad_i_4 = $('#input_insumo_4').val() != "" ? parseFloat($('#input_insumo_4').val()) : parseFloat(0);
+            var cantidad_i_5 = $('#input_insumo_5').val() != "" ? parseFloat($('#input_insumo_5').val()) : parseFloat(0);
+            var cantidad_i_6 = $('#input_insumo_6').val() != "" ? parseFloat($('#input_insumo_6').val()) : parseFloat(0);
+            var cantidad_i_7 = $('#input_insumo_7').val() != "" ? parseFloat($('#input_insumo_7').val()) : parseFloat(0);
+            var cantidad_i_8 = $('#input_insumo_8').val() != "" ? parseFloat($('#input_insumo_8').val()) : parseFloat(0);
+            var cantidad_i_9 = $('#input_insumo_9').val() != "" ? parseFloat($('#input_insumo_9').val()) : parseFloat(0);
+            var cantidad_i_10 = $('#input_insumo_10').val() != "" ? parseFloat($('#input_insumo_10').val()) : parseFloat(0);
+
+            /*** Variables alimentos */
+            var costo_racion_1_usd = parseFloat(0);
+            var costo_racion_1_mxn = parseFloat(0);
+            var costo_racion_2_usd = parseFloat(0);
+            var costo_racion_2_mxn = parseFloat(0);
+            var costo_racion_3_usd = parseFloat(0);
+            var costo_racion_3_mxn = parseFloat(0);
+
+            /*** Variables insumos */
+            var costo_insumo_1_usd = parseFloat(0);
+            var costo_insumo_1_mxn = parseFloat(0);
+            var costo_insumo_2_usd = parseFloat(0);
+            var costo_insumo_2_mxn = parseFloat(0);
+            var costo_insumo_3_usd = parseFloat(0);
+            var costo_insumo_3_mxn = parseFloat(0);
+            var costo_insumo_4_usd = parseFloat(0);
+            var costo_insumo_4_mxn = parseFloat(0);
+            var costo_insumo_5_usd = parseFloat(0);
+            var costo_insumo_5_mxn = parseFloat(0);
+            var costo_insumo_6_usd = parseFloat(0);
+            var costo_insumo_6_mxn = parseFloat(0);
+            var costo_insumo_7_usd = parseFloat(0);
+            var costo_insumo_7_mxn = parseFloat(0);
+            var costo_insumo_8_usd = parseFloat(0);
+            var costo_insumo_8_mxn = parseFloat(0);
+            var costo_insumo_9_usd = parseFloat(0);
+            var costo_insumo_9_mxn = parseFloat(0);
+            var costo_insumo_10_usd = parseFloat(0);
+            var costo_insumo_10_mxn = parseFloat(0);
+
+            var costo_racion_usd = parseFloat(0);
+            var costo_racion_mxn = parseFloat(0);
+            var costo_dia_usd = parseFloat(0);
+            var costo_dia_mxn = parseFloat(0);
+
+            var usd = 0;
+            var mxn = 0;
+            
+            /*** Obtener el costo por alimento*/
+            for(var i = 0; i <= alimentos.length - 1; i ++){
+                /*** ALIMENTO 1*/
+                if(alimentos[i]._id == id_1){     
+                    if(alimentos[i].moneda == "USD"){
+                        usd += 1;
+                        costo_racion_1_usd = parseFloat(alimentos[i].precioNeto) * parseFloat(cantidad_1);
+                        costo_racion_1_mxn = parseFloat(costo_racion_1_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        //console.log(alimentos[i].nombre + " USD: " + costo_racion_1_usd);
+                        //console.log(alimentos[i].nombre + " MXN: " + costo_racion_1_mxn);
+                        costo_racion_usd += parseFloat(costo_racion_1_usd);
+                        costo_racion_mxn += parseFloat(costo_racion_1_mxn);
+                    } else {
+                        mxn += 1;
+                        costo_racion_1_mxn = parseFloat(alimentos[i].precioNeto) * parseFloat(cantidad_1);
+                        costo_racion_1_usd = parseFloat(costo_racion_1_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        //console.log(alimentos[i].nombre + " MXN: " + costo_racion_1_mxn);
+                        //console.log(alimentos[i].nombre + " USD: " + costo_racion_1_usd);
+                        costo_racion_usd += parseFloat(costo_racion_1_usd);
+                        costo_racion_mxn += parseFloat(costo_racion_1_mxn);
+                    }
+                }
+
+                /*** ALIMENTO 2*/
+                if(alimentos[i]._id == id_2){
+                    if(alimentos[i].moneda == "USD"){
+                        usd += 1;
+                        costo_racion_2_usd = parseFloat(alimentos[i].precioNeto) * parseFloat(cantidad_2);
+                        costo_racion_2_mxn = parseFloat(costo_racion_2_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_racion_2_usd);
+                        costo_racion_mxn += parseFloat(costo_racion_2_mxn);
+                    } else {
+                        mxn += 1;
+                        costo_racion_2_mxn = parseFloat(alimentos[i].precioNeto) * parseFloat(cantidad_2);
+                        costo_racion_2_usd = parseFloat(costo_racion_2_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_racion_2_usd);
+                        costo_racion_mxn += parseFloat(costo_racion_2_mxn);
+                    }
+                }
+                
+                /*** ALIMENTO 3*/
+                if(alimentos[i]._id == id_3){                   
+                    if(alimentos[i].moneda == "USD"){
+                        usd += 1;
+                        costo_racion_3_usd = parseFloat(alimentos[i].precioNeto) * parseFloat(cantidad_3);
+                        costo_racion_3_mxn = parseFloat(costo_racion_3_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_racion_3_usd);
+                        costo_racion_mxn += parseFloat(costo_racion_3_mxn);
+                    } else {
+                        mxn += 1;
+                        costo_racion_3_mxn = parseFloat(alimentos[i].precioNeto) * parseFloat(cantidad_3);
+                        costo_racion_3_usd = parseFloat(costo_racion_3_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_racion_3_usd);
+                        costo_racion_mxn += parseFloat(costo_racion_3_mxn);
+                    }
+                }
+            }
+
+            /** Obtener el costo por insumo */
+            for(var j = 0; j <= insumos.length - 1;  j ++){
+                
+                /*** INSUMO 1**/
+                if(insumos[j]._id == id_i_1){
+                    if(insumos[j].moneda == "USD"){
+                        usd += 1;
+                        costo_insumo_1_usd = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_1);
+                        costo_insumo_1_mxn = parseFloat(costo_insumo_1_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        //console.log(insumos[j].nombre + " USD: " + costo_insumo_1_usd);
+                        //console.log(insumos[j].nombre + " MXN: " + costo_insumo_1_mxn);
+                        costo_racion_usd += parseFloat(costo_insumo_1_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_1_mxn);
+                    } else {
+                        mxn += 1;
+                        costo_insumo_1_mxn = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_1);
+                        costo_insumo_1_usd = parseFloat(costo_insumo_1_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        //console.log(insumos[j].nombre + " MXN: " + costo_insumo_1_mxn);
+                        //console.log(insumos[j].nombre + " USD: " + costo_insumo_1_usd);
+                        costo_racion_usd += parseFloat(costo_insumo_1_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_1_mxn);
+                    }
+                }
+
+                /*** INSUMO 2**/
+                if(insumos[j]._id == id_i_2){
+                    if(insumos[j].moneda == "USD"){
+                        usd += 1;
+                        costo_insumo_2_usd = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_2);
+                        costo_insumo_2_mxn = parseFloat(costo_insumo_2_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_2_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_2_mxn);
+                    } else {
+                        mxn += 1;
+                        costo_insumo_2_mxn = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_2);
+                        costo_insumo_2_usd = parseFloat(costo_insumo_2_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_2_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_2_mxn);
+                    }
+                }
+                
+                /*** INSUMO 3**/
+                if(insumos[j]._id == id_i_3){                   
+                    if(insumos[j].moneda == "USD"){
+                        usd += 1;
+                        costo_insumo_3_usd = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_3);
+                        costo_insumo_3_mxn = parseFloat(costo_insumo_3_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_3_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_3_mxn);
+                    } else {
+                        mxn += 1;
+                        costo_insumo_3_mxn = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_3);
+                        costo_insumo_3_usd = parseFloat(costo_insumo_3_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_3_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_3_mxn);
+                    }
+                }
+
+                /*** INSUMO 4**/
+                if(insumos[j]._id == id_i_4){                   
+                    if(insumos[j].moneda == "USD"){
+                        usd += 1;
+                        costo_insumo_4_usd = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_4);
+                        costo_insumo_4_mxn = parseFloat(costo_insumo_4_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_4_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_4_mxn);
+                    } else {
+                        mxn += 1;
+                        costo_insumo_4_mxn = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_4);
+                        costo_insumo_4_usd = parseFloat(costo_insumo_4_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_4_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_4_mxn);
+                    }
+                }
+
+                /*** INSUMO 5**/
+                if(insumos[j]._id == id_i_5){                   
+                    if(insumos[j].moneda == "USD"){
+                        usd += 1;
+                        costo_insumo_5_usd = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_5);
+                        costo_insumo_5_mxn = parseFloat(costo_insumo_5_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_5_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_5_mxn);
+                    } else {
+                        mxn += 1;
+                        costo_insumo_5_mxn = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_5);
+                        costo_insumo_5_usd = parseFloat(costo_insumo_5_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_5_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_5_mxn);
+                    }
+                }
+
+                /*** INSUMO 6**/
+                if(insumos[j]._id == id_i_6){                   
+                    if(insumos[j].moneda == "USD"){
+                        usd += 1;
+                        costo_insumo_6_usd = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_6);
+                        costo_insumo_6_mxn = parseFloat(costo_insumo_6_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_6_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_6_mxn);
+                    } else {
+                        mxn += 1;
+                        costo_insumo_6_mxn = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_6);
+                        costo_insumo_6_usd = parseFloat(costo_insumo_6_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_6_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_6_mxn);
+                    }
+                }
+
+                /*** INSUMO 7**/
+                if(insumos[j]._id == id_i_7){                   
+                    if(insumos[j].moneda == "USD"){
+                        usd += 1;
+                        costo_insumo_7_usd = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_7);
+                        costo_insumo_7_mxn = parseFloat(costo_insumo_7_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_7_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_7_mxn);
+                    } else {
+                        mxn += 1;
+                        costo_insumo_7_mxn = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_7);
+                        costo_insumo_7_usd = parseFloat(costo_insumo_7_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_7_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_7_mxn);
+                    }
+                }
+
+                /*** INSUMO 8**/
+                if(insumos[j]._id == id_i_8){                   
+                    if(insumos[j].moneda == "USD"){
+                        usd += 1;
+                        costo_insumo_8_usd = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_8);
+                        costo_insumo_8_mxn = parseFloat(costo_insumo_8_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_8_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_8_mxn);
+                    } else {
+                        mxn += 1;
+                        costo_insumo_8_mxn = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_8);
+                        costo_insumo_8_usd = parseFloat(costo_insumo_8_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_8_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_8_mxn);
+                    }
+                }
+
+                /*** INSUMO 9**/
+                if(insumos[j]._id == id_i_9){                   
+                    if(insumos[j].moneda == "USD"){
+                        usd += 1;
+                        costo_insumo_9_usd = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_9);
+                        costo_insumo_9_mxn = parseFloat(costo_insumo_9_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_9_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_9_mxn);
+                    } else {
+                        mxn += 1;
+                        costo_insumo_9_mxn = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_9);
+                        costo_insumo_9_usd = parseFloat(costo_insumo_9_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_9_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_9_mxn);
+                    }
+                }
+
+                /*** INSUMO 10**/
+                if(insumos[j]._id == id_i_10){                   
+                    if(insumos[j].moneda == "USD"){
+                        usd += 1;
+                        costo_insumo_10_usd = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_10);
+                        costo_insumo_10_mxn = parseFloat(costo_insumo_10_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_10_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_10_mxn);
+                    } else {
+                        mxn += 1;
+                        costo_insumo_10_mxn = parseFloat(insumos[j].precioNeto) * parseFloat(cantidad_i_10);
+                        costo_insumo_10_usd = parseFloat(costo_insumo_10_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2);
+                        costo_racion_usd += parseFloat(costo_insumo_10_usd);
+                        costo_racion_mxn += parseFloat(costo_insumo_10_mxn);
+                    }
+                }
+            }
+
+            /*** revisar el tipo de moneda*/
+            if(usd > mxn){
+                costo_dia_usd = parseFloat(costo_racion_usd * 12).toFixed(2);
+                var costo_modulo_racion_usd = parseFloat(parseFloat(costo_racion_usd).toFixed(2) * numero_piscinas).toFixed(2);
+                var costo_modulo_dia_usd = parseFloat(parseFloat(costo_dia_usd).toFixed(2) * numero_piscinas).toFixed(2);
+
+                $('#span_costo_racion').text('$ ' + parseFloat(costo_racion_usd).toFixed(2) + ' USD (' + parseFloat(costo_racion_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2) + ' MXN)');
+                $('#span_modulo_racion').text('$ ' + costo_modulo_racion_usd + ' USD (' + parseFloat(costo_modulo_racion_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2) + ' MXN)'); 
+                $('#span_costo_dia').text('$ ' + costo_dia_usd + ' USD (' + parseFloat(costo_dia_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2) + ' MXN)');
+                $('#span_modulo_dia').text('$ ' + costo_modulo_dia_usd + ' USD (' + parseFloat(costo_modulo_dia_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2) + ' MXN)'); 
+            } else {
+                costo_dia_mxn = parseFloat(costo_racion_mxn * 12).toFixed(2);
+                var costo_modulo_racion_mxn = parseFloat(parseFloat(costo_racion_mxn).toFixed(2) * numero_piscinas).toFixed(2);
+                var costo_modulo_dia_mxn = parseFloat(parseFloat(costo_dia_mxn).toFixed(2) * numero_piscinas).toFixed(2);
+
+                $('#span_costo_racion').text('$ ' + parseFloat(costo_racion_mxn).toFixed(2) + ' MXN (' + parseFloat(costo_racion_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2) + ' USD)'); 
+                $('#span_modulo_racion').text('$ ' + parseFloat(costo_modulo_racion_mxn).toFixed(2) + ' MXN (' + parseFloat(costo_modulo_racion_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2) + ' USD)'); 
+                $('#span_costo_dia').text('$ ' + parseFloat(costo_dia_mxn).toFixed(2) + ' MXN (' + parseFloat(costo_dia_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2) + ' USD)' );
+                $('#span_modulo_dia').text('$ ' + parseFloat(costo_modulo_dia_mxn).toFixed(2) + ' MXN (' + parseFloat(costo_modulo_dia_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2) + ' USD)' ); 
+            }
+        }
+    
+    // Inputs funcionamiento
+    input.hidden#modulos(value="#{user.modulo}")
+    input.hidden#user(value="#{user._id}")
+
+    // Título
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-utensils
+                    |  Configuración de alimentos
+                div
+                    a#guardar(href="javascript:guardarConfiguracion();").btn.btn-success.Ripple-parent.green-gradient
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Realizar").fas.fa-save
+    
+    // Detalles
+    section.mb-4
+        .card
+            .card-body
+                .row
+                    .col-md-6.col-lg-6.col-xs-6.text-left
+                        h4.h4-responsive
+                            small Módulo(s): 
+                            br
+                            strong
+                                span#span_modulos.blue-text ####
+                        h5.h5-responsive
+                            small Número de piscinas: 
+                            br
+                            strong
+                                span#num_piscinas ###
+                        h5.h5-responsive
+                            small Costo por ración.
+                            br
+                            strong
+                                span#span_costo_racion #######
+                        h5.h5-responsive
+                            small Costo por día (12 raciones).
+                            br
+                            strong
+                                span#span_costo_dia #######
+                        h5.h5-responsive
+                            small Costo por módulo (1 ración).
+                            br
+                            strong
+                                span#span_modulo_racion #######
+                        h5.h5-responsive
+                            small Costo por módulo (12 raciones).
+                            br
+                            strong
+                                span#span_modulo_dia #######
+                    .col-md-6.col-lg-6.col-xs-6.text-right
+                        h4.h4-responsive
+                            small Fecha.
+                            br
+                            strong
+                                a(data-toggle="modal" href="#fechaModal" style="margin-right: 5px; margin-top: 2px;").btn.btn-primary.btn-small.blue-gradient
+                                    i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Cambiar fecha").fas.fa-2x.fa-sync-alt
+                                span#fecha.blue-text
+                                span#hora.blue-text
+                        h5.h5-responsive
+                            small Estatus.
+                            br
+                            strong
+                                span#span_estatus Nuevo
+                        h5.h5-responsive
+                            small Tipo de cambio.
+                            br
+                            strong
+                                span $ 
+                                span#span_tipo_cambio 20.02
+                                span(style="font-weight: 300; font-style: italic;")  (1 USD = 20.02 MXN)
+                        h5.h5-responsive#h_piscina.hidden
+                            small Piscina.
+                            br
+                            strong
+                                span#span_piscina #######
+    
+    // Datos de captura alimentos                  
+    section.mb-4
+        .panel.panel-primary
+            .panel-heading
+                i.fas.fa-seedling
+            .panel-body
+                .d-flex.justify-content-between
+                    .form-group.margin-div
+                        label | Alimento 1
+                        select#alimento_1.form-control(name="tipo_alimento_1" onchange="obtenerCostos()" value="")
+                    .form-group.margin-div
+                        label | Kg/Grs A1
+                        input#input_alimento_1.form-control(type="text" name="alimento_1" onkeyup="obtenerCostos()" placeholder="KG / Grs")
+                    .form-group.margin-div
+                        label | Alimento 2
+                        select#alimento_2.form-control(name="tipo_alimento_2" onchange="obtenerCostos()" value="")
+                    .form-group.margin-div
+                        label | Kg/Grs A2
+                        input#input_alimento_2.form-control(type="text" name="alimento_2" onkeyup="obtenerCostos()" placeholder="Kg / Grs")
+                    .form-group.margin-div
+                        label | Alimento 3
+                        select#alimento_3.form-control(name="tipo_alimento_3" onchange="obtenerCostos()" value="")
+                    .form-group.margin-div
+                        label | Kg/Grs A3
+                        input#input_alimento_3.form-control(type="text" name="alimento_3" onkeyup="obtenerCostos()" placeholder="Kg / Grs")
+
+    // Datos de captura insumos                  
+    section.mb-4
+        .panel.panel-primary
+            .panel-heading
+                i.fas.fa-vial
+            .panel-body
+                // Insumos 1-5
+                .d-flex.justify-content-between
+                    .form-group.margin-div
+                        label | Insumo 1
+                        select#insumo_1.form-control(name="tipo_insumo_1" onchange="obtenerCostos()" value="")
+                            option(value=-1) << Seleccione >>
+                    .form-group.margin-div
+                        label | Kg/Grs I1
+                        input#input_insumo_1.form-control(type="text" name="insumo_1" onkeyup="obtenerCostos()" placeholder="KG / Grs")
+                    .form-group.margin-div
+                        label | Insumo 2
+                        select#insumo_2.form-control(name="tipo_insumo_2" onchange="obtenerCostos()" value="")
+                            option(value=-1) << Seleccione >>
+                    .form-group.margin-div
+                        label | Kg/Grs I2
+                        input#input_insumo_2.form-control(type="text" name="insumo_2" onkeyup="obtenerCostos()" placeholder="Kg / Grs")
+                    .form-group.margin-div
+                        label | Insumo 3
+                        select#insumo_3.form-control(name="tipo_insumo_3" onchange="obtenerCostos()" value="")
+                            option(value=-1) << Seleccione >>
+                    .form-group.margin-div
+                        label | Kg/Grs I3
+                        input#input_insumo_3.form-control(type="text" name="insumo_3" onkeyup="obtenerCostos()" placeholder="Kg / Grs")
+                    .form-group.margin-div
+                        label | Insumo 4
+                        select#insumo_4.form-control(name="tipo_insumo_4" onchange="obtenerCostos()" value="")
+                            option(value=-1) << Seleccione >>
+                    .form-group.margin-div
+                        label | Kg/Grs I4
+                        input#input_insumo_4.form-control(type="text" name="insumo_4" onkeyup="obtenerCostos()" placeholder="Kg / Grs")
+                    .form-group.margin-div
+                        label | Insumo 5
+                        select#insumo_5.form-control(name="tipo_insumo_5" onchange="obtenerCostos()" value="")
+                            option(value=-1) << Seleccione >>
+                    .form-group.margin-div
+                        label | Kg/Grs I5
+                        input#input_insumo_5.form-control(type="text" name="insumo_5" onkeyup="obtenerCostos()" placeholder="Kg / Grs")
+                hr
+                // Insumos 2-10
+                .d-flex.justify-content-between
+                    .form-group.margin-div
+                        label | Insumo 6
+                        select#insumo_6.form-control(name="tipo_insumo_6" onchange="obtenerCostos()" value="")
+                            option(value=-1) << Seleccione >>
+                    .form-group.margin-div
+                        label | Kg/Grs I6
+                        input#input_insumo_6.form-control(type="text" name="insumo_6" onkeyup="obtenerCostos()" placeholder="KG / Grs")
+                    .form-group.margin-div
+                        label | Insumo 7
+                        select#insumo_7.form-control(name="tipo_insumo_7" onchange="obtenerCostos()" value="")
+                            option(value=-1) << Seleccione >>
+                    .form-group.margin-div
+                        label | Kg/Grs I7
+                        input#input_insumo_7.form-control(type="text" name="insumo_7" onkeyup="obtenerCostos()" placeholder="Kg / Grs")
+                    .form-group.margin-div
+                        label | Insumo 8
+                        select#insumo_8.form-control(name="tipo_insumo_8" onchange="obtenerCostos()" value="")
+                            option(value=-1) << Seleccione >>
+                    .form-group.margin-div
+                        label | Kg/Grs I8
+                        input#input_insumo_8.form-control(type="text" name="insumo_8" onkeyup="obtenerCostos()" placeholder="Kg / Grs")
+                    .form-group.margin-div
+                        label | Insumo 9
+                        select#insumo_9.form-control(name="tipo_insumo_9" onchange="obtenerCostos()" value="")
+                            option(value=-1) << Seleccione >>
+                    .form-group.margin-div
+                        label | Kg/Grs I9
+                        input#input_insumo_9.form-control(type="text" name="insumo_9" onkeyup="obtenerCostos()" placeholder="Kg / Grs")
+                    .form-group.margin-div
+                        label | Insumo 10
+                        select#insumo_10.form-control(name="tipo_insumo_10" onchange="obtenerCostos()" value="")
+                            option(value=-1) << Seleccione >>
+                    .form-group.margin-div
+                        label | Kg/Grs I10
+                        input#input_insumo_10.form-control(type="text" name="insumo_10" onkeyup="obtenerCostos()" placeholder="Kg / Grs")
+
+    // Modal Seleccionar tiempo
+    #tiempoModal(class="modal")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
+                    .col-lg-12
+                        i.fa.fas.fa-sync-alt(style="margin-right: 15px;")
+                        label 
+                            strong Seleccionar tiempo
+                .modal-body()
+                    .card
+                        .card-body
+                            .row
+                                .col-lg-12
+                                    .form-group
+                                        label | Tiempo
+                                        .input-group
+                                            span.input-group-addon.blue-gradient
+                                                i.fas.fa-hourglass-half.fa-input
+                                            select#select_tiempo.form-control(required name="tiempo" tabindex="1" value="" onchange="asignarTiempo()")
+                                                option(value="") << Seleccione >>
+                                                option(value="AM") AM
+                                                option(value="PM") PM
+
+                .modal-footer
+                    .text-right
+                        .btn-group
+                            a(data-dismiss="modal").btn.btn-default
+                                i.fa.fas.fa-times-circle()
+                                |   Cerrar
+
+    // Modal seleccionar fecha
+    #fechaModal(class="modal")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
+                    .col-lg-12
+                        i.fa.fas.fa-sync-alt(style="margin-right: 15px;")
+                        label 
+                            strong Seleccionar tiempo
+                .modal-body()
+                    .card
+                        .card-body
+                            .row
+                                .col-lg-12
+                                    .form-group
+                                        label | Tiempo
+                                        .input-group
+                                            span.input-group-addon.blue-gradient
+                                                i.fas.fa-calendar(style="color: #fff;")
+                                            input#fecha_new.form-control(type="date" name="fecha_new" tabindex="6" onblur="asignarFecha()")
+                .modal-footer
+                    .text-right
+                        .btn-group
+                            a(data-dismiss="modal").btn.btn-default
+                                i.fa.fas.fa-times-circle()
+                                |   Cerrar
+
+               

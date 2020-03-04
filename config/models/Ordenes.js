@@ -23,7 +23,7 @@ var articulosOrdenSchemaJSON = {
     unidad: String,
     codigo: String,
     producto: String,
-    //id_producto: { type: Schema.ObjectId, ref: "Productos" },
+    id_producto: { type: Schema.ObjectId, ref: "Productos" },
     descripcion: String,
     precio_unitario: String,
     iva: String,

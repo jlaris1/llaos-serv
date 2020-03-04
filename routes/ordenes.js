@@ -807,7 +807,8 @@ module.exports = {
                                                         iva: ivaArt.toFixed(3),
                                                         orden: ord.id,
                                                         requisicion: solicitud.body.codigoRequi,
-                                                        moneda: producto.moneda
+                                                        moneda: producto.moneda,
+                                                        id_producto: producto._id
                                                     }		
                                         
                                                     var articuloOrden = new ArticulosOrdenes(dataO);
@@ -1081,7 +1082,8 @@ module.exports = {
                                         iva: ivaArt.toFixed(3),
                                         orden: solicitud.params.id_orden,
                                         requisicion: solicitud.body.codigoRequi,
-                                        moneda: producto.moneda
+                                        moneda: producto.moneda,
+                                        id_producto: producto._id
                                     }		
                         
                                     var articuloOrden = new ArticulosOrdenes(data);
@@ -4149,14 +4151,14 @@ module.exports = {
                 } else {
                     if(solicitud.body.articulos != undefined){
                         for(let i = 0; i <= solicitud.body.articulos.length - 1; i++){
-                            //console.log(solicitud.body.articulos[0]);
+                            console.log(solicitud.body.articulos[i]);
     
                             /*** Agragar el id del producto para no buscar por código */
-                            Productos.findOne({"codigo": solicitud.body.articulos[i].codigo}, (error, producto) => {
+                            Productos.findOne({"_id": solicitud.body.articulos[i]._id}, (error, producto) => {
                                 if(error){
                                     console.log(error);
                                 } else {
-                                    //console.log(producto);
+                                    console.log(producto);
     
                                     if(producto.cantidad == NaN){
                                         producto.cantidad = 0;

@@ -239,7 +239,7 @@ block contenido
                         span.input-group-addon
                             i.fas.fa-object-group
                         select#categoria.form-control(required name="categoria" tabindex="7")
-                            option(value=-1) << Seleccione >>
+                            //option(value=-1) << Seleccione >>
                             each cat in categorias
                                 option(value=cat.id, selected=(cat.id== producto.categoria)) #{cat.nombre}
         .row

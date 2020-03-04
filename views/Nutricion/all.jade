@@ -6,7 +6,9 @@ block contenido
             $('#spanMenuNutricion').removeClass('fa-angle-left');
             $('#spanMenuNutricion').addClass('fa-angle-down');
 
-            $('#nutricion').dataTable();
+            $('#nutricion').dataTable(
+                {"fecha": [[ 0, "desc" ]]}
+            );
 
             if($('#url').text() != ''){
                 url = '../../reports/nutricion/'+ $('#url').text();
@@ -64,7 +66,7 @@ block contenido
                                 td.text-center #{ nut.porcent_ajuste == "" ? "" :parseFloat(nut.porcent_ajuste).toFixed(2) }
                                 td.text-center #{ nut.suma == "" ? "" : parseFloat(nut.suma).toFixed(2) }
                                 td.text-center #{ nut.codigo_racion == "" ? "" : parseFloat(nut.codigo_racion).toFixed(2) }
-                                td.text-center #{ nut.siguiente_racion == "" ? "" : parseFloat(nut.siguiente_racion).toFixed(2) }
+                                td.text-center #{ nut.siguiente_racion == "NaN" ? "" : parseFloat(nut.siguiente_racion).toFixed(2) }
                                 td.text-center #{ nut.charolero.nombre }
 
                                 - var date = new Date(nut.fecha);

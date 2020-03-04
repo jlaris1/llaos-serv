@@ -81,7 +81,7 @@ module.exports = {
                         }
                     })
                 }
-            });
+            }).sort({fecha: 1});
         } 
     },
     new: function(solicitud, respuesta){
@@ -520,7 +520,7 @@ module.exports = {
                 if(error){
                     console.log(error);
                 } else { 
-                    respuesta.render('Nutricion/new_maternidad', {
+                    respuesta.render('Nutricion/config', {
                         user: solicitud.session.user,
                         titulo: "Nutrición",
                         criterios: [

@@ -767,7 +767,7 @@ module.exports = {
                                                     }
                                             });
                                         }
-                                    });
+                                    }).sort({fecha: 1});
                                 }
                             });
                         }

@@ -1128,7 +1128,7 @@ block contenido
                 .card-body.card-5-7
                     h4.text-center
                         b Promedios
-                    .col-lg-4(style="font-size: 16px;")
+                    .d-flex.justify-content-between(style="font-size: 16px;")    
                         span 
                             b pH: 
                                 if prom_ph >= 8.0 && prom_ph <= 8.3
@@ -1140,7 +1140,6 @@ block contenido
                                 else if prom_ph < 7.7 || prom_ph > 8.7
                                     i.fas.fa-exclamation-circle.text-danger
                                     span.text-right.text-danger  #{ parseFloat(prom_ph).toFixed(2)}
-                    .col-lg-4(style="font-size: 16px;")
                         span 
                             b °C: 
                                 if prom_c >= 29.0 && prom_c <= 31.0
@@ -1152,7 +1151,6 @@ block contenido
                                 else if prom_c < 25.0 || prom_c > 33.0
                                     i.fas.fa-exclamation-circle.text-danger
                                     span.text-right.text-danger  #{ parseFloat(prom_c).toFixed(2)}
-                    .col-lg-4(style="font-size: 16px;")
                         span 
                             b 0
                             sub

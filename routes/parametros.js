@@ -85,7 +85,7 @@ module.exports = {
                         }
                     });
                 }
-            });
+            }).sort({fecha: -1});
         }
     },
     find: function(solicitud, respuesta){

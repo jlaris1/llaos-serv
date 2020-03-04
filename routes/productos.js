@@ -147,7 +147,7 @@ module.exports = {
                         }
                     });
                 }
-            });
+            }).sort({ nombreEmpresa: 1});
         };
     },
     // Mostrar edición de producto
@@ -206,7 +206,7 @@ module.exports = {
                                     }
                                 });
                             }
-                        });
+                        }).sort({ nombreEmpresa: 1});
                     }
                 }
             });
