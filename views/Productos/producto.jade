@@ -205,7 +205,7 @@ block contenido
                             i.fas.fa-dollar-sign
                         input#precioNeto.form-control(readonly type="text" min=0.000 name="precioNeto" tabindex="7")
         .row
-            .col-lg-3
+            .col-lg-4
                 .form-group
                     label | Moneda
                     .input-group
@@ -215,11 +215,21 @@ block contenido
                             option(value="") << Seleccione >>
                             option(value="MXN", selected=("MXN"== moneda)) Pesos - MXN
                             option(value="USD",  selected=("USD"== moneda)) Dólares - USD
-            .col-lg-6(style="margin-top: 25px;")
+            .col-lg-4(style="margin-top: 25px;")
                 .form-check
                     input#chkIVA(type="checkbox" name="exentoiva" checked tabindex="9")
                     label(style="margin-left: 15px;")
                         |   ¿Incluye IVA?
+            .col-lg-4
+                .form-group
+                    label | Categoría
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-object-group
+                        select#categoria.form-control(required name="categoria" tabindex="6")
+                            option(value=-1) << Seleccione >>
+                            each cat in categorias
+                                option(value=cat.id) #{cat.nombre}
         .row
             .col-lg-12
                 h4.page-header

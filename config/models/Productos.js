@@ -20,11 +20,17 @@ var productoSchemaJSON = {
 	minimo: String,
 	fecha: String,
 	almacen: String,
-	lugar: String
+	lugar: String,
+	categoria: { type: Schema.ObjectId, ref: "Categorias", default: '5e5e8ab5e353ee43602d6bc5' }
+}
+
+var categoriaSchemaJSON = {
+	codigo: String,
+	nombre: String
 }
 
 var productoSchema = new Schema(productoSchemaJSON);
-
-var Productos = mongoose.model("Productos", productoSchema);
+var categoriaSchema = new Schema(categoriaSchemaJSON);
 
 mongoose.model("Productos", productoSchema);
+mongoose.model("Categorias", categoriaSchema);

@@ -427,7 +427,9 @@ module.exports = function(app){
     //nutricionRouter.post('/report/xls', nutricion.xls);
     nutricionRouter.post('/piscinas', nutricion.piscinas);
     nutricionRouter.post('/acumulado', nutricion.acumulado);
-
+    nutricionRouter.get('/config', nutricion.config);
+    nutricionRouter.get('/alimento', nutricion.obtenerAlimentos);
+    nutricionRouter.get('/insumos', nutricion.obtenerInsumos);
     // Recepción Larva
 
 

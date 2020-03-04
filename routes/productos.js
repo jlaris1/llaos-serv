@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
     Proveedores = mongoose.model('Proveedores');
     FechaHora = require('./fechahora');
     UnidadesNegocio = mongoose.model('UnidadesNegocio');
+    Categorias = mongoose.model('Categorias');
 
 module.exports = {
     //Método para obtener todos los productos
@@ -13,7 +14,7 @@ module.exports = {
             Usuarios.find( function(error, usuarios){
                 if(error){
                     console.log(error);
-                } else { 
+                } else {
                     respuesta.render("Productos/productos",{
                         user: solicitud.session.user,
                         titulo: "Productos",
@@ -108,31 +109,38 @@ module.exports = {
                                 if(error){
                                     console.log(error);
                                 } else {
-                                    respuesta.render("Productos/producto", {
-                                        user: solicitud.session.user,
-                                        proveedores: proveedores,
-                                        unidadesNegocio: unidadesNegocio,
-                                        titulo: "Productos",
-                                        criterios: [
-                                            {
-                                                val: "",
-                                                name: ""
-                                            }
-                                        ],
-                                        piscinas: [
-                                            {
-                                                id: 0,
-                                                nombre: ""
-                                            }
-                                        ],
-                                        charoleros: [
-                                            {
-                                                id: 0,
-                                                nombre: ""
-                                            }   
-                                        ],
-                                        usuarios: usuarios,
-                                        ruta: "productos"
+                                    Categorias.find((error, categorias) => {
+                                        if(error){
+                                            console.log(error);
+                                        } else {
+                                            respuesta.render("Productos/producto", {
+                                                user: solicitud.session.user,
+                                                proveedores: proveedores,
+                                                categorias: categorias,
+                                                unidadesNegocio: unidadesNegocio,
+                                                titulo: "Productos",
+                                                criterios: [
+                                                    {
+                                                        val: "",
+                                                        name: ""
+                                                    }
+                                                ],
+                                                piscinas: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }
+                                                ],
+                                                charoleros: [
+                                                    {
+                                                        id: 0,
+                                                        nombre: ""
+                                                    }   
+                                                ],
+                                                usuarios: usuarios,
+                                                ruta: "productos"
+                                            });
+                                        }
                                     });
                                 }
                             })
@@ -162,31 +170,38 @@ module.exports = {
                                     if(error){
                                         console.log(error);
                                     } else { 
-                                        respuesta.render("Productos/editar",{
-                                            user: solicitud.session.user,
-                                            proveedores: proveedores, 
-                                            producto: producto,
-                                            titulo: "Productos",
-                                            criterios: [
-                                                {
-                                                    val: "",
-                                                    name: ""
-                                                }
-                                            ],
-                                            piscinas: [
-                                                {
-                                                    id: 0,
-                                                    nombre: ""
-                                                }
-                                            ],
-                                            charoleros: [
-                                                {
-                                                    id: 0,
-                                                    nombre: ""
-                                                }   
-                                            ],
-                                            usuarios: usuarios,
-                                            ruta: "productos"
+                                        Categorias.find((error, categorias) => {
+                                            if(error){
+                                                console.log(error);
+                                            } else {
+                                                respuesta.render("Productos/editar",{
+                                                    user: solicitud.session.user,
+                                                    proveedores: proveedores, 
+                                                    categorias: categorias,
+                                                    producto: producto,
+                                                    titulo: "Productos",
+                                                    criterios: [
+                                                        {
+                                                            val: "",
+                                                            name: ""
+                                                        }
+                                                    ],
+                                                    piscinas: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }
+                                                    ],
+                                                    charoleros: [
+                                                        {
+                                                            id: 0,
+                                                            nombre: ""
+                                                        }   
+                                                    ],
+                                                    usuarios: usuarios,
+                                                    ruta: "productos"
+                                                });
+                                            }
                                         });
                                     }
                                 });
@@ -230,7 +245,8 @@ module.exports = {
                 orden: '',
                 factura: '',
                 almacen: solicitud.body.almacen,
-                lugar: ''
+                lugar: '',
+                categoria: solicitud.body.categoria
             }
 
             console.log(data);
@@ -275,7 +291,8 @@ module.exports = {
                 cantidad: solicitud.body.cantidad,
                 minimo: solicitud.body.minimo,
                 maximo: solicitud.body.maximo,
-                almacen: solicitud.body.almacen 
+                almacen: solicitud.body.almacen,
+                categoria: solicitud.body.categoria 
             };
 
             Productos.updateOne({"_id": solicitud.params.id}, data, function (error){

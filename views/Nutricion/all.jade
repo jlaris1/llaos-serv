@@ -60,13 +60,13 @@ block contenido
                                 td.text-center #{ nut.charola_2 }
                                 td.text-center #{ nut.charola_3 }
                                 td.text-center #{ nut.charola_4 }
-                                td.text-center #{ parseFloat(nut.kg_racion).toFixed(2) }
-                                td.text-center #{ parseFloat(nut.porcent_ajuste).toFixed(2) }
-                                td.text-center #{ parseFloat(nut.suma).toFixed(2) }
-                                td.text-center #{ nut.codigo_racion }
-                                td.text-center #{ nut.siguiente_racion }
+                                td.text-center #{ nut.kg_racion == "" ? "" : parseFloat(nut.kg_racion).toFixed(2) }
+                                td.text-center #{ nut.porcent_ajuste == "" ? "" :parseFloat(nut.porcent_ajuste).toFixed(2) }
+                                td.text-center #{ nut.suma == "" ? "" : parseFloat(nut.suma).toFixed(2) }
+                                td.text-center #{ nut.codigo_racion == "" ? "" : parseFloat(nut.codigo_racion).toFixed(2) }
+                                td.text-center #{ nut.siguiente_racion == "" ? "" : parseFloat(nut.siguiente_racion).toFixed(2) }
                                 td.text-center #{ nut.charolero.nombre }
 
                                 - var date = new Date(nut.fecha);
-                                - date.setDate(date.getDate() + 1);
+                                - date.setDate(date.getDate());
                                 td #{date.toLocaleDateString("es-MX",{dateStyle: 'short'})}

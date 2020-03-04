@@ -215,7 +215,7 @@ block contenido
                             i.fas.fa-dollar-sign
                         input#precioNeto.form-control(readonly type="text" min=0 name="precioNeto" value="#{producto.precioNeto}")
         .row
-            .col-lg-3
+            .col-lg-4
                 .form-group
                     label | Moneda
                     .input-group
@@ -227,11 +227,21 @@ block contenido
                             option(value="USD",  selected=("USD"== producto.moneda)) Dólares - USD
             label#chk.hidden #{producto.exentoiva}
             input#chkUpd.hidden(type="text" name="exentoiva")
-            .col-lg-6(style="margin-top: 25px;")
+            .col-lg-4(style="margin-top: 25px;")
                 .form-check
                     input#chkIVA(type="checkbox" tabindex="9")
                     label(style="margin-left: 15px;")
                         |   ¿Incluye IVA?
+            .col-lg-4
+                .form-group
+                    label | Categoría
+                    .input-group
+                        span.input-group-addon
+                            i.fas.fa-object-group
+                        select#categoria.form-control(required name="categoria" tabindex="7")
+                            option(value=-1) << Seleccione >>
+                            each cat in categorias
+                                option(value=cat.id, selected=(cat.id== producto.categoria)) #{cat.nombre}
         .row
             .col-lg-12
                 h4.page-header

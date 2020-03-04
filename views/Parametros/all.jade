@@ -82,7 +82,7 @@ block contenido
                                 td #{ med.turbidez == "" ? "" : parseFloat(med.turbidez).toFixed(2) }
 
                                 - var date = new Date(med.fecha);
-                                - date.setDate(date.getDate() + 1);
+                                - date.setDate(date.getDate());
                                 td #{date.toLocaleDateString("es-MX",{dateStyle: 'short'})}
 
                                 td  #{ med.hora }

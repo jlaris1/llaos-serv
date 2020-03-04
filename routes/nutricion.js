@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
     Nutricion = mongoose.model('Nutricion');
     TiposModulos = mongoose.model('TiposModulos');
     Usuarios = mongoose.model('Usuarios');
+    Productos = mongoose.model('Productos')
     chalk = require('chalk');
 
 var file_path = './files/reports/nutricion/';
@@ -507,6 +508,74 @@ module.exports = {
                             id: solicitud.body.id,
                             kg_acumulados: suma.toFixed(2)
                         });
+                }
+            });
+        }
+    },
+    config: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		}else{ 
+            Usuarios.find( function(error, usuarios){
+                if(error){
+                    console.log(error);
+                } else { 
+                    respuesta.render('Nutricion/new_maternidad', {
+                        user: solicitud.session.user,
+                        titulo: "Nutrición",
+                        criterios: [
+                            {
+                                val: "piscina",
+                                name: "Piscina"
+                            },
+                            {
+                                val: "charolero",
+                                name: "Charolero"
+                            }
+                        ],
+                        piscinas: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }
+                        ],
+                        charoleros: [
+                            {
+                                id: 0,
+                                nombre: ""
+                            }   
+                        ],
+                        usuarios: usuarios,
+                        ruta: "nutricion"
+                    });
+                }
+            });
+        }
+    },
+    obtenerAlimentos: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		}else{ 
+            /***Búscar el alimento que perteneza a maternidad */
+            Productos.find({"categoria": "5e5e8ab5e353ee43602d6bc6"}, (error, alimento) => {
+                if(error) {
+                    console.log(error);
+                } else {
+                    respuesta.json({ alimento: alimento});
+                }
+            });
+        }
+    },
+    obtenerInsumos: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+            respuesta.redirect("/sesion-expirada");
+        }else{ 
+            /***Búscar el insumo que perteneza a maternidad */
+            Productos.find({"categoria": "5e5f1685e353ee43602d6bc9"}, (error, insumo) => {
+                if(error) {
+                    console.log(error);
+                } else {
+                    respuesta.json({ insumo: insumo});
                 }
             });
         }
