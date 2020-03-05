@@ -53,7 +53,7 @@ var articulosRutaSchemaJSON = {
     codigo: String,
     unidad: String,
     descripcion: String,
-    //id_producto: { type: Schema.ObjectId, ref: "Productos" },
+    id_producto: { type: Schema.ObjectId, ref: "Productos" },
     orden: { type: Schema.ObjectId, ref: "Ordenes" } ,
     proveedor: { type: Schema.ObjectId, ref: "Proveedores" },
     ordenRuta: String,

@@ -3232,7 +3232,8 @@ module.exports = {
                                                         orden: art.orden,
                                                         proveedor: orden.proveedor,
                                                         ordenRuta: ordRut.id,
-                                                        requisicion: art.requisicion
+                                                        requisicion: art.requisicion,
+                                                        id_producto: art.id_producto
                                                     }
                         
                                                     var artRuta = new ArticulosEnRuta(data);
@@ -3344,7 +3345,8 @@ module.exports = {
                                         orden: art.orden,
                                         proveedor: orden.proveedor,
                                         ordenRuta: solicitud.body.codigo,
-                                        requisicion: art.requisicion
+                                        requisicion: art.requisicion,
+                                        id_producto: art.id_producto
                                     }
 
                                     var artRuta = new ArticulosEnRuta(data);
