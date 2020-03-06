@@ -52,6 +52,7 @@ block contenido
                         th Suma
                         th Código Ración
                         th Sig. Ración
+                        th Tiempo
                         th Charolero
                         th Fecha
                     tbody
@@ -68,6 +69,7 @@ block contenido
                                 td.text-center #{ nut.codigo_racion == "" ? "" : parseFloat(nut.codigo_racion).toFixed(2) }
                                 td.text-center #{ nut.siguiente_racion == "NaN" ? "" : parseFloat(nut.siguiente_racion).toFixed(2) }
                                 td.text-center #{ nut.charolero.nombre }
+                                td.text-center #{ nut.tiempo }
 
                                 - var date = new Date(nut.fecha);
                                 - date.setDate(date.getDate());

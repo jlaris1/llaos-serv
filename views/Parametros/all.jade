@@ -84,8 +84,10 @@ block contenido
                                 td #{ med.turbidez == "" ? "" : parseFloat(med.turbidez).toFixed(2) }
 
                                 - var date = new Date(med.fecha);
-                                - date.setDate(date.getDate());
-                                td #{date.toLocaleDateString("es-MX",{dateStyle: 'short'})}
+                                - date.setDate(date.getDate() + 1);
+                                - var day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
+                                - var month = date.getMonth() > 9 ? date.getMonth() : '0' + date.getMonth();
+                                td #{  day + '/' + month + '/' + date.getFullYear() }
 
                                 td  #{ med.hora }
                                 td  #{ med.tiempo }

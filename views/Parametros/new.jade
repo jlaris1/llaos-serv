@@ -62,6 +62,9 @@ block contenido
             $('#spanMenuParametros').removeClass('fa-angle-left');
             $('#spanMenuParametros').addClass('fa-angle-down');
 
+            var today = new Date();
+            document.getElementById("fecha_new").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+
             mostrarPiscinas();
             obtenerFecha();
             obtenerHora();
@@ -197,6 +200,8 @@ block contenido
             obj.hora = hora;
             obj.tiempo = $('#span_tiempo').text();
             obj.parametrista = $('#user').val();
+            obj.fecha = $('#fecha_new').val();
+
 
             if( obj.temperatura == 0 &&
                obj.oxigeno == 0 &&

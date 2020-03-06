@@ -371,11 +371,7 @@ block contenido
                 obj.siguiente_racion = $("#kg_sig" + id ).text();
                 obj.estanque = $("input[name=idPis"+id+"]").val();
                 obj.hora = hora;
-
-                if(cambiar_fecha == true) {
-                    obj.fecha = $('#fecha_new').val();
-                }
-
+                obj.fecha = $('#fecha_new').val();
                 obj.tiempo = $("#span_tiempo").text();
                 obj.charolero = $('#user').val();
 
