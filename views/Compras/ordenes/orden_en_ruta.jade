@@ -1,0 +1,517 @@
+extends ../../layouts/layout.jade
+block contenido
+    style.
+        .labelFol {
+            font-weight: 700;
+            font-size: 2em; 
+            background-color: black; 
+            color: white !important; 
+            border-radius: 8px 0 0 8px;
+        }
+
+        .labelSta {
+            font-weight: 700;
+            color: white;
+            font-size: 2em; 
+            border-radius: 0 8px 8px 0;
+        } 
+
+        a.disabled {
+            /* Make the disabled links grayish*/
+            color: gray;
+            /* And disable the pointer events */
+            pointer-events: none;
+        }
+
+        .btn-margin {
+            margin-right: 5px;
+        }
+    script.
+        var productos = [];
+        var ordenes = []
+        var articulos = [];
+        var orden_id;
+        var total = 0;
+        var iva = 0;
+        var subtotal= 0;
+
+
+        $(document).ready( function(){
+            $('#subMenuCompras').removeClass('hidden');
+            $('#spanMenuCompras').removeClass('fa-angle-left');
+            $('#spanMenuCompras').addClass('fa-angle-down');
+            $('#subMenuOrdenes').removeClass('hidden');
+            $('#spanMenuOrdenes').removeClass('fa-angle-left');
+            $('#spanMenuOrdenes').addClass('fa-angle-down');       
+            $('#subMenuOrdenesRuta').removeClass('hidden');
+            $('#spanMenuOrdenesRuta').removeClass('fa-angle-left');
+            $('#spanMenuOrdenesRuta').addClass('fa-angle-down'); 
+            
+            obtenerfecha();
+            obtenerhora();
+            obtenerOrdenes();
+
+            $('#cantidadModal').on('hidden.bs.modal', function () {
+                cambiarCantidad();
+                $('#editar_cantidad').addClass('hidden');
+            });
+
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        function obtenerfecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio);
+        }
+
+        function obtenerhora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if(horas < 12){
+                dn = "a.m.";
+            }else{
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        /*** Obtener ordenes de comprar */
+        function obtenerOrdenes() {
+            abrirLoader();
+
+            $.getJSON('/ordenes/ordenruta/ordenes/', (orders)=>{
+                if(orders.length > 0){   
+                    ordenes = orders;
+
+                    for(let i = 0; i <= orders.length -1; i ++){
+                        rowCount = $('#pTable >tbody >tr').length;
+
+                        $('#pTable > tbody:last').append(
+                        "<tr id='tr" + rowCount + "'>" +
+                        "   <td class='text-center'>"+
+                        "       <div class='d-flex'>"+
+                        "           <a class='btn btn-success btn-small' style='margin-right: 5px;' href='javascript:agregarOrden(\""+orders[i]._id+"\", \""+orders[i].serie+"\", \""+orders[i].proveedor.nombreEmpresa+"\")', data-toggle='tooltip', data-placement='top', title='Eliminar artículo'> "+ 
+                        "               <i class='fas fa-2x fa-plus-circle' style='color: white;'></i>" +
+                        "           </a>" +
+                        "       </div>" +
+                        "   </td> " +
+                        "   <td>" + orders[i].serie + "</td> " +
+                        "   <td><strong>" + orders[i].proveedor.nombreEmpresa + "</strong></td> " +
+                        "   <td>" + orders[i].unidad_negocio.nombre  + "</td> " +
+                        "   <td>" +
+                        "       <span class='text-left'> $ </span> " +
+                        "       <span class='text-right'> " + parseFloat(orders[i].total).toFixed(3) + "</span> " +
+                        "   </td> " +
+                        "</tr>")
+
+                        if(i == orders.length - 1){
+                            $('#pTable').dataTable();
+                            cerrarLoader()
+                        }
+
+                    }
+                }               
+            });           
+        }
+
+        /** Agregar los artículos de la orden */
+        function agregarOrden(idOrden, serie, proveedor){
+            abrirLoader();
+
+            $.getJSON('/ordenes/ordenruta/articulos/orden/' + idOrden, (artis)=>{
+                //articulos = artis;
+
+                if(artis.length > 0){   
+                    for(let i = 0; i <= artis.length - 1; i++ ) {
+                        rowCount = $('#articulos >tbody >tr').length;
+
+                        $('#articulos > tbody:last').append(
+                        "<tr id='tr" + rowCount + "'>" +
+                        "   <td class='text-center'>"+
+                        "       <div class='d-flex'>"+
+                        "           <a class='btn btn-danger btn-small' style='margin-right: 5px;' href='javascript:eliminarArticulo(\""+artis[i]._id+"\", \""+rowCount+"\")', data-toggle='tooltip', data-placement='top', title='Eliminar artículo'> "+ 
+                        "               <i class='fas fa-2x fa-minus-circle' style='color: white;'></i>" +
+                        "           </a>" +
+                        "           <a class='btn btn-primary btn-small' href='javascript:editarArticulo(\""+artis[i]._id+"\",\""+proveedor+"\");', data-toggle='tooltip', data-placement='top', title='Editar artículo'> "+ 
+                        "               <i class='fas fa-2x fa-edit' style='color: white;'></i>" +
+                        "           </a>" +
+                        "       </div>" +
+                        "   </td> " +
+                        "   <td class='text-center' id='cant"+artis[i]._id+"'>" + parseFloat(artis[i].cantidad).toFixed(3) + "</td> " +
+                        "   <td>" + artis[i].unidad + "</td> " +
+                        "   <td>" + artis[i].codigo + "</td> " +
+                        "   <td>" + artis[i].descripcion + "</td> " +
+                        "   <td><strong>" + serie + "</strong></td> " +
+                        "   <td><strong>" + proveedor + "</strong></td> " +
+                        "</tr>")
+
+                        subtotal += (parseFloat(artis[i].cantidad) * parseFloat(artis[i].precio_unitario));
+                        iva += (parseFloat(artis[i].cantidad) * parseFloat(artis[i].iva));
+                        total += (parseFloat(artis[i].cantidad) * parseFloat(artis[i].importe));
+
+                        articulos.push(artis[i]);
+                    }
+                }               
+            });
+
+            cerrarLoader();
+        }
+
+        function eliminarArticulo(id, index){
+            $("#tr"+index).remove();
+
+            for(let i = 0; i < articulos.length; i++){
+                if(articulos[i]._id == id){
+                    articulos.splice(i, 1);
+                    break;
+                }
+            }
+        }
+
+        function editarArticulo(id, proveedor){
+            $('#editar_cantidad').removeClass('hidden');
+
+            for(let i = 0; i <= articulos.length -1 ; i++){
+                if(articulos[i]._id == id){
+                    //console.log(articulos[i])
+                    id_select = articulos[i]._id;
+                    $('#span_codigo').text(articulos[i].codigo);
+                    $('#span_orden').text(articulos[i].orden.serie);
+                    $('#span_descripcion').text(articulos[i].descripcion);
+                    $('#span_proveedor').text(proveedor);
+                    $('#span_cantidad').text(parseFloat(articulos[i].cantidad).toFixed(3));
+                    $('#cantidad').val(articulos[i].cantidad);
+                    $("#cantidad").attr({
+                        "max" : parseFloat(articulos[i].cantidad) - 1,
+                        "min" : 1
+                    });
+                    return;
+                }
+            }
+        }
+
+        function cambiarCantidad(){
+            $("#span_cantidad").text(parseFloat($('#cantidad').val()).toFixed(3));
+            $('#cant'+id_select).html(parseFloat($('#cantidad').val()).toFixed(3));
+            
+            for(let i = 0; i < articulos.length; i++){
+                if(articulos[i]._id == id_select){
+                    nuevaCantidad = (parseFloat(articulos[i].cantidad) - parseFloat($('#cantidad').val())).toFixed(3);
+                    articulos[i].cantidad =  parseFloat($('#cantidad').val());
+                    break;
+                }
+            }
+        }
+
+        function generarOrden(){
+            $.post( "/ordenes/ordenruta/generar", {
+                unidad_negocio: $('#lugar_unidad').val(),
+                envia: $('#id_user').val(),
+                chofer: $('#span_chofer').text(),
+                unidad: $('#span_unidad').text(),
+                fecha: Date,
+                hora: $("#hora").text(),
+                subtotal: subtotal,
+                iva: iva,
+                total: total,
+                articulos: articulos,
+                estatus: 'Generada',
+                codigo: $('#numero_orden').val()
+            }, (data) => {
+                $('#span_estatus').text(data.estatus);
+                orden_id = data.id_orden
+
+                $('#buscar_ordenes').addClass('disabled');
+                $('#guardar').addClass('disabled');
+
+                var url = '../../../'+ data.url;
+                window.open(url, 'Download');
+                                
+                // Mostrar notificación de guardado correcto 
+                $('#alert').removeClass('warning');
+                $('#alert').addClass('success');
+                $('#alertDiv').removeClass('hidden');
+                $('#msg1').text('Se ha guardado con ');
+                $('#msg2').text('la orden en ruta.');
+                $('#msg_alert').text('éxito ');
+            }, "json");
+        }
+
+        function enviarOrden(){
+            $.post( "/ordenes/ordenruta/enviar", {
+                envia: $('#id_user').val(),
+                chofer: $('#span_chofer').text(),
+                unidad: $('#span_unidad').text(),
+                codigo: $('#numero_orden').val(),
+                estatus: 'En Ruta',
+                id_orden: orden_id
+            }, (data) => {
+                $('#span_estatus').text(data.estatus);
+
+                $('#enviar').addClass('disabled');
+                                
+                // Mostrar notificación de guardado correcto 
+                $('#alert').removeClass('warning');
+                $('#alert').addClass('success');
+                $('#alertDiv').removeClass('hidden');
+                $('#msg1').text('Se ha envido con ');
+                $('#msg2').text('la orden en ruta.');
+                $('#msg_alert').text('éxito ');
+            }, "json");
+        }
+    //Termina Javascript
+    input#numero_orden(type="text" name="numero_orden" value="#{numeroOrden}").hidden
+    input#id_user(value="#{user._id}").hidden
+
+    // Inputs funcionamiento
+    
+    // Título
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-truck-loading
+                    |   Órden En Ruta
+                div
+                    a#buscar_ordenes(data-toggle="modal" href="#normalModal").btn.btn-primary.blue-gradient.btn-margin
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Busca producto").fas.fa-search
+                    a(href="/ordenes/enruta").btn.btn-success.btn-margin
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nueva orden en ruta").fas.fa-plus-circle
+                    a#guardar(href="javascript:generarOrden();").btn.btn-danger.btn-margin
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Generar").fas.fa-file-pdf
+                    a#enviar(href="javascript:enviarOrden();").btn.btn-primary.btn-margin
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Enviar").fas.fa-envelope
+    
+    // Detalles
+    section.mb-4
+        .card
+            .card-body
+                .row
+                    .col-md-6.col-lg-6.col-xs-6.text-left
+                        h4.h4-responsive
+                            small Unidad de Negocio: 
+                            br
+                            strong
+                                span#span_unidad_negocio.blue-text #{user.unidad_negocio.nombre}
+                            a(data-toggle="modal" href="#unidadNegocioModal" style="margin-left: 10px;").btn.btn-primary.btn-small.blue-gradient
+                                i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Seleccionar almacén").fas.fa-2x.fa-sync-alt
+                        h5.h5-responsive
+                            small Realiza:
+                            br
+                            strong
+                                span #{user.nombre}
+                        h5.h5-responsive
+                            small Unidad:
+                            br
+                            strong
+                                span#span_unidad ########
+                            a(data-toggle="modal" href="unidadModal" style="margin-left: 10px;").btn.btn-primary.btn-small.blue-gradient
+                                i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Seleccionar almacén").fas.fa-2x.fa-sync-alt
+                        h5.h5-responsive
+                            small Chofer:
+                            br
+                            strong
+                                span#span_chofer ########
+                            a(data-toggle="modal" href="#choferModal" style="margin-left: 10px;").btn.btn-primary.btn-small.blue-gradient
+                                i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Seleccionar almacén").fas.fa-2x.fa-sync-alt
+                    .col-md-6.col-lg-6.col-xs-6.text-right
+                        h4.h4-responsive
+                            small Salida No.
+                            br
+                            strong
+                                span.blue-text ##{numeroOrden}
+                        h5.h5-responsive
+                            small Fecha.
+                            br
+                            strong
+                                a(data-toggle="modal" href="#fechaModal" style="margin-right: 5px; margin-top: 2px;").btn.btn-primary.btn-small.blue-gradient
+                                    i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Cambiar fecha").fas.fa-2x.fa-sync-alt
+                                span#fecha.blue-text
+                                span#hora.blue-text
+                        h5.h5-responsive
+                            small Estatus.
+                            br
+                            strong
+                                span#span_estatus Nuevo
+                        h5.h5-responsive
+                            small Realiza:
+                            br
+                            strong
+                                span#span_realiza #{user.nombre}
+
+    // Datos para cambio en cantidad
+    section#editar_cantidad.mb-4.hidden
+        .card
+            .card-header.view.view-cascade.gradient-card-header.blue-gradient.mb-3
+                h4.h4-responsive.mb-3(style="font-weight: 700; color: #fff;")
+                    |   Editar cantidad artículo
+            .card-body
+                .row
+                    .col-md-6.col-lg-6.col-xs-6.text-left
+                        h4.h4-responsive
+                            small Codigo: 
+                            br
+                            strong
+                                span#span_codigo.blue-text ######
+                        h5.h5-responsive
+                            small Descrición: 
+                            br
+                            strong
+                                span#span_descripcion ##########
+                        h5.h5-responsive
+                            small Cantidad: 
+                            br
+                            strong
+                                span#span_cantidad ##########
+                            a(data-toggle="modal" href="#cantidadModal" style="margin-left: 10px;").btn.btn-primary.btn-small.blue-gradient
+                                i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Modificar cantidad").fas.fa-2x.fa-sync-alt
+                    .col-md-6.col-lg-6.col-xs-6.text-right
+                        h4.h4-responsive
+                            small Orden No.
+                            br
+                            strong
+                                span#span_orden.blue-text ######
+                        h5.h5-responsive
+                            small Proveedor.
+                            br
+                            strong
+                                span#span_proveedor ##########
+
+    // Datos artículos de orden en ruta
+    section.mb-4
+        .card
+            .card-header.view.view-cascade.gradient-card-header.blue-gradient.mb-3
+                h4.h4-responsive.mb-3(style="font-weight: 700; color: #fff;")
+                    i(style="margin-right: 10px").fas.fa-table
+                    |   Artículos
+            .card-body
+                .table-responsive(style="margin-top: 5px;")
+                    table#articulos.table.table-hover
+                        thead.blue-gradient(style="color: #fff")
+                            th.text-center
+                                i.fas.fa-cog
+                            th Cantidad
+                            th Unida
+                            th Código
+                            th Descripción
+                            th Orden
+                            th Proveedor
+                            //th Stock actual
+                        tbody
+
+    // Modal para seleccion de órdenes
+    #normalModal(class="modal")
+        .modal-dialog.modal-lg(role="document")
+            .modal-content
+                .modal-header.Popup(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
+                    .col-lg-12
+                        i.fa.fas.fa-shopping-cart(style="margin-right: 15px;")
+                        label 
+                            strong Órdenes de compra
+                .modal-body()
+                    .card
+                        .card-tittle
+                        .card-body.table-color-new
+                            .row
+                                table#pTable.table.table-hover
+                                    thead
+                                        th.text-center
+                                            i(style="color: #fff;").fas.fa-cog
+                                        th.text-center  Serie
+                                        th.text-right   Proveedor
+                                        th.text-right   Unidad Negocio
+                                        th.text-right   Total
+                                    tbody
+                                        
+                .modal-footer
+                    .text-right
+                        .btn-group
+                            a(data-dismiss="modal").btn.btn-default
+                                i.fa.fas.fa-times-circle()
+                                |   Cerrar
+
+    // Modal modificar cantidad
+    #cantidadModal(class="modal")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
+                    .col-lg-12
+                        i.fa.fas.fa-sort-numeric-down(style="margin-right: 15px;")
+                        label 
+                            strong Modificar cantidad
+                .modal-body()
+                    .card
+                        .card-body
+                            .row
+                                .col-lg-12
+                                    .form-group
+                                        label | Cantidad
+                                        .input-group
+                                            span.input-group-addon.blue-gradient
+                                                i.fas.fa-sort-numeric-down(style="color: #fff;")
+                                            input#cantidad.form-control(type="number" name="cantidad" placeholder="Cantidad" tabindex="2")
+
+                .modal-footer
+                    .text-right
+                        .btn-group
+                            a(data-dismiss="modal").btn.btn-default
+                                i.fa.fas.fa-times-circle()
+                                |   Cerrar
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    

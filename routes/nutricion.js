@@ -81,7 +81,7 @@ module.exports = {
                         }
                     })
                 }
-            }).sort({fecha: 1});
+            }).sort({fecha: -1});
         } 
     },
     new: function(solicitud, respuesta){

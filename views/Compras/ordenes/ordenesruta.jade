@@ -40,15 +40,24 @@ block contenido
             .table-responsive(style="margin-top: 10px;")
                 table#orders.table.table-striped.table-hover
                     thead.table-head
-                        th.text-center # Folio
+                        th.text-center
+                            i(style="color: gray;").fas.fa-cog
+                        th # Folio
                         th Unidad
                         th Chofer
                         th Estatus
                         th Fecha
-                        th Acciones
                     tbody
                         each ord in ordersRuta
                             tr
+                                td
+                                    .d-flex
+                                        a(href="/ordenes/ordenruta/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Ver detalles", style="margin-right: 5px; color: #FFF;").btn.btn-primary.btn-small
+                                            i.fas.fa-eye.fa-2x
+                                        a(href="/ordenes/ordenruta/entrada/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Entrada  Inventarios", style="margin-right: 5px;").btn.btn-success.btn-small
+                                            i.fas.fa-sign-in-alt.fa-2x
+                                        a(href="/ordenes/orden/ordenruta/#{ord.id}}", data-toggle="tooltip", data-placement="top", title="Cerrar orden").btn.btn-danger.btn-small
+                                            i.fas.fa-lock.fa-2x                                            
                                 td.text-center ORD#{ord.codigo}
                                 td.text-center #{ord.unidad}
                                 td.text-center #{ord.chofer}
@@ -77,15 +86,4 @@ block contenido
                                             td.text-center #{ '0' + new Date(ord.fecha).getDate()+ '/' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()}
                                         else 
                                             td.text-center #{ new Date(ord.fecha).getDate()+ '/' + (new Date(ord.fecha).getMonth() + 1)+ '/' + new Date(ord.fecha).getFullYear()}
-                                td
-                                    a(href="/ordenes/ordenruta/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Ver detalles", style="margin-right: 10px;")
-                                        i.fas.fa-eye.text-primary.fa-lg
-                                    if ord.estatus == "En Ruta"
-                                        a(href="/ordenes/ordenruta/entrada/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Entrada  Inventarios", style="margin-right: 10px;")
-                                            i.fas.fa-sign-in-alt.text-success.fa-lg
-                                    else    
-                                        a.disabled(href="#",  data-toggle="tooltip", data-placement="top", title="Entrada  Inventarios", style="margin-right: 10px;")
-                                            i.fas.fa-sign-in-alt.text-default.fa-lg     
-                                    a(href="/ordenes/orden/ordenruta/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Cerrar", style="margin-right: 5px; color: #000000;")
-                                            i.fas.fa-lock.fa-lg
                                     

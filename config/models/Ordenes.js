@@ -43,7 +43,21 @@ var ordenRutaSchemaJSON = {
     subtotal: String,
     iva: String,
     total: String,
-    estatus: String
+    estatus: String,
+    envia: { type: Schema.ObjectId, ref: "Usuarios" },
+    articulos: [
+        { 
+            cantidad: String,
+            unidad: String,
+            codigo: String,
+            descripcion: String,
+            id_producto: { type: Schema.ObjectId, ref: "Productos" },
+            ordenRuta: String,
+            // requisicion: String
+            // ordenRuta: { type: Schema.ObjectId, ref: "OrdenesRuta"}
+        }
+    ],
+    unidad_negocio: { type: Schema.ObjectId, ref: "UnidadesNegocio"}
 }
 
 // ARTÍCULOS EN ORDEN RUTA

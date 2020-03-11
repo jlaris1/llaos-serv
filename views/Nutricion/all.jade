@@ -55,6 +55,7 @@ block contenido
                         th Tiempo
                         th Charolero
                         th Fecha
+                        th Hora
                     tbody
                         each nut in nutricion
                             tr  
@@ -63,14 +64,17 @@ block contenido
                                 td.text-center #{ nut.charola_2 }
                                 td.text-center #{ nut.charola_3 }
                                 td.text-center #{ nut.charola_4 }
-                                td.text-center #{ nut.kg_racion == "" ? "" : parseFloat(nut.kg_racion).toFixed(2) }
+                                td.text-center #{ nut.kg_racion == "" ? "" : parseFloat(nut.kg_racion).toFixed(3) }
                                 td.text-center #{ nut.porcent_ajuste == "" ? "" :parseFloat(nut.porcent_ajuste).toFixed(2) }
                                 td.text-center #{ nut.suma == "" ? "" : parseFloat(nut.suma).toFixed(2) }
                                 td.text-center #{ nut.codigo_racion == "" ? "" : parseFloat(nut.codigo_racion).toFixed(2) }
-                                td.text-center #{ nut.siguiente_racion == "NaN" ? "" : parseFloat(nut.siguiente_racion).toFixed(2) }
-                                td.text-center #{ nut.charolero.nombre }
+                                td.text-center #{ nut.siguiente_racion == "" ? "" : parseFloat(nut.siguiente_racion).toFixed(2) }
                                 td.text-center #{ nut.tiempo }
-
+                                td.text-center #{ nut.charolero.nombre }
+                                
                                 - var date = new Date(nut.fecha);
-                                - date.setDate(date.getDate());
-                                td #{date.toLocaleDateString("es-MX",{dateStyle: 'short'})}
+                                - date.setDate(date.getDate() + 1);
+                                - var day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
+                                - var month = (date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1);
+                                td #{  day + '/' + month + '/' + date.getFullYear() }
+                                td #{ nut.hora }

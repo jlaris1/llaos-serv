@@ -7,7 +7,7 @@ block contenido
             $('#spanMenuParametros').removeClass('fa-angle-left');
             $('#spanMenuParametros').addClass('fa-angle-down');
             $('#mediciones').dataTable(
-                {"fecha": [[ 0, "desc" ]]}
+                {"fecha": [[ 0, "asc" ]]}
             );
 
             if($('#url').text() != ''){
@@ -86,7 +86,7 @@ block contenido
                                 - var date = new Date(med.fecha);
                                 - date.setDate(date.getDate() + 1);
                                 - var day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
-                                - var month = date.getMonth() > 9 ? date.getMonth() : '0' + date.getMonth();
+                                - var month = (date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1);
                                 td #{  day + '/' + month + '/' + date.getFullYear() }
 
                                 td  #{ med.hora }

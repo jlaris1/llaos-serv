@@ -2831,57 +2831,7 @@ module.exports = {
 
     ////////// ORDENES EN RUTA
     // Mostrar enviar ordenes en ruta a granja
-    ordenesEnRuta: (solicitud, respuesta) => {
-        if(solicitud.session.user === undefined){
-			respuesta.redirect("/sesion-expirada");
-        }else{//Agregar try-catch
-            Proveedores.find( function(error, proveedores){
-                if(error){
-                    console.log(error);
-                } else {
-                    Usuarios.find( function(error, usuarios){
-                        if(error){
-                            console.log(error);
-                        } else { 
-                            respuesta.render("Compras/ordenes/enruta",
-                                {
-                                    user: solicitud.session.user,
-                                    ordenes: {},
-                                    folio: '00000',
-                                    unidad: '',
-                                    chofer: '',
-                                    busca: '',
-                                    articulosRuta: {},
-                                    proveedores: proveedores,
-                                    titulo: "Órdenes",
-                                    criterios: [
-                                        {
-                                            val: "",
-                                            name: ""
-                                        }
-                                    ],
-                                    piscinas: [
-                                        {
-                                            id: 0,
-                                            nombre: ""
-                                        }
-                                    ],
-                                    charoleros: [
-                                        {
-                                            id: 0,
-                                            nombre: ""
-                                        }   
-                                    ],
-                                    usuarios: usuarios,
-                                    ruta: "ordenes"
-                                }
-                            );
-                        }
-                    });
-                }
-            }).sort({ nombreEmpresa : 1});          
-        };
-    },
+    
     buscarOrdenes: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
@@ -2914,7 +2864,7 @@ module.exports = {
                                                 if(error){
                                                     console.log(error);
                                                 } else { 
-                                                    respuesta.render("Compras/ordenes/enruta",
+                                                    respuesta.render("Compras/ordenes/orden_en_ruta",
                                                         {
                                                             user: solicitud.session.user,
                                                             ordenes: ordenes,
@@ -2974,7 +2924,7 @@ module.exports = {
                                                 if(error){
                                                     console.log(error);
                                                 } else { 
-                                                    respuesta.render("Compras/ordenes/enruta",
+                                                    respuesta.render("Compras/ordenes/orden_en_ruta",
                                                         {
                                                             estatus: '',
                                                             user: solicitud.session.user,
@@ -3051,7 +3001,7 @@ module.exports = {
                                                                             if(error){
                                                                                 console.log(error);
                                                                             } else { 
-                                                                                respuesta.render("Compras/ordenes/enruta",
+                                                                                respuesta.render("Compras/ordenes/orden_en_ruta",
                                                                                     {
                                                                                         user: solicitud.session.user,
                                                                                         ordenes: ordenes,
@@ -3125,7 +3075,7 @@ module.exports = {
                                                                                         if(error){
                                                                                             console.log(error);
                                                                                         } else { 
-                                                                                            respuesta.render("Compras/ordenes/enruta",
+                                                                                            respuesta.render("Compras/ordenes/orden_en_ruta",
                                                                                                 {
                                                                                                     estatus: '',
                                                                                                     user: solicitud.session.user,
@@ -3271,7 +3221,7 @@ module.exports = {
                                                                                             if(error){
                                                                                                 console.log(error);
                                                                                             } else { 
-                                                                                                respuesta.render("Compras/ordenes/enruta",
+                                                                                                respuesta.render("Compras/ordenes/orden_en_ruta",
                                                                                                     {
                                                                                                         codigo: oRuta.id,
                                                                                                         folio: oRuta.codigo,
@@ -3404,7 +3354,7 @@ module.exports = {
                                                                                     if(error){
                                                                                         console.log(error);
                                                                                     } else { 
-                                                                                        respuesta.render("Compras/ordenes/enruta",
+                                                                                        respuesta.render("Compras/ordenes/orden_en_ruta",
                                                                                             {
                                                                                                 codigo: oRuta.id,
                                                                                                 folio: oRuta.codigo,
@@ -3459,447 +3409,6 @@ module.exports = {
             };
         };
     },
-    pdfOrdenRuta: (solicitud, respuesta) => {
-        if(solicitud.session.user === undefined){
-			respuesta.redirect("/sesion-expirada");
-        }else{//Agregar try-catch
-            OrdenesRuta.findById({"_id": solicitud.params.id}, function(error, oRuta){
-                if(error){
-                    console.log(error);
-                } else {    
-                    ArticulosEnRuta.find({"ordenRuta": oRuta.id}, function(error, articulos){
-                        if(error){
-                            console.log(error);
-                        } else {
-                            Ordenes.populate(articulos, {path: "orden"}, function(error, articulos){
-                                if(error){
-                                    console.log(error);
-                                } else {
-                                    Proveedores.populate(articulos, {path: "proveedor"}, function(error, articulos){
-                                        if(error){
-                                            console.log(error);
-                                        } else {
-                                            // Crear el documento
-                                            doc = new pdf({
-                                                // Establecer tamaño de hoja
-                                                size: 'letter',
-                                                layout: 'landscape'
-                                            });
-                                        
-                                            // Logo empresa
-                                            doc.image('./public/imgs/logo.png', 5, 40,{width: 200})
-                                            
-                                            // Nombre empresa y rfc
-                                            doc.font('fonts/Roboto-Black.ttf')
-                                            .fontSize(14)
-                                            .text('LLAOS ACUACULTURA S.A. de C.V.', 480, 40, { align: 'right', width: 290 })
-                                            .text('LISTADO DE ENVIO DE PRODUCTOS', { align: 'right', width: 290 })
-                                            .text('Folio: ' + oRuta.codigo, { align: 'right', width: 290 })
-
-                                            // Nombre formato, fecha y hora de creación
-                                            doc.font('fonts/Roboto-Regular.ttf')
-                                            .fontSize(14)
-                                            .text("Fecha: "+ FechaHora.obtenerfecha() + " - Hora: " + FechaHora.obtenerhora(),{ align: 'right' , width: 290})
-                                                                                                                                            
-                                            // Encabezados tabla
-                                            doc.lineWidth(25)
-                                            doc.lineCap('butt')
-                                            .fillColor("blue")
-                                            .moveTo(15, 150)
-                                            .lineTo(780, 150)
-                                            .stroke()
-                                        
-                                            doc.fontSize(10)
-                                            .fill('white')
-                                            .text("Cant", 17, 140, {align: 'center', width: 45})
-                                            .text("Unidad", 49, 140,  {align: 'center', width: 70})
-                                            .text("Descripción",69, 140, {align: 'center', width: 250})
-                                            .text("Orden",319, 140, {align: 'center', width: 100})
-                                            .text("Requisición",304, 140, {align: 'center', width: 380})
-                                            .text("Fecha",709, 140, {align: 'center', width: 80})
-                                
-                                            // Llenado de tabla
-                                            var y = 155;
-                                            var total = 0;
-
-                                            articulos.forEach( function(art) {
-                                                total = total + 1;
-                                                y += 10;
-
-                                                if (y > 525){
-                                                    y = 165;
-
-                                                    doc.addPage()
-
-                                                    // Logo empresa
-                                                    doc.image('./public/imgs/logo.png', 5, 40,{width: 200})
-                                                    
-                                                    // Nombre empresa y rfc
-                                                    doc.font('fonts/Roboto-Black.ttf')
-                                                    .fontSize(14)
-                                                    .text('LLAOS ACUACULTURA S.A. de C.V.', 480, 40, { align: 'right', width: 290 })
-                                                    .text('LISTADO DE ENVIO DE PRODUCTOS', { align: 'right', width: 290 })
-                                                    .text("Folio: " + oRuta.codigo, { align: 'right', width: 290 }) 
-                                                    
-                                                    // Nombre formato, fecha y hora de creación
-                                                    doc.font('fonts/Roboto-Regular.ttf')
-                                                    .fontSize(14)
-                                                    .text("Fecha: "+ FechaHora.obtenerfecha() + " - Hora: " + FechaHora.obtenerhora(),{ align: 'right' , width: 290})
-                                                    
-                                                    // Encabezados tabla
-                                                    doc.lineWidth(25)
-                                                    doc.lineCap('butt')
-                                                    .fillColor("blue")
-                                                    .moveTo(15, 150)
-                                                    .lineTo(780, 150)
-                                                    .stroke()
-                                                
-                                                    doc.fontSize(10)
-                                                    .fill('white')
-                                                    .text("Cant", 17, 140, {align: 'center', width: 45})
-                                                    .text("Unidad", 49, 140,  {align: 'center', width: 70})
-                                                    .text("Descripción",69, 140, {align: 'center', width: 250})
-                                                    .text("Orden",319, 140, {align: 'center', width: 100})
-                                                    .text("Requisición",304, 140, {align: 'center', width: 380})
-                                                    .text("Fecha",709, 140, {align: 'center', width: 80})
-                                                }
-                                                    doc.fillColor('black')
-                                                    .text(parseFloat(art.cantidad).toFixed(2), 10, y, {align: 'center', width: 45})
-                                                    .text(art.unidad, 49, y,  {align: 'center', height: 15, width: 70})
-                                                    .text(art.descripcion, 124, y, {align: 'left', height: 15, width: 300})
-                                                    .text(art.orden.serie, 295, y, {align: 'center', width: 150})
-                                                    .text(art.orden.comentarios, 414, y, {height: 15, width: 300})
-                                                    .text(FechaHora.obtenerfecha(), 709, y, {align: 'center', width: 80})
-                                            });
-                                                            
-                                            // División productos y totales
-                                            doc.lineWidth(2)
-                                            doc.lineCap('butt')
-                                            .moveTo(15, y + 15)
-                                            .lineTo(780, y + 15)
-                                            .stroke()
-                                            
-                                            // Conciciones / Observaciones / Comentarios
-                                            doc.font('fonts/Roboto-Black.ttf')
-                                            .text("No. artículos enviados: " + total, 15, y + 15, { align: 'left', width: 400 })
-                                            .text("Total: " + fmon.FormatMoney(true, parseFloat(oRuta.total)), 480, y + 15, { align: 'right', width: 290 })
-
-                                            // Creación del documento y guardado
-
-                                            var nombre_archivo = './files/';
-                                            var nombre_pdf = 'ordenRuta' + oRuta.codigo + '.pdf';
-
-                                            //console.log(nombre_archivo);
-
-                                            doc.pipe(fs.createWriteStream(nombre_archivo+nombre_pdf)).on('finish', function (error){
-                                                if(error){
-                                                    console.log(error);
-                                                } else {
-
-                                                    var dataOrd = {
-                                                        estatus: 'Generada'
-                                                    }
-
-                                                    OrdenesRuta.updateOne({"_id": oRuta.id}, dataOrd, function(error){
-                                                        if(error){
-                                                            console.log(error);
-                                                        } else {
-                                                            Proveedores.find( function(error, proveedores){
-                                                                if(error){
-                                                                    console.log(error);
-                                                                } else {
-                                                                    Usuarios.find( function(error, usuarios){
-                                                                        if(error){
-                                                                            console.log(error);
-                                                                        } else { 
-                                                                            respuesta.render("Compras/ordenes/enruta",
-                                                                                {
-                                                                                    codigo: oRuta.id,
-                                                                                    folio: oRuta.codigo,
-                                                                                    user: solicitud.session.user,
-                                                                                    ordenes: {},
-                                                                                    unidad: oRuta.unidad,
-                                                                                    chofer: oRuta.chofer,
-                                                                                    articulosRuta: articulos,
-                                                                                    url: nombre_pdf,
-                                                                                    proveedores: proveedores,
-                                                                                    titulo: "Órdenes",
-                                                                                    criterios: [
-                                                                                        {
-                                                                                            val: "",
-                                                                                            name: ""
-                                                                                        }
-                                                                                    ],
-                                                                                    piscinas: [
-                                                                                        {
-                                                                                            id: 0,
-                                                                                            nombre: ""
-                                                                                        }
-                                                                                    ],
-                                                                                    charoleros: [
-                                                                                        {
-                                                                                            id: 0,
-                                                                                            nombre: ""
-                                                                                        }   
-                                                                                    ],
-                                                                                    usuarios: usuarios,
-                                                                                    ruta: "ordenes"
-                                                                                }
-                                                                            );
-                                                                        }
-                                                                    });
-                                                                }
-                                                            }).sort({ nombreEmpresa : 1});
-                                                            console.log('PDF closed & Actualizada!');
-                                                        }
-                                                    });
-                                                }
-                                            });     
-                                        
-                                            // Finalize PDF file
-                                            doc.end();
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        };
-    },
-    enviarOrdenRuta: (solicitud, respuesta) => {
-        if(solicitud.session.user === undefined){
-			respuesta.redirect("/sesion-expirada");
-        }else{//Agregar try-catch
-            OrdenesRuta.findById({"_id": solicitud.params.id }, function(error, oRuta){
-                if(error){
-                    console.log(error);
-                } else {
-                    var mailOptions = {
-                        from: 'Llaos Sist 2.0 <sistema@llaos.com>',
-                        //to: 'flopez@llaos.com',
-                        to: 'davilar@llaos.com',
-                        cc: 'jcuamea@llaos.com',
-                        bcc: 'flopez@llaos.com',
-                        subject: 'Ordenes en Ruta ' + oRuta.codigo,
-                        html: "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>"+
-                                    "<html xmlns='http://www.w3.org/1999/xhtml'>" +
-                                        "<head>" +
-                                            "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />" +
-                                            "<title>Requisiciones LLaos 1.0</title>" +
-                                            "<style type='text/css'>" +
-                                                "body {margin: 0; padding: 0; min-width: 100%!important;}" +
-                                                ".content {width: 100%; max-width: 600px;}" +
-                                                "@media only screen and (min-device-width: 601px) {" +
-                                                "	.content {width: 600px !important;}" +
-                                                "	.header {padding: 40px 30px 20px 30px;}" +
-                                                "}" +
-                                                "@media only screen and (min-device-width: 601px) {" +
-                                                "	.content {width: 600px !important;}" +
-                                                "	.col425 {width: 425px!important;}" +
-                                                "	.col380 {width: 380px!important;}" +
-                                                "}" +
-                                                "@media only screen and (max-width: 550px), screen and (max-device-width: 550px) {" +
-                                                "	body[yahoo] .buttonwrapper {background-color: transparent!important;}" +
-                                                "	body[yahoo] .button a {background-color: #e05443; padding: 15px 15px 13px!important; display: block!important;}" +
-                                                "}" +
-                                                ".col425 {width: 425px!important;}" +
-                                                ".subhead {font-size: 15px; color: #ffffff; font-family: sans-serif; letter-spacing: 10px;}" +
-                                                ".h1 {font-size: 33px; line-height: 38px; font-weight: bold;}" +
-                                                ".h1, .h2, .bodycopy {color: #153643; font-family: sans-serif;}" +
-                                                ".innerpadding {padding: 30px 30px 30px 30px; text-align: justify;}" +
-                                                ".borderbottom {border-bottom: 1px solid #f2eeed; text-align: justify;}" +
-                                                ".h2 {padding: 0 0 15px 0; font-size: 24px; line-height: 28px; font-weight: bold;}" +
-                                                ".bodycopy {font-size: 16px; line-height: 22px;  text-align: justify;}" +
-                                                ".button {text-align: center; font-size: 18px; font-family: sans-serif; font-weight: bold; padding: 0 30px 0 30px;}" +
-                                                ".button a {color: #ffffff; text-decoration: none;}" +
-                                                ".footer {padding: 20px 30px 15px 30px;}" +
-                                                ".footercopy {font-family: sans-serif; font-size: 14px; color: #ffffff;}" +
-                                                ".footercopy a {color: #ffffff; text-decoration: underline;}" +
-                                            "</style>" +
-                                        "</head>" +
-                                        "<body yahoo bgcolor='#f6f8f1'>" +
-                                            "<table width='100%' bgcolor='#f6f8f1' border='0' cellpadding='0' cellspacing='0'>" +
-                                                "<tr>" +
-                                                    "<td>" +
-                                                        "<!--[if (gte mso 9)|(IE)]>" +
-                                                        "<table width='600' align='center' cellpadding='0' cellspacing='0' border='0'>" +
-                                                            "<tr>" +
-                                                                "<td>" +
-                                                                    "<![endif]-->" +
-                                                                    "<table class='content' align='center' cellpadding='0' cellspacing='0' border='0'>" +
-                                                                        "<!-- HEADER -->" +
-                                                                        "<tr>" +
-                                                                            "<td class='header' bgcolor='#c7d8a7'>" +
-                                                                                "<table width='70' align='left' border='0' cellpadding='0' cellspacing='0'>" +
-                                                                                    "<tr>" +
-                                                                                        "<td height='70' style='padding: 0 20px 20px 0;'>" +
-                                                                                            "<img src='cid:unique@headerMail' width='70' height='70' border='0' alt='' / >" +
-                                                                                        "</td>" +
-                                                                                    "</tr>" +
-                                                                                "</table>" +
-                                                                                "<!--[if (gte mso 9)|(IE)]>" +
-                                                                                "<table width='425' align='left' cellpadding='0' cellspacing='0' border='0'>" +
-                                                                                    "<tr>" +
-                                                                                        "<td>" +
-                                                                                        "<![endif]-->" +
-                                                                                            "<table class='col425' align='left' border='0' cellpadding='0' cellspacing='0' style='width: 100%; max-width: 425px;'>" +
-                                                                                                "<tr>" +
-                                                                                                    "<td height='70'>" +
-                                                                                                        "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
-                                                                                                            "<tr>" +
-                                                                                                                "<td class='subhead' style='padding: 0 0 0 3px;'>" +
-                                                                                                                "	LLAOS 1.0" +
-                                                                                                                "</td>" +
-                                                                                                            "</tr>" +
-                                                                                                            "<tr>" +
-                                                                                                                "<td class='h1' style='padding: 5px 0 0 0;'>" +
-                                                                                                                "	Ordenes en Ruta" +
-                                                                                                                "</td>" +
-                                                                                                            "</tr>" +
-                                                                                                        "</table>" +
-                                                                                                    "</td>" +
-                                                                                                "</tr>" +
-                                                                                            "</table>" + 
-                                                                                        "<!--[if (gte mso 9)|(IE)]>" +
-                                                                                        "</td>" +
-                                                                                    "</tr>" +
-                                                                                "</table>" +
-                                                                                "<![endif]-->" +
-                                                                            "</td>" +
-                                                                        "</tr>" +
-                                                                        "<!-- CONTENIDO 1 -->" +
-                                                                        "<tr>" +
-                                                                            "<td class='innerpadding borderbottom'>" +
-                                                                                "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
-                                                                                    "<tr>" +
-                                                                                        "<td class='h2'>" +
-                                                                                        "	Estimado Usuario:" +
-                                                                                        "</td>" +
-                                                                                    "</tr>" +
-                                                                                    "<tr>" +
-                                                                                        "<td class='bodycopy'>" +
-                                                                                        "   El Departamento de Logística en conjunto con el Departamento de Compras ha enviado a granja " + 
-                                                                                        "   la unidad <strong>" + oRuta.unidad + "</strong> la cual es manejada por el operador <strong>" + oRuta.chofer + "</strong> la unidad " +
-                                                                                        "   estará en un aproximado de <strong> 1:30 hrs </strong> en su destino, favor de tener todo preparado para su recibimiento."  +
-                                                                                        "</td>" +
-                                                                                    "</tr>" +
-                                                                                "</table>" +
-                                                                            "</td>" +
-                                                                        "</tr>" +
-                                                                        "<!-- CONTENIDO 3 -->" +
-                                                                        "<tr>" +
-                                                                            "<td class='innerpadding borderbottom'>" +
-                                                                            "	Este correo ha sido generado en automático por el sistema" +
-                                                                            "	llaos 2.0, no responda al mismo ya que no tendrá respuesta" +
-                                                                            "	alguna, si usted no es un usuario que autoriza Requisiciones" +
-                                                                            "	favor de reportar el insidente al departamento de sistemas." +
-                                                                            "<br>" +
-                                                                            "<br>" +
-                                                                            "	Cualquier problema para abrir la requisición o el sistema" +
-                                                                            "	favor de reportar al Departamento de Sistemas." +
-                                                                            "</td>" +
-                                                                        "</tr>" +
-                                                                        "<!-- FOOTER -->" +
-                                                                        "<tr>" +
-                                                                            "<td class='footer' bgcolor='#44525f'>" +
-                                                                                "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
-                                                                                    "<tr>" +
-                                                                                        "<td align='center' class='footercopy'>" +
-                                                                                        "	&reg; Llaos Acuacultura S.A. de C.V. " + new Date().getFullYear() + 
-                                                                                        "</td>" +
-                                                                                    "</tr>" +
-                                                                                "</table>" +
-                                                                            "</td>" +
-                                                                        "</tr>" +
-                                                                    "</table>" +
-                                                                    "<!--[if (gte mso 9)|(IE)]>" +
-                                                                "</td>" +
-                                                            "</tr>" +
-                                                        "</table>" +
-                                                        "<![endif]-->" +
-                                                    "</td>" +
-                                                "</tr>" +
-                                            "</table>" +
-                                        "</body>" +
-                                    "</html>",
-                        attachments:[
-                            {
-                                fileName: 'mail.png',
-                                path: './public/imgs/mail.png',
-                                cid: 'unique@headerMail'
-                            },
-                            {
-                                fileName: oRuta.codigo + '.pdf',
-                                path: './files/ordenRuta' + oRuta.codigo + '.pdf',
-                                cid: 'unique@pdf'
-                            },
-                        ]
-                    }
-
-                    smtpTransport.sendMail(mailOptions, function(error,res){
-                        if(error){
-                            console.log(error);
-                        }else{
-                            //console.log(res);
-
-                            var updSta = {
-                                estatus: 'En Ruta'
-                            }
-
-                            OrdenesRuta.updateOne({"_id": oRuta.id}, updSta, function(error){
-                                if(error){
-                                    console.log(error);
-                                } else {
-                                    Usuarios.find( function(error, usuarios){
-                                        if(error){
-                                            console.log(error);
-                                        } else { 
-                                            respuesta.render("Compras/ordenes/enviadaGen",
-                                                {
-                                                    user: solicitud.session.user,
-                                                    titulo: 'Orden en Ruta enviada',
-                                                    estatus: 'Correctamente',
-                                                    msg: 'El viaje esta en ruta, solo queda esperar que reciban los productos.',
-                                                    nota: 'Es necesario revisar que todo llegue bien , ' +
-                                                        ' favor de revisarlo con el Administrador de Granja.',
-                                                    titulo: "Órdenes",
-                                                    criterios: [
-                                                        {
-                                                            val: "",
-                                                            name: ""
-                                                        }
-                                                    ],
-                                                    piscinas: [
-                                                        {
-                                                            id: 0,
-                                                            nombre: ""
-                                                        }
-                                                    ],
-                                                    charoleros: [
-                                                        {
-                                                            id: 0,
-                                                            nombre: ""
-                                                        }   
-                                                    ],
-                                                    usuarios: usuarios,
-                                                    ruta: "ordenes"
-                                                }
-                                            );
-                                        }
-                                    });
-                                }
-                            });
-                                                        
-                            console.log("Correo enviado!");
-                        }
-                        smtpTransport.close();
-                    });
-                }
-            });
-        };
-    },
     eliminarArticuloOrdenRuta: (solicitud, respuesta) => {
         ArticulosEnRuta.deleteOne({"_id": solicitud.params.id}, function(error){
             if(error){
@@ -3929,7 +3438,7 @@ module.exports = {
                                                             if(error){
                                                                 console.log(error);
                                                             } else { 
-                                                                respuesta.render("Compras/ordenes/enruta",
+                                                                respuesta.render("Compras/ordenes/orden_en_ruta",
                                                                     {
                                                                         codigo: oRuta.id,
                                                                         folio: oRuta.codigo,
@@ -3977,44 +3486,105 @@ module.exports = {
             }
         });
     },
+    
+    ordenRutaEntrada: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{ 
+            OrdenesRuta.findById({"_id": solicitud.params.id}, (error, oRuta) =>{
+                if(error){
+                    console.log(error);
+                } else {
+                    Proveedores.find( (error, proveedores) =>{
+                        if(error){
+                            console.log(error);
+                        } else {
+                            Usuarios.find( (error, usuarios)=> {
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.render("Compras/ordenes/entradaordenruta", 
+                                        {
+                                            user: solicitud.session.user,
+                                            oRuta: oRuta,
+                                            proveedores: proveedores,
+                                            titulo: "Órdenes",
+                                            criterios: [
+                                                {
+                                                    val: "",
+                                                    name: ""
+                                                }
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
+                                            usuarios: usuarios,
+                                            ruta: "ordenes"
+                                        }
+                                    );
+                                }
+                            });
+                        }
+                    });                 
+                }
+            });
+        }
+    },
+    
+    
+
+    ////////////// NUEVA VERSIÓN ORDEN RUTA
     ordenesEnRutaBandeja: (solicitud, respuesta) => {
-        OrdenesRuta.find( function(error, oRutas){
-            if(solicitud.session.user === undefined){
+        if(solicitud.session.user === undefined){
                 respuesta.redirect("/sesion-expirada");
             }else{//Agregar try-catch
-                Usuarios.find( function(error, usuarios){
-                    if(error){
-                        console.log(error);
-                    } else { 
-                        respuesta.render("Compras/ordenes/ordenesruta", {
-                            user: solicitud.session.user,
-                            ordersRuta: oRutas,
-                            titulo: "Órdenes",
-                            criterios: [
-                                {
-                                    val: "",
-                                    name: ""
-                                }
-                            ],
-                            piscinas: [
-                                {
-                                    id: 0,
-                                    nombre: ""
-                                }
-                            ],
-                            charoleros: [
-                                {
-                                    id: 0,
-                                    nombre: ""
-                                }   
-                            ],
-                            usuarios: usuarios,
-                            ruta: "ordenes"
+                OrdenesRuta.find( function(error, oRutas){
+                    if(error) {
+                        console.log(chalk.bgRed(error));
+                    } else {
+                        Usuarios.find( function(error, usuarios){
+                            if(error){
+                                console.log(error);
+                            } else { 
+                                respuesta.render("Compras/ordenes/ordenesruta", {
+                                    user: solicitud.session.user,
+                                    ordersRuta: oRutas,
+                                    titulo: "Órdenes",
+                                    criterios: [
+                                        {
+                                            val: "",
+                                            name: ""
+                                        }
+                                    ],
+                                    piscinas: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }
+                                    ],
+                                    charoleros: [
+                                        {
+                                            id: 0,
+                                            nombre: ""
+                                        }   
+                                    ],
+                                    usuarios: usuarios,
+                                    ruta: "ordenes"
+                                });
+                            }
                         });
                     }
-                });
-            }
-        })
+            }).sort({fecha: -1});
+        }
     },
     ordenRutaDetalles: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
@@ -4087,57 +3657,50 @@ module.exports = {
         }
         
     },
-    ordenRutaEntrada: (solicitud, respuesta) => {
+    ordenesEnRuta: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
-        }else{ 
-            OrdenesRuta.findById({"_id": solicitud.params.id}, (error, oRuta) =>{
+        }else{//Agregar try-catch
+            Usuarios.find( function(error, usuarios){
                 if(error){
                     console.log(error);
-                } else {
-                    Proveedores.find( (error, proveedores) =>{
-                        if(error){
-                            console.log(error);
+                } else { 
+                    OrdenesRuta.find( (error, orden_ruta) => {
+                        if(error) {
+                            console.log(chalk.bgRed(error));
                         } else {
-                            Usuarios.find( (error, usuarios)=> {
-                                if(error){
-                                    console.log(error);
-                                } else { 
-                                    respuesta.render("Compras/ordenes/entradaordenruta", 
-                                        {
-                                            user: solicitud.session.user,
-                                            oRuta: oRuta,
-                                            proveedores: proveedores,
-                                            titulo: "Órdenes",
-                                            criterios: [
-                                                {
-                                                    val: "",
-                                                    name: ""
-                                                }
-                                            ],
-                                            piscinas: [
-                                                {
-                                                    id: 0,
-                                                    nombre: ""
-                                                }
-                                            ],
-                                            charoleros: [
-                                                {
-                                                    id: 0,
-                                                    nombre: ""
-                                                }   
-                                            ],
-                                            usuarios: usuarios,
-                                            ruta: "ordenes"
-                                        }
-                                    );
+                            respuesta.render("Compras/ordenes/orden_en_ruta",
+                        {
+                            numeroOrden: zf.zfill(orden_ruta.length + 1, 6),
+                            user: solicitud.session.user,
+                            titulo: "Órdenes",
+                            criterios: [
+                                {
+                                    val: "",
+                                    name: ""
                                 }
-                            });
+                            ],
+                            piscinas: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }
+                            ],
+                            charoleros: [
+                                {
+                                    id: 0,
+                                    nombre: ""
+                                }   
+                            ],
+                            usuarios: usuarios,
+                            ruta: "ordenes"
                         }
-                    });                 
+                    );
+                        }
+                    });
                 }
             });
-        }
+        };
     },
     entradaOrdenRuta: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
@@ -4156,234 +3719,239 @@ module.exports = {
                             console.log(solicitud.body.articulos[i]);
     
                             /*** Agragar el id del producto para no buscar por código */
-                            Productos.findOne({"_id": solicitud.body.articulos[i]._id}, (error, producto) => {
+                            /*** Para ordenes viejas: "codigo": solicitud.body.articulos[i].codigo */
+                            Productos.findOne({"id": solicitud.body.articulos[i].id_producto}, (error, producto) => {
                                 if(error){
                                     console.log(error);
                                 } else {
                                     console.log(producto);
     
-                                    if(producto.cantidad == NaN){
-                                        producto.cantidad = 0;
-                                    }
-            
-                                    var data = {
-                                        cantidad: parseFloat(producto.cantidad) + parseFloat(solicitud.body.articulos[i].cantidad),
-                                        //lugar: solicitud.body.lugar_almacen
-                                    }
-            
-                                    Productos.updateOne({"_id": producto.id}, data, (error) => {
-                                        if(error){
-                                            console.log(chalk.bgRed(error));
-                                        } else {
-                                            if(i == solicitud.body.articulos.length - 1){
-                                                if(solicitud.body.articulos_fuera != undefined && solicitud.body.articulos_fuera.length > 0) {
-                                                    //console.log(solicitud.body.articulos_fuera);
-                                                    
-                                                    var contenidoTabla = "";
-    
-                                                    solicitud.body.articulos_fuera.forEach( (af) => {
-                                                        contenidoTabla += "<tr>" + 
-                                                                "<td>" +  parseFloat(af.cantidad).toFixed(3) + "</td>" +
-                                                                "<td>" +  af.unidad + "</td>" +
-                                                                "<td>" +  af.codigo + "</td>" +
-                                                                "<td>" +  af.descripcion + "</td>" +
-                                                                "<td>" +  af.orden.serie + "</td>" +
-                                                        "</tr>" 
-                                                    });
-                                        
-                                                    var mailOptions = {
-                                                        from: 'Llaos Sist 1.0 <sistema@llaos.com>',
-                                                        //to: 'flopez@llaos.com',
-                                                        to: 'jcuamea@llaos.com',
-                                                        cc: 'davilar@llaos.com',
-                                                        bcc: 'flopez@llaos.com',
-                                                        subject: 'Artículos no encontrados en orden en ruta ' + solicitud.body.serie,
-                                                        html: "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>"+
-                                                                    "<html xmlns='http://www.w3.org/1999/xhtml'>" +
-                                                                        "<head>" +
-                                                                            "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />" +
-                                                                            "<title>Requisiciones LLaos 1.0</title>" +
-                                                                            "<style type='text/css'>" +
-                                                                                "body {margin: 0; padding: 0; min-width: 100%!important;}" +
-                                                                                ".content {width: 100%; max-width: 600px;}" +
-                                                                                "@media only screen and (min-device-width: 601px) {" +
-                                                                                "	.content {width: 600px !important;}" +
-                                                                                "	.header {padding: 40px 30px 20px 30px;}" +
-                                                                                "}" +
-                                                                                "@media only screen and (min-device-width: 601px) {" +
-                                                                                "	.content {width: 600px !important;}" +
-                                                                                "	.col425 {width: 425px!important;}" +
-                                                                                "	.col380 {width: 380px!important;}" +
-                                                                                "}" +
-                                                                                "@media only screen and (max-width: 550px), screen and (max-device-width: 550px) {" +
-                                                                                "	body[yahoo] .buttonwrapper {background-color: transparent!important;}" +
-                                                                                "	body[yahoo] .button a {background-color: #e05443; padding: 15px 15px 13px!important; display: block!important;}" +
-                                                                                "}" +
-                                                                                ".col425 {width: 425px!important;}" +
-                                                                                ".subhead {font-size: 15px; color: #ffffff; font-family: sans-serif; letter-spacing: 10px;}" +
-                                                                                ".h1 {font-size: 33px; line-height: 38px; font-weight: bold;}" +
-                                                                                ".h1, .h2, .bodycopy {color: #153643; font-family: sans-serif;}" +
-                                                                                ".innerpadding {padding: 30px 30px 30px 30px; text-align: justify;}" +
-                                                                                ".borderbottom {border-bottom: 1px solid #f2eeed; text-align: justify;}" +
-                                                                                ".h2 {padding: 0 0 15px 0; font-size: 24px; line-height: 28px; font-weight: bold;}" +
-                                                                                ".bodycopy {font-size: 16px; line-height: 22px;  text-align: justify;}" +
-                                                                                ".button {text-align: center; font-size: 18px; font-family: sans-serif; font-weight: bold; padding: 0 30px 0 30px;}" +
-                                                                                ".button a {color: #ffffff; text-decoration: none;}" +
-                                                                                ".footer {padding: 20px 30px 15px 30px;}" +
-                                                                                ".footercopy {font-family: sans-serif; font-size: 14px; color: #ffffff;}" +
-                                                                                ".footercopy a {color: #ffffff; text-decoration: underline;}" +
-                                                                            "</style>" +
-                                                                        "</head>" +
-                                                                        "<body yahoo bgcolor='#f6f8f1'>" +
-                                                                            "<table width='100%' bgcolor='#f6f8f1' border='0' cellpadding='0' cellspacing='0'>" +
-                                                                                "<tr>" +
-                                                                                    "<td>" +
-                                                                                        "<!--[if (gte mso 9)|(IE)]>" +
-                                                                                        "<table width='600' align='center' cellpadding='0' cellspacing='0' border='0'>" +
-                                                                                            "<tr>" +
-                                                                                                "<td>" +
-                                                                                                    "<![endif]-->" +
-                                                                                                    "<table class='content' align='center' cellpadding='0' cellspacing='0' border='0'>" +
-                                                                                                        "<!-- HEADER -->" +
-                                                                                                        "<tr>" +
-                                                                                                            "<td class='header' bgcolor='#c7d8a7'>" +
-                                                                                                                "<table width='70' align='left' border='0' cellpadding='0' cellspacing='0'>" +
-                                                                                                                    "<tr>" +
-                                                                                                                        "<td height='70' style='padding: 0 20px 20px 0;'>" +
-                                                                                                                            "<img src='cid:unique@headerMail' width='70' height='70' border='0' alt='' / >" +
-                                                                                                                        "</td>" +
-                                                                                                                    "</tr>" +
-                                                                                                                "</table>" +
-                                                                                                                "<!--[if (gte mso 9)|(IE)]>" +
-                                                                                                                "<table width='425' align='left' cellpadding='0' cellspacing='0' border='0'>" +
-                                                                                                                    "<tr>" +
-                                                                                                                        "<td>" +
-                                                                                                                        "<![endif]-->" +
-                                                                                                                            "<table class='col425' align='left' border='0' cellpadding='0' cellspacing='0' style='width: 100%; max-width: 425px;'>" +
-                                                                                                                                "<tr>" +
-                                                                                                                                    "<td height='70'>" +
-                                                                                                                                        "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
-                                                                                                                                            "<tr>" +
-                                                                                                                                                "<td class='subhead' style='padding: 0 0 0 3px;'>" +
-                                                                                                                                                "	LLAOS 2.0" +
-                                                                                                                                                "</td>" +
-                                                                                                                                            "</tr>" +
-                                                                                                                                            "<tr>" +
-                                                                                                                                                "<td class='h1' style='padding: 5px 0 0 0;'>" +
-                                                                                                                                                "	Ordenes en Ruta" +
-                                                                                                                                                "</td>" +
-                                                                                                                                            "</tr>" +
-                                                                                                                                        "</table>" +
-                                                                                                                                    "</td>" +
-                                                                                                                                "</tr>" +
-                                                                                                                            "</table>" + 
-                                                                                                                        "<!--[if (gte mso 9)|(IE)]>" +
-                                                                                                                        "</td>" +
-                                                                                                                    "</tr>" +
-                                                                                                                "</table>" +
-                                                                                                                "<![endif]-->" +
-                                                                                                            "</td>" +
-                                                                                                        "</tr>" +
-                                                                                                        "<!-- CONTENIDO 1 -->" +
-                                                                                                        "<tr>" +
-                                                                                                            "<td class='innerpadding borderbottom'>" +
-                                                                                                                "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
-                                                                                                                    "<tr>" +
-                                                                                                                        "<td class='h2'>" +
-                                                                                                                        "	Estimado Usuario:" +
-                                                                                                                        "</td>" +
-                                                                                                                    "</tr>" +
-                                                                                                                    "<tr>" +
-                                                                                                                        "<td class='bodycopy'>" +
-                                                                                                                        "   El área de almacen en Granja realizó la entrada de los artículos enviados en la orden en ruta " + solicitud.body.serie + ", " + 
-                                                                                                                        "   encontrando inconsistencias en la misma ya que los siguientes artículos no venían dentro de la unidad." +
-                                                                                                                        "</td>" +
-                                                                                                                    "</tr>" +
-                                                                                                                "</table>" +
-                                                                                                            "</td>" +
-                                                                                                        "</tr>" +
-                                                                                                        "<tr>" +
-                                                                                                            "<td class='innerpadding borderbottom'>" +
-                                                                                                                "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
-                                                                                                                    "<tr>" +
-                                                                                                                        "<th> Cantidad </th>" +
-                                                                                                                        "<th> Unidad </th>" +
-                                                                                                                        "<th> Código </th>" +
-                                                                                                                        "<th> Descripción </th>" +
-                                                                                                                        "<th> Orden </th>" +
-                                                                                                                    "</tr>" +
-                                                                                                                    contenidoTabla +
-                                                                                                                "</table>" +
-                                                                                                            "</td>" +
-                                                                                                        "</tr>" +
-                                                                                                        "<!-- CONTENIDO 3 -->" +
-                                                                                                        "<tr>" +
-                                                                                                            "<td class='innerpadding borderbottom'>" +
-                                                                                                            "	Este correo ha sido generado en automático por el sistema" +
-                                                                                                            "	llaos 2.0, no responda al mismo ya que no tendrá respuesta" +
-                                                                                                            "	alguna, si usted no es un usuario que autoriza Requisiciones" +
-                                                                                                            "	favor de reportar el insidente al departamento de sistemas." +
-                                                                                                            "<br>" +
-                                                                                                            "<br>" +
-                                                                                                            "	Cualquier problema con el sistema" +
-                                                                                                            "	favor de reportar al Departamento de Sistemas." +
-                                                                                                            "</td>" +
-                                                                                                        "</tr>" +
-                                                                                                        "<!-- FOOTER -->" +
-                                                                                                        "<tr>" +
-                                                                                                            "<td class='footer' bgcolor='#44525f'>" +
-                                                                                                                "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
-                                                                                                                    "<tr>" +
-                                                                                                                        "<td align='center' class='footercopy'>" +
-                                                                                                                        "	&reg; Llaos Acuacultura S.A. de C.V. " + new Date().getFullYear() + 
-                                                                                                                        "</td>" +
-                                                                                                                    "</tr>" +
-                                                                                                                "</table>" +
-                                                                                                            "</td>" +
-                                                                                                        "</tr>" +
-                                                                                                    "</table>" +
-                                                                                                    "<!--[if (gte mso 9)|(IE)]>" +
-                                                                                                "</td>" +
-                                                                                            "</tr>" +
-                                                                                        "</table>" +
-                                                                                        "<![endif]-->" +
-                                                                                    "</td>" +
-                                                                                "</tr>" +
-                                                                            "</table>" +
-                                                                        "</body>" +
-                                                                    "</html>",
-                                                        attachments:[
-                                                            {
-                                                                fileName: 'mail.png',
-                                                                path: './public/imgs/mail.png',
-                                                                cid: 'unique@headerMail'
-                                                            }
-                                                        ]
-                                                    }
-                                        
-                                                    smtpTransport.sendMail(mailOptions, function(error,res){
-                                                        if(error){
-                                                            console.log(error);
-                                                        }else{
-                                                            console.log("Correo enviado!");
-                                                            respuesta.json(
+                                    if(producto != null){
+                                        if(producto.cantidad == NaN){
+                                            producto.cantidad = 0;
+                                        }
+                
+                                        var data = {
+                                            cantidad: parseFloat(producto.cantidad) + parseFloat(solicitud.body.articulos[i].cantidad),
+                                            //lugar: solicitud.body.lugar_almacen
+                                        }
+                
+                                        Productos.updateOne({"_id": producto.id}, data, (error) => {
+                                            if(error){
+                                                console.log(chalk.bgRed(error));
+                                            } else {
+                                                if(i == solicitud.body.articulos.length - 1){
+                                                    if(solicitud.body.articulos_fuera != undefined && solicitud.body.articulos_fuera.length > 0) {
+                                                        //console.log(solicitud.body.articulos_fuera);
+                                                        
+                                                        var contenidoTabla = "";
+        
+                                                        solicitud.body.articulos_fuera.forEach( (af) => {
+                                                            contenidoTabla += "<tr>" + 
+                                                                    "<td>" +  parseFloat(af.cantidad).toFixed(3) + "</td>" +
+                                                                    "<td>" +  af.unidad + "</td>" +
+                                                                    "<td>" +  af.codigo + "</td>" +
+                                                                    "<td>" +  af.descripcion + "</td>" +
+                                                                    "<td>" +  af.orden.serie + "</td>" +
+                                                            "</tr>" 
+                                                        });
+                                            
+                                                        var mailOptions = {
+                                                            from: 'Llaos Sist 1.0 <sistema@llaos.com>',
+                                                            //to: 'flopez@llaos.com',
+                                                            to: 'jcuamea@llaos.com',
+                                                            cc: 'davilar@llaos.com',
+                                                            bcc: 'flopez@llaos.com',
+                                                            subject: 'Artículos no encontrados en orden en ruta ' + solicitud.body.serie,
+                                                            html: "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>"+
+                                                                        "<html xmlns='http://www.w3.org/1999/xhtml'>" +
+                                                                            "<head>" +
+                                                                                "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />" +
+                                                                                "<title>Requisiciones LLaos 2.0</title>" +
+                                                                                "<style type='text/css'>" +
+                                                                                    "body {margin: 0; padding: 0; min-width: 100%!important;}" +
+                                                                                    ".content {width: 100%; max-width: 600px;}" +
+                                                                                    "@media only screen and (min-device-width: 601px) {" +
+                                                                                    "	.content {width: 600px !important;}" +
+                                                                                    "	.header {padding: 40px 30px 20px 30px;}" +
+                                                                                    "}" +
+                                                                                    "@media only screen and (min-device-width: 601px) {" +
+                                                                                    "	.content {width: 600px !important;}" +
+                                                                                    "	.col425 {width: 425px!important;}" +
+                                                                                    "	.col380 {width: 380px!important;}" +
+                                                                                    "}" +
+                                                                                    "@media only screen and (max-width: 550px), screen and (max-device-width: 550px) {" +
+                                                                                    "	body[yahoo] .buttonwrapper {background-color: transparent!important;}" +
+                                                                                    "	body[yahoo] .button a {background-color: #e05443; padding: 15px 15px 13px!important; display: block!important;}" +
+                                                                                    "}" +
+                                                                                    ".col425 {width: 425px!important;}" +
+                                                                                    ".subhead {font-size: 15px; color: #ffffff; font-family: sans-serif; letter-spacing: 10px;}" +
+                                                                                    ".h1 {font-size: 33px; line-height: 38px; font-weight: bold;}" +
+                                                                                    ".h1, .h2, .bodycopy {color: #153643; font-family: sans-serif;}" +
+                                                                                    ".innerpadding {padding: 30px 30px 30px 30px; text-align: justify;}" +
+                                                                                    ".borderbottom {border-bottom: 1px solid #f2eeed; text-align: justify;}" +
+                                                                                    ".h2 {padding: 0 0 15px 0; font-size: 24px; line-height: 28px; font-weight: bold;}" +
+                                                                                    ".bodycopy {font-size: 16px; line-height: 22px;  text-align: justify;}" +
+                                                                                    ".button {text-align: center; font-size: 18px; font-family: sans-serif; font-weight: bold; padding: 0 30px 0 30px;}" +
+                                                                                    ".button a {color: #ffffff; text-decoration: none;}" +
+                                                                                    ".footer {padding: 20px 30px 15px 30px;}" +
+                                                                                    ".footercopy {font-family: sans-serif; font-size: 14px; color: #ffffff;}" +
+                                                                                    ".footercopy a {color: #ffffff; text-decoration: underline;}" +
+                                                                                "</style>" +
+                                                                            "</head>" +
+                                                                            "<body yahoo bgcolor='#f6f8f1'>" +
+                                                                                "<table width='100%' bgcolor='#f6f8f1' border='0' cellpadding='0' cellspacing='0'>" +
+                                                                                    "<tr>" +
+                                                                                        "<td>" +
+                                                                                            "<!--[if (gte mso 9)|(IE)]>" +
+                                                                                            "<table width='600' align='center' cellpadding='0' cellspacing='0' border='0'>" +
+                                                                                                "<tr>" +
+                                                                                                    "<td>" +
+                                                                                                        "<![endif]-->" +
+                                                                                                        "<table class='content' align='center' cellpadding='0' cellspacing='0' border='0'>" +
+                                                                                                            "<!-- HEADER -->" +
+                                                                                                            "<tr>" +
+                                                                                                                "<td class='header' bgcolor='#c7d8a7'>" +
+                                                                                                                    "<table width='70' align='left' border='0' cellpadding='0' cellspacing='0'>" +
+                                                                                                                        "<tr>" +
+                                                                                                                            "<td height='70' style='padding: 0 20px 20px 0;'>" +
+                                                                                                                                "<img src='cid:unique@headerMail' width='70' height='70' border='0' alt='' / >" +
+                                                                                                                            "</td>" +
+                                                                                                                        "</tr>" +
+                                                                                                                    "</table>" +
+                                                                                                                    "<!--[if (gte mso 9)|(IE)]>" +
+                                                                                                                    "<table width='425' align='left' cellpadding='0' cellspacing='0' border='0'>" +
+                                                                                                                        "<tr>" +
+                                                                                                                            "<td>" +
+                                                                                                                            "<![endif]-->" +
+                                                                                                                                "<table class='col425' align='left' border='0' cellpadding='0' cellspacing='0' style='width: 100%; max-width: 425px;'>" +
+                                                                                                                                    "<tr>" +
+                                                                                                                                        "<td height='70'>" +
+                                                                                                                                            "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
+                                                                                                                                                "<tr>" +
+                                                                                                                                                    "<td class='subhead' style='padding: 0 0 0 3px;'>" +
+                                                                                                                                                    "	LLAOS 2.0" +
+                                                                                                                                                    "</td>" +
+                                                                                                                                                "</tr>" +
+                                                                                                                                                "<tr>" +
+                                                                                                                                                    "<td class='h1' style='padding: 5px 0 0 0;'>" +
+                                                                                                                                                    "	Ordenes en Ruta" +
+                                                                                                                                                    "</td>" +
+                                                                                                                                                "</tr>" +
+                                                                                                                                            "</table>" +
+                                                                                                                                        "</td>" +
+                                                                                                                                    "</tr>" +
+                                                                                                                                "</table>" + 
+                                                                                                                            "<!--[if (gte mso 9)|(IE)]>" +
+                                                                                                                            "</td>" +
+                                                                                                                        "</tr>" +
+                                                                                                                    "</table>" +
+                                                                                                                    "<![endif]-->" +
+                                                                                                                "</td>" +
+                                                                                                            "</tr>" +
+                                                                                                            "<!-- CONTENIDO 1 -->" +
+                                                                                                            "<tr>" +
+                                                                                                                "<td class='innerpadding borderbottom'>" +
+                                                                                                                    "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
+                                                                                                                        "<tr>" +
+                                                                                                                            "<td class='h2'>" +
+                                                                                                                            "	Estimado Usuario:" +
+                                                                                                                            "</td>" +
+                                                                                                                        "</tr>" +
+                                                                                                                        "<tr>" +
+                                                                                                                            "<td class='bodycopy'>" +
+                                                                                                                            "   El área de almacen en Granja realizó la entrada de los artículos enviados en la orden en ruta " + solicitud.body.serie + ", " + 
+                                                                                                                            "   encontrando inconsistencias en la misma ya que los siguientes artículos no venían dentro de la unidad." +
+                                                                                                                            "</td>" +
+                                                                                                                        "</tr>" +
+                                                                                                                    "</table>" +
+                                                                                                                "</td>" +
+                                                                                                            "</tr>" +
+                                                                                                            "<tr>" +
+                                                                                                                "<td class='innerpadding borderbottom'>" +
+                                                                                                                    "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
+                                                                                                                        "<tr>" +
+                                                                                                                            "<th> Cantidad </th>" +
+                                                                                                                            "<th> Unidad </th>" +
+                                                                                                                            "<th> Código </th>" +
+                                                                                                                            "<th> Descripción </th>" +
+                                                                                                                            "<th> Orden </th>" +
+                                                                                                                        "</tr>" +
+                                                                                                                        contenidoTabla +
+                                                                                                                    "</table>" +
+                                                                                                                "</td>" +
+                                                                                                            "</tr>" +
+                                                                                                            "<!-- CONTENIDO 3 -->" +
+                                                                                                            "<tr>" +
+                                                                                                                "<td class='innerpadding borderbottom'>" +
+                                                                                                                "	Este correo ha sido generado en automático por el sistema" +
+                                                                                                                "	llaos 2.0, no responda al mismo ya que no tendrá respuesta" +
+                                                                                                                "	alguna, si usted no es un usuario que autoriza Requisiciones" +
+                                                                                                                "	favor de reportar el insidente al departamento de sistemas." +
+                                                                                                                "<br>" +
+                                                                                                                "<br>" +
+                                                                                                                "	Cualquier problema con el sistema" +
+                                                                                                                "	favor de reportar al Departamento de Sistemas." +
+                                                                                                                "</td>" +
+                                                                                                            "</tr>" +
+                                                                                                            "<!-- FOOTER -->" +
+                                                                                                            "<tr>" +
+                                                                                                                "<td class='footer' bgcolor='#44525f'>" +
+                                                                                                                    "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
+                                                                                                                        "<tr>" +
+                                                                                                                            "<td align='center' class='footercopy'>" +
+                                                                                                                            "	&reg; Llaos Acuacultura S.A. de C.V. " + new Date().getFullYear() + 
+                                                                                                                            "</td>" +
+                                                                                                                        "</tr>" +
+                                                                                                                    "</table>" +
+                                                                                                                "</td>" +
+                                                                                                            "</tr>" +
+                                                                                                        "</table>" +
+                                                                                                        "<!--[if (gte mso 9)|(IE)]>" +
+                                                                                                    "</td>" +
+                                                                                                "</tr>" +
+                                                                                            "</table>" +
+                                                                                            "<![endif]-->" +
+                                                                                        "</td>" +
+                                                                                    "</tr>" +
+                                                                                "</table>" +
+                                                                            "</body>" +
+                                                                        "</html>",
+                                                            attachments:[
                                                                 {
-                                                                    estatus: 'En Inventario'
+                                                                    fileName: 'mail.png',
+                                                                    path: './public/imgs/mail.png',
+                                                                    cid: 'unique@headerMail'
                                                                 }
-                                                            );
+                                                            ]
                                                         }
-                                                        smtpTransport.close();
-                                                    });
-                                                } else {
-                                                    respuesta.json(
-                                                        {
-                                                            estatus: 'En Inventario'
-                                                        }
-                                                    );
+                                            
+                                                        smtpTransport.sendMail(mailOptions, function(error,res){
+                                                            if(error){
+                                                                console.log(error);
+                                                            }else{
+                                                                console.log("Correo enviado!");
+                                                                respuesta.json(
+                                                                    {
+                                                                        estatus: 'En Inventario'
+                                                                    }
+                                                                );
+                                                            }
+                                                            smtpTransport.close();
+                                                        });
+                                                    } else {
+                                                        respuesta.json(
+                                                            {
+                                                                estatus: 'En Inventario'
+                                                            }
+                                                        );
+                                                    }
                                                 }
                                             }
-                                        }
-                                    });
+                                        });
+                                    } else {
+                                        console.log("Articulo: " + solicitud.body.articulos[i].descripcion + " i: " + i + " tamaño: " + solicitud.body.articulos.length);
+                                    }
                                 }
                             });
                         }
@@ -4431,5 +3999,393 @@ module.exports = {
                 }
             });                   
         }
-    }
+    },
+    obtenerOrdenesCompra: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{ 
+            Ordenes.find({"unidad_negocio": { $exists: true}}, (error, orders) => {
+                if(error) {
+                    console.log(chalk.bgRed(error));
+                } else {
+                    Proveedores.populate(orders, {path: 'proveedor'}, (error, orders) => {
+                        if(error) {
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            UnidadesNegocio.populate(orders, {path: 'unidad_negocio'}, (error, orders) => {
+                                if(error) {
+                                    console.log(chalk.bgRed(error));
+                                } else {
+                                    respuesta.json(orders);
+                                }
+                            });
+                        }
+                    });
+                }
+            }).sort({fecha: -1});
+        }
+    },
+    agregarArticulosOrdenRuta: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{
+            ArticulosOrdenes.find({"orden": solicitud.params.id_orden}, (error, articulos) => {
+                if(error) {
+                    console.log(chalk.bgRed(error));
+                } else {
+                    Ordenes.populate(articulos, {path: 'orden'}, (error,articulos) => {
+                        if(error) {
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            respuesta.json(articulos);
+                        }
+                    });
+                }
+            });
+        }
+    },    
+    generarOrdenRuta: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{//Agregar try-catch
+            var ordenRuta = new OrdenesRuta(solicitud.body);
+
+            ordenRuta.save((error, ord) => {
+                if(error) {
+                    console.log(chalk.bgRed(error));
+                } else {
+                    respuesta.json({
+                        estatus: 'Generada',
+                        url: generarPDF(solicitud.body.codigo, solicitud.body.articulos, solicitud.body.total),
+                        id_orden: ord._id
+                    });
+                }
+            });
+
+        };
+    },
+    enviarOrdenRuta: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{//Agregar try-catch
+            var mailOptions = {
+                from: 'Llaos Sist 2.0 <sistema@llaos.com>',
+                to: 'flopez@llaos.com',
+                //to: 'davilar@llaos.com',
+                //cc: 'jcuamea@llaos.com',
+                //bcc: 'flopez@llaos.com',
+                subject: 'Ordenes en Ruta ' + solicitud.body.codigo,
+                html: "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>"+
+                            "<html xmlns='http://www.w3.org/1999/xhtml'>" +
+                                "<head>" +
+                                    "<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />" +
+                                    "<title>Requisiciones LLaos 2.0</title>" +
+                                    "<style type='text/css'>" +
+                                        "body {margin: 0; padding: 0; min-width: 100%!important;}" +
+                                        ".content {width: 100%; max-width: 600px;}" +
+                                        "@media only screen and (min-device-width: 601px) {" +
+                                        "	.content {width: 600px !important;}" +
+                                        "	.header {padding: 40px 30px 20px 30px;}" +
+                                        "}" +
+                                        "@media only screen and (min-device-width: 601px) {" +
+                                        "	.content {width: 600px !important;}" +
+                                        "	.col425 {width: 425px!important;}" +
+                                        "	.col380 {width: 380px!important;}" +
+                                        "}" +
+                                        "@media only screen and (max-width: 550px), screen and (max-device-width: 550px) {" +
+                                        "	body[yahoo] .buttonwrapper {background-color: transparent!important;}" +
+                                        "	body[yahoo] .button a {background-color: #e05443; padding: 15px 15px 13px!important; display: block!important;}" +
+                                        "}" +
+                                        ".col425 {width: 425px!important;}" +
+                                        ".subhead {font-size: 15px; color: #ffffff; font-family: sans-serif; letter-spacing: 10px;}" +
+                                        ".h1 {font-size: 33px; line-height: 38px; font-weight: bold;}" +
+                                        ".h1, .h2, .bodycopy {color: #153643; font-family: sans-serif;}" +
+                                        ".innerpadding {padding: 30px 30px 30px 30px; text-align: justify;}" +
+                                        ".borderbottom {border-bottom: 1px solid #f2eeed; text-align: justify;}" +
+                                        ".h2 {padding: 0 0 15px 0; font-size: 24px; line-height: 28px; font-weight: bold;}" +
+                                        ".bodycopy {font-size: 16px; line-height: 22px;  text-align: justify;}" +
+                                        ".button {text-align: center; font-size: 18px; font-family: sans-serif; font-weight: bold; padding: 0 30px 0 30px;}" +
+                                        ".button a {color: #ffffff; text-decoration: none;}" +
+                                        ".footer {padding: 20px 30px 15px 30px;}" +
+                                        ".footercopy {font-family: sans-serif; font-size: 14px; color: #ffffff;}" +
+                                        ".footercopy a {color: #ffffff; text-decoration: underline;}" +
+                                    "</style>" +
+                                "</head>" +
+                                "<body yahoo bgcolor='#f6f8f1'>" +
+                                    "<table width='100%' bgcolor='#f6f8f1' border='0' cellpadding='0' cellspacing='0'>" +
+                                        "<tr>" +
+                                            "<td>" +
+                                                "<!--[if (gte mso 9)|(IE)]>" +
+                                                "<table width='600' align='center' cellpadding='0' cellspacing='0' border='0'>" +
+                                                    "<tr>" +
+                                                        "<td>" +
+                                                            "<![endif]-->" +
+                                                            "<table class='content' align='center' cellpadding='0' cellspacing='0' border='0'>" +
+                                                                "<!-- HEADER -->" +
+                                                                "<tr>" +
+                                                                    "<td class='header' bgcolor='#c7d8a7'>" +
+                                                                        "<table width='70' align='left' border='0' cellpadding='0' cellspacing='0'>" +
+                                                                            "<tr>" +
+                                                                                "<td height='70' style='padding: 0 20px 20px 0;'>" +
+                                                                                    "<img src='cid:unique@headerMail' width='70' height='70' border='0' alt='' / >" +
+                                                                                "</td>" +
+                                                                            "</tr>" +
+                                                                        "</table>" +
+                                                                        "<!--[if (gte mso 9)|(IE)]>" +
+                                                                        "<table width='425' align='left' cellpadding='0' cellspacing='0' border='0'>" +
+                                                                            "<tr>" +
+                                                                                "<td>" +
+                                                                                "<![endif]-->" +
+                                                                                    "<table class='col425' align='left' border='0' cellpadding='0' cellspacing='0' style='width: 100%; max-width: 425px;'>" +
+                                                                                        "<tr>" +
+                                                                                            "<td height='70'>" +
+                                                                                                "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
+                                                                                                    "<tr>" +
+                                                                                                        "<td class='subhead' style='padding: 0 0 0 3px;'>" +
+                                                                                                        "	LLAOS 2.0" +
+                                                                                                        "</td>" +
+                                                                                                    "</tr>" +
+                                                                                                    "<tr>" +
+                                                                                                        "<td class='h1' style='padding: 5px 0 0 0;'>" +
+                                                                                                        "	Ordenes en Ruta" +
+                                                                                                        "</td>" +
+                                                                                                    "</tr>" +
+                                                                                                "</table>" +
+                                                                                            "</td>" +
+                                                                                        "</tr>" +
+                                                                                    "</table>" + 
+                                                                                "<!--[if (gte mso 9)|(IE)]>" +
+                                                                                "</td>" +
+                                                                            "</tr>" +
+                                                                        "</table>" +
+                                                                        "<![endif]-->" +
+                                                                    "</td>" +
+                                                                "</tr>" +
+                                                                "<!-- CONTENIDO 1 -->" +
+                                                                "<tr>" +
+                                                                    "<td class='innerpadding borderbottom'>" +
+                                                                        "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
+                                                                            "<tr>" +
+                                                                                "<td class='h2'>" +
+                                                                                "	Estimado Usuario:" +
+                                                                                "</td>" +
+                                                                            "</tr>" +
+                                                                            "<tr>" +
+                                                                                "<td class='bodycopy'>" +
+                                                                                "   El Departamento de Logística en conjunto con el Departamento de Compras ha enviado a granja " + 
+                                                                                "   la unidad <strong>" + solicitud.body.unidad + "</strong> la cual es manejada por el operador <strong>" + solicitud.body.chofer + "</strong> la unidad " +
+                                                                                "   estará en un aproximado de <strong> 1:30 hrs </strong> en su destino, favor de tener todo preparado para su recibimiento."  +
+                                                                                "</td>" +
+                                                                            "</tr>" +
+                                                                        "</table>" +
+                                                                    "</td>" +
+                                                                "</tr>" +
+                                                                "<!-- CONTENIDO 3 -->" +
+                                                                "<tr>" +
+                                                                    "<td class='innerpadding borderbottom'>" +
+                                                                    "	Este correo ha sido generado en automático por el sistema" +
+                                                                    "	llaos 2.0, no responda al mismo ya que no tendrá respuesta" +
+                                                                    "	alguna, si usted no es un usuario que autoriza Requisiciones" +
+                                                                    "	favor de reportar el insidente al departamento de sistemas." +
+                                                                    "<br>" +
+                                                                    "<br>" +
+                                                                    "	Cualquier problema para abrir la requisición o el sistema" +
+                                                                    "	favor de reportar al Departamento de Sistemas." +
+                                                                    "</td>" +
+                                                                "</tr>" +
+                                                                "<!-- FOOTER -->" +
+                                                                "<tr>" +
+                                                                    "<td class='footer' bgcolor='#44525f'>" +
+                                                                        "<table width='100%' border='0' cellspacing='0' cellpadding='0'>" +
+                                                                            "<tr>" +
+                                                                                "<td align='center' class='footercopy'>" +
+                                                                                "	&reg; Llaos Acuacultura S.A. de C.V. " + new Date().getFullYear() + 
+                                                                                "</td>" +
+                                                                            "</tr>" +
+                                                                        "</table>" +
+                                                                    "</td>" +
+                                                                "</tr>" +
+                                                            "</table>" +
+                                                            "<!--[if (gte mso 9)|(IE)]>" +
+                                                        "</td>" +
+                                                    "</tr>" +
+                                                "</table>" +
+                                                "<![endif]-->" +
+                                            "</td>" +
+                                        "</tr>" +
+                                    "</table>" +
+                                "</body>" +
+                            "</html>",
+                attachments:[
+                    {
+                        fileName: 'mail.png',
+                        path: './public/imgs/mail.png',
+                        cid: 'unique@headerMail'
+                    },
+                    {
+                        fileName: solicitud.body.codigo + '.pdf',
+                        path: './files/ordenRuta' + solicitud.body.codigo + '.pdf',
+                        cid: 'unique@pdf'
+                    },
+                ]
+            }
+
+            smtpTransport.sendMail(mailOptions, function(error){
+                if(error){
+                    console.log(error);
+                }else{
+                    var updSta = {
+                        estatus: 'En Ruta'
+                    }
+
+                    OrdenesRuta.updateOne({"_id": solicitud.body.id_orden}, updSta, (error) => {
+                        if(error){
+                            console.log(error);
+                        } else {
+                            Usuarios.find( function(error, usuarios){
+                                if(error){
+                                    console.log(error);
+                                } else { 
+                                    respuesta.json({
+                                        estatus: "En Ruta"
+                                    })
+                                }
+                            });
+                        }
+                    });
+                                                
+                    console.log("Correo enviado!");
+                }
+                smtpTransport.close();
+            });
+        };
+    },
+}
+
+
+function generarPDF(folio, articulos, total_cant){
+     // Crear el documento
+     doc = new pdf({
+        // Establecer tamaño de hoja
+        size: 'letter',
+        layout: 'landscape'
+    });
+
+    // Logo empresa
+    doc.image('./public/imgs/logo.png', 5, 40,{width: 200})
+    
+    // Nombre empresa y rfc
+    doc.font('fonts/Roboto-Black.ttf')
+    .fontSize(14)
+    .text('LLAOS ACUACULTURA S.A. de C.V.', 480, 40, { align: 'right', width: 290 })
+    .text('LISTADO DE ENVIO DE PRODUCTOS', { align: 'right', width: 290 })
+    .text('Folio: ' + folio, { align: 'right', width: 290 })
+
+    // Nombre formato, fecha y hora de creación
+    doc.font('fonts/Roboto-Regular.ttf')
+    .fontSize(14)
+    .text("Fecha: "+ FechaHora.obtenerfecha() + " - Hora: " + FechaHora.obtenerhora(),{ align: 'right' , width: 290})
+                                                                                                    
+    // Encabezados tabla
+    doc.lineWidth(25)
+    doc.lineCap('butt')
+    .fillColor("blue")
+    .moveTo(15, 150)
+    .lineTo(780, 150)
+    .stroke()
+
+    doc.fontSize(10)
+    .fill('white')
+    .text("Cant", 17, 140, {align: 'center', width: 45})
+    .text("Unidad", 49, 140,  {align: 'center', width: 70})
+    .text("Descripción",69, 140, {align: 'center', width: 250})
+    .text("Orden",319, 140, {align: 'center', width: 100})
+    .text("Requisición",304, 140, {align: 'center', width: 380})
+    .text("Fecha",709, 140, {align: 'center', width: 80})
+
+    // Llenado de tabla
+    var y = 155;
+    var total = 0;
+
+    articulos.forEach( function(art) {
+        total = total + 1;
+        y += 10;
+
+        if (y > 525){
+            y = 165;
+
+            doc.addPage()
+
+            // Logo empresa
+            doc.image('./public/imgs/logo.png', 5, 40,{width: 200})
+            
+            // Nombre empresa y rfc
+            doc.font('fonts/Roboto-Black.ttf')
+            .fontSize(14)
+            .text('LLAOS ACUACULTURA S.A. de C.V.', 480, 40, { align: 'right', width: 290 })
+            .text('LISTADO DE ENVIO DE PRODUCTOS', { align: 'right', width: 290 })
+            .text("Folio: " + oRuta.codigo, { align: 'right', width: 290 }) 
+            
+            // Nombre formato, fecha y hora de creación
+            doc.font('fonts/Roboto-Regular.ttf')
+            .fontSize(14)
+            .text("Fecha: "+ FechaHora.obtenerfecha() + " - Hora: " + FechaHora.obtenerhora(),{ align: 'right' , width: 290})
+            
+            // Encabezados tabla
+            doc.lineWidth(25)
+            doc.lineCap('butt')
+            .fillColor("blue")
+            .moveTo(15, 150)
+            .lineTo(780, 150)
+            .stroke()
+        
+            doc.fontSize(10)
+            .fill('white')
+            .text("Cant", 17, 140, {align: 'center', width: 45})
+            .text("Unidad", 49, 140,  {align: 'center', width: 70})
+            .text("Descripción",69, 140, {align: 'center', width: 250})
+            .text("Orden",319, 140, {align: 'center', width: 100})
+            .text("Requisición",304, 140, {align: 'center', width: 380})
+            .text("Fecha",709, 140, {align: 'center', width: 80})
+        }
+            doc.fillColor('black')
+            .text(parseFloat(art.cantidad).toFixed(2), 10, y, {align: 'center', width: 45})
+            .text(art.unidad, 49, y,  {align: 'center', height: 15, width: 70})
+            .text(art.descripcion, 124, y, {align: 'left', height: 15, width: 300})
+            .text(art.orden.serie, 295, y, {align: 'center', width: 150})
+            .text(art.orden.comentarios, 414, y, {height: 15, width: 300})
+            .text(FechaHora.obtenerfecha(), 709, y, {align: 'center', width: 80})
+    });
+                    
+    // División productos y totales
+    doc.lineWidth(2)
+    doc.lineCap('butt')
+    .moveTo(15, y + 15)
+    .lineTo(780, y + 15)
+    .stroke()
+    
+    // Conciciones / Observaciones / Comentarios
+    doc.font('fonts/Roboto-Black.ttf')
+    .text("No. artículos enviados: " + total, 15, y + 15, { align: 'left', width: 400 })
+    .text("Total: " + fmon.FormatMoney(true, parseFloat(total_cant)), 480, y + 15, { align: 'right', width: 290 })
+
+    // Creación del documento y guardado
+
+    var nombre_archivo = './files/';
+    var nombre_pdf = 'ordenRuta' + folio+ '.pdf';
+
+    //console.log(nombre_archivo);
+
+    doc.pipe(fs.createWriteStream(nombre_archivo+nombre_pdf)).on('finish', function (error){
+        if(error){
+            console.log(error);
+        } else {
+            console.log("PDF closed");
+        }
+    });     
+
+    // Finalize PDF file
+    doc.end();
+
+    return nombre_pdf;
 }

@@ -179,15 +179,23 @@ module.exports = function(app){
     ordenesRouter.get('/orden/cerrar/:id', ordenes.cerrarOrden);
     ordenesRouter.get('/enruta', ordenes.ordenesEnRuta);
     ordenesRouter.post('/agregar/enruta/:id', ordenes.agregarOrdenEnRuta);
-    ordenesRouter.get('/pdf/ordenruta/:id', ordenes.pdfOrdenRuta);
-    ordenesRouter.get('/enviar/ordenruta/:id', ordenes.enviarOrdenRuta);
+    
+    
     ordenesRouter.get('/articuloruta/eliminar/:id/:id_oRuta', ordenes.eliminarArticuloOrdenRuta);
-    ordenesRouter.get('/ordenesruta', ordenes.ordenesEnRutaBandeja);
+    
     ordenesRouter.get('/ordenruta/ver/:id', ordenes.ordenRutaDetalles);
     ordenesRouter.get('/ordenruta/entrada/:id', ordenes.ordenRutaEntrada);
     ordenesRouter.get('/ordenruta/cerrar/:id', ordenes.cerrarOrdenRuta);
     ordenesRouter.post('/ordenruta/inventario', ordenes.entradaOrdenRuta);
     ordenesRouter.get('/ordenruta/articulos/:id', ordenes.articulosOrdenRuta);
+
+    // REVISAR TODO LO QUE SE VA A ELIMINAR DE ARRIBA
+    ordenesRouter.get('/ordenesruta', ordenes.ordenesEnRutaBandeja);
+    ordenesRouter.get('/ordenruta/ordenes', ordenes.obtenerOrdenesCompra);
+    ordenesRouter.get('/ordenruta/articulos/orden/:id_orden', ordenes.agregarArticulosOrdenRuta);
+    ordenesRouter.post('/ordenruta/generar', ordenes.generarOrdenRuta);
+    ordenesRouter.post('/ordenruta/enviar', ordenes.enviarOrdenRuta);
+
     //ordenesRouter.post('/report/pdf', ordenes.pdf);
     //ordenesRouter.post('/report/xls', ordenes.xls);
 
