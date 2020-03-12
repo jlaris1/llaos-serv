@@ -234,6 +234,8 @@ block contenido
             }, (data) => {
                 //console.log(data);
                 $('#span_estatus').text(data.estatus);
+
+                limpiarDatos();
                 
                 // Mostrar notificación de guardado correcto 
                 $('#alert').removeClass('alert-warning');
@@ -258,6 +260,21 @@ block contenido
             parametros.forEach( n => {
                 n.fecha = $('#fecha_new').val();
             });
+        }
+
+        function limpiarDatos() {
+            obtenerFecha();
+            obtenerHora();
+
+            cambiar_tiempo = true;
+            cambiar_fecha = false;
+
+            var today = new Date();
+            document.getElementById("fecha_new").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+        
+            $("#lista_parametros").empty();
+
+            mostrarPiscinas();
         }
 
     // Inputs funcionamiento
