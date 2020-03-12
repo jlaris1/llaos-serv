@@ -432,7 +432,7 @@ module.exports = function(app){
     //nutricionRouter.get('/detail/:id', nutricion.detail);
     nutricionRouter.post('/find', nutricion.find);
     nutricionRouter.post('/report/pdf', nutricion.pdf);
-    //nutricionRouter.post('/report/xls', nutricion.xls);
+    nutricionRouter.post('/report/xls', nutricion.xls);
     nutricionRouter.post('/piscinas', nutricion.piscinas);
     nutricionRouter.post('/acumulado', nutricion.acumulado);
     nutricionRouter.get('/config', nutricion.config);

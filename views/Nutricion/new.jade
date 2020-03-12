@@ -433,6 +433,8 @@ block contenido
 
         function asignarFecha(){
             cambiar_fecha = true;
+            var fecha = $('#fecha_new').val().split("-");
+            $('#fecha').text(fecha[2]+"/"+fecha[1]+"/"+fecha[0] + " - ");
 
             nutricion.forEach( n => {
                 n.fecha = $('#fecha_new').val();
@@ -553,14 +555,14 @@ block contenido
                     .col-lg-12
                         i.fa.fas.fa-sync-alt(style="margin-right: 15px;")
                         label 
-                            strong Seleccionar tiempo
+                            strong Seleccionar fecha
                 .modal-body()
                     .card
                         .card-body
                             .row
                                 .col-lg-12
                                     .form-group
-                                        label | Tiempo
+                                        label | Fecha
                                         .input-group
                                             span.input-group-addon.blue-gradient
                                                 i.fas.fa-calendar(style="color: #fff;")

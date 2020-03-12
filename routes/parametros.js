@@ -605,7 +605,7 @@ module.exports = {
                                                 console.log(chalk.bgRed(error));
                                             } else {                                                                                      
                                                 parametros.forEach( function(p){
-                                                    search = p.estanque.nombre;
+                                                    search = p.estanque.codigo;
                                                     modulo = p.estanque.modulo.codigo;
                                                 });
                                                 
@@ -722,7 +722,6 @@ module.exports = {
                                 console.log(chalk.bgRed(error));
                                 respuesta.sendStatus(501);
                             } else {             
-                                
                                 // Un día menos del que quieran el reporte y un día más
                                 Parametros.find(
                                     { $and: [
@@ -730,10 +729,7 @@ module.exports = {
                                         { fecha: {
                                             $gte: solicitud.body.fechaInicio,
                                             $lte: solicitud.body.fechaFin
-                                        }},
-                                        { salinidad: { $ne: "" }},
-                                        { nivel_agua: { $ne: "" }},
-                                        { turbidez: { $ne: "" }}
+                                        }}
                                     ]
                                 }, (error, parametros) => {
                                     if(error){
@@ -744,6 +740,7 @@ module.exports = {
                                             if(error){
                                                 console.log(chalk.bgRed(error));
                                             } else {
+                                                console.log(parametros);
                                                 title = 'Modulo ' + solicitud.body.modulo;
                                                 xls_name = 'reporte_concetrado_modulo_' + solicitud.body.modulo + '.xlsx';
                                                 
@@ -1367,22 +1364,6 @@ function generateConcentradoXLS(data, title, xls_name, fecha_ini, fecha_fin){
         j_am += 1;
         g_am += 1;
     
-        /**
-         * salinidad: '25',
-            nivel_agua: '125',
-            fecha: 2020-02-24T07:00:00.000Z,
-            turbidez: '25',
-            anio: '2020',
-            _id: 5e541077e5669157d46dc3ed,
-            estanque: 5cae39fb6865d612ecabb09d,
-            temperatura: '24.5',
-            oxigeno: '2',
-            ph: '7',
-            hora: '11:05:05',
-            tiempo: '',
-            parametrista: 5ad7c044eea0fd1424fdfd97
-         */
-
         // EVALUAR QUE EL QUE SIGUE SEA PM Y SEAN DEL MISMO ESTANQUE
         if(data[i+1] != null){
             if(data[i+1].tiempo == 'PM' && (data[i+1].codigo == data[i].codigo)){

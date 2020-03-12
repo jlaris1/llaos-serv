@@ -252,6 +252,9 @@ block contenido
         function asignarFecha(){
             cambiar_fecha = true;
 
+            var fecha = $('#fecha_new').val().split("-");
+            $('#fecha').text(fecha[2]+"/"+fecha[1]+"/"+fecha[0] + " - ");
+
             parametros.forEach( n => {
                 n.fecha = $('#fecha_new').val();
             });
