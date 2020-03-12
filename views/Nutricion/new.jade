@@ -331,6 +331,7 @@ block contenido
             }, (data) => {
                 //console.log(data);
                 $('#span_estatus').text(data.estatus);
+                $('#guardar').addClass('disabled');
 
                 limpiarDatos();
                 
@@ -341,7 +342,7 @@ block contenido
                 $('#msg1').text('Se ha realizado con ');
                 $('#msg2').text('el registro de parámetros');
                 $('#msg_alert').text('éxito ');
-                $('#guardar').addClass('disabled');
+                
             }, "json");
 
             $('#loader').addClass('hidden');
@@ -454,7 +455,8 @@ block contenido
             document.getElementById("fecha_new").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
         
             $("#lista_nutricion").empty();
-
+            $('#guardar').removeClass('disabled');
+            
             mostrarPiscinas();
         }
 
