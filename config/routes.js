@@ -397,6 +397,7 @@ module.exports = function(app){
     //estanqueRouter.post('/report/pdf', estanque.pdf);
     //estanqueRouter.post('/report/xls', estanque.xls);
     estanqueRouter.get('/indicators', estanque.indicators);
+    estanqueRouter.post('/indicators/piscinas', estanque.piscinas);
     
 
     // Parametros
@@ -451,6 +452,7 @@ module.exports = function(app){
     unidadRouter.get('/camioneta/all', unidad.allC);
     unidadRouter.get('/camioneta/new', unidad.newC);
     unidadRouter.post('/tractor/add', unidad.addS);
+    unidadRouter.post('/camioneta/add', unidad.addC);
     /*unidadRouter.get('/tractor/view/:id', unidad.viewT);
     unidadRouter.get('/tractor/delete/:id', unidad.deleteT);*/
 

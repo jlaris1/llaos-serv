@@ -92,8 +92,8 @@ block contenido
                         "   <td>" + articulos[i].unidad + "</td> " +
                         "   <td>" + articulos[i].codigo + "</td> " +
                         "   <td>" + articulos[i].descripcion + "</td> " +
-                        "   <td>" + articulos[i].orden.serie + "</td> " +
-                        "   <td>" + articulos[i].proveedor.nombreEmpresa + "</td> " +
+                        "   <td><strong>" + articulos[i].orden.serie + "</strong></td> " +
+                        "   <td><strong>" + articulos[i].id_producto.proveedor.nombreEmpresa + "</strong></td> " +
                         "</tr>")
                     }
 
@@ -324,12 +324,13 @@ block contenido
                             small Unidad: 
                             br
                             strong
-                                span.blue-text #{oRuta.unidad}
+                                span.blue-text #{oRuta.unidad.marca} - #{oRuta.unidad.modelo}
+                               
                         h5.h5-responsive
                             small Chofer: 
                             br
                             strong
-                                span #{oRuta.chofer}
+                                span #{oRuta.chofer.nombre}
                     .col-md-6.col-lg-6.col-xs-6.text-right
                         h4.h4-responsive
                             small Orden Ruta No.

@@ -233,7 +233,7 @@ module.exports = {
                                     }   
                                 ],
                                 ruta: "unidades",
-                                camioneta: camionetas
+                                camionetas: camionetas
                             });
                         }
                     });

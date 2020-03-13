@@ -34,6 +34,8 @@ block contenido
         var total = 0;
         var iva = 0;
         var subtotal= 0;
+        var unidad = "";
+        var chofer = "";
 
 
         $(document).ready( function(){
@@ -233,8 +235,8 @@ block contenido
             $.post( "/ordenes/ordenruta/generar", {
                 unidad_negocio: $('#lugar_unidad').val(),
                 envia: $('#id_user').val(),
-                chofer: $('#span_chofer').text(),
-                unidad: $('#span_unidad').text(),
+                chofer: chofer,
+                unidad: unidad,
                 fecha: Date,
                 hora: $("#hora").text(),
                 subtotal: subtotal,
@@ -285,6 +287,16 @@ block contenido
                 $('#msg_alert').text('éxito ');
             }, "json");
         }
+
+        function asignarUnidad(){
+            $('#span_unidad').text($("#unidad option:selected").html());
+            unidad = $('#unidad').val();
+        }
+        
+        function asignarChofer(){
+            $('#span_chofer').text($("#chofer option:selected").html());
+            chofer = $('#chofer').val();
+        }
     //Termina Javascript
     input#numero_orden(type="text" name="numero_orden" value="#{numeroOrden}").hidden
     input#id_user(value="#{user._id}").hidden
@@ -331,7 +343,7 @@ block contenido
                             br
                             strong
                                 span#span_unidad ########
-                            a(data-toggle="modal" href="unidadModal" style="margin-left: 10px;").btn.btn-primary.btn-small.blue-gradient
+                            a(data-toggle="modal" href="#unidadModal" style="margin-left: 10px;").btn.btn-primary.btn-small.blue-gradient
                                 i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Seleccionar almacén").fas.fa-2x.fa-sync-alt
                         h5.h5-responsive
                             small Chofer:
@@ -484,8 +496,65 @@ block contenido
                                 i.fa.fas.fa-times-circle()
                                 |   Cerrar
 
+    // Modal modificar unidad
+    #unidadModal(class="modal")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
+                    .col-lg-12
+                        i.fa.fas.fa-truck(style="margin-right: 15px;")
+                        label 
+                            strong Modificar unidad
+                .modal-body()
+                    .card
+                        .card-body
+                            .row
+                                .col-lg-12
+                                    .form-group
+                                        label | Unidad
+                                        .input-group
+                                            span.input-group-addon.blue-gradient
+                                                i.fas.fa-truck(style="color: #fff;")
+                                            select#unidad.form-control(name="unidad" onchange="asignarUnidad();")
+                                                    option(value=-1) << Seleccione >>
+                                                    each c in camionetas
+                                                        option(value="#{c._id}") #{c.marca} - #{c.modelo}
+                .modal-footer
+                    .text-right
+                        .btn-group
+                            a(data-dismiss="modal").btn.btn-default
+                                i.fa.fas.fa-times-circle()
+                                |   Cerrar
 
-    
+    // Modal modificar chofer
+    #choferModal(class="modal")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
+                    .col-lg-12
+                        i.fa.fas.fa-user(style="margin-right: 15px;")
+                        label 
+                            strong Modificar chofer
+                .modal-body()
+                    .card
+                        .card-body
+                            .row
+                                .col-lg-12
+                                    .form-group
+                                        label | Chofer
+                                        .input-group
+                                            span.input-group-addon.blue-gradient
+                                                i.fas.fa-user(style="color: #fff;")
+                                            select#chofer.form-control(name="chofer" onchange="asignarChofer()")
+                                                    option(value=-1) << Seleccione >>
+                                                    each u in usuarios
+                                                        option(value="#{u._id}") #{u.nombre}
+                .modal-footer
+                    .text-right
+                        .btn-group
+                            a(data-dismiss="modal").btn.btn-default
+                                i.fa.fas.fa-times-circle()
+                                |   Cerrar
     
     
     

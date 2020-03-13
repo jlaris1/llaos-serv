@@ -54,13 +54,17 @@ block contenido
                                     .d-flex
                                         a(href="/ordenes/ordenruta/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Ver detalles", style="margin-right: 5px; color: #FFF;").btn.btn-primary.btn-small
                                             i.fas.fa-eye.fa-2x
-                                        a(href="/ordenes/ordenruta/entrada/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Entrada  Inventarios", style="margin-right: 5px;").btn.btn-success.btn-small
+                                        - var disabled = false;
+                                        - if(ord.estatus == "En Inventario") { disabled = true; }
+                                        a#status(class=disabled ? 'disabled':'' href="/ordenes/ordenruta/entrada/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Entrada  Inventarios", style="margin-right: 5px;" disabled=disabled).btn.btn-success.btn-small
                                             i.fas.fa-sign-in-alt.fa-2x
-                                        a(href="/ordenes/orden/ordenruta/#{ord.id}}", data-toggle="tooltip", data-placement="top", title="Cerrar orden").btn.btn-danger.btn-small
+                                        - var disabled = true;
+                                        - if(ord.estatus == "En Inventario") { disabled = false; }
+                                        a#cerrar(class=disabled ? 'disabled':'' href="/ordenes/orden/ordenruta/#{ord.id}}", data-toggle="tooltip", data-placement="top", title="Cerrar orden" disabled=disabled).btn.btn-danger.btn-small
                                             i.fas.fa-lock.fa-2x                                            
                                 td.text-center ORD#{ord.codigo}
-                                td.text-center #{ord.unidad}
-                                td.text-center #{ord.chofer}
+                                td.text-center #{ord.unidad.marca} - #{ord.unidad.modelo}
+                                td.text-center #{ord.chofer.nombre}
                                 td
                                     if ord.estatus == "Nueva"
                                         label.label.label-primary &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{ord.estatus}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

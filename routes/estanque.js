@@ -864,5 +864,39 @@ module.exports = {
                 }
             });
         }
+    },
+    piscinas: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{
+            Estanques.find({"codigo": {$ne: "NLL"}}, (error, piscinas) => {
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    var markers = [];
+                    var location = [];
+                    var indicators = [];
+
+                    // recorrer las posicinas
+                    piscinas.forEach( piscina => {
+                        // Agregar los marcadores a una lista
+                        markers.push([piscina.marker_x, piscina.marker_y, piscina.codigo])
+
+                        // Recorrer las locaciones y agregarlas a una lista
+                        piscina.locations.forEach( l => {
+                            location.push([l.pointer[0].x, l.pointer[0].y])
+                        });
+
+
+                        indicators.push(location);
+                        location = [];
+                    });
+
+                    //console.log(markers);
+
+                    respuesta.json({indicators: indicators, markers: markers});
+                }
+            });
+        }
     }
 }
