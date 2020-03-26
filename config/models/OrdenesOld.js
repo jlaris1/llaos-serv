@@ -14,7 +14,9 @@ var ordenOldSchemaJSON = {
     comentarios: String,
     factura: String,
     tipoCambio: String,
-    incluyeIVA: Boolean
+    incluyeIVA: Boolean,
+    ano: String,
+    mes: String
 }
 
 var ordenOldSchema = new Schema(ordenOldSchemaJSON);

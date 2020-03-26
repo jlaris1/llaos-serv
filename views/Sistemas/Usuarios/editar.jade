@@ -14,6 +14,13 @@ block contenido
         var autorizador = false;
 
         $(document).ready( function(){
+            $('#spanMenuSistemas').removeClass('fa-angle-left');
+            $('#spanMenuSistemas').addClass('fa-angle-down');
+            $('#subMenuSistemas').removeClass('hidden');
+            $('#subMenuUsuarios').removeClass('hidden');
+            $('#spanMenuUsuarios').removeClass('fa-angle-left');
+            $('#spanMenuUsuarios').addClass('fa-angle-down'); 
+
             if($('#chk').text() == 'true'){
                 $('#chkAutorizar').prop('checked', true);
             } else {
@@ -29,17 +36,7 @@ block contenido
                 offLabel: 'No',
                 onLabel: 'Si'
             }); 
-
-            $('#subMenuUsuarios').removeClass('hidden');
-            $('#spanMenuUsuarios').removeClass('fa-angle-left');
-            $('#spanMenuUsuarios').addClass('fa-angle-down');
-
-            if( $('#menuSistemas').hasClass('hidden')){
-                $('#subMenuSistemas').addClass('hidden');
-                $('#spanMenuSistemas').removeClass('fa-angle-down');
-                $('#spanMenuSistemas').addClass('fa-angle-left');
-            }    
-
+            
             $("#chkMostrar").change(function(){
                 if($(this).prop("checked") == true){
                     $('#conformato').addClass('hidden');
@@ -49,7 +46,6 @@ block contenido
                     $('#conformato').removeClass('hidden');
                 }
             });       
-
             
             $("#chkAutorizar").change(function(){
                 if($(this).prop("checked") == true){
@@ -94,8 +90,7 @@ block contenido
         }
 
         function obtenerModulos(){
-            alert($('#areas').val());
-            if ($('#areas').val() == "5e4eceea3b139a5224a9ee5a"){
+            if ($('#areas').val() == "5e4eceea3b139a5224a9ee5a" || $("#areas").val() == "5e4ecf2c3b139a5224a9ee5b"){
                     $('#h_modulo').removeClass('hidden');
                     $('#modulosSal').removeClass('hidden');
                     $('#sel').removeClass('hidden');
@@ -117,7 +112,7 @@ block contenido
         }
 
          function obtenerModuloSeleccionado(seleccionado){
-            if (seleccionado == "5e4eceea3b139a5224a9ee5a"){
+            if (seleccionado == "5e4eceea3b139a5224a9ee5a" || seleccionado == "5e4ecf2c3b139a5224a9ee5b"){
                     $('#h_modulo').removeClass('hidden');
                     $('#modulosSal').removeClass('hidden');
                     $('#sel').removeClass('hidden');
@@ -151,31 +146,44 @@ block contenido
         function obtenerAreas(){
             var seleccionado = $('#id_area').val();
 
-            $.getJSON('/usuarios/find/' + $('#cmbUnidadNeg').val(), (areas)=>{
-                if( areas.length > 0){
+            $.getJSON('/usuarios/find/' + $('#cmbUnidadNeg').val(), (datos)=>{
+                console.log(datos)
+                 if( datos.modulos.length > 0){
+                    $('#moduloS')
+                        .empty();
+                    
+                    for(var i = 0; i < datos.modulos.length; i ++){
+                        $("#moduloS")
+                            .append($("<option id=opt"+datos.modulos[i]._id+"></option>")
+                            .attr("value",datos.modulos[i]._id)
+                            .text(datos.modulos[i].nombre));
+                    }
+                }
+
+                if( datos.areas.length > 0){
                     $('#areas')
                         .empty()
                         .append('<option value=-1> << Seleccione >> </option>');
-                    
-                    for(var i = 0; i < areas.length; i ++){
-                        if(areas[i]._id == seleccionado){
+                        
+                    for(var i = 0; i < datos.areas.length; i ++){
+                        if(datos.areas[i]._id == seleccionado){
                             $("#areas")
                             .append($("<option></option>")
-                            .attr("value", areas[i]._id)
+                            .attr("value", datos.areas[i]._id)
                             .attr("selected", true)
-                            .text(areas[i].codigo + " - "+ areas[i].nombre));
+                            .text(datos.areas[i].codigo + " - "+ datos.areas[i].nombre));
                         } else {
                             $("#areas")
                             .append($("<option></option>")
-                            .attr("value",areas[i]._id)
-                            .text(areas[i].codigo + " - "+ areas[i].nombre));
+                            .attr("value",datos.areas[i]._id)
+                            .text(datos.areas[i].codigo + " - "+ datos.areas[i].nombre));
                         }
 
-                        if(i == areas.length -1){
+                        if(i == datos.areas.length -1){
                             obtenerModuloSeleccionado(seleccionado);
                         }
                     }
-                }               
+                }             
             });
         }
 
@@ -314,4 +322,4 @@ block contenido
                                     i.fas.fa-input.fa-map-pin(style="color: #fff;")
                                 select#moduloS.form-control(tabindex="3" name="modulo" multiple)
                                     each modulo in modulos
-                                        option(id="opt#{modulo.id}" value=modulo.id, selected=(modulo.id==usr.modulo)) #{modulo.nombre}
+                                        

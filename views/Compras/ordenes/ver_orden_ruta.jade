@@ -59,13 +59,8 @@ block contenido
             $('#spanMenuOrdenes').addClass('fa-angle-down');       
         
             $('[data-toggle="tooltip"]').tooltip();
+            
             obtenerArticulos();
-
-            $('#cantidadModal').on('hidden.bs.modal', function () {
-                cambiarCantidad();
-                $('#editar_cantidad').addClass('hidden');
-            });
-
         });
         
         function obtenerArticulos(){
@@ -93,7 +88,7 @@ block contenido
                         "   <td>" + articulos[i].codigo + "</td> " +
                         "   <td>" + articulos[i].descripcion + "</td> " +
                         "   <td><strong>" + articulos[i].orden.serie + "</strong></td> " +
-                        "   <td><strong>" + articulos[i].id_producto.nombreEmpresa + "</strong></td> " +
+                        "   <td><strong>" + articulos[i].id_producto.proveedor.nombreEmpresa + "</strong></td> " +
                         "</tr>")
                     }
 
@@ -109,7 +104,6 @@ block contenido
 
             for(let i = 0; i < articulos.length; i++){
                 if(articulos[i]._id == id){
-                    console.log(articulos[i]);
                     rowCount = $('#arts_fuera >tbody >tr').length;
 
                     $('#arts_fuera > tbody:last').append(
@@ -126,7 +120,7 @@ block contenido
                     "   <td>" + articulos[i].codigo + "</td> " +
                     "   <td>" + articulos[i].descripcion + "</td> " +
                     "   <td>" + articulos[i].orden.serie + "</td> " +
-                    "   <td>" + articulos[i].id_producto.nombreEmpresa + "</td> " +
+                    "   <td>" + articulos[i].proveedor.nombreEmpresa + "</td> " +
                     "</tr>");
 
                     articulos_fuera.push(articulos[i]);
@@ -186,7 +180,7 @@ block contenido
                 "   <td>" + articulo.codigo + "</td> " +
                 "   <td>" + articulo.descripcion + "</td> " +
                 "   <td>" + articulo.orden.serie + "</td> " +
-                "   <td>" + articulo.id_producto.nombreEmpresa + "</td> " +
+                "   <td>" + articulo.proveedor.nombreEmpresa + "</td> " +
                 "</tr>");
             }
 
@@ -236,7 +230,7 @@ block contenido
                     $('#span_codigo').text(articulos[i].codigo);
                     $('#span_orden').text(articulos[i].orden.serie);
                     $('#span_descripcion').text(articulos[i].descripcion);
-                    $('#span_proveedor').text(articulos[i].id_producto.nombreEmpresa);
+                    $('#span_proveedor').text(articulos[i].proveedor.nombreEmpresa);
                     $('#span_cantidad').text(parseFloat(articulos[i].cantidad).toFixed(3));
                     $('#cantidad').val(articulos[i].cantidad);
                     $("#cantidad").attr({
@@ -276,7 +270,7 @@ block contenido
                     "   <td>" + articulos[i].codigo + "</td> " +
                     "   <td>" + articulos[i].descripcion + "</td> " +
                     "   <td>" + articulos[i].orden.serie + "</td> " +
-                    "   <td>" + articulos[i].id_producto.nombreEmpresa + "</td> " +
+                    "   <td>" + articulos[i].proveedor.nombreEmpresa + "</td> " +
                     "</tr>");
 
                     obj._id = articulos[i]._id;
@@ -304,17 +298,17 @@ block contenido
 
     //Termina Javascript
     
+    // Input id Orden Ruta
+    input.hidden#orden_id(name="ordenId" type="text" value="#{oRuta.id}")
+    
     //  Título de entrada a orden en ruta
     section.mb-4
         .card
             .card-body.d-flex.justify-content-between
                 h4.h4-responsive.mt-3
                     i.fas.fa-truck-loading
-                    |   Entrada a Inventario de Órden Ruta
-                div
-                    a#realizar(href="javascript:realizarEntrada();").btn.btn-success.Ripple-parent
-                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Realizar").fas.fa-truck-loading
-   
+                    |   Ver Órden Ruta
+  
     // Datos del envío
     section.mb-4
         .card
@@ -344,47 +338,6 @@ block contenido
                             strong
                                 span#span_solicita #{oRuta.estatus}
     
-    // Input id Orden Ruta
-    input.hidden#orden_id(name="ordenId" type="text" value="#{oRuta.id}")
-
-    // Datos para cambio en cantidad
-    section#editar_cantidad.mb-4.hidden
-        .card
-            .card-header.view.view-cascade.gradient-card-header.blue-gradient.mb-3
-                h4.h4-responsive.mb-3(style="font-weight: 700; color: #fff;")
-                    |   Editar cantidad artículo
-            .card-body
-                .row
-                    .col-md-6.col-lg-6.col-xs-6.text-left
-                        h4.h4-responsive
-                            small Codigo: 
-                            br
-                            strong
-                                span#span_codigo.blue-text ######
-                        h5.h5-responsive
-                            small Descrición: 
-                            br
-                            strong
-                                span#span_descripcion ##########
-                        h5.h5-responsive
-                            small Cantidad: 
-                            br
-                            strong
-                                span#span_cantidad ##########
-                            a(data-toggle="modal" href="#cantidadModal" style="margin-left: 10px;").btn.btn-primary.btn-small.blue-gradient
-                                i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Modificar cantidad").fas.fa-2x.fa-sync-alt
-                    .col-md-6.col-lg-6.col-xs-6.text-right
-                        h4.h4-responsive
-                            small Orden No.
-                            br
-                            strong
-                                span#span_orden.blue-text ######
-                        h5.h5-responsive
-                            small Proveedor.
-                            br
-                            strong
-                                span#span_proveedor ##########
-
     // Artículos para entrada
     section.mb-4
         .card
@@ -424,36 +377,6 @@ block contenido
                             th Orden
                             th Proveedor
                         tbody
-                                        
-    // Modal modificar cantidad
-    #cantidadModal(class="modal")
-        .modal-dialog(role="document")
-            .modal-content
-                .modal-header(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
-                    .col-lg-12
-                        i.fa.fas.fa-sort-numeric-down(style="margin-right: 15px;")
-                        label 
-                            strong Modificar cantidad
-                .modal-body()
-                    .card
-                        .card-body
-                            .row
-                                .col-lg-12
-                                    .form-group
-                                        label | Cantidad
-                                        .input-group
-                                            span.input-group-addon.blue-gradient
-                                                i.fas.fa-sort-numeric-down(style="color: #fff;")
-                                            input#cantidad.form-control(type="number" name="cantidad" placeholder="Cantidad" tabindex="2")
+                            
 
-                .modal-footer
-                    .text-right
-                        .btn-group
-                            a(data-dismiss="modal").btn.btn-default
-                                i.fa.fas.fa-times-circle()
-                                |   Cerrar
-
-
-                    
-                    
                     

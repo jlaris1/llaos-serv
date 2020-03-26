@@ -3612,72 +3612,63 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
         }else{
-            OrdenesRuta.findById({"_id": solicitud.params.id}, function(error, oRuta){
+            OrdenesRuta.findById({"_id": solicitud.params.id}, (error, oRuta) =>{
                 if(error){
                     console.log(error);
                 } else {
-                    ArticulosEnRuta.find({"ordenRuta": oRuta.id}, function(error, articulosEnRuta){
+                    Proveedores.find( (error, proveedores) =>{
                         if(error){
                             console.log(error);
                         } else {
-                            Ordenes.populate(articulosEnRuta, {path: "orden"}, function(error, articulosEnRuta){
+                            Usuarios.find( (error, usuarios) => {
                                 if(error){
                                     console.log(error);
-                                } else {
-                                    Proveedores.populate(articulosEnRuta, {path: "proveedor"}, function(error, articulosEnRuta){
+                                } else { 
+                                    Camionetas.populate(oRuta,{path: "unidad"}, (error, oRuta) => {
                                         if(error){
                                             console.log(error);
                                         } else {
-                                            Proveedores.find( function(error, proveedores){
+                                            Usuarios.populate(oRuta, {path: "chofer"}, (error, oRuta) => {
                                                 if(error){
                                                     console.log(error);
                                                 } else {
-                                                    Usuarios.find( function(error, usuarios){
-                                                        if(error){
-                                                            console.log(error);
-                                                        } else { 
-                                                            respuesta.render("Compras/ordenes/verordenruta", 
-                                                                {
-                                                                    user: solicitud.session.user,
-                                                                    oRuta: oRuta,
-                                                                    articulosRuta: articulosEnRuta,
-                                                                    titulo: "Órdenes",
-                                                                    criterios: [
-                                                                        {
-                                                                            val: "",
-                                                                            name: ""
-                                                                        }
-                                                                    ],
-                                                                    piscinas: [
-                                                                        {
-                                                                            id: 0,
-                                                                            nombre: ""
-                                                                        }
-                                                                    ],
-                                                                    charoleros: [
-                                                                        {
-                                                                            id: 0,
-                                                                            nombre: ""
-                                                                        }   
-                                                                    ],
-                                                                    usuarios: usuarios,
-                                                                    ruta: "ordenes"
-                                                                }
-                                                            );
-                                                        }
+                                                    respuesta.render("Compras/ordenes/ver_orden_ruta", {
+                                                        user: solicitud.session.user,
+                                                        oRuta: oRuta,
+                                                        proveedores: proveedores,
+                                                        titulo: "Órdenes",
+                                                        criterios: [
+                                                            {
+                                                                val: "",
+                                                                name: ""
+                                                            }
+                                                        ],
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ],
+                                                        usuarios: usuarios,
+                                                        ruta: "ordenes"
                                                     });
                                                 }
-                                            }) 
+                                            });
                                         }
-                                    });
+                                    })
                                 }
                             });
                         }
-                    });                   
+                    });                 
                 }
             });
         }
-        
     },
     ordenesEnRuta: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
@@ -3775,7 +3766,7 @@ module.exports = {
                                             });
                                 
                                             var mailOptions = {
-                                                from: 'Llaos Sist 1.0 <sistema@llaos.com>',
+                                                from: 'Llaos Sist .0 <sistema@llaos.com>',
                                                 //to: 'flopez@llaos.com',
                                                 to: 'jcuamea@llaos.com',
                                                 cc: 'davilar@llaos.com',
@@ -4110,10 +4101,10 @@ module.exports = {
         }else{//Agregar try-catch
             var mailOptions = {
                 from: 'Llaos Sist 2.0 <sistema@llaos.com>',
-                to: 'flopez@llaos.com',
-                //to: 'davilar@llaos.com',
-                //cc: 'jcuamea@llaos.com',
-                //bcc: 'flopez@llaos.com',
+                // to: 'flopez@llaos.com',
+                to: 'davilar@llaos.com',
+                cc: 'jcuamea@llaos.com',
+                bcc: 'flopez@llaos.com',
                 subject: 'Ordenes en Ruta ' + solicitud.body.codigo,
                 html: "<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>"+
                             "<html xmlns='http://www.w3.org/1999/xhtml'>" +

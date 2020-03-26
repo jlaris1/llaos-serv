@@ -216,7 +216,13 @@ module.exports = {//HAcen falta try-catch a los metodos
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.json(areas);
+                    Modulos.find({"unidad_negocio": solicitud.params.unidad}, (error, modulos) =>{
+                        if(error){
+                            console.log(error);
+                        } else {
+                            respuesta.json({areas: areas, modulos: modulos});
+                        }
+                    });
                 }
             });
         }

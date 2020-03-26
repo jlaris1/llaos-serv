@@ -62,8 +62,11 @@ block contenido
             }, "json");
         }
 
+
+
+
         function obtenerModulos(){
-           if ($('#areas').val() == "5e4eceea3b139a5224a9ee5a"){
+           if ($('#areas').val() == "5e4eceea3b139a5224a9ee5a" || $("#areas").val() == "5e4ecf2c3b139a5224a9ee5b"){
                 $('#h_modulo').removeClass('hidden');
                 $('#modulosSal').removeClass('hidden');
                 $('#sel').removeClass('hidden');
@@ -85,17 +88,29 @@ block contenido
         }
 
         function obtenerAreas(){
-            $.getJSON('/usuarios/find/' + $('#cmbUnidadNeg').val(), (areas)=>{
-                if( areas.length > 0){
+            $.getJSON('/usuarios/find/' + $('#cmbUnidadNeg').val(), (datos)=>{
+                if( datos.areas.length > 0){
                     $('#areas')
                         .empty()
                         .append('<option value=-1> << Seleccione >> </option>');
                     
-                    for(var i = 0; i < areas.length; i ++){
+                    for(var i = 0; i < datos.areas.length; i ++){
                         $("#areas")
                             .append($("<option></option>")
-                            .attr("value",areas[i]._id)
-                            .text(areas[i].codigo + " - "+ areas[i].nombre));
+                            .attr("value",datos.areas[i]._id)
+                            .text(datos.areas[i].codigo + " - "+ datos.areas[i].nombre));
+                    }
+                } 
+                if( datos.modulos.length > 0){
+                    $('#moduloS')
+                        .empty()
+                        .append('<option value=-1> << Seleccione >> </option>');
+                    
+                    for(var i = 0; i < datos.modulos.length; i ++){
+                        $("#moduloS")
+                            .append($("<option></option>")
+                            .attr("value",datos.modulos[i]._id)
+                            .text(datos.modulos[i].nombre));
                     }
                 }               
             });
@@ -224,6 +239,4 @@ block contenido
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-input.fa-map-pin(style="color: #fff;")
                                 select#moduloS.form-control(tabindex="12" name="modulo" multiple)
-                                    each modulo in modulos
-                                        option(value=modulo.id) #{modulo.nombre}
                 

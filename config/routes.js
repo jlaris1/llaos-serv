@@ -88,6 +88,7 @@ module.exports = function(app){
     //Errores
     app.get('error-inesperado', errores.errorInesperado);
     app.get('/error-inicio/:user', errores.errorInicio);
+    
         
     //Sesion
     app.get('/', sesion.login);
@@ -95,6 +96,8 @@ module.exports = function(app){
     app.get('/home', sesion.home);
     app.get('/cerrar_sesion', sesion.logoff);
     app.get('/sesion-expirada', sesion.expirada);
+    app.get('/obtener/indicadores/compras', sesion.indicadoresCompras);
+    app.get('/obtener/indicadores/alimento', sesion.indicadoresAlimento);
 
     //Usuarios
     app.use('/usuarios', usuariosRouter);

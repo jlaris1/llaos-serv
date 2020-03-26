@@ -24,7 +24,8 @@ var estanquesSchemaJSON = {
 // Módulos
 var modulosSchemaJSON = {
     codigo: String,
-    nombre: String
+    nombre: String,
+    unidad_negocio: { type: Schema.ObjectId, ref: "Modulos" }
 }
 
 // Tipos Modulos

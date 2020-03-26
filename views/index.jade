@@ -1,5 +1,385 @@
 extends ./layouts/layout.jade
 block contenido
+    style.
+        .border-left-primary {
+            border-left: .25rem solid #4e73df!important;
+        }
+        .border-left-success {
+            border-left: .25rem solid #1cc88a!important;
+        }
+
+        .border-left-info {
+            border-left: .25rem solid #36b9cc!important;
+        }
+
+        .border-left-warning {
+            border-left: .25rem solid #f6c23e!important;
+        }
+ 
+        .border-left-danger {
+            border-left: .25rem solid #e74a3b!important;
+        }
+
+        .mb-4, .my-4 {
+            margin-bottom: 1.5rem!important;
+        }
+
+        .pb-2, .py-2 {
+            padding-bottom: .5rem!important;
+        }
+
+        .h-100 {
+            height: 100%!important;
+        }
+
+        .shadow {
+            box-shadow: 0 .15rem 1.75rem 0 rgba(58,59,69,.15)!important;
+        }
+
+        .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid #e3e6f0;
+            border-radius: .35rem;
+        }
+
+        .align-items-center {
+            align-items: center!important;
+        }
+
+        .no-gutters {
+            margin-right: 0;
+            margin-left: 0;
+        }
+
+        .mr-2, .mx-2 {
+            margin-right: .5rem!important;
+        }
+
+        .col {
+            flex-basis: 0;
+            flex-grow: 1;
+            max-width: 100%;
+        }
+
+        .col {
+            position: relative;
+            width: 100%;
+            padding-right: .75rem;
+            padding-left: .75rem;
+        }
+ 
+        .text-xs {
+            font-size: 1.0rem;
+        }
+
+        .text-md {
+            font-size: 1.2rem;
+        }
+
+        .text-success {
+            color: #1cc88a!important;
+        }
+
+        .text-danger {
+            color: #e74a3b!important;
+        }
+
+        .text-danger2{
+            color: #eb6e62!important;
+        }
+
+        .text-danger3{
+            color: #ee8075!important;
+        }
+
+        .font-weight-bold {
+            font-weight: 700!important;
+        }
+
+        .dropdown .dropdown-menu .dropdown-header, .sidebar .sidebar-heading, .text-uppercase {
+            text-transform: uppercase!important;
+        }
+
+        .mb-1, .my-1 {
+            margin-bottom: .25rem!important;
+        }  
+
+        .text-gray-800 {
+            color: #5a5c69!important;
+        }
+
+        .h5, h5 {
+            font-size: 1.8rem;
+        }
+
+        .mb-0, .my-0 {
+            margin-bottom: 0!important;
+            margin-top: 0!important;
+        }
+
+        .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+            margin-bottom: .5rem;
+            font-weight: 400;
+            line-height: 1.2;
+        }
+
+        .col-auto {
+            flex: 0 0 auto;
+            width: auto;
+            max-width: 100%;
+        }
+
+        .text-gray-300 {
+            color: #dddfeb!important;
+        }
+
+    script.
+        var datos = [];
+        var fechas = [];
+        var total = 0;
+        var mes = 0;
+        var dia = 0;
+
+        $(document).ready( function(){
+            obtenerCompras();
+            obtenerAlimentacion();
+        })
+
+        function obtenerCompras(){
+            var ctx = document.getElementById('myChart');
+
+            $.getJSON('/obtener/indicadores/compras', (data)=>{
+                /*data.indicators.forEach(i => {
+                    datos.push(i.total);
+                    fechas.push(i.fecha);
+                });*/
+
+                $('#span_total_2020').text(FormatMoney(true,parseFloat(data.total)));
+                $('#span_total_2018').text(FormatMoney(true,parseFloat(data.total2018)));
+                $('#span_total_2019').text(FormatMoney(true,parseFloat(data.total2019)));
+
+                $('#span_mes').text(FormatMoney(true, parseFloat(data.mes)));
+                $('#span_mes_2018').text(FormatMoney(true, parseFloat(data.mes2018)));
+                $('#span_mes_2019').text(FormatMoney(true, parseFloat(data.mes2019)));                
+                
+                $('#span_dia_2019').text(FormatMoney(true,parseFloat(data.dia2019)));
+                $('#span_dia_2018').text(FormatMoney(true,parseFloat(data.dia2018)));
+                $('#span_dia').text(FormatMoney(true,parseFloat(data.dia)));
+
+                if(parseFloat(data.total) > parseFloat(data.total2019)){
+                    if(parseFloat(data.total) > parseFloat(data.total2018)){
+                        $('#border_ano_2020').removeClass('border-left-success');
+                        $('#border_ano_2020').addClass('border-left-danger');
+                        $('#texto_ano_2020').removeClass('text-success');
+                        $('#texto_ano_2020').addClass('text-danger');
+                        $('#texto_ano_cant_2020').removeClass('text-gray-800');
+                        $('#texto_ano_cant_2020').addClass('text-danger2');
+                        $('#icon_ano_2020').removeClass('text-gray-300');
+                        $('#icon_ano_2020').addClass('text-danger3');
+                    } else {
+                        $('#border_ano_2018').removeClass('border-left-info');
+                        $('#border_ano_2018').addClass('border-left-danger');
+                        $('#texto_ano_2018').removeClass('text-success');
+                        $('#texto_ano_2018').addClass('text-danger');
+                        $('#texto_ano_cant_2018').removeClass('text-gray-800');
+                        $('#texto_ano_cant_2018').addClass('text-danger2');
+                        $('#icon_ano_2018').removeClass('text-gray-300');
+                        $('#icon_ano_2018').addClass('text-danger3');
+                    }
+                } else {
+                    $('#border_ano_2019').removeClass('border-left-primary');
+                    $('#border_ano_2019').addClass('border-left-danger');
+                    $('#texto_ano_2019').removeClass('text-success');
+                    $('#texto_ano_2019').addClass('text-danger');
+                    $('#texto_ano_cant_2019').removeClass('text-gray-800');
+                    $('#texto_ano_cant_2019').addClass('text-danger2');
+                    $('#icon_ano_2019').removeClass('text-gray-300');
+                    $('#icon_ano_2019').addClass('text-danger3');
+                }
+
+                if(parseFloat(data.mes) > parseFloat(data.mes2019)){
+                    if(parseFloat(data.mes) > parseFloat(data.mes2018)){
+                        $('#border_mes_2020').removeClass('border-left-success');
+                        $('#border_mes_2020').addClass('border-left-danger');
+                        $('#texto_mes_2020').removeClass('text-success');
+                        $('#texto_mes_2020').addClass('text-danger');
+                        $('#texto_mes_cant_2020').removeClass('text-gray-800');
+                        $('#texto_mes_cant_2020').addClass('text-danger2');
+                        $('#icon_mes_2020').removeClass('text-gray-300');
+                        $('#icon_mes_2020').addClass('text-danger3');
+                    } else {
+                        $('#border_mes_2018').removeClass('border-left-info');
+                        $('#border_mes_2018').addClass('border-left-danger');
+                        $('#texto_mes_2018').removeClass('text-info');
+                        $('#texto_mes_2018').addClass('text-danger');
+                        $('#texto_mes_cant_2018').removeClass('text-gray-800');
+                        $('#texto_mes_cant_2018').addClass('text-danger2');
+                        $('#icon_mes_2018').removeClass('text-gray-300');
+                        $('#icon_mes_2018').addClass('text-danger3');
+                    }
+                } else {
+                    $('#border_mes_2019').removeClass('border-left-primary');
+                    $('#border_mes_2019').addClass('border-left-danger');
+                    $('#texto_mes_2019').removeClass('text-primary');
+                    $('#texto_mes_2019').addClass('text-danger');
+                    $('#texto_mes_cant_2019').removeClass('text-gray-800');
+                    $('#texto_mes_cant_2019').addClass('text-danger2');
+                    $('#icon_mes_2019').removeClass('text-gray-300');
+                    $('#icon_mes_2019').addClass('text-danger3');
+                }
+
+                if(parseFloat(data.dia) > parseFloat(data.dia2019)){
+                    if(parseFloat(data.dia) > parseFloat(data.dia2018)){
+                        $('#border_dia_2020').removeClass('border-left-success');
+                        $('#border_dia_2020').addClass('border-left-danger');
+                        $('#texto_dia_2020').removeClass('text-success');
+                        $('#texto_dia_2020').addClass('text-danger');
+                        $('#texto_dia_cant_2020').removeClass('text-gray-800');
+                        $('#texto_dia_cant_2020').addClass('text-danger2');
+                        $('#icon_dia_2020').removeClass('text-gray-300');
+                        $('#icon_dia_2020').addClass('text-danger3');
+                    } else {
+                        $('#border_dia_2018').removeClass('border-left-info');
+                        $('#border_dia_2018').addClass('border-left-danger');
+                        $('#texto_dia_2018').removeClass('text-info');
+                        $('#texto_dia_2018').addClass('text-danger');
+                        $('#texto_dia_cant_2018').removeClass('text-gray-800');
+                        $('#texto_dia_cant_2018').addClass('text-danger2');
+                        $('#icon_dia_2018').removeClass('text-gray-300');
+                        $('#icon_dia_2018').addClass('text-danger3');
+                    }
+                } else {
+                    $('#border_dia_2019').removeClass('border-left-primary');
+                    $('#border_dia_2019').addClass('border-left-danger');
+                    $('#texto_dia_2019').removeClass('text-primary');
+                    $('#texto_dia_2019').addClass('text-danger');
+                    $('#texto_dia_cant_2019').removeClass('text-gray-800');
+                    $('#texto_dia_cant_2019').addClass('text-danger2');
+                    $('#icon_dia_2019').removeClass('text-gray-300');
+                    $('#icon_dia_2019').addClass('text-danger3');
+                }
+
+                /*
+                // Gráficas de Parámetros
+                var chart = new Chart(ctx, {
+                    // The type of chart we want to create
+                    type: 'line',
+
+                    // The data for our dataset
+                    data: {
+                        labels: fechas,
+                        datasets: [
+                            {
+                                label: 'Total',
+                                borderColor: 'rgb(66,133,244)',
+                                backgroundColor: 'rgb(66,133,244)',
+                                fill: false,
+                                data: datos
+                            }
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: false
+                        },
+                        gridLines: {
+                            display: true,
+                            drowBorder: true,
+                            drawOnChartArea: false
+                        },
+                        responsive: true                        
+                    }
+                });*/
+            });
+        }
+
+        function obtenerAlimentacion(){
+            var cAlimento = document.getElementById('chartAlimento');
+
+            $.getJSON('/obtener/indicadores/alimento', (data)=>{
+                $('#span_m01').text(" " + parseFloat(data.m01).toFixed(2) + " Kgs.");
+                $('#span_m05').text(" " + parseFloat(data.m05).toFixed(2) + " Kgs.");
+                $('#span_m07').text(" " + parseFloat(data.m07).toFixed(2) + " Kgs.");
+                
+                
+                // Gráfico por día de consumo alimento
+                var chart = new Chart(cAlimento, {
+                    // The type of chart we want to create
+                    type: 'line',
+
+                    // The data for our dataset
+                    data: {
+                        labels: data.fechas,
+                        datasets: [
+                            {
+                                label: 'Total',
+                                borderColor: 'rgb(66,133,244)',
+                                backgroundColor: 'rgb(160,194,249',
+                                fill: true,
+                                data: data.alimento
+                            }
+                        ],
+                    },
+                    options: {
+                        title: {
+                            display: false
+                        },
+                        gridLines: {
+                            display: true,
+                            drowBorder: true,
+                            drawOnChartArea: true
+                        },
+                        responsive: true                        
+                    }
+                });
+            });
+        }
+
+        function FormatMoney(bol, valor){
+            var total = 0;
+
+            if (bol) {
+                total += valor;
+            } else {
+                total-=valor;
+            }
+            
+            var entero = '';
+            
+            Entero_Decimal = total.toString().split('.');
+            
+            cadena = Entero_Decimal[0].split('').reverse().join('');
+            
+            for (var z = cadena.length; z >=0; z--) {
+                numero = cadena.charAt(z)
+                
+                if ((cadena.length >= 4 && z ==3 ) || (cadena.length >= 7 && z ==6 ) || (cadena.length >= 10 && z == 9 ) || (cadena.length >= 13 && z ==12 ) || (cadena.length >= 16 && z ==15 )) {
+                    numero +=  ",";
+                }
+
+                entero += numero;
+            }
+            
+            if(Entero_Decimal[1]) {
+                if( Entero_Decimal[1].length == 1){
+                    decimales = '.'+ Entero_Decimal[1]+'00';
+                } else {
+                    decimales = '.'+ Entero_Decimal[1];
+                }
+                
+            } else {
+                decimales = '.00';
+            }
+            
+            return "$ " + entero + decimales;
+        }
+
     .row
         .col-lg-12
             h2.page-header ¡Bienvenido #{user.nombre}!
@@ -65,3 +445,159 @@ block contenido
                             span.pull-right
                                 i.fas.fa-eye
                             .clearfix
+    
+    
+    //  INDICADORES
+    section.mb-4
+        .card.border-left-success.shadow
+                .card-body
+                    .font-weight-bold.text-uppercase Indicadores
+    .row
+        // AÑO EN  CURSO - 2020
+        .col-xs-4.mb-4
+            .card.border-left-success.shadow
+                .card-body
+                    - var anio = new Date().getFullYear()
+                    .text-md.font-weight-bold.text-primary.text-uppercase Gastos (#{anio})
+            .card.border-left-success.shadow#border_ano_2020
+                .card-body
+                    .text-xs.font-weight-bold.text-primary.text-uppercase#texto_ano_2020 Anual
+                    .d-flex.justify-content-between
+                        .h5.mb-0.font-weight-bold.text-gray-800#texto_ano_cant_2020
+                            span#span_total_2020
+                        i.fas.fa-dollar-sign.fa-2x.text-gray-300#icon_ano_2020(style="font-size: 2.5rem")
+            .card.border-left-success.shadow#border_mes_2020
+                .card-body
+                    .text-xs.font-weight-bold.text-primary.text-uppercase#texto_mes_2020  Mensual
+                    .d-flex.justify-content-between
+                        .h5.mb-0.font-weight-bold.text-gray-800#texto_mes_cant_2020
+                            span#span_mes
+                        i.fas.fa-dollar-sign.fa-2x.text-gray-300#icon_mes_2020(style="font-size: 2.5rem")
+            .card.border-left-success.shadow#border_dia_2020
+                .card-body
+                    .text-xs.font-weight-bold.text-primary.text-uppercase#texto_dia_2020 Diario
+                    .d-flex.justify-content-between
+                        .h5.mb-0.font-weight-bold.text-gray-800#texto_dia_cant_2020
+                            span#span_dia
+                        i.fas.fa-dollar-sign.fa-2x.text-gray-300#icon_dia_2020(style="font-size: 2.5rem")
+    
+        // UN AÑO ATRAS - 2019
+        .col-xs-4.mb-4
+            .card.border-left-primary.shadow
+                .card-body
+                    - var anio_menos_uno = new Date().getFullYear() - 1
+                    .text-md.font-weight-bold.text-primary.text-uppercase Gastos (#{anio_menos_uno})
+            .card.border-left-primary.shadow#border_ano_2019
+                .card-body
+                    .text-xs.font-weight-bold.text-primary.text-uppercase#texto_ano_2019  Anual
+                    .d-flex.justify-content-between
+                        .h5.mb-0.font-weight-bold.text-gray-800#texto_ano_cant_2019
+                            span#span_total_2019
+                        i.fas.fa-dollar-sign.fa-2x.text-gray-300#icon_ano_2019(style="font-size: 2.5rem")  
+            .card.border-left-primary.shadow#border_mes_2019
+                .card-body
+                    .text-xs.font-weight-bold.text-primary.text-uppercase#texto_mes_2019 Mes
+                    .d-flex.justify-content-between
+                        .h5.mb-0.font-weight-bold.text-gray-800#texto_mes_cant_2019
+                            span#span_mes_2019
+                        i.fas.fa-dollar-sign.fa-2x.text-gray-300#icon_mes_2019(style="font-size: 2.5rem")     
+            .card.border-left-primary.shadow#border_dia_2019
+                .card-body
+                    .text-xs.font-weight-bold.text-primary.text-uppercase#texto_dia_2019 Día
+                    .d-flex.justify-content-between
+                        .h5.mb-0.font-weight-bold.text-gray-800#texto_dia_cant_2019
+                            span#span_dia_2019
+                        i.fas.fa-dollar-sign.fa-2x.text-gray-300#icon_dia_2019(style="font-size: 2.5rem")     
+
+        // DOS AÑOS ATRAS - 2018
+        .col-xs-4.mb-4
+            .card.border-left-info.shadow
+                .card-body
+                    - var anio_menos_dos = new Date().getFullYear() - 2
+                    .text-md.font-weight-bold.text-info.text-uppercase Gastos (#{anio_menos_dos})
+            .card.border-left-info.shadow#border_ano_2018
+                .card-body
+                    .text-xs.font-weight-bold.text-info.text-uppercase#texto_ano_2018 Anual
+                    .d-flex.justify-content-between
+                        .h5.mb-0.font-weight-bold.text-gray-800#texto_ano_cant_2018
+                            span#span_total_2018
+                        i.fas.fa-dollar-sign.fa-2x.text-gray-300#icon_ano_2018(style="font-size: 2.5rem")
+            .card.border-left-info.shadow#border_mes_2018
+                .card-body
+                    .text-xs.font-weight-bold.text-info.text-uppercase#texto_mes_2018 Mes
+                    .d-flex.justify-content-between
+                        .h5.mb-0.font-weight-bold.text-gray-800#texto_mes_cant_2018
+                            span#span_mes_2018
+                        i.fas.fa-dollar-sign.fa-2x.text-gray-300#icon_mes_2018(style="font-size: 2.5rem")     
+            .card.border-left-info.shadow#border_dia_2018
+                .card-body
+                    .text-xs.font-weight-bold.text-info.text-uppercase#texto_dia_2018 Día
+                    .d-flex.justify-content-between
+                        .h5.mb-0.font-weight-bold.text-gray-800#texto_dia_cant_2018
+                            span#span_dia_2018
+                        i.fas.fa-dollar-sign.fa-2x.text-gray-300#icon_dia_2018(style="font-size: 2.5rem")  
+        
+    .card.border-left-primary
+        .card-header
+            i.fas.fa-seedling.fa-fw
+            |  Indicadores Alimento
+        .card-body
+            div.d-flex.justify-content-between
+                div 
+                    label M01
+                    span#span_m01.text-primary
+                div 
+                    label M05
+                    span#span_m05.text-primary
+                div 
+                    label M07
+                    span#span_m07.text-primary
+            canvas#chartAlimento    
+
+
+    //section.mb-4
+        .card
+            .card-body
+                .row
+                    .col-md-6.col-lg-6.col-xs-6.text-left
+                        h4.h4-responsive
+                            small Total a la Fecha: 
+                            br
+                            strong
+                                span#span_total.blue-text
+                                span &nbsp;
+                                span#icon.hidden
+                                    i#icon_i.fas
+                        h5.h5-responsive
+                            small Total del mes: 
+                            br
+                            strong
+                                span#span_mes
+                        h5.h5-responsive
+                            small Total del día:
+                            br
+                            strong
+                                span#span_dia
+                    .col-md-6.col-lg-6.col-xs-6.text-right
+                        h4.h4-responsive
+                            small Total (2019): 
+                            br
+                            strong
+                                span#span_total_2019.blue-text
+                        h5.h5-responsive
+                            small Total del mes (2019): 
+                            br
+                            strong
+                                span#span_mes_2019
+                        h5.h5-responsive
+                            small Total del día (2019):
+                            br
+                            strong
+                                span#span_dia_2019
+    //.chart-container(style="position: relative;")
+        .card.card-default
+            .card-body.card-5-7
+                // Datos para gráficos parámetros
+                h4
+                    b Indicadores
+                canvas#myChart
