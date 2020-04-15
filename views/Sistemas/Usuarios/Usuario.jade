@@ -22,7 +22,7 @@ block contenido
                 onLabel: 'Si'
             });
 
-             $("#chkAutorizar").change(function(){
+            $("#chkAutorizar").change(function(){
                 if($(this).prop("checked") == true){
                     autorizador = true;
                 }else{
@@ -66,7 +66,7 @@ block contenido
 
 
         function obtenerModulos(){
-           if ($('#areas').val() == "5e4eceea3b139a5224a9ee5a" || $("#areas").val() == "5e4ecf2c3b139a5224a9ee5b"){
+            if ($('#areas').val() == "5e4eceea3b139a5224a9ee5a" || $("#areas").val() == "5e4ecf2c3b139a5224a9ee5b"){
                 $('#h_modulo').removeClass('hidden');
                 $('#modulosSal').removeClass('hidden');
                 $('#sel').removeClass('hidden');
@@ -83,7 +83,7 @@ block contenido
                 $('#piscinas').addClass('hidden');
                 $('#modulos').addClass('hidden');
                 $('#module').attr('required', false);
-                 $('#modulosSal').addClass('hidden');
+                $('#modulosSal').addClass('hidden');
             }
         }
 
@@ -234,7 +234,7 @@ block contenido
                                 select#areas.form-control(tabindex="11" value="" name="area" onchange="obtenerModulos()")
                     .col-lg-6.col-md-6.col-sm-6.col-xs-6#modulosSal.hidden
                         .form-group
-                            label | Modulo
+                            label | Modulo(s)
                             .input-group
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-input.fa-map-pin(style="color: #fff;")

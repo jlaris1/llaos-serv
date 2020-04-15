@@ -17,14 +17,14 @@ block contenido
         }
 
         .center-middle {
-           margin-top: 13px;
+            margin-top: 13px;
         }
 
         .margin-div {
             margin-right: 5px;
         }
 
-         .btn-small {
+        .btn-small {
             font-size: 0.5rem;
         }
 
@@ -57,6 +57,14 @@ block contenido
         var cambiar_tiempo = false;
         var cambiar_fecha = false;
         var numero_piscinas = parseFloat(0);
+        var hora;
+
+        /*** COSTOS ***/
+            var costo_racion = parseFloat(0);
+            var costo_dia = parseFloat(0);
+            var costo_modulo = parseFloat(0);
+            var costo_modulo_dia = parseFloat(0);
+            var tipo_moneda = '';
 
         $(document).ready( function(){
             obtenerFecha();
@@ -615,6 +623,7 @@ block contenido
 
             /*** revisar el tipo de moneda*/
             if(usd > mxn){
+                tipo_moneda = 'USD';
                 costo_dia_usd = parseFloat(costo_racion_usd * 12).toFixed(2);
                 var costo_modulo_racion_usd = parseFloat(parseFloat(costo_racion_usd).toFixed(2) * numero_piscinas).toFixed(2);
                 var costo_modulo_dia_usd = parseFloat(parseFloat(costo_dia_usd).toFixed(2) * numero_piscinas).toFixed(2);
@@ -623,7 +632,13 @@ block contenido
                 $('#span_modulo_racion').text('$ ' + costo_modulo_racion_usd + ' USD (' + parseFloat(costo_modulo_racion_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2) + ' MXN)'); 
                 $('#span_costo_dia').text('$ ' + costo_dia_usd + ' USD (' + parseFloat(costo_dia_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2) + ' MXN)');
                 $('#span_modulo_dia').text('$ ' + costo_modulo_dia_usd + ' USD (' + parseFloat(costo_modulo_dia_usd * parseFloat($('#span_tipo_cambio').text())).toFixed(2) + ' MXN)'); 
+            
+                costo_racion = costo_racion_usd;
+                costo_dia = costo_dia_usd;
+                costo_modulo = costo_modulo_racion_usd;
+                costo_modulo_dia = costo_modulo_dia_usd;
             } else {
+                tipo_moneda = 'MXN';
                 costo_dia_mxn = parseFloat(costo_racion_mxn * 12).toFixed(2);
                 var costo_modulo_racion_mxn = parseFloat(parseFloat(costo_racion_mxn).toFixed(2) * numero_piscinas).toFixed(2);
                 var costo_modulo_dia_mxn = parseFloat(parseFloat(costo_dia_mxn).toFixed(2) * numero_piscinas).toFixed(2);
@@ -632,12 +647,62 @@ block contenido
                 $('#span_modulo_racion').text('$ ' + parseFloat(costo_modulo_racion_mxn).toFixed(2) + ' MXN (' + parseFloat(costo_modulo_racion_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2) + ' USD)'); 
                 $('#span_costo_dia').text('$ ' + parseFloat(costo_dia_mxn).toFixed(2) + ' MXN (' + parseFloat(costo_dia_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2) + ' USD)' );
                 $('#span_modulo_dia').text('$ ' + parseFloat(costo_modulo_dia_mxn).toFixed(2) + ' MXN (' + parseFloat(costo_modulo_dia_mxn / parseFloat($('#span_tipo_cambio').text())).toFixed(2) + ' USD)' ); 
+
+                costo_racion = costo_racion_mxn;
+                costo_dia = costo_dia_mxn;
+                costo_modulo = costo_modulo_racion_mxn;
+                costo_modulo_dia = costo_modulo_dia_mxn;
             }
+        }
+
+        function guardar(){
+            $.post( "/nutricion/save", {
+                alimento_1: $('#alimento_1').val() == "-1" ? null : $('#alimento_1').val(),
+                kgs_1: $('#input_alimento_1').val(),
+                alimento_2: $('#alimento_2').val() == "-1" ? null : $('#alimento_2').val(),
+                kgs_2: $('#input_alimento_2').val(),
+                alimento_3: $('#alimento_3').val() == "-1" ? null : $('#alimento_3').val(),
+                kgs_3: $('#input_alimento_3').val(),
+                insumo_1: $('#insumo_1').val() == "-1" ? null : $('#insumo_1').val(),
+                kgs_i_1: $('#input_insumo_1').val(),
+                insumo_2: $('#insumo_2').val() == "-1" ? null : $('#insumo_2').val(),
+                kgs_i_2: $('#input_insumo_2').val(),
+                insumo_3: $('#insumo_3').val() == "-1" ? null : $('#insumo_3').val(),
+                kgs_i_3: $('#input_insumo_3').val(),
+                insumo_4: $('#insumo_4').val() == "-1" ? null : $('#insumo_4').val(),
+                kgs_i_4: $('#input_insumo_4').val(),
+                insumo_5: $('#insumo_5').val() == "-1" ? null : $('#insumo_5').val(),
+                kgs_i_5: $('#input_insumo_5').val(),
+                insumo_6: $('#insumo_6').val() == "-1" ? null : $('#insumo_6').val(),
+                kgs_i_6: $('#input_insumo_6').val(),
+                insumo_7: $('#insumo_7').val() == "-1" ? null : $('#insumo_7').val(),
+                kgs_i_7: $('#input_insumo_7').val(),
+                insumo_8: $('#insumo_8').val() == "-1" ? null : $('#insumo_8').val(),
+                kgs_i_8: $('#input_insumo_8').val(),
+                insumo_9: $('#insumo_9').val() == "-1" ? null : $('#insumo_9').val(),
+                kgs_i_9: $('#input_insumo_9').val(),
+                insumo_10: $('#insumo_10').val() == "-1" ? null : $('#insumo_10').val(),
+                kgs_i_10: $('#input_insumo_10').val(),
+                costo_racion: parseFloat(costo_racion).toFixed(2),
+                costo_dia: parseFloat(costo_dia).toFixed(2),
+                costo_modulo: parseFloat(costo_modulo).toFixed(2),
+                costo_modulo_raciones: parseFloat(costo_modulo_dia).toFixed(2),
+                moneda: tipo_moneda,
+                modulo: $('#id_modulo').val(),
+                numero_piscinas: $('#num_piscinas').text(),
+                tipo_cambio: $('#tipo_cambio').val(),
+                fecha: new Date().toLocaleDateString("es-MX",{dateStyle: 'short'}),
+                hora: hora
+            }, (data) => {
+                $('#span_estatus').text(data.estatus);
+            });
         }
     
     // Inputs funcionamiento
     input.hidden#modulos(value="#{user.modulo}")
     input.hidden#user(value="#{user._id}")
+    input.hidden#id_modulo(value="#{user.modulo}")
+    input.hidden#tipo_cambio(value="20.01")
 
     // Título
     section.mb-4
@@ -647,7 +712,7 @@ block contenido
                     i.fas.fa-utensils
                     |  Configuración de alimentos
                 div
-                    a#guardar(href="javascript:guardarConfiguracion();").btn.btn-success.Ripple-parent.green-gradient
+                    a#guardar(href="javascript:guardar();").btn.btn-success.Ripple-parent.green-gradient
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Realizar").fas.fa-save
     
     // Detalles

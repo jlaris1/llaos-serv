@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
     UnidadesNegocios = mongoose.model('UnidadesNegocio');
     Modulos = mongoose.model('Modulos');
     Areas = mongoose.model('Areas');
+    historial = require('./historial');
     
 module.exports = {//HAcen falta try-catch a los metodos
     //Método para obtener todos los usuarios
@@ -167,10 +168,19 @@ module.exports = {//HAcen falta try-catch a los metodos
 		}else{
             var usuario = new Usuarios(solicitud.body);
 
-            usuario.save(function(error){
+            usuario.save( (error) => {
                 if(error){
                     console.log(error);
                 }else{
+                    /*********** AGREGAR AL HISTORIAL */
+                        historial.save(
+                            'shamrock',
+                            'fa-user-plus',
+                            'registro nuevo usuario en el sistema.',
+                            solicitud.session.user._id
+                        )
+                    /******************************* */
+
                     respuesta.json({
                         estatus: 'Guardado'
                     });
@@ -179,14 +189,25 @@ module.exports = {//HAcen falta try-catch a los metodos
         };
     },
     // Actualizar usuario en bd
-    actualizar: function(solicitud, respuesta){
+    actualizar: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		}else{
-            Usuarios.updateOne({"_id": solicitud.params.id}, solicitud.body, function(error){
+            Usuarios.updateOne({"_id": solicitud.params.id}, solicitud.body, (error) => {
                 if(error){
                     console.log(error);
                 } else {
+                    /*********** AGREGAR AL HISTORIAL */
+                    console.log(solicitud.session.user);
+
+                        historial.save(
+                            'shamrock',
+                            'fa-user-edit',
+                            'actualizó al usuario <small>' + solicitud.body.nombre + '.</small>',
+                            solicitud.session.user._id
+                        )                    
+                    /******************************* */
+
                     respuesta.json({
                         estatus: 'Actualizado'
                     });
@@ -195,14 +216,23 @@ module.exports = {//HAcen falta try-catch a los metodos
         };
     },
     // Eliminar usuario de bd
-    eliminar: function(solicitud, respuesta){
+    eliminar: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		}else{
-            Usuarios.deleteOne({"_id": solicitud.params.id}, function(error){
+            Usuarios.deleteOne({"_id": solicitud.params.id}, (error) => {
                 if(error){
                     console.log(error);
                 } else {
+                    /*********** AGREGAR AL HISTORIAL */
+                        historial.save(
+                            'shamrock',
+                            'fa-user-times',
+                            ' eliminó al usuario ' + solicitud.params.id + ' .',
+                            solicitud.session.user._id
+                        )  
+                    /******************************* */
+
                     respuesta.redirect("/usuarios");
                 }
             });

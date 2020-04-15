@@ -6,10 +6,12 @@ var mongoose = require('mongoose');
     OrdenesOld = mongoose.model('OrdenesOld');
     Errores = mongoose.model('Errores');
     FechaHora = require('./fechahora');
+    chalk = require('chalk');
     UnidadesNegocio = mongoose.model('UnidadesNegocio');
 
     var fechas = [];
     var alimento = [];
+    var piscinas = [];
 
     var dia1 = 0, dia2 = 0, dia3 = 0, dia4 = 0, dia5 = 0, dia6 = 0, dia7 = 0, dia8 = 0, dia9 = 0, dia10 = 0,
         dia11 = 0, dia12 = 0, dia13 = 0, dia14 = 0, dia15 = 0, dia16 = 0, dia17 = 0, dia18 = 0, dia19 = 0, dia20 = 0,
@@ -232,7 +234,6 @@ module.exports = {
             var dia_actual = new Date(), y = dia_actual.getFullYear(), m = dia_actual.getMonth();
             var dia_un_anio = new Date(), y1 = dia_un_anio.getFullYear()-1, m1 = dia_un_anio.getMonth();
             var dia_dos_anio = new Date(), y2 = dia_dos_anio.getFullYear()-1, m2 = dia_dos_anio.getMonth();
-           
 
             // Variables año en curso
             var inicio_anio_actual = dia_actual.getFullYear() + '-01-01';
@@ -259,7 +260,6 @@ module.exports = {
             
             /** Solo utilizar por ordenes viejas de 2018 */
             var mesNombres = [ "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre" ]; 
-
 
             var un_anio_atras = dia_actual.getFullYear() - 1;
             var dos_anio_atras = dia_actual.getFullYear() - 2;
@@ -382,32 +382,30 @@ module.exports = {
                     });
                 }
             });
-
-            /******************** AÑO PASADO */
-            
         }
     },
     indicadoresAlimento: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		}else{
-            var m01 = 0, m05 = 0, m07 = 0;
+            var m01 = 0, m05 = 0, m07 = 0, m06 = 0;
+            var m2_01 = 0;
             var dia = 0;
 
             reiniciarContadores();
 
-            var dia_actual = new Date(), y = dia_actual.getFullYear(), m = dia_actual.getMonth();
-           
+            var dia_actual = new Date(), y = dia_actual.getFullYear(), m = dia_actual.getMonth(), d = dia_actual.getDate();
+
             // Variables año en curso
             var primerDiaMes = new Date(y, m, 1).toLocaleDateString("es-MX",{dateStyle: 'short'});
             var ultimoDiaMes = new Date(y, m + 1, 0).toLocaleDateString("es-MX",{dateStyle: 'short'});
             
 
             Nutricion.find({
-                fecha: {
+                /*fecha: {
                     $gte: primerDiaMes,
                     $lte: ultimoDiaMes
-                }
+                }*/
             },{fecha: 1, estanque: 1, kg_racion: 1}, (error, nutricion) => {
                 if(error){
                     console.log(error);
@@ -416,25 +414,241 @@ module.exports = {
                         if(error){
                             console.log(error);
                         } else {
-                            
-                            for(let i = 0; i <= nutricion.length - 1; i ++) {
+                            Modulos.populate( nutricion, {path: 'estanque.modulo'}, (error, nutricion) => {
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    UnidadesNegocio.populate( nutricion, {path: 'estanque.modulo.unidad_negocio'}, (error, nutricion) =>{
+                                        if(error){
+                                            console.log(error);
+                                        } else {
+                                            //console.log(nutricion);
 
-                                /** Obtener sumatoria por piscina */
-                                if(nutricion[i].estanque.codigo == "M-01"){
-                                    m01 += parseFloat(nutricion[i].kg_racion);
-                                } 
-                                
-                                if(nutricion[i].estanque.codigo == "M-05"){
-                                    m05 += parseFloat(nutricion[i].kg_racion);
-                                } 
-                                
-                                if(nutricion[i].estanque.codigo == "M-07"){
-                                    m07 += parseFloat(nutricion[i].kg_racion);
+                                            for(let i = 0; i <= nutricion.length - 1; i ++) {
+                                                if(existePiscina(nutricion[i].estanque.codigo) == false){
+
+                                                    piscinas.push(
+                                                        { 
+                                                            codigo: nutricion[i].estanque.codigo,
+                                                            unidad_negocio: nutricion[i].estanque.modulo.unidad_negocio.nombre
+                                                        }
+                                                    );
+                                                }
+                
+                                                /*if(i == 0){
+                                                    var date = new Date(nutricion[i].fecha);
+                                                    date.setDate(date.getDate() + 1);
+                                                    
+                                                    fechas.push(new Date(date).toLocaleDateString("es-MX",{dateStyle: 'short'}));
+                                                } 
+                                                
+                                                if(i > 0) {
+                                                    if(new Date(nutricion[i].fecha).getTime() != new Date(nutricion[i-1].fecha).getTime()){
+                                                        var date = new Date(nutricion[i].fecha);
+                                                        date.setDate(date.getDate() + 1);
+                                                        fechas.push(new Date(date).toLocaleDateString("es-MX",{dateStyle: 'short'}));
+                                                    }
+                                                }*/
+                
+                                            } 
+
+                                            var total = 0;
+                                            
+                                            piscinas.forEach( p => {
+                                                p.acumulado =  nutricion.map( n => {
+                                                    if( n.estanque.codigo == p.codigo ){
+                                                        return parseFloat(n.kg_racion);
+                                                    }
+                                                }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                                                total += p.acumulado;
+                                            });
+
+                                            respuesta.json({piscinas,total});
+                                        }
+                                    })
                                 }
+                            });                               
 
+                            /*var m05_list = [];
+                            var m05_list_dia = [];
+                            var m07_list = [];
+                            var m07_list_dia = [];
+                            var m2_01_list = [];
+                            var m2_01_list_dia = [];
+                            var m06_list = [];
+                            var m06_list_dia = [];
+                            
+                            m05_list = nutricion.map( n => {
+                                if(n.estanque.codigo == "M-05"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined);
+
+                            var d1_m05 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(primerDiaMes).getTime() && n.estanque.codigo == "M-05"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                            var d2_m05 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 2).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-05"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                            var d3_m05 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 3).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-05"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                            var d4_m05 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 4).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-05"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                            var d5_m05 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 5).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-05"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+
+                            m05_list_dia = [d1_m05, d2_m05, d3_m05, d4_m05, d5_m05];
+
+                            /// M-06
+                            m06_list = nutricion.map( n => {
+                                if(n.estanque.codigo == "M-06"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined);
+
+                            var d1_m06 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(primerDiaMes).getTime() && n.estanque.codigo == "M-06"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                            var d2_m06 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 2).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-06"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                            var d3_m06 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 3).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-06"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                            var d4_m06 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 4).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-06"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                            var d5_m06 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 5).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-06"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+
+                            m06_list_dia = [d1_m06, d2_m06, d3_m06, d4_m06, d5_m06];
+
+                            ///
+                            m07_list = nutricion.map( n => {
+                                if(n.estanque.codigo == "M-07"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined);
+
+                            var d1_m07 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(primerDiaMes).getTime() && n.estanque.codigo == "M-07"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                            var d2_m07 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 2).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-07"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                            var d3_m07 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 3).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-07"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                            var d4_m07 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 4).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-07"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                            var d5_m07 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 5).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-07"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                            m07_list_dia = [d1_m07, d2_m07, d3_m07, d4_m07, d5_m07];
+
+                            m2_01_list = nutricion.map( n => {
+                                if(n.estanque.codigo == "M2-01"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined);
+
+                            var d1_m2_01 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(primerDiaMes).getTime() && n.estanque.codigo == "M2-01"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+                            
+                            
+                            var d2_m2_01 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 2).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M2-01"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+
+                            var d3_m2_01 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 3).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M2-01"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+
+                            var d4_m2_01 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 4).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M2-01"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                            var d5_m2_01 = nutricion.map( n => {
+                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 5).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M2-01"){
+                                    return parseFloat(n.kg_racion);
+                                }
+                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+                            m2_01_list_dia = [d1_m2_01, d2_m2_01, d3_m2_01, d4_m2_01, d5_m2_01];
+
+                            m05 = m05_list.reduce((a, b) => a + b, 0);   
+                            m07 = m07_list.reduce((a, b) => a + b, 0);
+                            m06 = m06_list.reduce((a, b) => a + b, 0);                         
+                            m2_01 = m2_01_list.reduce((a, b) => a + b, 0);                          
+
+                            for(let i = 0; i <= nutricion.length - 1; i ++) {
+                                
                                 if(i == 0){
                                     var date = new Date(nutricion[i].fecha);
                                     date.setDate(date.getDate() + 1);
+                                    
                                     fechas.push(new Date(date).toLocaleDateString("es-MX",{dateStyle: 'short'}));
                                     dia += 1;
                                     sumarAlDia(dia, nutricion[i].kg_racion);
@@ -460,15 +674,42 @@ module.exports = {
                             respuesta.json({
                                 m01: m01,
                                 m05: m05,
+                                m06: m06,
                                 m07: m07,
+                                m2_01: m2_01,
+                                m05_list_dia: m05_list_dia,
+                                m07_list_dia: m07_list_dia,
+                                m06_list_dia: m06_list_dia,
+                                m2_01_list_dia: m2_01_list_dia,
                                 fechas: fechas,
                                 alimento: alimento
-                            });
+                            });*/
+
+                            
 
                         }
                     });
                 }
             }).sort({fecha: 1, codigo: 1});
+        }
+    },
+    historial: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		}else{
+            Historial.find( (error, historial) => {
+                if(error){
+                    console.log(error);
+                } else {
+                    Usuarios.populate( historial, {path: 'usuario'}, (error, historial) => {
+                        if(error){
+                            console.log(error);
+                        } else {
+                            respuesta.json(historial);
+                        }
+                    });
+                }
+            })
         }
     }
 };
@@ -678,4 +919,18 @@ function reiniciarContadores(){
         dia11 = 0, dia12 = 0, dia13 = 0, dia14 = 0, dia15 = 0, dia16 = 0, dia17 = 0, dia18 = 0, dia19 = 0, dia20 = 0,
         dia21 = 0, dia22 = 0, dia23 = 0, dia24 = 0, dia25 = 0, dia26 = 0, dia27 = 0, dia28 = 0, dia29 = 0, dia30 = 0,
         dia31 = 0;
+}
+
+function existePiscina(piscina) {
+    if(piscinas != undefined && piscinas != null && piscinas.length > 0){
+        for(let i = 0; i <= piscinas.length -1; i ++){
+            if(piscina == piscinas[i].codigo){
+                return true;
+            }
+        }
+    } else {
+        return false;
+    }
+
+    return false;
 }

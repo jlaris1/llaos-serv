@@ -3982,27 +3982,7 @@ module.exports = {
     articulosOrdenRuta: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
-        }else{
-            /*ArticulosEnRuta.find({"ordenRuta": solicitud.params.id}, function(error, articulos){
-                if(error){
-                    console.log(error);
-                } else {
-                    Ordenes.populate(articulos, {path: "orden"}, function(error, articulos){
-                        if(error){
-                            console.log(error);
-                        } else {
-                            Proveedores.populate(articulos, {path: "proveedor"}, function(error, articulos){
-                                if(error){
-                                    console.log(error);
-                                } else {
-                                    respuesta.json(articulos)
-                                }
-                            });
-                        }
-                    });
-                }
-            });*/
-            
+        }else{    
             OrdenesRuta.findOne({"_id": solicitud.params.id}, (error, orden) => {
                 if(error){
                     console.log(error);
@@ -4291,11 +4271,20 @@ module.exports = {
             });
         };
     },
+    articuloOrdenVieja: (solicitud, respuesta) => {
+        Productos.findOne({codigo: solicitud.params.id}, (error, producto) => {
+            if(error){
+                console.log(error);
+            } else {
+                respuesta.json(producto);
+            }
+        });
+    }
 }
 
 function generarPDF(folio, articulos, total_cant){
      // Crear el documento
-     doc = new pdf({
+    doc = new pdf({
         // Establecer tamaño de hoja
         size: 'letter',
         layout: 'landscape'

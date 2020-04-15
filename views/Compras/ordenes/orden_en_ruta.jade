@@ -147,37 +147,37 @@ block contenido
             abrirLoader();
 
             $.getJSON('/ordenes/ordenruta/articulos/orden/' + idOrden, (artis)=>{
-                //articulos = artis;
-
                 if(artis.length > 0){   
                     for(let i = 0; i <= artis.length - 1; i++ ) {
-                        rowCount = $('#articulos >tbody >tr').length;
+                        if(existeArticulo(artis[i], proveedor, serie )){} else {
+                            rowCount = $('#articulos >tbody >tr').length;
 
-                        $('#articulos > tbody:last').append(
-                        "<tr id='tr" + rowCount + "'>" +
-                        "   <td class='text-center'>"+
-                        "       <div class='d-flex'>"+
-                        "           <a class='btn btn-danger btn-small' style='margin-right: 5px;' href='javascript:eliminarArticulo(\""+artis[i]._id+"\", \""+rowCount+"\")', data-toggle='tooltip', data-placement='top', title='Eliminar artículo'> "+ 
-                        "               <i class='fas fa-2x fa-minus-circle' style='color: white;'></i>" +
-                        "           </a>" +
-                        "           <a class='btn btn-primary btn-small' href='javascript:editarArticulo(\""+artis[i]._id+"\",\""+proveedor+"\");', data-toggle='tooltip', data-placement='top', title='Editar artículo'> "+ 
-                        "               <i class='fas fa-2x fa-edit' style='color: white;'></i>" +
-                        "           </a>" +
-                        "       </div>" +
-                        "   </td> " +
-                        "   <td class='text-center' id='cant"+artis[i]._id+"'>" + parseFloat(artis[i].cantidad).toFixed(3) + "</td> " +
-                        "   <td>" + artis[i].unidad + "</td> " +
-                        "   <td>" + artis[i].codigo + "</td> " +
-                        "   <td>" + artis[i].descripcion + "</td> " +
-                        "   <td><strong>" + serie + "</strong></td> " +
-                        "   <td><strong>" + proveedor + "</strong></td> " +
-                        "</tr>")
+                            $('#articulos > tbody:last').append(
+                            "<tr id='tr" + rowCount + "'>" +
+                            "   <td class='text-center'>"+
+                            "       <div class='d-flex'>"+
+                            "           <a class='btn btn-danger btn-small' style='margin-right: 5px;' href='javascript:eliminarArticulo(\""+artis[i]._id+"\", \""+rowCount+"\")', data-toggle='tooltip', data-placement='top', title='Eliminar artículo'> "+ 
+                            "               <i class='fas fa-2x fa-minus-circle' style='color: white;'></i>" +
+                            "           </a>" +
+                            "           <a class='btn btn-primary btn-small' href='javascript:editarArticulo(\""+artis[i]._id+"\",\""+proveedor+"\");', data-toggle='tooltip', data-placement='top', title='Editar artículo'> "+ 
+                            "               <i class='fas fa-2x fa-edit' style='color: white;'></i>" +
+                            "           </a>" +
+                            "       </div>" +
+                            "   </td> " +
+                            "   <td class='text-center' id='cant"+artis[i]._id+"'>" + parseFloat(artis[i].cantidad).toFixed(3) + "</td> " +
+                            "   <td>" + artis[i].unidad + "</td> " +
+                            "   <td>" + artis[i].codigo + "</td> " +
+                            "   <td>" + artis[i].descripcion + "</td> " +
+                            "   <td id='serie"+artis[i]._id+"'><strong>" + serie + "</strong></td> " +
+                            "   <td><strong>" + proveedor + "</strong></td> " +
+                            "</tr>")
 
-                        subtotal += (parseFloat(artis[i].cantidad) * parseFloat(artis[i].precio_unitario));
-                        iva += (parseFloat(artis[i].cantidad) * parseFloat(artis[i].iva));
-                        total += (parseFloat(artis[i].cantidad) * parseFloat(artis[i].importe));
+                            subtotal += (parseFloat(artis[i].cantidad) * parseFloat(artis[i].precio_unitario));
+                            iva += (parseFloat(artis[i].cantidad) * parseFloat(artis[i].iva));
+                            total += (parseFloat(artis[i].cantidad) * parseFloat(artis[i].importe));
 
-                        articulos.push(artis[i]);
+                            articulos.push(artis[i]);
+                        }
                     }
                 }               
             });
@@ -297,6 +297,89 @@ block contenido
             $('#span_chofer').text($("#chofer option:selected").html());
             chofer = $('#chofer').val();
         }
+
+        function buscarEnArticulos(art){
+            if(articulos.length > 0){
+                for(let i = 0; i <= articulos.length -1; i++){
+                    if(articulos[i].id_producto == art.id_producto){
+                        return i;
+                    }
+                }
+            } else {
+                return 0;
+            }
+
+            return 0;
+        }
+
+        function existeArticulo(art, proveedor, serie){
+            if(art !== undefined && art != null){
+                if(art.id_producto !== undefined && art.id_producto != null){
+                    if(articulos.length > 0){
+                        for(let i = 0; i <= articulos.length - 1; i++){
+
+                            if(articulos[i].id_producto == art.id_producto){
+                                articulos[i].cantidad = (parseFloat(articulos[i].cantidad) + parseFloat(art.cantidad)).toFixed(3);
+                                $('#cant'+ articulos[i]._id).html(articulos[i].cantidad);
+                                $('#serie'+ articulos[i]._id).html($('#serie'+ articulos[i]._id).html() + ", <strong>" + art.orden.serie + "</strong>");
+                                return true;
+                            }
+                        }
+                    } else {
+                        return false;
+                    }
+                } else {
+                    $.getJSON('/ordenes/ordenruta/articulo/buscar/' + art.codigo, (producto)=>{
+                        if(producto !== undefined && producto != null){
+                            art.id_producto = producto._id;
+
+                            let index = buscarEnArticulos(art);
+
+                            if( index > 0){
+                                articulos[index].cantidad = (parseFloat(articulos[index].cantidad) + parseFloat(art.cantidad)).toFixed(3);
+                                $('#cant'+ articulos[index]._id).html(articulos[index].cantidad);
+                                $('#serie'+ articulos[index]._id).html($('#serie'+ articulos[index]._id).html() + ", <strong>" + art.orden.serie + "</strong>");
+                                return true;
+                            }
+
+                            rowCount = $('#articulos >tbody >tr').length;
+
+                            $('#articulos > tbody:last').append(
+                            "<tr id='tr" + rowCount + "'>" +
+                            "   <td class='text-center'>"+
+                            "       <div class='d-flex'>"+
+                            "           <a class='btn btn-danger btn-small' style='margin-right: 5px;' href='javascript:eliminarArticulo(\""+art._id+"\", \""+rowCount+"\")', data-toggle='tooltip', data-placement='top', title='Eliminar artículo'> "+ 
+                            "               <i class='fas fa-2x fa-minus-circle' style='color: white;'></i>" +
+                            "           </a>" +
+                            "           <a class='btn btn-primary btn-small' href='javascript:editarArticulo(\""+art._id+"\",\""+proveedor+"\");', data-toggle='tooltip', data-placement='top', title='Editar artículo'> "+ 
+                            "               <i class='fas fa-2x fa-edit' style='color: white;'></i>" +
+                            "           </a>" +
+                            "       </div>" +
+                            "   </td> " +
+                            "   <td class='text-center' id='cant"+art._id+"'>" + parseFloat(art.cantidad).toFixed(3) + "</td> " +
+                            "   <td>" + art.unidad + "</td> " +
+                            "   <td>" + art.codigo + "</td> " +
+                            "   <td>" + art.descripcion + "</td> " +
+                            "   <td id='serie"+art._id+"'><strong>" + serie + "</strong></td> " +
+                            "   <td><strong>" + proveedor + "</strong></td> " +
+                            "</tr>")
+
+                            subtotal += (parseFloat(art.cantidad) * parseFloat(art.precio_unitario));
+                            iva += (parseFloat(art.cantidad) * parseFloat(art.iva));
+                            total += (parseFloat(art.cantidad) * parseFloat(art.importe));
+
+                            articulos.push(art);
+                        }
+                    });
+
+                    //console.log(articulos)
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
     //Termina Javascript
     input#numero_orden(type="text" name="numero_orden" value="#{numeroOrden}").hidden
     input#id_user(value="#{user._id}").hidden

@@ -98,6 +98,7 @@ module.exports = function(app){
     app.get('/sesion-expirada', sesion.expirada);
     app.get('/obtener/indicadores/compras', sesion.indicadoresCompras);
     app.get('/obtener/indicadores/alimento', sesion.indicadoresAlimento);
+    app.get('/historial', sesion.historial);
 
     //Usuarios
     app.use('/usuarios', usuariosRouter);
@@ -191,6 +192,7 @@ module.exports = function(app){
     ordenesRouter.get('/ordenruta/cerrar/:id', ordenes.cerrarOrdenRuta);
     ordenesRouter.post('/ordenruta/inventario', ordenes.entradaOrdenRuta);
     ordenesRouter.get('/ordenruta/articulos/:id', ordenes.articulosOrdenRuta);
+    ordenesRouter.get('/ordenruta/articulo/buscar/:id', ordenes.articuloOrdenVieja);
 
     // REVISAR TODO LO QUE SE VA A ELIMINAR DE ARRIBA
     ordenesRouter.get('/ordenesruta', ordenes.ordenesEnRutaBandeja);
@@ -239,8 +241,11 @@ module.exports = function(app){
     inventariosRouter.get('/entradas', inventarios.abrirEntradas);
     inventariosRouter.get('/salidas', inventarios.abrirSalidas);
     inventariosRouter.get('/salidas/ver/:id', inventarios.verOrdenSalida);
+
+
     //inventariosRouter.post('/report/pdf', inventarios.pdf);
-    //inventariosRouter.post('/report/xls', inventarios.xls);
+    inventariosRouter.post('/report/salidas/xls', inventarios.xls);
+    inventariosRouter.post('/report/entradas/xls', inventarios.xls);
 
     //Empleados
     app.use('/empleados', empleadosRouter);

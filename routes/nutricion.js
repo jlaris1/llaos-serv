@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
     Usuarios = mongoose.model('Usuarios');
     Productos = mongoose.model('Productos')
     chalk = require('chalk');
+    historial = require('./historial');
 
 var file_path = './files/reports/nutricion/';
 
@@ -223,6 +224,16 @@ module.exports = {
                     if(error){
                         console.log(chalk.bgRed(error));
                     } else {
+                        /*********** AGREGAR AL HISTORIAL */
+                            historial.save(
+                                'perano',
+                                'fa-vial',
+                                'registró nutricion para la piscina <em class="text-md">' + solicitud.body.estanque.codigo + '.</em>',
+                                solicitud.session.user._id
+                            )
+                        /******************************* */
+
+
                         if(i == solicitud.body.nutricion.length -1){
                             respuesta.json(
                                 {
@@ -333,7 +344,7 @@ module.exports = {
                 fechaInicio = new Date(solicitud.body.fechaInicio).getFullYear() + '-' +
                             (new Date(solicitud.body.fechaInicio).getMonth() + 1) +  '-' +
                             (new Date(solicitud.body.fechaInicio).getDate() + 1);
-                              
+
                 fechaFin = new Date(solicitud.body.fechaFin).getFullYear() + '-' +
                         (new Date(solicitud.body.fechaFin).getMonth() + 1) +  '-' +
                         (new Date(solicitud.body.fechaFin).getDate() + 1);
@@ -396,6 +407,15 @@ module.exports = {
                                                 piscinas.push(n.estanque);
                                                 charoleros.push(n.charolero);
                                             })
+
+                                            /*********** AGREGAR AL HISTORIAL */
+                                                historial.save(
+                                                    'brinkpink',
+                                                    'fa-file-pdf',
+                                                    'generó reporte en pdf por <em class="text-md">' + column + '.</em>',
+                                                    solicitud.session.user._id
+                                                )
+                                            /******************************* */
 
                                             respuesta.render('Nutricion/all',
                                                 {
@@ -529,7 +549,7 @@ module.exports = {
                 fechaInicio = new Date(solicitud.body.fechaInicio).getFullYear() + '-' +
                             (new Date(solicitud.body.fechaInicio).getMonth() + 1) +  '-' +
                             (new Date(solicitud.body.fechaInicio).getDate() + 1);
-                              
+
                 fechaFin = new Date(solicitud.body.fechaFin).getFullYear() + '-' +
                         (new Date(solicitud.body.fechaFin).getMonth() + 1) +  '-' +
                         (new Date(solicitud.body.fechaFin).getDate() + 1);
@@ -591,7 +611,16 @@ module.exports = {
                                             nutricion.forEach(function(n){
                                                 piscinas.push(n.estanque);
                                                 charoleros.push(n.charolero);
-                                            })
+                                            });
+                                        
+                                        /*********** AGREGAR AL HISTORIAL */
+                                            historial.save(
+                                                'brinkpink',
+                                                'fa-file-excel',
+                                                'generó reporte en excel por <em class="text-md">'+ column + '.</em>',
+                                                solicitud.session.user._id
+                                            )
+                                        /******************************* */
 
                                             respuesta.render('Nutricion/all',
                                                 {
@@ -771,7 +800,7 @@ module.exports = {
                 }
             });
         }
-    }
+    },
 }
 
 function generatePdf(data, title, search, pdf_name){

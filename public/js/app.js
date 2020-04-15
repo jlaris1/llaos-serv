@@ -637,8 +637,16 @@ function reportePDF(){
     document.frmReports.submit();
 }
 
+var sub_ruta = "";
+
 function reporteXLS(){
-    var action = "/"+ $('#ruta').val() +"/report/xls";
+    var action = '';
+
+    if(sub_ruta != ''){
+        action = "/"+ $('#ruta').val() +"/report/"+sub_ruta+"/xls";
+    } else {
+        action = "/"+ $('#ruta').val() +"/report/xls";
+    }
 
     $('#frmReports').attr('action', action);
     document.frmReports.submit();
@@ -1045,6 +1053,64 @@ function reports(){
             $('#input').attr('required', false);
             $('#combo').attr('required', false);
             $('#label_charo').text("| Parametrista");
+        } else if(this.value == 'salidas') {
+            $('#piscinas').addClass('hidden');
+            $('#areas').addClass('hidden');
+            $('#estatus').addClass('hidden');
+            $('#otros').addClass('hidden');
+            $('#fechas').addClass('hidden');
+            $('#responsables').addClass('hidden');
+            $('#solicitantes').addClass('hidden');
+            $('#modulos').addClass('hidden');
+            $('#fechaInicio').addClass('hidden');
+            $('#fechaFin').addClass('hidden');
+            $('#inputs').addClass('hidden');
+            $('#combos').addClass('hidden');
+            $('#charolero').addClass('hidden');
+            $('#piscina').attr('required', false);
+            $('#estatus').attr('required', false);
+            $('#modulo').attr('required', false);
+            $('#otro').attr('required', false);
+            $('#fecha').attr('required', false);
+            $('#area').attr('required', false);
+            $('#charoleros').attr('required', false);
+            $('#solicitante').attr('required', false);
+            $('#responsable').attr('required', false);
+            $('#fInicio').attr('required', false);
+            $('#fFin').attr('required', false);
+            $('#input').attr('required', false);
+            $('#combo').attr('required', false);
+
+            sub_ruta = 'salidas';
+        } else if(this.value == 'entradas') {
+            $('#piscinas').addClass('hidden');
+            $('#areas').addClass('hidden');
+            $('#estatus').addClass('hidden');
+            $('#otros').addClass('hidden');
+            $('#fechas').addClass('hidden');
+            $('#responsables').addClass('hidden');
+            $('#solicitantes').addClass('hidden');
+            $('#modulos').addClass('hidden');
+            $('#fechaInicio').addClass('hidden');
+            $('#fechaFin').addClass('hidden');
+            $('#inputs').addClass('hidden');
+            $('#combos').addClass('hidden');
+            $('#charolero').addClass('hidden');
+            $('#piscina').attr('required', false);
+            $('#estatus').attr('required', false);
+            $('#modulo').attr('required', false);
+            $('#otro').attr('required', false);
+            $('#fecha').attr('required', false);
+            $('#area').attr('required', false);
+            $('#charoleros').attr('required', false);
+            $('#solicitante').attr('required', false);
+            $('#responsable').attr('required', false);
+            $('#fInicio').attr('required', false);
+            $('#fFin').attr('required', false);
+            $('#input').attr('required', false);
+            $('#combo').attr('required', false);
+
+            sub_ruta = 'entradas';
         }
     });
 /********************** */
@@ -1054,7 +1120,6 @@ function reports(){
 function cerrarAlert(){
     $('#alertDiv').addClass('hidden');
 }
-
 
 // Abrir loader
 function abrirLoader(){
@@ -1067,3 +1132,7 @@ function cerrarLoader(){
     $(".modal-loader").fadeOut("300");
     console.log("Loader cerrado...");
 }
+
+Array.prototype.unique = function(a){
+    return function(){return this.filter(a)}}(function(a,b,c){return c.indexOf(a,b+1)<0
+});

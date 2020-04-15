@@ -11,6 +11,9 @@ var mongoose = require('mongoose');
     zf = require('./zfill');
     chalk = require('chalk');
 
+    // RUTA PARA REPORTES
+    var file_path = './files/reports/inventarios/';
+
 module.exports = {
     // Abrir inventario de granja
     inventarioGranja: function(solicitud, respuesta){
@@ -75,9 +78,13 @@ module.exports = {
                                                     titulo: "Inventarios",
                                                     criterios: [
                                                         {
-                                                            val: "",
-                                                            name: ""
-                                                        }
+                                                            val: "salidas",
+                                                            name: "Salidas"
+                                                        },
+                                                        {
+                                                            val: "entradas",
+                                                            name: "Entradas"
+                                                        },
                                                     ],
                                                     piscinas: [
                                                         {
@@ -1376,6 +1383,45 @@ module.exports = {
                 }
             });
         }
+    },
+    xls: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{ 
+            OrdenSalida.find( (error, salidas) => {
+                if(error){
+                    console.log(chalk.bgRed(error));
+                } else {
+                    Modulos.populate(salidas, {path: 'modulo'}, (error, salidas) =>{
+                        if(error){
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            Estanques.populate(salidas, {path: 'piscina'}, (error, salidas) => {
+                                if(error){
+                                    console.log(chalk.bgRed(error));
+                                } else {
+                                    UnidadesNegocio.populate(salidas, {path: 'lugar_unidad'}, (error, salidas) => {
+                                        if(error){
+                                            console.log(chalk.bgRed(error));
+                                        } else {
+                                            Usuarios.populate(salidas, {path: 'solicita'}, (error, salidas) => {
+                                                if(error){
+                                                    console.log(chalk.bgRed(error));
+                                                } else {
+                                                    title =  'Reporte de Salidas';    
+                                                    xls_name = 'reporte_inventarios_salidas.xlsx';     
+                                                    excelReport(salidas, title, xls_name);
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
     }
 }
 
@@ -1475,4 +1521,285 @@ function generatePDF(data){
     doc.end(); 
 
     return pdf_name;
+}
+
+function excelReport(data){
+    var options = {
+        filename:  file_path + '/' + xls_name ,
+        useStyles: true,
+        useSharedStrings: true
+    };
+
+    console.log(xls_name);
+
+    var wb = new Excel.stream.xlsx.WorkbookWriter(options);
+
+    wb.creator = 'Llaos Web 2.0';
+    wb.created = new Date();
+
+    var ws = wb.addWorksheet('Reporte');
+
+    // TITULO
+    ws.mergeCells('A1:L1');
+    ws.getCell('E1').value = title;
+    ws.getCell('E1').font = {
+        name: "Roboto", 
+        size: 12,  
+        bold: true,
+        horizontal: 'center',
+        color: { argb: 'ffffff'}
+    };   
+    ws.getCell('E1').fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: {argb:'000000'}
+    };
+    ws.getCell('E1').alignment = { vertical: 'middle', horizontal: 'center' };
+    //ws.getCell('E1').height = 25;
+
+    // SUBTITULO
+    ws.mergeCells('A2:L2');
+    ws.getCell('E2').value = 'LLAOS ACUACULTURA S.A. DE C.V.';
+    ws.getCell('E2').font = {
+        name: "Roboto", 
+        size: 11,  
+        bold: true,
+        horizontal: 'center',
+        color: { argb: 'ffffff'}
+    };
+    ws.getCell('E2').alignment = { vertical: 'middle', horizontal: 'center' }; 
+    ws.getCell('E2').fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: {argb:'000000'},
+    };  
+
+    ws.getRow(5).values = ['Código', 'Descripción', 'Unidad', 'Cantidad', 'Almacen', 'Unidad Negocio', 'Salida No.', 'Solicitó', 'Área', 'Módulo', 'Piscina','Fecha'];
+
+    /**** ESTILOS DE ENCABEZADOS */
+        ws.getCell('A5').font = { name: "Roboto", size: 12, color: {argb: 'FFFFFF'}};
+        ws.getCell('A5').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('A5').numFmt = '0.00';
+        ws.getCell('A5').border = {
+            bottom: {style:'thin', color: {argb:'#FFF'}},
+            left: {style:'thin', color: {argb:'#FFF'}},
+            top: {style:'thin', color: {argb:'#FFF'}},
+            right: {style:'thin', color: {argb:'#FFF'}}
+        };
+        ws.getCell('A5').fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: {argb:'000000'},
+        };
+
+        ws.getCell('B5').font = { name: "Roboto", size: 12, color: {argb: 'FFFFFF'}};
+        ws.getCell('B5').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('B5').border = {
+            bottom: {style:'thin', color: {argb:'#FFF'}},
+            left: {style:'thin', color: {argb:'#FFF'}},
+            top: {style:'thin', color: {argb:'#FFF'}},
+            right: {style:'thin', color: {argb:'#FFF'}}
+        };
+        ws.getCell('B5').fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: {argb:'000000'},
+        };
+
+        ws.getCell('C5').font = { name: "Roboto", size: 12, color: {argb: 'FFFFFF'}};
+        ws.getCell('C5').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('C5').numFmt = '0.00';
+        ws.getCell('C5').border = {
+            bottom: {style:'thin', color: {argb:'#FFF'}},
+            left: {style:'thin', color: {argb:'#FFF'}},
+            top: {style:'thin', color: {argb:'#FFF'}},
+            right: {style:'thin', color: {argb:'#FFF'}}
+        };
+        ws.getCell('C5').fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: {argb:'000000'},
+        };
+
+        ws.getCell('D5').font = { name: "Roboto", size: 12, color: {argb: 'FFFFFF'}};
+        ws.getCell('D5').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('D5').numFmt = '0.00';
+        ws.getCell('D5').border = {
+            bottom: {style:'thin', color: {argb:'#FFF'}},
+            left: {style:'thin', color: {argb:'#FFF'}},
+            top: {style:'thin', color: {argb:'#FFF'}},
+            right: {style:'thin', color: {argb:'#FFF'}}
+        };
+        ws.getCell('D5').fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: {argb:'000000'},
+        };
+
+        ws.getCell('E5').font = { name: "Roboto", size: 12, color: {argb: 'FFFFFF'}};
+        ws.getCell('E5').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('E5').numFmt = '0.00';
+        ws.getCell('E5').border = {
+            bottom: {style:'thin', color: {argb:'#FFF'}},
+            left: {style:'thin', color: {argb:'#FFF'}},
+            top: {style:'thin', color: {argb:'#FFF'}},
+            right: {style:'thin', color: {argb:'#FFF'}}
+        };
+        ws.getCell('E5').fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: {argb:'000000'},
+        };
+
+        ws.getCell('F5').font = { name: "Roboto", size: 12, color: {argb: 'FFFFFF'}};
+        ws.getCell('F5').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('F5').numFmt = '0.00';
+        ws.getCell('F5').border = {
+            bottom: {style:'thin', color: {argb:'#FFF'}},
+            left: {style:'thin', color: {argb:'#FFF'}},
+            top: {style:'thin', color: {argb:'#FFF'}},
+            right: {style:'thin', color: {argb:'#FFF'}}
+        };
+        ws.getCell('F5').fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: {argb:'000000'},
+        };
+
+        ws.getCell('G5').font = { name: "Roboto", size: 12, color: {argb: 'FFFFFF'}};
+        ws.getCell('G5').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('G5').numFmt = '0.00';
+        ws.getCell('G5').border = {
+            bottom: {style:'thin', color: {argb:'#FFF'}},
+            left: {style:'thin', color: {argb:'#FFF'}},
+            top: {style:'thin', color: {argb:'#FFF'}},
+            right: {style:'thin', color: {argb:'#FFF'}}
+        };
+        ws.getCell('G5').fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: {argb:'000000'},
+        };
+
+        ws.getCell('H5').font = { name: "Roboto", size: 12, color: {argb: 'FFFFFF'}};
+        ws.getCell('H5').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('H5').numFmt = '0.00';
+        ws.getCell('H5').border = {
+            bottom: {style:'thin', color: {argb:'#FFF'}},
+            left: {style:'thin', color: {argb:'#FFF'}},
+            top: {style:'thin', color: {argb:'#FFF'}},
+            right: {style:'thin', color: {argb:'#FFF'}}
+        };
+        ws.getCell('H5').fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: {argb:'000000'},
+        };
+
+        ws.getCell('I5').font = { name: "Roboto", size: 12, color: {argb: 'FFFFFF'}};
+        ws.getCell('I5').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('I5').numFmt = '0.00';
+        ws.getCell('I5').border = {
+            bottom: {style:'thin', color: {argb:'#FFF'}},
+            left: {style:'thin', color: {argb:'#FFF'}},
+            top: {style:'thin', color: {argb:'#FFF'}},
+            right: {style:'thin', color: {argb:'#FFF'}}
+        };
+        ws.getCell('I5').fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: {argb:'000000'},
+        };
+
+        ws.getCell('J5').font = { name: "Roboto", size: 12, color: {argb: 'FFFFFF'}};
+        ws.getCell('J5').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('J5').numFmt = '0.00';
+        ws.getCell('J5').border = {
+            bottom: {style:'thin', color: {argb:'#FFF'}},
+            left: {style:'thin', color: {argb:'#FFF'}},
+            top: {style:'thin', color: {argb:'#FFF'}},
+            right: {style:'thin', color: {argb:'#FFF'}}
+        };
+        ws.getCell('J5').fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: {argb:'000000'},
+        };
+
+        ws.getCell('K5').font = { name: "Roboto", size: 12, color: {argb: 'FFFFFF'}};
+        ws.getCell('K5').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('K5').numFmt = '0.00';
+        ws.getCell('K5').border = {
+            bottom: {style:'thin', color: {argb:'#FFF'}},
+            left: {style:'thin', color: {argb:'#FFF'}},
+            top: {style:'thin', color: {argb:'#FFF'}},
+            right: {style:'thin', color: {argb:'#FFF'}}
+        };
+        ws.getCell('K5').fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: {argb:'000000'},
+        };
+
+        ws.getCell('L5').font = { name: "Roboto", size: 12, color: {argb: 'FFFFFF'}};
+        ws.getCell('L5').alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getCell('L5').numFmt = '0.00';
+        ws.getCell('L5').border = {
+            bottom: {style:'thin', color: {argb:'#FFF'}},
+            left: {style:'thin', color: {argb:'#FFF'}},
+            top: {style:'thin', color: {argb:'#FFF'}},
+            right: {style:'thin', color: {argb:'#FFF'}}
+        };
+        ws.getCell('L5').fill = {
+            type: "pattern",
+            pattern: "solid",
+            fgColor: {argb:'000000'},
+        };
+    /*********************/
+
+    ws.columns = [
+        { key: 'codigo'},
+        { key: 'descripcion'},
+        { key: 'unidad'},
+        { key: 'cantidad'},
+        { key: 'almacen'},
+        { key: 'unidad_neg'},
+        { key: 'no_salida'},
+        { key: 'solicito'},
+        { key: 'area'},
+        { key: 'modulo'},
+        { key: 'piscina'},
+        { key: 'fecha'},
+    ]
+
+    for(let i = 0; i <= data.length - 1; i++){
+        for(let j = 0; j <= data[i].articulos.length -1; j++){
+            ws.addRow(
+                {   
+                    codigo: data[i].articulos[j].articulo.codigo,
+                    descripcion: data[i].articulos[j].articulo.descripcion,
+                    unidad: data[i].articulos[j].articulo.unidad,
+                    cantidad: parseFloat(data[i].articulos[j].articulo.cantidad).toFixed(2),
+                    almacen: data[i].lugar_almacen,
+                    unidad_neg: data[i].lugar_unidad.nombre,
+                    no_salida: data[i].numero_orden,
+                    solicito: data[i].solicita.nombre, 
+                    area: data[i].area,
+                    modulo: data[i].modulo != null ? data[i].modulo.nombre : "",
+                    piscina: data[i].piscina != null ? data[i].piscina.codigo : "",
+                    fecha: data[i].registro,
+                }
+            );
+        } 
+    }
+
+    ws.autoFilter = {
+        from: 'A5',
+        to: 'L5',
+    };
+
+    wb.commit().then( function(){
+        console.log("XLS terminado.")
+        return xls_name;
+    });
 }

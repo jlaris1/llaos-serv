@@ -93,7 +93,7 @@ block contenido
                         "   <td>" + articulos[i].codigo + "</td> " +
                         "   <td>" + articulos[i].descripcion + "</td> " +
                         "   <td><strong>" + articulos[i].orden.serie + "</strong></td> " +
-                        "   <td><strong>" + articulos[i].id_producto.nombreEmpresa + "</strong></td> " +
+                        "   <td><strong>" + articulos[i].id_producto.proveedor.nombreEmpresa + "</strong></td> " +
                         "</tr>")
                     }
 
@@ -126,7 +126,7 @@ block contenido
                     "   <td>" + articulos[i].codigo + "</td> " +
                     "   <td>" + articulos[i].descripcion + "</td> " +
                     "   <td>" + articulos[i].orden.serie + "</td> " +
-                    "   <td>" + articulos[i].id_producto.nombreEmpresa + "</td> " +
+                    "   <td>" + articulos[i].id_producto.proveedor.nombreEmpresa + "</td> " +
                     "</tr>");
 
                     articulos_fuera.push(articulos[i]);
@@ -186,7 +186,7 @@ block contenido
                 "   <td>" + articulo.codigo + "</td> " +
                 "   <td>" + articulo.descripcion + "</td> " +
                 "   <td>" + articulo.orden.serie + "</td> " +
-                "   <td>" + articulo.id_producto.nombreEmpresa + "</td> " +
+                "   <td>" + articulo.id_producto.proveedor.nombreEmpresa + "</td> " +
                 "</tr>");
             }
 

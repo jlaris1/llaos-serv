@@ -8,9 +8,7 @@ var express = require('express'),
 	cookieParser = require('cookie-parser'),
 	session = require('express-session'),
 	fileUpload = require('express-fileupload'),
-	portHttps = 3000,
-	portHttp= 80,
-	//port = 443
+	PORT = 3000,
 	app = express();
 	compression = require('compression');
 	fs = require('fs');
@@ -23,9 +21,9 @@ https.createServer({
     key: fs.readFileSync('./public/ssl/key.pem'),
     cert: fs.readFileSync('./public/ssl/cert.pem'),
     passphrase: 'llaos2019'
-}, app).listen(portHttps);
+}, app).listen(PORT);
 
-//http.createServer(app).listen(portHttps);
+//http.createServer(app).listen(PORT);
 	
 require('mongoose-double')(mongoose);
 
@@ -83,7 +81,7 @@ app.locals.moment = require('moment');
 app.use( (err, solicitud, respuesta, next) => {
 	respuesta.status(500);
 	respuesta.json({
-	  "error": `${err}`
+		"error": `${err}`
 	});
 });
 
@@ -118,6 +116,7 @@ require('./config/models/RecepcionLarva');
 require('./config/models/Unidades');
 require('./config/models/UnidadesNegocio');
 require('./config/models/Catalogos');
+require('./config/models/Historial');
 
 /* Importación de clase que contiene todas las rutas */
 require('./config/routes')(app);
