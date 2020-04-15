@@ -228,7 +228,7 @@ module.exports = {
                             historial.save(
                                 'perano',
                                 'fa-vial',
-                                'registró nutricion para la piscina <em class="text-md">' + solicitud.body.estanque.codigo + '.</em>',
+                                'registró nutricion para la piscina <em class="text-md">' + solicitud.body.estanque + '.</em>',
                                 solicitud.session.user._id
                             )
                         /******************************* */
