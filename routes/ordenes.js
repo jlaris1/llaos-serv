@@ -3766,7 +3766,7 @@ module.exports = {
                                             });
                                 
                                             var mailOptions = {
-                                                from: 'Llaos Sist .0 <sistema@llaos.com>',
+                                                from: 'Llaos Sist 2.0 <sistema@llaos.com>',
                                                 //to: 'flopez@llaos.com',
                                                 to: 'jcuamea@llaos.com',
                                                 cc: 'davilar@llaos.com',
