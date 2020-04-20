@@ -111,7 +111,7 @@ block contenido
                 }
         }
 
-         function obtenerModuloSeleccionado(seleccionado){
+        function obtenerModuloSeleccionado(seleccionado){
             if (seleccionado == "5e4eceea3b139a5224a9ee5a" || seleccionado == "5e4ecf2c3b139a5224a9ee5b"){
                     $('#h_modulo').removeClass('hidden');
                     $('#modulosSal').removeClass('hidden');
@@ -186,10 +186,7 @@ block contenido
                 }             
             });
         }
-
-
     //Termina Javascript
-    
     
     //  Título
     section.mb-4
@@ -248,7 +245,8 @@ block contenido
                                     option(value="usuario", selected=('usuario'== usr.permisos)) usuario
                                     option(value="compras", selected=('compras'== usr.permisos)) compras
                                     option(value="admin", selected=('admin'== usr.permisos)) admin
-                                    option(value="almacen_camaron", selected=('almacen_camaron'== usr.permisos)) almacen_camaron
+                                    option(value="almacen_camaron", selected=('almacen_camaron'== usr.permisos)) Almacen camarón
+                                    option(value="gerente_modulo", selected=('gerente_modulo'== usr.permisos)) Gerente módulo
                                     option(value="owner", selected=('owner'== usr.permisos)) owner
                                     option(value="master", selected=('master'== usr.permisos)) master
                                     option(value="externo", selected=('externo'== usr.permisos)) externo

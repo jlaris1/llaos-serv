@@ -553,50 +553,43 @@ module.exports = {
                         if(error){
                             console.log(error);
                         } else {
-                            Modulos.find({"codigo": {$ne: "NLL"}}, (error, modulos) => {
+                            OrdenSalida.find( (error, ordSalida) => {
                                 if(error){
                                     console.log(error);
                                 } else {
-                                    OrdenSalida.find( (error, ordSalida) => {
-                                        if(error){
-                                            console.log(error);
-                                        } else {
-                                            respuesta.render("Inventarios/salida_nueva", 
+                                    respuesta.render("Inventarios/salida_nueva", 
+                                        {
+                                            codigo: '',
+                                            user: solicitud.session.user,
+                                            piscinas: {},
+                                            articulos_salida: {},
+                                            numeroOrden: zf.zfill(ordSalida.length + 1, 6),
+                                            productos: productos,
+                                            titulo: "Inventarios",
+                                            criterios: [
                                                 {
-                                                    codigo: '',
-                                                    user: solicitud.session.user,
-                                                    piscinas: {},
-                                                    modulos: modulos,
-                                                    articulos_salida: {},
-                                                    numeroOrden: zf.zfill(ordSalida.length + 1, 6),
-                                                    productos: productos,
-                                                    titulo: "Inventarios",
-                                                    criterios: [
-                                                        {
-                                                            val: "",
-                                                            name: ""
-                                                        }
-                                                    ],
-                                                    piscinas: [
-                                                        {
-                                                            id: 0,
-                                                            nombre: ""
-                                                        }
-                                                    ],
-                                                    charoleros: [
-                                                        {
-                                                            id: 0,
-                                                            nombre: ""
-                                                        }   
-                                                    ],
-                                                    usuarios: usuarios,
-                                                    ruta: "inventarios"
+                                                    val: "",
+                                                    name: ""
                                                 }
-                                            );
+                                            ],
+                                            piscinas: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }
+                                            ],
+                                            charoleros: [
+                                                {
+                                                    id: 0,
+                                                    nombre: ""
+                                                }   
+                                            ],
+                                            usuarios: usuarios,
+                                            ruta: "inventarios"
                                         }
-                                    })
+                                    );
                                 }
-                            }).sort({ nombre : 1});
+                            })
                         }
                     }).sort({ nombre : 1});
                 }
@@ -1422,6 +1415,31 @@ module.exports = {
                 }
             });
         }
+    },
+    datosUsuario: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+        }else{ 
+            Usuarios.findOne({"_id": solicitud.params.id}, (error, usuario) => {
+                if(error){
+                    console.log(error);
+                } else {
+                    Areas.populate(usuario, {path: 'area'}, (error, usuario) => {
+                        if(error){
+                            console.log(error);
+                        } else {
+                            Modulos.populate(usuario, {path: 'modulo'}, (error, usuario) => {
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    respuesta.json(usuario);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
     }
 }
 
@@ -1523,6 +1541,7 @@ function generatePDF(data){
     return pdf_name;
 }
 
+/***  */
 function excelReport(data){
     var options = {
         filename:  file_path + '/' + xls_name ,

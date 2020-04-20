@@ -18,6 +18,14 @@ block contenido
 
             $('[data-toggle="tooltip"]').tooltip();
         });
+
+        function eliminarRegistros(piscina) {
+            $.post('/nutricion/delete/piscina', {
+                id: piscina
+            }, (estatus) => {
+                alert(estatus);
+            });
+        }
     //Termina Javascript
 
     // Inputs funcionamiento
@@ -33,15 +41,21 @@ block contenido
                 div
                     a(href="/nutricion/new" style="margin-right: 5px;").btn.btn-success
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nuevo registro de nutrición").fas.fa-plus-circle
-                    a(href="#reports" data-toggle="modal" data-target="#reports").btn.btn-danger
+                    a(href="#reports" data-toggle="modal" data-target="#reports" style="margin-right: 5px;").btn.btn-danger
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Reportes").fas.fa-file-pdf
-   
+                    if user.permisos == "gerente_modulo" || user.permisos == "developer"
+                        a(href="javascript:eliminarRegistros('')").btn.btn-warning
+                            i(style="color: #000;" data-toggle="tooltip", data-placement="top", title="Eliminar registros").fas.fa-minus-circle
+
     // Datos
     section.mb-4
         .card
             .table-responsive(style="margin-top: 10px;") 
                 table#nutricion.table.table-striped.table-hover
                     thead
+                        if user.permisos == "gerente_modulo" || user.permisos == "developer"
+                            th.text-center
+                                i(style="color: gray;").fas.fa-cog
                         th Piscina
                         th Charola 1
                         th Charola 2
@@ -59,6 +73,13 @@ block contenido
                     tbody
                         each nut in nutricion
                             tr  
+                                if user.permisos == "gerente_modulo" || user.permisos == "developer"
+                                    td.text-center
+                                        div.d-flex
+                                            a.btn.btn-danger.btn-small(style='margin-right: 5px;' href='/nutricion/eliminar/#{nut._id}' data-toggle='tooltip', data-placement='top', title='Eliminar') 
+                                                i.fas.fa-2x.fa-minus-circle(style='color: white')
+                                            a.btn.btn-primary.btn-small(href='/nutricion/editar/#{nut._id}' data-toggle='tooltip', data-placement='top', title='Editar') 
+                                                i.fas.fa-2x.fa-edit(style='color: white')
                                 td.text-center #{ nut.estanque.codigo }
                                 td.text-center #{ nut.charola_1 }
                                 td.text-center #{ nut.charola_2 }

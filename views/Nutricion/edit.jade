@@ -60,11 +60,14 @@ block contenido
             obtenerFecha();
             obtenerHora(); 
 
-            $('#subMenuParametros').removeClass('hidden');
-            $('#spanMenuParametros').removeClass('fa-angle-left');
-            $('#spanMenuParametros').addClass('fa-angle-down');
+            $('#subMenuNutricion').removeClass('hidden');
+            $('#spanMenuNutricion').removeClass('fa-angle-left');
+            $('#spanMenuNutricion').addClass('fa-angle-down');
 
             $('[data-toggle="tooltip"]').tooltip();
+            
+            var today = new Date();
+            document.getElementById("fecha_new").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
         });
 
         function obtenerFecha(){
@@ -82,9 +85,6 @@ block contenido
             }
 
             $('#fecha').text(dia+"/"+mes+"/"+anio + " - ");
-
-            var today = new Date();
-            document.getElementById("fecha_new").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
         }
 
         function obtenerHora(){
@@ -122,20 +122,19 @@ block contenido
         function actualizarParametro() {
             abrirLoader();
 
-            $.post( "/parametros/update", {
+            $.post( "/nutricion/update", {
                 id: $("#id_param").val(),
                 estanque: $("#est").val(),
-                temperatura: $("input[name=temperatura]").val()  == "" ? 0 : $("input[name=temperatura]").val() ,
-                oxigeno: $("input[name=oxigeno]").val() == "" ? 0 : $("input[name=oxigeno]").val(),
-                nivel_agua: $("input[name=nivel_agua]").val() == null || $("input[name=nivel_agua]").val() == "" ? null : $("input[name=nivel_agua]").val(),
-                salinidad: $("input[name=salinidad]").val() == null || $("input[name=salinidad]").val() == "" ? null : $("input[name=salinidad]").val(),
-                ph: $("input[name=ph]").val() == "" ? 0 : $("input[name=ph]").val(),
-                turbidez: $("input[name=turbidez]").val() == "" || $("input[name=turbidez]").val() == null ? null : $("input[name=turbidez]").val(),
+                charola_1: $("input[name=charola_1]").val()  == "" ? 0 : $("input[name=charola_1]").val() ,
+                charola_2: $("input[name=charola_2]").val() == "" ? 0 : $("input[name=charola_2]").val(),
+                charola_3: $("input[name=charola_3]").val() == null || $("input[name=charola_3]").val() == "" ? null : $("input[name=charola_3]").val(),
+                charola_4: $("input[name=charola_4]").val() == null || $("input[name=charola_4]").val() == "" ? null : $("input[name=charola_4]").val(),
+                kg_racion: $("input[name=kg_racion]").val() == "" ? 0 : $("input[name=kg_racion]").val(),
+                procent_ajuste: $("input[name=procent_ajuste]").val() == "" || $("input[name=procent_ajuste]").val() == null ? null : $("input[name=procent_ajuste]").val(),
                 hora: hora,
                 tiempo: $('#span_tiempo').text(),
-                parametrista: $('#user').val(),
-                fecha: $('#fecha_new').val(),
-                anio: $('#span_anio').text()
+                charolero: $('#user').val(),
+                fecha: $('#fecha_new').val()
             }, (data) => {
                 //console.log(data);
                                 
@@ -144,7 +143,7 @@ block contenido
                 $('#alert').addClass('success');
                 $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Se ha realizado con ');
-                $('#msg2').text('la actualización del registro de parámetros');
+                $('#msg2').text('la actualización del registro de nutrición');
                 $('#msg_alert').text('éxito ');
                 $('#guardar').addClass('disabled');
             }, "json");
@@ -161,17 +160,17 @@ block contenido
         }
     
     // Inputs funcionamiento
-    input#id_param.hidden(name="id" value="#{parametro.id}")
-    input#est.hidden(name="estanque" value="#{parametro.estanque.id}")
-    input#user.hidden(value="#{parametro.parametrista.id}")
+    input#id_param.hidden(name="id" value="#{nutricion.id}")
+    input#est.hidden(name="estanque" value="#{nutricion.estanque.id}")
+    input#user.hidden(type="text" name="user_id" value="#{nutricion.charolero.id}")
 
     // Título
     section.mb-4
         .card
             .card-body.d-flex.justify-content-between
                 h4.h4-responsive.mt-3
-                    i.fas.fa-eye-dropper
-                    |  Edición de parámetros
+                    i.fas.fa-seedling
+                    |  Edición de nutricón
                 div
                     a#guardar(href="javascript:actualizarParametro();").btn.btn-success.Ripple-parent.green-gradient
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Realizar").fas.fa-save
@@ -186,19 +185,19 @@ block contenido
                             small Módulo: 
                             br
                             strong
-                                span#span_modulos.blue-text #{parametro.estanque.modulo.nombre}
+                                span#span_modulos.blue-text #{nutricion.estanque.modulo.nombre}
                         h5.h5-responsive
                             small Piscina: 
                             br
                             strong
-                                span#span_piscinas #{parametro.estanque.codigo}
+                                span#span_piscinas #{nutricion.estanque.codigo}
                         h5.h5-responsive
                             small Fecha - Hora: 
                             br
                             strong
-                                - var date = new Date(parametro.fecha);
+                                - var date = new Date(nutricion.fecha);
                                 - date.setDate(date.getDate() + 1);
-                                span#span_fecha_hora #{date.toLocaleDateString("es-MX",{dateStyle: 'short'})} - #{parametro.hora}
+                                span#span_fecha_hora #{date.toLocaleDateString("es-MX",{dateStyle: 'short'})} - #{nutricion.hora}
                                 span.hidden#span_fecha #{date.toLocaleDateString("es-MX",{dateStyle: 'short'})}
                                 span.hidden#span_anio #{date.getFullYear()}
                     .col-md-6.col-lg-6.col-xs-6.text-right
@@ -217,7 +216,7 @@ block contenido
                             strong
                                 a(data-toggle="modal" href="#tiempoModal" style="margin-right: 5px; margin-top: 2px;" tabindex="7").btn.btn-primary.btn-small.blue-gradient
                                     i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Cambiar tiempo").fas.fa-2x.fa-sync-alt
-                                span#span_tiempo(style="margin-top: 5px;") #{parametro.tiempo}
+                                span#span_tiempo(style="margin-top: 5px;") #{nutricion.tiempo}
                         h5.h5-responsive
                             small Estatus.
                             br
@@ -227,7 +226,7 @@ block contenido
                             small Registrado por:
                             br
                             strong
-                                span #{parametro.parametrista.nombre}     
+                                span #{nutricion.charolero.nombre}     
     
     // Datos de captura                        
     section.mb-4
@@ -237,23 +236,23 @@ block contenido
             .panel-body
                 .d-flex.justify-content-between
                     .form-group.margin-div
-                        label | Temperatura (°C)
-                        input.form-control(type="text" value="#{parametro.temperatura}" name="temperatura" placeholder="Temperatura" tabindex="1")
+                        label | Charola 1
+                        input.form-control(type="text" value="#{nutricion.charola_1}" name="charola_1" placeholder="Charola 1" tabindex="1")
                     .form-group.margin-div
-                        label | Oxigeno (mg/L)
-                        input.form-control(type="text" value="#{parametro.oxigeno}" name="oxigeno" placeholder="Oxigeno" tabindex="2")
+                        label | Charola 2
+                        input.form-control(type="text" value="#{nutricion.charola_2}" name="charola_2" placeholder="Charola 2" tabindex="2")
                     .form-group.margin-div
-                        label | Nivel de Agua
-                        input.form-control(type="text" value="#{parametro.nivel_agua}" name="nivel_agua" placeholder="Nivel agua" tabindex="3")
+                        label | Charola 3
+                        input.form-control(type="text" value="#{nutricion.charola_3}" name="charola_3" placeholder="Charola 3" tabindex="3")
                     .form-group.margin-div
-                        label | Salinidad
-                        input.form-control(type="text" value="#{parametro.salinidad}" name="salinidad" placeholder="Salinidad" tabindex="4")
+                        label | Charola 4
+                        input.form-control(type="text" value="#{nutricion.charola_4}" name="charola_4" placeholder="Charola4" tabindex="4")
                     .form-group.margin-div
-                        label | pH
-                        input.form-control(type="text" value="#{parametro.ph}" name="ph" placeholder="pH" tabindex="5")
+                        label | Kg ración
+                        input.form-control(type="text" value="#{nutricion.kg_racion}" name="kg_racion" placeholder="Kg racion" tabindex="5")
                     .form-group.margin-div
-                        label | Turbidez
-                        input.form-control(type="text" value="#{parametro.turbidez}" name="turbidez" placeholder="Turbidez" tabindex="6")
+                        label | % Ajuste
+                        input.form-control(type="text" value="#{nutricion.porcent_ajuste}" name="porcent_ajuste" placeholder="% Ajuste" tabindex="6")
 
     // Modal Seleccionar tiempo
     #tiempoModal(class="modal")
@@ -294,14 +293,14 @@ block contenido
                     .col-lg-12
                         i.fa.fas.fa-sync-alt(style="margin-right: 15px;")
                         label 
-                            strong Seleccionar fecha
+                            strong Seleccionar tiempo
                 .modal-body()
                     .card
                         .card-body
                             .row
                                 .col-lg-12
                                     .form-group
-                                        label | Fecha
+                                        label | Tiempo
                                         .input-group
                                             span.input-group-addon.blue-gradient
                                                 i.fas.fa-calendar(style="color: #fff;")

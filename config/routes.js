@@ -242,6 +242,8 @@ module.exports = function(app){
     inventariosRouter.get('/salidas', inventarios.abrirSalidas);
     inventariosRouter.get('/salidas/ver/:id', inventarios.verOrdenSalida);
 
+    inventariosRouter.get('/usuario/datos/:id', inventarios.datosUsuario);
+
 
     //inventariosRouter.post('/report/pdf', inventarios.pdf);
     inventariosRouter.post('/report/salidas/xls', inventarios.xls);
@@ -436,7 +438,7 @@ module.exports = function(app){
     app.use('/nutricion', nutricionRouter);
     nutricionRouter.get('/all', nutricion.all);
     nutricionRouter.get('/new', nutricion.new);
-    //nutricionRouter.get('/edit', nutricion.edit);
+    nutricionRouter.get('/editar/:id', nutricion.edit);
     nutricionRouter.post('/add', nutricion.add );
     //nutricionRouter.get('/detail/:id', nutricion.detail);
     nutricionRouter.post('/find', nutricion.find);
@@ -447,6 +449,10 @@ module.exports = function(app){
     nutricionRouter.get('/config', nutricion.config);
     nutricionRouter.get('/alimento', nutricion.obtenerAlimentos);
     nutricionRouter.get('/insumos', nutricion.obtenerInsumos);
+    nutricionRouter.post('/delete/piscina/', nutricion.delete);
+    nutricionRouter.get('/eliminar/:id', nutricion.deleteOne);
+    nutricionRouter.post('/update', nutricion.update);
+
     // Recepción Larva
 
 

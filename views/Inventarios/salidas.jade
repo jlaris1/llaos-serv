@@ -10,7 +10,7 @@ block contenido
             $('#subMenuInventarios').removeClass('hidden');
             $('#spanMenuInventarios').removeClass('fa-angle-left');
             $('#spanMenuInventarios').addClass('fa-angle-down');
-           
+
             if($('#lugar').text() == 'Granja'){
                 $('#subMenuGranja').removeClass('hidden');
                 $('#spanMenuGranja').removeClass('fa-angle-left');
@@ -46,7 +46,7 @@ block contenido
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Reportes").fas.fa-file-pdf
     section.mb-4
         .card
-            .card-body.d-flex.justify-content-between
+            .card-body
                 .table-responsive 
                     table#salidas.table.table-striped.table-hover
                         thead
@@ -63,7 +63,7 @@ block contenido
                             th Registro
                         tbody
                             each ord in ordenes_salida
-                                tr(scope="row")
+                                tr
                                     td.d-flex.justify-content-between
                                         a.btn.btn-warning.btn-small(href="/inventarios/salidas/ver/#{ord.id}", data-toggle="tooltip", data-placement="top", title="Editar" style="margin-right: 5px;")
                                             i.fas.fa-eye.fa-input.fa-2x
@@ -76,6 +76,3 @@ block contenido
                                     td #{ ord.piscina == null ? '' : ord.piscina.codigo }
                                     td #{ ord.estatus }
                                     td #{ ord.registro.toLocaleDateString("es-MX",{dateStyle: 'short'})}
-                                 
-
-    

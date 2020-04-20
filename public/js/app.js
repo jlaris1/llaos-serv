@@ -1132,7 +1132,3 @@ function cerrarLoader(){
     $(".modal-loader").fadeOut("300");
     console.log("Loader cerrado...");
 }
-
-Array.prototype.unique = function(a){
-    return function(){return this.filter(a)}}(function(a,b,c){return c.indexOf(a,b+1)<0
-});

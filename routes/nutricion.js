@@ -33,8 +33,8 @@ module.exports = {
                                         if(error){
                                             console.log(error);
                                         } else { 
-                                            var piscinas = Array();
-                                            var charoleros = Array();
+                                            var piscinas = [];
+                                            var charoleros = [];
 
                                             nutricion.forEach(function(n){
                                                 if(piscinas.includes(n.estanque) == false){
@@ -44,7 +44,7 @@ module.exports = {
                                                 if(charoleros.includes(n.charolero) == false){
                                                     charoleros.push(n.charolero);
                                                 }
-                                            })
+                                            });
 
                                             respuesta.render('Nutricion/all',
                                                 {
@@ -80,7 +80,7 @@ module.exports = {
                                 }
                             });
                         }
-                    })
+                    });
                 }
             }).sort({fecha: -1});
         } 
@@ -144,6 +144,66 @@ module.exports = {
                     });
                 }
             }).sort({codigo: 1});
+        }
+    },
+    edit: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+            respuesta.redirect("/sesion-expirada");
+        }else{ 
+            Nutricion.findOne({"_id": solicitud.params.id}, (error, nutricion) => {
+                if(error){
+                    console.log(error);
+                } else {
+                    Estanques.populate(nutricion,{path: 'estanque'}, (error, nutricion) => {
+                        if(error){
+                            console.log(error);
+                        } else {
+                            Modulos.populate(nutricion, {path: 'estanque.modulo'}, (error, nutricion) => {
+                                if(error){
+                                    console.log(error);
+                                } else {
+                                    Usuarios.populate(nutricion, {path: 'charolero'}, (error, nutricion) => {
+                                        if(error){
+                                            console.log(error);
+                                        } else {
+                                            Usuarios.find( (error, usuarios) => {
+                                                if(error){
+                                                    console.log(error);
+                                                } else {
+                                                    respuesta.render('Nutricion/edit',
+                                                    {   nutricion: nutricion , 
+                                                        user: solicitud.session.user,
+                                                        titulo: "",
+                                                        usuarios: usuarios,
+                                                        criterios: [
+                                                            {
+                                                                val: "",
+                                                                name: ""
+                                                            },
+                                                        ],
+                                                        piscinas: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }
+                                                        ],
+                                                        charoleros: [
+                                                            {
+                                                                id: 0,
+                                                                nombre: ""
+                                                            }   
+                                                        ]
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
         }
     },
     find: function(solicitud, respuesta){
@@ -228,7 +288,7 @@ module.exports = {
                             historial.save(
                                 'perano',
                                 'fa-vial',
-                                'registró nutricion para la piscina <em class="text-md">' + solicitud.body.estanque + '.</em>',
+                                'registró nutricion para la piscina <em class="text-md">' + solicitud.body.nutricion[i].codigo_piscina + '.</em>',
                                 solicitud.session.user._id
                             )
                         /******************************* */
@@ -404,15 +464,20 @@ module.exports = {
                                             var charoleros = Array();
 
                                             nutricion.forEach(function(n){
-                                                piscinas.push(n.estanque);
-                                                charoleros.push(n.charolero);
-                                            })
+                                                if(piscinas.includes(n.estanque) == false){
+                                                    piscinas.push(n.estanque);
+                                                }
+
+                                                if(charoleros.includes(n.charolero) == false){
+                                                    charoleros.push(n.charolero);
+                                                }
+                                            });
 
                                             /*********** AGREGAR AL HISTORIAL */
                                                 historial.save(
                                                     'brinkpink',
                                                     'fa-file-pdf',
-                                                    'generó reporte en pdf por <em class="text-md">' + column + '.</em>',
+                                                    'generó reporte de nutrición en pdf por <em class="text-md">' + column + '.</em>',
                                                     solicitud.session.user._id
                                                 )
                                             /******************************* */
@@ -605,14 +670,21 @@ module.exports = {
                                         if(error){
                                             console.log(error);
                                         } else { 
-                                            var piscinas = Array();
-                                            var charoleros = Array();
+                                            var piscinas = new Array();
+                                            var charoleros = new Array();
 
                                             nutricion.forEach(function(n){
-                                                piscinas.push(n.estanque);
-                                                charoleros.push(n.charolero);
+                                                if(piscinas.includes(n.estanque) == false){
+                                                    piscinas.push(n.estanque);
+                                                }
+
+                                                if(charoleros.includes(n.charolero) == false){
+                                                    charoleros.push(n.charolero);
+                                                }
                                             });
                                         
+
+
                                         /*********** AGREGAR AL HISTORIAL */
                                             historial.save(
                                                 'brinkpink',
@@ -801,6 +873,45 @@ module.exports = {
             });
         }
     },
+    delete: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+            respuesta.redirect("/sesion-expirada");
+        }else{ 
+            Nutricion.deleteMany({ estanque: solicitud.body.id } , (error) => {
+                if(error) {
+                    console.log(error);
+                } else {
+                    respuesta.json('terminado');
+                }
+            });
+        }
+    },
+    deleteOne: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+            respuesta.redirect("/sesion-expirada");
+        }else{ 
+            Nutricion.deleteOne({"_id": solicitud.params.id}, (error) => {
+                if(error){
+                    console.log(error);
+                } else {
+                    respuesta.redirect('/nutricion/all')
+                }
+            });
+        }
+    },
+    update: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+            respuesta.redirect("/sesion-expirada");
+        }else{ 
+            Nutricion.updateOne({"_id": solicitud.body.id}, solicitud.body,(error) =>{
+                if(error){
+                    console.log(error);
+                } else {
+                    respuesta.json({estatus: "Actualizado"});
+                }
+            });
+        }
+    }
 }
 
 function generatePdf(data, title, search, pdf_name){

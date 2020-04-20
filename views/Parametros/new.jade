@@ -17,14 +17,14 @@ block contenido
         }
 
         .center-middle {
-           margin-top: 13px;
+            margin-top: 13px;
         }
 
         .margin-div {
             margin-right: 5px;
         }
 
-         .btn-small {
+        .btn-small {
             font-size: 0.5rem;
         }
 
@@ -88,7 +88,7 @@ block contenido
                                 '<input type="text" name="idPis'+data.piscinas[i].codigo+'" value="'+data.piscinas[i]._id+'" class="hidden">'+
                                 '<div class="center-middle">' +
                                     '<i class="fas fa-water" style="margin-right: 1px; color: #2d6e99"></i>' +
-                                    '<label>'+data.piscinas[i].codigo+'</label>' +
+                                    '<label id="codPis_'+data.piscinas[i]._id+'">'+data.piscinas[i].codigo+'</label>' +
                                 '</div>'+
                                 '<div class="form-group margin-div">' +
                                     '<label> Temperatura °C </label>' +
@@ -198,25 +198,27 @@ block contenido
             obj.ph = $("input[name=ph"+id+"]").val() == "" ? 0 : $("input[name=ph"+id+"]").val();
             obj.turbidez = $("input[name=turbidez"+id+"]").val() == "" || $("input[name=turbidez"+id+"]").val() == null ? null : $("input[name=turbidez"+id+"]").val();
             obj.hora = hora;
+            obj.codigo_piscina = $("#codPis_"+id).text();
             obj.tiempo = $('#span_tiempo').text();
             obj.parametrista = $('#user').val();
             obj.fecha = $('#fecha_new').val();
 
 
             if( obj.temperatura == 0 &&
-               obj.oxigeno == 0 &&
-               obj.nivel_agua == null &&
-               obj.salinidad == null &&
-               obj.ph == 0 &&
-               obj.turbidez == null ) { 
-                   console.log(" Nose mandará a registrar piscina: " + id);
-               } else {
-                   parametros.push(obj);
-               }
+                obj.oxigeno == 0 &&
+                obj.nivel_agua == null &&
+                obj.salinidad == null &&
+                obj.ph == 0 &&
+                obj.turbidez == null ) { 
+                    console.log(" Nose mandará a registrar piscina: " + id);
+                } else {
+                    parametros.push(obj);
+                }
         }
 
         function guardarRegistros(){
             abrirLoader();
+            $('#guardar').addClass('disabled');
 
             if(parametros.length == 0) {
                 $('#alert').removeClass('alert-success');
@@ -249,6 +251,7 @@ block contenido
             $('#loader').addClass('hidden');
 
             cerrarLoader();
+            $('#guardar').removelass('disabled');
         }
 
         function asignarFecha(){
@@ -290,7 +293,7 @@ block contenido
                     i.fas.fa-eye-dropper
                     |   Registro de parámetros
                 div
-                    a#guardar(href="javascript:guardarRegistros();").btn.btn-success.Ripple-parent.green-gradient
+                    a#guardar(class="disabled" href="javascript:guardarRegistros();").btn.btn-success.Ripple-parent.green-gradient
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Realizar").fas.fa-save
     
     // Detalles

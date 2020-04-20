@@ -426,30 +426,13 @@ module.exports = {
 
                                             for(let i = 0; i <= nutricion.length - 1; i ++) {
                                                 if(existePiscina(nutricion[i].estanque.codigo) == false){
-
                                                     piscinas.push(
                                                         { 
                                                             codigo: nutricion[i].estanque.codigo,
                                                             unidad_negocio: nutricion[i].estanque.modulo.unidad_negocio.nombre
                                                         }
                                                     );
-                                                }
-                
-                                                /*if(i == 0){
-                                                    var date = new Date(nutricion[i].fecha);
-                                                    date.setDate(date.getDate() + 1);
-                                                    
-                                                    fechas.push(new Date(date).toLocaleDateString("es-MX",{dateStyle: 'short'}));
-                                                } 
-                                                
-                                                if(i > 0) {
-                                                    if(new Date(nutricion[i].fecha).getTime() != new Date(nutricion[i-1].fecha).getTime()){
-                                                        var date = new Date(nutricion[i].fecha);
-                                                        date.setDate(date.getDate() + 1);
-                                                        fechas.push(new Date(date).toLocaleDateString("es-MX",{dateStyle: 'short'}));
-                                                    }
-                                                }*/
-                
+                                                }                
                                             } 
 
                                             var total = 0;

@@ -252,6 +252,15 @@ module.exports = {
                         if(error){
                             console.log(chalk.bgRed(error));
                         } else {
+                            /*********** AGREGAR AL HISTORIAL */
+                            historial.save(
+                                'perano',
+                                'fa-eye-dropper',
+                                'registró parámetros para la piscina <em class="text-md">' + solicitud.body.parametros[i].codigo_piscina + '.</em>',
+                                solicitud.session.user._id
+                            )
+                        /******************************* */
+
                             if(i == solicitud.body.parametros.length -1 ){
                                 respuesta.json({
                                     estatus: 'Registrado'
@@ -426,7 +435,7 @@ module.exports = {
                                         parametros.forEach(function(p){
                                             search = p.parametrista.nombre;
                                         });
-  
+
                                         title = 'Parametrista: ' + search;
                                         pdf_name = 'reporte_parametros_parametrista_' + search + '.pdf';
                                         generatePDF(parametros, title, pdf_name)
@@ -470,7 +479,7 @@ module.exports = {
                 fechaInicio = new Date(solicitud.body.fechaInicio).getFullYear() + '-' +
                             (new Date(solicitud.body.fechaInicio).getMonth() + 1) +  '-' +
                             (new Date(solicitud.body.fechaInicio).getDate() + 1);
-                              
+
                 fechaFin = new Date(solicitud.body.fechaFin).getFullYear() + '-' +
                         (new Date(solicitud.body.fechaFin).getMonth() + 1) +  '-' +
                         (new Date(solicitud.body.fechaFin).getDate() + 1);
@@ -537,7 +546,15 @@ module.exports = {
                                                     parametristas.push(m.parametrista);
                                                 }
                                             });
-
+                                            
+                                            /*********** AGREGAR AL HISTORIAL */
+                                                historial.save(
+                                                    'brinkpink',
+                                                    'fa-file-pdf',
+                                                    'generó reporte de parámetros en pdf por <em class="text-md">' + column + '.</em>',
+                                                    solicitud.session.user._id
+                                                )
+                                            /******************************* */
 
                                             respuesta.render('Parametros/all', {
                                                 user: solicitud.session.user,
@@ -636,7 +653,6 @@ module.exports = {
                                         parametros.forEach(function(p){
                                             search = p.parametrista.nombre;
                                         });
-  
                                         title = 'Parametrista: ' + search;
                                         xls_name = 'reporte_parametros_parametrista_' + search + '.xlsx';
                                         generateXLS(parametros, title, xls_name)
@@ -650,7 +666,7 @@ module.exports = {
                 search = solicitud.body.fecha;
 
                 var fF = (solicitud.body.fecha).split('-')[0] + '-' + 
-                         (solicitud.body.fecha).split('-')[1] + '-';
+                        (solicitud.body.fecha).split('-')[1] + '-';
 
                 if((solicitud.body.fecha).split('-')[2] < 10 ){
                     fF += '0' + (parseFloat((solicitud.body.fecha).split('-')[2])+1);
@@ -677,7 +693,7 @@ module.exports = {
                 fechaInicio = new Date(solicitud.body.fechaInicio).getFullYear() + '-' +
                             (new Date(solicitud.body.fechaInicio).getMonth() + 1) +  '-' +
                             (new Date(solicitud.body.fechaInicio).getDate() + 1);
-                              
+
                 fechaFin = new Date(solicitud.body.fechaFin).getFullYear() + '-' +
                         (new Date(solicitud.body.fechaFin).getMonth() + 1) +  '-' +
                         (new Date(solicitud.body.fechaFin).getDate() + 1);
@@ -771,8 +787,8 @@ module.exports = {
                                         if(error){
                                             console.log(chalk.bgRed(error));
                                         } else {
-                                            var piscinas = Array();
-                                            var parametristas = Array();
+                                            var piscinas = new Array();
+                                            var parametristas = new Array();
 
                                             mediciones.forEach(function(m){
                                                 if(piscinas.includes(m.estanque) == false){

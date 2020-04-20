@@ -181,7 +181,7 @@ block contenido
                                 '<input type="text" id="idPis'+data.piscinas[i]._id+'" name="idPis'+data.piscinas[i]._id+'" value="'+data.piscinas[i]._id+'" class="hidden">'+
                                 '<div class="center-middle">' +
                                     '<i class="fas fa-water" style="margin-right: 1px; color: #2d6e99"></i>' +
-                                    '<label>'+data.piscinas[i].codigo+'</label>' +
+                                    '<label id="codPis_'+data.piscinas[i]._id+'">'+data.piscinas[i].codigo+'</label>' +
                                 '</div>'+
                                 '<div class="form-group margin-div">' +
                                     '<label> Charola 1 </label>' +
@@ -373,6 +373,7 @@ block contenido
                 obj.suma = $("#suma" + id).text();
                 obj.siguiente_racion = $("#kg_sig" + id ).text();
                 obj.estanque = $("input[name=idPis"+id+"]").val();
+                obj.codigo_piscina = $("#codPis_"+id).text();
                 obj.hora = hora;
                 obj.fecha = $('#fecha_new').val();
                 obj.tiempo = $("#span_tiempo").text();
@@ -408,6 +409,7 @@ block contenido
                     obj.suma = $("#suma" + id).text();
                     obj.siguiente_racion = $("#kg_sig" + id ).text();
                     obj.estanque = $("input[name=idPis"+id+"]").val();
+                    obj.codigo_piscina = $("#codPis_"+id).text();
                     obj.hora = hora;
                     obj.tiempo = $("#span_tiempo").text();
                     obj.charolero = $('#user').val();
@@ -565,7 +567,7 @@ block contenido
                                 |   Cerrar
 
      // Modal Seleccionar tiempo
-   
+
     // Modal seleccionar fecha
     #fechaModal(class="modal")
         .modal-dialog(role="document")
@@ -592,5 +594,3 @@ block contenido
                             a(data-dismiss="modal").btn.btn-default
                                 i.fa.fas.fa-times-circle()
                                 |   Cerrar
-
-               
