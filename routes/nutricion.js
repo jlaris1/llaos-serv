@@ -287,7 +287,7 @@ module.exports = {
                         /*********** AGREGAR AL HISTORIAL */
                             historial.save(
                                 'perano',
-                                'fa-seeding',
+                                'fa-seedling',
                                 'registró nutricion para la piscina <em class="text-md">' + solicitud.body.nutricion[i].codigo_piscina + '.</em>',
                                 solicitud.session.user._id
                             )
