@@ -239,6 +239,7 @@ block contenido
             .overflow-auto {
                 overflow: auto !important;
             }
+
             .card-body {
                 flex: 1 1 auto;
                 padding: 1.25rem;
@@ -517,6 +518,47 @@ block contenido
                 margin-top: -20px;
                 font-size: 3em;
             }
+
+            .scroll {
+                max-height: 800px;
+                overflow-y: auto;
+            }
+
+            /** Scrollbar*/
+            .scrollbar
+            {
+                margin-left: 30px;
+                float: left;
+                height: 300px;
+                width: 65px;
+                background: #F5F5F5;
+                overflow-y: scroll;
+                margin-bottom: 25px;
+            }
+
+            .scrollbar-morpheus-den::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+                background-color: #F5F5F5;
+                border-radius: 10px; 
+            }
+
+            .scrollbar-morpheus-den::-webkit-scrollbar {
+                width: 12px;
+                background-color: #F5F5F5; 
+            }
+
+            .scrollbar-morpheus-den::-webkit-scrollbar-thumb {
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+                background-image: -webkit-gradient(linear, left bottom, left top, from(#30cfd0), to(#330867));
+                background-image: -webkit-linear-gradient(bottom, #30cfd0 0%, #330867 100%);
+                background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%); 
+            }
+
+            .scrollbar-morpheus-den {
+                scrollbar-color: #330867 #F5F5F5;
+            }
+
     script.
         var datos = [];
         var fechas = [];
@@ -952,16 +994,17 @@ block contenido
                         span
                             strong#total
                         |   Kgs
-                .table-responsive.h-360.overflow-auto.card-body
-                    table#alimentos.table.table-striped.table-hover
-                        thead
-                            tr
-                                th PISCINA
-                                th UNIDAD NEGOCIO
-                                th KG ACUMULADO
-                                th %   
-                                th .
-                        tbody
+                .table-responsive.h-360.card-body
+                    div.scroll.scrollbar-morpheus-den
+                        table#alimentos.table.table-striped.table-hover
+                            thead
+                                tr
+                                    th PISCINA
+                                    th UNIDAD NEGOCIO
+                                    th KG ACUMULADO
+                                    th %   
+                                    th .
+                            tbody
         
         // Historial
         .col-xl-4.col-lg-4.col-md-12
@@ -971,38 +1014,39 @@ block contenido
                         i.fas.fa-history
                     .ml-3
                         h5 Historial
-                .h-360.overflow-auto.card-body
-                    ul.timeline.ml-0.pl-0#historial_ul
-                        //li.shamrock
-                            i.text-lg.fas.fa-user-plus
-                            p.mb-1
-                                strong John Doe
-                                | , started following you on Instagram
-                            small.text-md 4 hours ago
-                        //li.perano
-                            i.text-lg.fas.fa-cart-plus
-                            p.mb-1
-                                strong
-                                | Invoice for 30 hours of calls has paid
-                            small.text-md 8 hours ago
-                        //li.brinkpink
-                            i.text-lg.fas.fa-lock
-                            p.mb-1
-                                strong
-                                | You’ve logged in on a new device
-                            small.text-md 2 days ago
-                        //li.yellow
-                            i.text-lg.fas.fa-envelope
-                            p.mb-1
-                                strong
-                                | You’ve a new message on Facebook
-                            small.text-md 3 days ago
-                        //li.shamrock
-                            i.text-lg.fas.fa-user-plus
-                            p.mb-1
-                                strong
-                                | You’ve a new message on Facebook
-                            small.text-md 3 days ago
+                .h-360.card-body
+                    div.scroll.scrollbar-morpheus-den
+                        ul.timeline.ml-0.pl-0#historial_ul
+                            //li.shamrock
+                                i.text-lg.fas.fa-user-plus
+                                p.mb-1
+                                    strong John Doe
+                                    | , started following you on Instagram
+                                small.text-md 4 hours ago
+                            //li.perano
+                                i.text-lg.fas.fa-cart-plus
+                                p.mb-1
+                                    strong
+                                    | Invoice for 30 hours of calls has paid
+                                small.text-md 8 hours ago
+                            //li.brinkpink
+                                i.text-lg.fas.fa-lock
+                                p.mb-1
+                                    strong
+                                    | You’ve logged in on a new device
+                                small.text-md 2 days ago
+                            //li.yellow
+                                i.text-lg.fas.fa-envelope
+                                p.mb-1
+                                    strong
+                                    | You’ve a new message on Facebook
+                                small.text-md 3 days ago
+                            //li.shamrock
+                                i.text-lg.fas.fa-user-plus
+                                p.mb-1
+                                    strong
+                                    | You’ve a new message on Facebook
+                                small.text-md 3 days ago
 
         // Gráficos de alimentación
         .col-sm-12

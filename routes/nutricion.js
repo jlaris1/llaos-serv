@@ -265,11 +265,7 @@ module.exports = {
     add: function(solicitud, respuesta){
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
-		}else{
-            //console.log(solicitud.body.cambiar_fecha);
-            //console.log("fecha new : " + solicitud.body.fecha_new);
-            //console.log("fecha short: " + new Date(solicitud.body.fecha_new).toLocaleDateString("es-MX", {dateStyle: 'short'}));
-            
+		}else{            
             for(let i = 0; i <= solicitud.body.nutricion.length -1; i++){
                 
                 if(solicitud.body.cambiar_fecha == true){
@@ -292,7 +288,6 @@ module.exports = {
                                 solicitud.session.user._id
                             )
                         /******************************* */
-
 
                         if(i == solicitud.body.nutricion.length -1){
                             respuesta.json(
