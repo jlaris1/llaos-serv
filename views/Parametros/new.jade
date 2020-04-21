@@ -221,13 +221,14 @@ block contenido
             $('#guardar').addClass('disabled');
 
             if(parametros.length == 0) {
-                $('#alert').removeClass('alert-success');
-                $('#alert').addClass('alert-warning');
+                $('#alert').removeClass('success');
+                $('#alert').addClass('warning');
                 $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Es necesario ingresar ');
                 $('#msg2').text('en al menos una piscina');
                 $('#msg_alert').text('parámetros ');
                 $('#loader').addClass('hidden');
+                cerrarLoader();
                 return;
             }
 
@@ -410,5 +411,3 @@ block contenido
                             a(data-dismiss="modal").btn.btn-default
                                 i.fa.fas.fa-times-circle()
                                 |   Cerrar
-
-               
