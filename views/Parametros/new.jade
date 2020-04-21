@@ -189,31 +189,34 @@ block contenido
         }
 
         function registrarParametro(id){
-            var obj = new Object()
-            obj.estanque = $("input[name=idPis"+id+"]").val();
-            obj.temperatura = $("input[name=temperatura"+id+"]").val()  == "" ? 0 : $("input[name=temperatura"+id+"]").val() ;
-            obj.oxigeno = $("input[name=oxigeno"+id+"]").val() == "" ? 0 : $("input[name=oxigeno"+id+"]").val();
-            obj.nivel_agua = $("input[name=nivel_agua"+id+"]").val() == null || $("input[name=nivel_agua"+id+"]").val() == "" ? null : $("input[name=nivel_agua"+id+"]").val();
-            obj.salinidad = $("input[name=salinidad"+id+"]").val() == null || $("input[name=salinidad"+id+"]").val() == "" ? null : $("input[name=salinidad"+id+"]").val();
-            obj.ph = $("input[name=ph"+id+"]").val() == "" ? 0 : $("input[name=ph"+id+"]").val();
-            obj.turbidez = $("input[name=turbidez"+id+"]").val() == "" || $("input[name=turbidez"+id+"]").val() == null ? null : $("input[name=turbidez"+id+"]").val();
-            obj.hora = hora;
-            obj.codigo_piscina = $("#codPis_"+id).text();
-            obj.tiempo = $('#span_tiempo').text();
-            obj.parametrista = $('#user').val();
-            obj.fecha = $('#fecha_new').val();
+            var obj = new Object();
+            
+            if(existeRegistro($("input[name=idPis"+id+"]").val(), id)){ } else {
+                obj.estanque = $("input[name=idPis"+id+"]").val();
+                obj.temperatura = $("input[name=temperatura"+id+"]").val()  == "" ? 0 : $("input[name=temperatura"+id+"]").val();
+                obj.oxigeno = $("input[name=oxigeno"+id+"]").val() == "" ? 0 : $("input[name=oxigeno"+id+"]").val();
+                obj.nivel_agua = $("input[name=nivel_agua"+id+"]").val() == null || $("input[name=nivel_agua"+id+"]").val() == "" ? null : $("input[name=nivel_agua"+id+"]").val();
+                obj.salinidad = $("input[name=salinidad"+id+"]").val() == null || $("input[name=salinidad"+id+"]").val() == "" ? null : $("input[name=salinidad"+id+"]").val();
+                obj.ph = $("input[name=ph"+id+"]").val() == "" ? 0 : $("input[name=ph"+id+"]").val();
+                obj.turbidez = $("input[name=turbidez"+id+"]").val() == "" || $("input[name=turbidez"+id+"]").val() == null ? null : $("input[name=turbidez"+id+"]").val();
+                obj.hora = hora;
+                obj.codigo_piscina = id;
+                obj.tiempo = $('#span_tiempo').text();
+                obj.parametrista = $('#user').val();
+                obj.fecha = $('#fecha_new').val();
 
 
-            if( obj.temperatura == 0 &&
-                obj.oxigeno == 0 &&
-                obj.nivel_agua == null &&
-                obj.salinidad == null &&
-                obj.ph == 0 &&
-                obj.turbidez == null ) { 
-                    console.log(" Nose mandará a registrar piscina: " + id);
-                } else {
-                    parametros.push(obj);
-                }
+                if( obj.temperatura == 0 &&
+                    obj.oxigeno == 0 &&
+                    obj.nivel_agua == null &&
+                    obj.salinidad == null &&
+                    obj.ph == 0 &&
+                    obj.turbidez == null ) { 
+                        console.log(" Nose mandará a registrar piscina: " + id);
+                    } else {
+                        parametros.push(obj);
+                    }
+            }
         }
 
         function guardarRegistros(){
@@ -228,6 +231,7 @@ block contenido
                 $('#msg2').text('en al menos una piscina');
                 $('#msg_alert').text('parámetros ');
                 $('#loader').addClass('hidden');
+                $('#guardar').removeClass('disabled');
                 cerrarLoader();
                 return;
             }
@@ -280,6 +284,43 @@ block contenido
             $('#guardar').removeClass('disabled');
 
             mostrarPiscinas();
+        }
+
+        function existeRegistro(codigo, id){
+            var obj = new Object();
+
+            for(var i=0; i <= parametros.length -1; i ++){    
+                if(parametros[i].estanque == codigo){
+                    obj.estanque = $("input[name=idPis"+id+"]").val();
+                    obj.temperatura = $("input[name=temperatura"+id+"]").val()  == "" ? 0 : $("input[name=temperatura"+id+"]").val();
+                    obj.oxigeno = $("input[name=oxigeno"+id+"]").val() == "" ? 0 : $("input[name=oxigeno"+id+"]").val();
+                    obj.nivel_agua = $("input[name=nivel_agua"+id+"]").val() == null || $("input[name=nivel_agua"+id+"]").val() == "" ? null : $("input[name=nivel_agua"+id+"]").val();
+                    obj.salinidad = $("input[name=salinidad"+id+"]").val() == null || $("input[name=salinidad"+id+"]").val() == "" ? null : $("input[name=salinidad"+id+"]").val();
+                    obj.ph = $("input[name=ph"+id+"]").val() == "" ? 0 : $("input[name=ph"+id+"]").val();
+                    obj.turbidez = $("input[name=turbidez"+id+"]").val() == "" || $("input[name=turbidez"+id+"]").val() == null ? null : $("input[name=turbidez"+id+"]").val();
+                    obj.hora = hora;
+                    obj.codigo_piscina = $("#codPis_"+id).text();
+                    obj.tiempo = $('#span_tiempo').text();
+                    obj.parametrista = $('#user').val();
+                    obj.fecha = $('#fecha_new').val();
+
+
+                    if( obj.temperatura == 0 &&
+                        obj.oxigeno == 0 &&
+                        obj.nivel_agua == null &&
+                        obj.salinidad == null &&
+                        obj.ph == 0 &&
+                        obj.turbidez == null ) { 
+                            console.log(" Nose mandará a registrar piscina: " + id);
+                        } else {
+                            parametros[i] =  obj;
+                        }
+
+                    return true;
+                }
+            }
+            return false;
+            
         }
 
     // Inputs funcionamiento
