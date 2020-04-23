@@ -170,14 +170,6 @@ block contenido
 
             $.getJSON('/inventarios/usuario/datos/' + $('#solicita').val(), (usuario) =>{
                 if(usuario != undefined && usuario != null){
-
-                    if(usuario.area != undefined && usuario.area != null){
-                        $('#areas').val(usuario.area.nombre);
-                        $('#span_area').text(usuario.area.nombre);
-                        $('#area_salida').val(usuario.area._id);
-                    }
-                    
-
                     if(usuario.area != null && usuario.area != undefined && usuario.area.nombre == "Producción"){
                         $('#modulosSal').removeClass('hidden');
 
@@ -198,7 +190,16 @@ block contenido
                         }
 
                     } else {
-                        $('#areas').val("");
+                        if(usuario.area != undefined && usuario.area != null){
+                            $('#areaImp').val(usuario.area.nombre);
+                            $('#span_area').text(usuario.area.nombre);
+                            $('#area_salida').val(usuario.area._id);
+                        } else {
+                            $('#areaImp').val("");
+                            $('#span_area').text("");
+                            $('#area_salida').val("");
+                        }
+                        
                         $('#modulosSal').addClass('hidden');
                         $('#piscinasSal').addClass('hidden');
                         $('#h_piscina').addClass('hidden');
@@ -320,14 +321,14 @@ block contenido
                 return;
             }
 
-            if($('#areas').val() == -1){
+            if($('#areaImp').val() == -1){
                 $('#alert').addClass('warning');
                 $('#alertDiv').removeClass('hidden');
                 $('#msg1').text('Es necesario selecionar ');
                 $('#msg2').text('para poder guardar la orden de salida.');
                 $('#msg_alert').text('un Área ');
                 console.log('Error seleccion área.');
-                $('#areas').focus();
+                $('#areaImp').focus();
                 return;
             }
 
@@ -519,7 +520,7 @@ block contenido
                             .input-group
                                 span.input-group-addon.blue-gradient
                                     i.fas.fa-map-signs.fa-input
-                                input#areas.form-control()
+                                input#areaImp.form-control(type="text")
                                     
                     .col-lg-3.col-md-6.col-sm-6.col-xs-6#modulosSal.hidden
                         .form-group

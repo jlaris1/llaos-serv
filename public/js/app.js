@@ -565,7 +565,7 @@ $(document).ready( function() {
                     }        
                 });
 
-                /***************** CUENTAS */
+                /***************** SUB CUENTAS */
                 $('#menuSubCuentas').click( function(){
                     if ($('#subMenuSubCuentas').hasClass('hidden')) {
                         $('#subMenuSubCuentas').removeClass('hidden');
@@ -578,11 +578,20 @@ $(document).ready( function() {
                     }        
                 });
 
+                /***************** PRODUCCIÓN */
+                $('#menuProduccion').click( function(){
+                    if ($('#subMenuProduccion').hasClass('hidden')) {
+                        $('#subMenuProduccion').removeClass('hidden');
+                        $('#spanmenuProduccion').removeClass('fa-angle-left');
+                        $('#spanmenuProduccion').addClass('fa-angle-down');
+                    }else{
+                        $('#subMenuProduccion').addClass('hidden');
+                        $('#spanMenuProduccion').removeClass('fa-angle-down');
+                        $('#spanMenuProduccion').addClass('fa-angle-left');
+                    }        
+                });
 
             /*******************************/
-
-           
-
 
 });
 

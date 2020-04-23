@@ -18,7 +18,8 @@ var estanquesSchemaJSON = {
                 y: Number
             }]
         }
-    ]
+    ],
+    estatus: String
 }
 
 // Módulos

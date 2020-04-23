@@ -82,6 +82,9 @@ module.exports = function(app){
     var catalogos = require('../routes/catalogos.js');
     var catalogosRouter = express.Router();
 
+    var produccion = require('../routes/produccion.js');
+    var produccionRouter = express.Router();
+
     //Pruebas
     //app.get('/pruebita', pruebita.prueba); 
     //app.get('/pruebita', inventarios.imprimirOrdenSalida);
@@ -497,5 +500,8 @@ module.exports = function(app){
     catalogosRouter.post('/subcuentas/', catalogos.saveSubCuentas);
     catalogosRouter.post('/subcuentas/update/:id', catalogos.updateSubCuentas);
 
-
+    // Producción
+    app.use('/produccion', produccionRouter);
+    produccionRouter.get('/configuracion/piscinas', produccion.configPiscinas);
+    produccionRouter.post('/configuracion/piscinas/guardar', produccion.guardarConfigPiscinas);
 } 

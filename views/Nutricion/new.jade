@@ -201,7 +201,7 @@ block contenido
                                 '</div>' +
                                 '<div class="form-group margin-div">' +
                                     '<label> Kg ración </label>' +
-                                    '<input class="form-control" type="text" name="racion'+data.piscinas[i]._id+'" placeholder="Kg ración">' + 
+                                    '<input class="form-control" type="text" id="ra_'+data.piscinas[i]._id+'" name="racion'+data.piscinas[i]._id+'" placeholder="Kg ración" onkeyup="registrarParametro(this.id)">' + 
                                 '</div>' +
                                 '<div class="form-group margin-div">' +
                                     '<label> % Ajuste </label>' +
@@ -312,7 +312,9 @@ block contenido
 
         function guardarRegistros(){
             abrirLoader();
-
+            
+            console.log(nutricion);
+            /*
             if(nutricion.length == 0) {
                 $('#alert').removeClass('success');
                 $('#alert').addClass('warning');
@@ -346,7 +348,7 @@ block contenido
             }, "json");
 
             $('#loader').addClass('hidden');
-
+            */
             cerrarLoader();
         }
 
@@ -361,6 +363,8 @@ block contenido
         function registrarParametro(idS){
             var id = idS.split("_")[1];
             var obj = new Object()
+
+            console.log(id);
             
             if(existeRegistro(id)){ } else {
                 obj.charola_1 = $("input[name=charola1"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola1"+id+"]").val();
@@ -383,14 +387,13 @@ block contenido
                 obj.charola_2 == 0 &&
                 obj.charola_3 == 0 &&
                 obj.charola_4 == 0 &&
-                obj.kg_racion == 0 &&
-                obj.porcent_ajuste == 0 ) { 
+                obj.kg_racion == 0 /*&&
+                obj.porcent_ajuste == 0*/ ) { 
                     console.log(" Nose mandará a registrar piscina: " + id);
                 } else {
+                    console.log(obj);
                     nutricion.push(obj);
                 }
-
-                console.log(nutricion);
             }
         }
 

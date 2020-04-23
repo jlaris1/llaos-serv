@@ -9,7 +9,7 @@ html(lang="es")
         link(href="/css/form-new.css" rel="stylesheet")
         link(href="/css/new-css.css" rel="stylesheet")
         link(href="/css/card.css" rel="stylesheet")
-        link(href='/fontawesome-free-5.7.2-web/css/all.css' rel='stylesheet' type='text/css')
+        link(href='/fontawesome-free-5.13.0-web/css/all.css' rel='stylesheet' type='text/css')
         link(href='/css/animate.css' rel='stylesheet' type='text/css')
         link(href='/css/datatables.css' rel='stylesheet' type='text/css')
         link(href='https://unpkg.com/leaflet@1.6.0/dist/leaflet.css' rel="stylesheet")
@@ -28,7 +28,7 @@ html(lang="es")
         script(src="/js/jsbarcode/JsBarcode-master/CODE39.js")
         script(src="/js/jsbarcode/JsBarcode-master/JsBarcode.js")
         //script(src="https://kit.fontawesome.com/19636afd68.js" crossorigin="anonymous")
-        script(type="text/javascript" src="/js/piscinas.js")
+        //script(type="text/javascript" src="/js/piscinas.js")
     body
         #wrapper
             // Navigation
@@ -564,40 +564,53 @@ html(lang="es")
                                             a(href='/laboratoriolarvas/new')
                                                 i.fas.fa-plus-circle.fa-fw 
                                                 |   Nuevo
-                                // MENÚ NUTRICIÓN
+                                
+                                // MENÚ PRODUCCIÓN
                                 li
-                                    a(href='#')#menuNutricion
-                                        i.fas.fa-seedling.fa-fw 
-                                        |   Nutrición
-                                        span#spanMenuNutricion.fas.fa-angle-left
-                                    ul#subMenuNutricion.nav.nav-second-level.hidden
+                                    a(href='#')#menuProduccion
+                                        i.fas.fa-cogs.fa-fw 
+                                        |   Producción
+                                        span#spanMenuProduccion.fas.fa-angle-left
+                                    ul#subMenuProduccion.nav.nav-second-level.hidden
+                                        // MENÚ NUTRICIÓN
+                                        li
+                                            a(href='#')#menuNutricion
+                                                i.fas.fa-seedling.fa-fw 
+                                                |   Nutrición
+                                                span#spanMenuNutricion.fas.fa-angle-left
+                                            ul#subMenuNutricion.nav.nav-third-level.hidden
+                                                li
+                                                    a(href='/nutricion/all') 
+                                                        i.fas.fa-table.fa-fw 
+                                                        |   Bandeja
+                                                li
+                                                    a(href='/nutricion/new')
+                                                        i.fas.fa-plus-circle.fa-fw 
+                                                        |   Nuevo
+                                        // MENÚ PARAMETROS
+                                        li
+                                            a(href='#')#menuParametros
+                                                i.fas.fa-temperature-high.fa-fw
+                                                |  Parámetros
+                                                span#spanMenuParametros.fas.fa-angle-left
+                                            ul#subMenuParametros.nav.nav-third-level.hidden
+                                                li
+                                                    a(href='/parametros/all') 
+                                                        i.fas.fa-table.fa-fw 
+                                                        |   Bandeja
+                                                li
+                                                    a(href='/parametros/new')
+                                                        i.fas.fa-plus-circle.fa-fw 
+                                                        |   Nuevo
+                                        li
+                                            a(href='/produccion/configuracion/piscinas')
+                                                i.fas.fa-water.fa-fw 
+                                                |   Config. piscinas
                                         li
                                             a(href='/nutricion/config')
                                                 i.fas.fa-utensils.fa-fw 
-                                                |   Configuración alimentos
-                                        li
-                                            a(href='/nutricion/all') 
-                                                i.fas.fa-table.fa-fw 
-                                                |   Bandeja
-                                        li
-                                            a(href='/nutricion/new')
-                                                i.fas.fa-plus-circle.fa-fw 
-                                                |   Nuevo
-                                // MENÚ PARAMETROS
-                                li
-                                    a(href='#')#menuParametros
-                                        i.fas.fa-eye-dropper.fa-fw
-                                        |  Parámetros
-                                        span#spanMenuParametros.fas.fa-angle-left
-                                    ul#subMenuParametros.nav.nav-second-level.hidden
-                                        li
-                                            a(href='/parametros/all') 
-                                                i.fas.fa-table.fa-fw 
-                                                |   Bandeja
-                                        li
-                                            a(href='/parametros/new')
-                                                i.fas.fa-plus-circle.fa-fw 
-                                                |   Nuevo
+                                                |   Config. alimento
+
                                 // MENÚ PRODUCTOS
                                 if user.permisos == "admin" || user.permisos == "developer" || user.permisos == "compras"
                                     li
@@ -691,6 +704,7 @@ html(lang="es")
             #page-wrapper
                 .container-fluid
                     block contenido
+
         // Reportes
         #reports.modal(tabindex='-1', role='dialog')
                 .modal-dialog(role='document')

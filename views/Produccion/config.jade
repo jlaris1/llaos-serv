@@ -1,0 +1,274 @@
+extends ../layouts/layout.jade
+block contenido
+    style.
+        .round {
+            border-radius: 5px !important;
+            -moz-border-radius: 5px !important;
+            -webkit-border-radius: 5px !important;
+        }
+        thead {
+            background-color: black;
+            color: #fff;
+        } 
+
+        ul {
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .center-middle {
+            margin-top: 13px;
+        }
+
+        .margin-div {
+            margin-right: 5px;
+        }
+
+        .btn-small {
+            font-size: 0.5rem;
+        }
+
+        .input-group-addon {
+            background-color: #dd7206; 
+            border: 2px;
+        }
+
+        .fa-input {
+            color: #fff;
+        }
+
+        a.btn {
+            border: 0;
+            border-radius: 2px;
+        }
+
+        hr {
+            margin-top: -5px;
+            margin-bottom: 5px;
+            border: 1px solid #2d6e99;
+        }
+    script. 
+        var cambiar_tiempo = true;
+        var cambiar_fecha = false;
+        var piscinas = [];
+        var hora;
+
+        $(document).ready( function(){
+            $('#subMenuProduccion').removeClass('hidden');
+            $('#spanMenuProduccion').removeClass('fa-angle-left');
+            $('#spanMenuProduccion').addClass('fa-angle-down');
+
+            var today = new Date();
+            //document.getElementById("fecha_new").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+
+            //mostrarPiscinas();
+            obtenerFecha();
+            obtenerHora();
+        });
+
+        function obtenerFecha(){
+            var fecha = new Date()
+            var dia = fecha.getDate();
+            var mes = fecha.getMonth()+1;
+            var anio = fecha.getFullYear();
+
+            if(dia < 10){
+                dia = "0"+dia;
+            }
+
+            if(mes < 10){
+                mes = "0"+mes;
+            }
+
+            $('#fecha').text(dia+"/"+mes+"/"+anio + " - ");
+        }
+
+        function obtenerHora(){
+            var tiempo = new Date();
+            var horas = tiempo.getHours();
+            var minutos = tiempo.getMinutes();
+            var segundos = tiempo.getSeconds();
+            var dn ="";
+
+            if (horas < 12) {
+                if(cambiar_tiempo == true) {
+                    $("#span_tiempo").text("AM");
+                }
+                dn = "a.m.";
+            } else {
+                if(cambiar_tiempo == true) {
+                    $("#span_tiempo").text("PM");
+                }
+                dn = "p.m.";
+            }
+
+            if(minutos < 10){
+                minutos = "0"+minutos;
+            }
+
+            if(segundos < 10){
+                segundos = "0"+segundos;
+            }
+                
+            hora = horas+":"+minutos+":"+segundos;
+            $("#hora").text(horas+":"+minutos+":"+segundos+" "+dn+"    ");
+            setTimeout('obtenerhora()',1000);
+        }
+
+        function registrarPiscina(id){
+            var obj = new Object();
+
+            obj.id = id;
+            obj.estatus = $("select[name=status_"+id+"]").val();
+
+            if(existePiscina(id, obj.estatus) == false){
+                piscinas.push(obj);
+            }
+
+            console.log(piscinas);
+        }
+
+        function existePiscina(id, estatus) {
+            for(let i = 0; i <= piscinas.length -1; i++){
+                if(id == piscinas[i].id){
+                    piscinas[i].estatus = estatus;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    
+        function guardarRegistros(){
+            $.post('/produccion/configuracion/piscinas/guardar', {piscinas: piscinas}, (data) => {
+                
+            });
+        }
+
+
+    // Título
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-water
+                    |   Configuración de piscinas
+                div
+                    a#guardar(href="javascript:guardarRegistros();").btn.btn-success.Ripple-parent.green-gradient
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Realizar").fas.fa-save
+    
+    // Detalles
+    section.mb-4
+        .card
+            .card-body
+                .row
+                    .col-md-6.col-lg-6.col-xs-6.text-left
+                        //h4.h4-responsive
+                            small Módulo(s): 
+                            br
+                            strong
+                                span#span_modulos.blue-text ####
+                                a(data-toggle="modal" href="#moduloModal" style="margin-left: 5px; margin-top: 2px;").btn.btn-primary.btn-small.blue-gradient
+                                    i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Cambiar módulo").fas.fa-2x.fa-sync-alt
+                        h4.h4-responsive
+                            small Número de piscinas: 
+                            br
+                            strong
+                                span#num_piscinas #{estanques.length}
+                        h4.h4-responsive
+                            small Mostrar solo: 
+                            br
+                            div.d-flex
+                                .form-check.margin-div
+                                    input#todos.form-check-input(type='checkbox', name='todos', value='option0', checked='')
+                                    label.form-check-label(style="font-size: 14px;")
+                                        |   Todos
+                                .form-check.margin-div
+                                    input#sembrado.form-check-input(type='checkbox', name='sembrado', value='option1')
+                                    label.form-check-label(style="font-size: 14px;")
+                                        |   Sembrado
+                                .form-check.margin-div
+                                    input#cosechado.form-check-input(type='checkbox', name='cosechado', value='option2')
+                                    label.form-check-label(style="font-size: 14px;")
+                                        |   Cosechado
+                                .form-check
+                                    input#proceso.form-check-input(type='checkbox', name='proceso', value='option3',)
+                                    label.form-check-label(style="font-size: 14px;")
+                                        |   En Proceso
+                    .col-md-6.col-lg-6.col-xs-6.text-right
+                        h4.h4-responsive
+                            small Fecha.
+                            br
+                            strong
+                                a(data-toggle="modal" href="#fechaModal" style="margin-right: 5px; margin-top: 2px;").btn.btn-primary.btn-small.blue-gradient
+                                    i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Cambiar fecha").fas.fa-2x.fa-sync-alt
+                                span#fecha.blue-text
+                                span#hora.blue-text
+    
+    // Captura de datos
+    section.mb-4
+        .panel.panel-primary
+            .panel-heading
+                i.fas.fa-cog
+            .panel-body
+                ul#lista_piscinas
+                    each p in estanques
+                        li
+                            div.d-flex.justify-content-between
+                                .center-middle
+                                    i.fas.fa-water(style="margin-right: 1px; color: #2d6e99")
+                                    label(id="codPis_"+p._id) #{p.codigo}
+                                .form-group.margin-div.center-middle
+                                    label #{p.nombre}
+                                .form-group.margin-div.center-middle
+                                    label #{p.modulo.nombre}
+                                .form-group.margin-div
+                                    label | Estatus
+                                    .input-group
+                                        span.input-group-addon(style="color: #FFF").blue-gradient
+                                            i.fas.fa-stamp
+                                        select.form-control(id=p._id, name="status_"+p.id onchange="registrarPiscina(this.id)")
+                                            option(value=-1) << Seleccione >>
+                                            option(value="Sembrado", selected=("Sembrado" == p.estatus != undefined ? p.estatus : "")) Sembrado
+                                            option(value="En proceso", selected=("En proceso" == p.estatus != undefined ? p.estatus : "")) En proceso
+                                            option(value="Cosechado", selected=("Cosechado" == p.estatus != undefined ? p.estatus : "")) Cosechado
+                                            option(value="Inactivo", selected=("Inactivo" == p.estatus != undefined ? p.estatus : "")) Inactivo
+                                            option(value="Cerrado",selected=("Cerrado" == p.estatus != undefined ? p.estatus : "")) Cerrado
+                                    
+                            hr
+
+    // Modal Seleccionar tiempo
+    #tiempoModal(class="modal")
+        .modal-dialog(role="document")
+            .modal-content
+                .modal-header(style="font-size: 2em; margin: 0; color: #fff;").view.view-cascade.gradient-card-header.blue-gradient
+                    .col-lg-12
+                        i.fa.fas.fa-sync-alt(style="margin-right: 15px;")
+                        label 
+                            strong Seleccionar tiempo
+                .modal-body()
+                    .card
+                        .card-body
+                            .row
+                                .col-lg-12
+                                    .form-group
+                                        label | Tiempo
+                                        .input-group
+                                            span.input-group-addon.blue-gradient
+                                                i.fas.fa-hourglass-half.fa-input
+                                            select#select_tiempo.form-control(required name="tiempo" tabindex="1" value="" onchange="asignarTiempo()")
+                                                option(value="") << Seleccione >>
+                                                option(value="AM") AM
+                                                option(value="PM") PM
+
+                .modal-footer
+                    .text-right
+                        .btn-group
+                            a(data-dismiss="modal").btn.btn-default
+                                i.fa.fas.fa-times-circle()
+                                |   Cerrar
+
+     // Modal Seleccionar tiempo
+
+    // Modal seleccionar fecha
+    #fechaModal(class="modal")
