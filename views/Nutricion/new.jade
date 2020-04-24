@@ -60,19 +60,24 @@ block contenido
         var lista_nutricion = [];
 
         $(document).ready( function(){
-            obtenerFecha();
-            obtenerHora(); 
+            $('#subMenuProduccion').removeClass('hidden');
+            $('#spanMenuProduccion').removeClass('fa-angle-left');
+            $('#spanMenuProduccion').addClass('fa-angle-down');
 
             $('#subMenuNutricion').removeClass('hidden');
             $('#spanMenuNutricion').removeClass('fa-angle-left');
             $('#spanMenuNutricion').addClass('fa-angle-down');
-
+            
             var today = new Date();
             document.getElementById("fecha_new").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
         
+
+            obtenerFecha();
+            obtenerHora(); 
             mostrarPiscinas();
             
             $('[data-toggle="tooltip"]').tooltip();
+            
         });
 
         function obtenerFecha(){
@@ -314,7 +319,7 @@ block contenido
             abrirLoader();
             
             console.log(nutricion);
-            /*
+            
             if(nutricion.length == 0) {
                 $('#alert').removeClass('success');
                 $('#alert').addClass('warning');
@@ -348,7 +353,7 @@ block contenido
             }, "json");
 
             $('#loader').addClass('hidden');
-            */
+            
             cerrarLoader();
         }
 

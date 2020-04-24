@@ -51,6 +51,7 @@ block contenido
         var cambiar_tiempo = true;
         var cambiar_fecha = false;
         var piscinas = [];
+        var estanques = [];
         var hora;
 
         $(document).ready( function(){
@@ -58,10 +59,23 @@ block contenido
             $('#spanMenuProduccion').removeClass('fa-angle-left');
             $('#spanMenuProduccion').addClass('fa-angle-down');
 
+            $('#subMenuNutricion').removeClass('hidden');
+            $('#spanMenuNutricion').removeClass('fa-angle-left');
+            $('#spanMenuNutricion').addClass('fa-angle-down');
+
             var today = new Date();
             //document.getElementById("fecha_new").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
 
-            //mostrarPiscinas();
+            $('#sembrado').on( 'click', function() {
+            if( $(this).is(':checked') ){
+                // Hacer algo si el checkbox ha sido seleccionado
+                mostrarSoloSembrados();
+            } else {
+                // Regresar a como estaban antes las piscinas
+            }
+        });
+
+            mostrarPiscinas();
             obtenerFecha();
             obtenerHora();
         });
@@ -115,7 +129,8 @@ block contenido
             setTimeout('obtenerhora()',1000);
         }
 
-        function registrarPiscina(id){
+        function registrarPiscina(ids){
+            var id = ids.split("_")[1];
             var obj = new Object();
 
             obj.id = id;
@@ -143,6 +158,120 @@ block contenido
             $.post('/produccion/configuracion/piscinas/guardar', {piscinas: piscinas}, (data) => {
                 
             });
+        }
+
+        function mostrarPiscinas(){
+            abrirLoader();
+
+            $.getJSON('/produccion/mostrar/piscinas', (data) =>{
+                if(data != undefined){
+                    estanques = data.piscinas;
+
+                    //var comparar = data.piscinas[i].estatus != undefined ? data.piscinas[i].estatus : "";
+
+                    
+                            
+                    
+
+                    for(let i = 0; i <= data.piscinas.length -1; i++){
+                        switch( data.piscinas[i].estatus != undefined ? data.piscinas[i].estatus : ""){
+                            case "Sembrado":
+                                console.log("entreee !");
+                                console.log($('#i_'+data.piscinas[i]._id).val());
+                                //$("#menu option[value='2']").attr("selected", true);
+                                $('#opt1_'+data.piscinas[i]._id).prop("selected", true);
+                                break;
+                            case "En proceso":
+                                break;
+                            case "Cosechado":
+                                break;
+                            case "Inactivo":
+                                break;
+                            case "Cerrado":
+                                break;
+                            default:
+                                break;
+                        }
+
+                        $("#lista_piscinas").append('<li id="pis'+data.piscinas[i]._id+'"> ' +
+                            '<div class="d-flex justify-content-between">' +
+                                '<input type="text" id="idPis'+data.piscinas[i]._id+'" name="idPis'+data.piscinas[i]._id+'" value="'+data.piscinas[i]._id+'" class="hidden">'+
+                                '<div class="center-middle">' +
+                                    '<i class="fas fa-water" style="margin-right: 1px; color: #2d6e99"></i>' +
+                                    '<label id="codPis_'+data.piscinas[i]._id+'">'+data.piscinas[i].codigo+'</label>' +
+                                '</div>'+
+                                '<div class="form-group margin-div center-middle">' +
+                                    '<label>' + data.piscinas[i].nombre + '</label>' +
+                                '</div>' +
+                                '<div class="form-group margin-div center-middle">' +
+                                    '<label>' + data.piscinas[i].modulo.nombre + '</label>' +
+                                '</div>' +
+                                '<div class="form-group margin-div">' +
+                                    '<label> Estatus </label>' +
+                                    '<div class="input-group">' +
+                                        '<span class="input-group-addon blue-gradient">'+
+                                            '<i class="fas fa-stamp fa-input"></i>' +
+                                        '</span>' +
+                                        '<select class="form-control" type="text" id="i_'+data.piscinas[i]._id+'" name="status_'+data.piscinas[i]._id+'" onchange="registrarPiscina(this.id)">' + 
+                                            '<option id="opt1_'+data.piscinas[i]._id+'" value=-1> << Seleccione >> </option>' +
+                                            '<option id="opt2_'+data.piscinas[i]._id+'" value=Sembrado> Sembrado </option>' +
+                                            '<option id="opt3_'+data.piscinas[i]._id+'" value=Cosechado> Cosechado </option>' +
+                                            '<option id="opt4_'+data.piscinas[i]._id+'" value=Inactivo> Inactivo </option>' +
+                                            '<option id="opt5_'+data.piscinas[i]._id+'" value=Cerrado> Cerrado </option>' +
+                                        '</select>' + 
+                                    '</div>'+
+                                '</div>' +
+                            '</div>' +
+                            '<hr>'+
+                        '</li>');
+                    }
+                }
+            });
+
+            cerrarLoader();
+        }
+
+        function mostrarSoloSembrados(){
+            var filtrados = []
+            filtrados = estanques.filter(e => e.estatus == "Cerrado");
+
+            $("#lista_piscinas").empty();
+
+            for(let i = 0; i <= filtrados.length; i++){
+                $("#lista_piscinas").append(
+                    '<li>'+
+                        '<div class="d-flex justify-content-between">'+
+                            '<div class="center-middle">'+
+                                '<i class="fas.fa-water" style="margin-right: 1px; color: #2d6e99"></i>' +
+                                '<label id="codPis_" + estanques[i]._id>'+estanques[i].codigo+'</label>' +
+                            '</div>' +
+                            '<div class="form-group margin-div center-middle">'+
+                                '<label>' + estanques[i].nombre + '</label>' +
+                            '</div>' +
+                            '<div class="form-group margin-div center-middle">'+
+                                '<label>' + estanques[i].modulo.nombre + '</label>' +
+                            '</div>' +
+                            '<div class="form-group margin-div">'+
+                                '<label> Estatus </label>' +
+                                '<div class="input-group">' +
+                                    '<span class="input-group-addon blue-gradient" style="color: #FFF">' +
+                                        '<i class="fas fa-stamp"></i>' +
+                                    '</span>' +
+                                    '<select class="form-control" id=estanques[i]_id name="status_"+estanques[i]id onchange="registrarPiscina(this.id)">' +
+                                        '<option value=-1> << Seleccione >> </option>' +
+                                        '<option value="Sembrado", selected=("Sembrado" == (estanques[i]estatus != undefined ? estanques[i]estatus : ""))> Sembrado </option>' +
+                                        '<option value="En proceso", selected=("En proceso" == (estanques[i]estatus != undefined ? estanques[i]estatus : ""))> En proceso </option>' +
+                                        '<option value="Cosechado", selected=("Cosechado" == (estanques[i]estatus != undefined ? estanques[i]estatus : ""))> Cosechado </option>' +
+                                        '<option value="Inactivo", selected=("Inactivo" == (estanques[i]estatus != undefined ? estanques[i]estatus : ""))> Inactivo </option>' +
+                                        '<option value="Cerrado",selected=("Cerrado" == (estanques[i]estatus != undefined ? estanques[i]estatus : ""))> Cerrado </option>' +
+                                    '</select>'+
+                                '</div>' +
+                            '</div>' +
+                        '</div>'+
+                    '</li>'+
+                    '<hr>'
+                );
+            }
         }
 
 
@@ -212,30 +341,6 @@ block contenido
                 i.fas.fa-cog
             .panel-body
                 ul#lista_piscinas
-                    each p in estanques
-                        li
-                            div.d-flex.justify-content-between
-                                .center-middle
-                                    i.fas.fa-water(style="margin-right: 1px; color: #2d6e99")
-                                    label(id="codPis_"+p._id) #{p.codigo}
-                                .form-group.margin-div.center-middle
-                                    label #{p.nombre}
-                                .form-group.margin-div.center-middle
-                                    label #{p.modulo.nombre}
-                                .form-group.margin-div
-                                    label | Estatus
-                                    .input-group
-                                        span.input-group-addon(style="color: #FFF").blue-gradient
-                                            i.fas.fa-stamp
-                                        select.form-control(id=p._id, name="status_"+p.id onchange="registrarPiscina(this.id)")
-                                            option(value=-1) << Seleccione >>
-                                            option(value="Sembrado", selected=("Sembrado" == p.estatus != undefined ? p.estatus : "")) Sembrado
-                                            option(value="En proceso", selected=("En proceso" == p.estatus != undefined ? p.estatus : "")) En proceso
-                                            option(value="Cosechado", selected=("Cosechado" == p.estatus != undefined ? p.estatus : "")) Cosechado
-                                            option(value="Inactivo", selected=("Inactivo" == p.estatus != undefined ? p.estatus : "")) Inactivo
-                                            option(value="Cerrado",selected=("Cerrado" == p.estatus != undefined ? p.estatus : "")) Cerrado
-                                    
-                            hr
 
     // Modal Seleccionar tiempo
     #tiempoModal(class="modal")

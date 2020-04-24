@@ -582,8 +582,8 @@ $(document).ready( function() {
                 $('#menuProduccion').click( function(){
                     if ($('#subMenuProduccion').hasClass('hidden')) {
                         $('#subMenuProduccion').removeClass('hidden');
-                        $('#spanmenuProduccion').removeClass('fa-angle-left');
-                        $('#spanmenuProduccion').addClass('fa-angle-down');
+                        $('#spanMenuProduccion').removeClass('fa-angle-left');
+                        $('#spanMenuProduccion').addClass('fa-angle-down');
                     }else{
                         $('#subMenuProduccion').addClass('hidden');
                         $('#spanMenuProduccion').removeClass('fa-angle-down');

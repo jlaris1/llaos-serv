@@ -503,5 +503,8 @@ module.exports = function(app){
     // Producción
     app.use('/produccion', produccionRouter);
     produccionRouter.get('/configuracion/piscinas', produccion.configPiscinas);
+    produccionRouter.get('/mostrar/piscinas', produccion.mostrasPiscinas);
     produccionRouter.post('/configuracion/piscinas/guardar', produccion.guardarConfigPiscinas);
+
+
 } 

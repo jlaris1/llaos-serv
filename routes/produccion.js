@@ -78,5 +78,30 @@ module.exports = {
                 }) 
             }
         }
+    },
+    mostrasPiscinas: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+            respuesta.redirect("/sesion-expirada");
+        } else {
+            Modulos.find({"unidad_negocio": solicitud.session.user.unidad_negocio}, (error, modulos) =>{
+                if(error) {
+                    console.log(chalk.bgRed(error));
+                } else {
+                    Estanques.find({modulo: {$in: modulos}}, (error, estanques) => {
+                        if(error) {
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            Modulos.populate(estanques, {path: 'modulo'}, (error, estanques) =>{
+                                if(error){
+                                    console.log(chalk.bgRed(error));
+                                } else {
+                                    respuesta.json({piscinas: estanques});
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
     }
 }
