@@ -369,7 +369,7 @@ block contenido
             var id = idS.split("_")[1];
             var obj = new Object()
 
-            console.log(id);
+            console.log($('#fecha_new').val());
             
             if(existeRegistro(id)){ } else {
                 obj.charola_1 = $("input[name=charola1"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola1"+id+"]").val();
@@ -418,6 +418,7 @@ block contenido
                     obj.siguiente_racion = $("#kg_sig" + id ).text();
                     obj.estanque = $("input[name=idPis"+id+"]").val();
                     obj.codigo_piscina = $("#codPis_"+id).text();
+                    obj.fecha = $('#fecha_new').val();
                     obj.hora = hora;
                     obj.tiempo = $("#span_tiempo").text();
                     obj.charolero = $('#user').val();
