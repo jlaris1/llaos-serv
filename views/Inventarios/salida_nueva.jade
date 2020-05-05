@@ -173,6 +173,8 @@ block contenido
                     if(usuario.area != null && usuario.area != undefined && usuario.area.nombre == "Producción"){
                         $('#modulosSal').removeClass('hidden');
 
+                        $("#moduloS").empty();
+
                         $("#moduloS").append(
                             new Option(
                                 "<< Seleccione >>", 
@@ -189,7 +191,12 @@ block contenido
                             );
                         }
 
+                        $('#areaImp').val(usuario.area.nombre);
+                        $('#span_area').text(usuario.area.nombre);
+                        $('#area_salida').val(usuario.area._id);
+
                     } else {
+                        console.log(usuario.area);
                         if(usuario.area != undefined && usuario.area != null){
                             $('#areaImp').val(usuario.area.nombre);
                             $('#span_area').text(usuario.area.nombre);
