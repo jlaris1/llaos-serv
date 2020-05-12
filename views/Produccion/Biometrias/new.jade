@@ -1,4 +1,4 @@
-extends ../layouts/layout.jade
+extends ../../layouts/layout.jade
 block contenido
     style.
         .round {
@@ -17,14 +17,14 @@ block contenido
         }
 
         .center-middle {
-           margin-top: 13px;
+            margin-top: 13px;
         }
 
         .margin-div {
             margin-right: 5px;
         }
 
-         .btn-small {
+        .btn-small {
             font-size: 0.5rem;
         }
 
@@ -64,9 +64,9 @@ block contenido
             $('#spanMenuProduccion').removeClass('fa-angle-left');
             $('#spanMenuProduccion').addClass('fa-angle-down');
 
-            $('#subMenuNutricion').removeClass('hidden');
-            $('#spanMenuNutricion').removeClass('fa-angle-left');
-            $('#spanMenuNutricion').addClass('fa-angle-down');
+            $('#subMenuBiometrias').removeClass('hidden');
+            $('#spanMenuBiometrias').removeClass('fa-angle-left');
+            $('#spanMenuBiometrias').addClass('fa-angle-down');
             
             var today = new Date();
             document.getElementById("fecha_new").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
@@ -77,7 +77,6 @@ block contenido
             mostrarPiscinas();
             
             $('[data-toggle="tooltip"]').tooltip();
-            
         });
 
         function obtenerFecha(){
@@ -214,26 +213,24 @@ block contenido
                                 '</div>' +
                             '</div>' +
                             '<div style="margin-top: -10px;" class="text-right">' +
-                                '<label> R1: </label>' +
-                                '<label class="margin-div2 blue-text" id="r1'+data.piscinas[i]._id+'" name"r1'+data.piscinas[i]._id+'"></label>' +
-                                '<label> R2: </label>' +
-                                '<label class="margin-div2 blue-text" id="r2'+data.piscinas[i]._id+'" name"r2'+data.piscinas[i]._id+'"></label>' +
-                                '<label> R3: </label>' +
-                                '<label class="margin-div2 blue-text" id="r3'+data.piscinas[i]._id+'" name"3'+data.piscinas[i]._id+'"></label>' +
-                                '<label> R4: </label>' +
-                                '<label class="margin-div2 blue-text" id="r4'+data.piscinas[i]._id+'" name"r4'+data.piscinas[i]._id+'"></label>' +
-                                '<label> R5: </label>' +
-                                '<label class="margin-div2 blue-text" id="r5'+data.piscinas[i]._id+'" name"r5'+data.piscinas[i]._id+'"></label>' +
-                                '<label> Kg día: </label>' +
-                                '<label class="margin-div2 blue-text" id="kg_dia'+data.piscinas[i]._id+'" name"kg_dia'+data.piscinas[i]._id+'"></label>' +
-                                '<label> Kg acumulado: </label>' +
-                                '<label class="margin-div2 blue-text" id="kg_acumu'+data.piscinas[i]._id+'" name"kg_acumu'+data.piscinas[i]._id+'"></label>' +
-                                '<label> Código: </label>' +
-                                '<label class="margin-div2 blue-text" id="cod'+data.piscinas[i]._id+'" name"cod'+data.piscinas[i]._id+'"></label>' +
-                                '<label> Suma: </label>' +
-                                '<label class="margin-div2 blue-text" id="suma'+data.piscinas[i]._id+'" name"suma'+data.piscinas[i]._id+'"></label>' +
-                                '<label> Kg Siguiente ración: </label>' +
-                                '<label class="margin-div2 blue-text" id="kg_sig'+data.piscinas[i]._id+'" name"kg_sig'+data.piscinas[i]._id+'"></label>' +
+                                '<label> Superfi (ha): </label>' +
+                                '<label class="margin-div2 blue-text" id="super'+data.piscinas[i]._id+'" name"super'+data.piscinas[i]._id+'">5.0</label>' +
+                                '<label> Fecha siemb: </label>' +
+                                '<label class="margin-div2 blue-text" id="fsiembra'+data.piscinas[i]._id+'" name"fsiembra'+data.piscinas[i]._id+'">14/04/2020</label>' +
+                                '<label> Días culti: </label>' +
+                                '<label class="margin-div2 blue-text" id="dculti'+data.piscinas[i]._id+'" name"dculti'+data.piscinas[i]._id+'">21</label>' +
+                                '<label> Peso siemb: </label>' +
+                                '<label class="margin-div2 blue-text" id="peso_siem'+data.piscinas[i]._id+'" name"peso_siem'+data.piscinas[i]._id+'">0.307</label>' +
+                                '<label> Peso ant: </label>' +
+                                '<label class="margin-div2 blue-text" id="peso_ant'+data.piscinas[i]._id+'" name"peso_ant'+data.piscinas[i]._id+'">1.70</label>' +
+                                '<label> Incre: </label>' +
+                                '<label class="margin-div2 blue-text" id="incre'+data.piscinas[i]._id+'" name"incre'+data.piscinas[i]._id+'">0.65</label>' +
+                                '<label> Alim Sem: </label>' +
+                                '<label class="margin-div2 blue-text" id="alim_sem'+data.piscinas[i]._id+'" name"alim_sem'+data.piscinas[i]._id+'">815</label>' +
+                                '<label> Kg x ha: </label>' +
+                                '<label class="margin-div2 blue-text" id="kg_x_ha'+data.piscinas[i]._id+'" name"kg_x_ha'+data.piscinas[i]._id+'">23.3</label>' +
+                                '<label> Acumul: </label>' +
+                                '<label class="margin-div2 blue-text" id="acumu'+data.piscinas[i]._id+'" name"acumu'+data.piscinas[i]._id+'">1907</label>' +
                             '</div>' +
                             '<hr>'+
                         '</li>');
@@ -482,8 +479,8 @@ block contenido
         .card
             .card-body.d-flex.justify-content-between
                 h4.h4-responsive.mt-3
-                    i.fas.fa-seedling
-                    |   Registro de nutrición
+                    i.fas.fa-ruler-combined
+                    |   Registro de biometrias
                 div
                     a#guardar(href="javascript:guardarRegistros();").btn.btn-success.Ripple-parent.green-gradient
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Realizar").fas.fa-save
@@ -574,8 +571,6 @@ block contenido
                             a(data-dismiss="modal").btn.btn-default
                                 i.fa.fas.fa-times-circle()
                                 |   Cerrar
-
-     // Modal Seleccionar tiempo
 
     // Modal seleccionar fecha
     #fechaModal(class="modal")

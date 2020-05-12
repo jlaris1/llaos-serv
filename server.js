@@ -117,6 +117,7 @@ require('./config/models/Unidades');
 require('./config/models/UnidadesNegocio');
 require('./config/models/Catalogos');
 require('./config/models/Historial');
+require('./config/models/Biometrias');
 
 /* Importación de clase que contiene todas las rutas */
 require('./config/routes')(app);

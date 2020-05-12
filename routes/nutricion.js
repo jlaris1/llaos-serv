@@ -265,7 +265,8 @@ module.exports = {
     add: function(solicitud, respuesta){
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
-		}else{            
+		}else{      
+            console.log(solicitud.body.nutricion);      
             for(let i = 0; i <= solicitud.body.nutricion.length -1; i++){
                 
                 if(solicitud.body.cambiar_fecha == true){
@@ -280,14 +281,7 @@ module.exports = {
                     if(error){
                         console.log(chalk.bgRed(error));
                     } else {
-                        /*********** AGREGAR AL HISTORIAL */
-                            historial.save(
-                                'perano',
-                                'fa-seedling',
-                                'registró nutricion para la piscina <em class="text-md">' + solicitud.body.nutricion[i].codigo_piscina + '.</em>',
-                                solicitud.session.user._id
-                            )
-                        /******************************* */
+                        
 
                         if(i == solicitud.body.nutricion.length -1){
                             respuesta.json(

@@ -85,6 +85,9 @@ module.exports = function(app){
     var produccion = require('../routes/produccion.js');
     var produccionRouter = express.Router();
 
+    var biometrias = require('../routes/biometrias.js');
+    var biometriasRouter = express.Router();
+
     //Pruebas
     //app.get('/pruebita', pruebita.prueba); 
     //app.get('/pruebita', inventarios.imprimirOrdenSalida);
@@ -506,5 +509,9 @@ module.exports = function(app){
     produccionRouter.get('/mostrar/piscinas', produccion.mostrasPiscinas);
     produccionRouter.post('/configuracion/piscinas/guardar', produccion.guardarConfigPiscinas);
 
+    app.use('/biometrias', biometriasRouter);
+    biometriasRouter.get('/all', biometrias.all);
+    biometriasRouter.get('/new', biometrias.new);
+    biometriasRouter.post('/save', biometrias.add);
 
 } 

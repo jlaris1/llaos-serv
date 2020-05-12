@@ -587,6 +587,21 @@ html(lang="es")
                                                     a(href='/nutricion/new')
                                                         i.fas.fa-plus-circle.fa-fw 
                                                         |   Nuevo
+                                        // MENÚ BIOMETRIAS
+                                        li
+                                            a(href='#')#menuBiometrias
+                                                i.fas.fa-ruler-combined.fa-fw
+                                                |   Biometrias
+                                                span#spanMenuBiometrias.fas.fa-angle-left
+                                        ul#subMenuBiometrias.nav.nav-third-level.hidden
+                                            li
+                                                a(href='/biometrias/all')
+                                                    i.fas.fa-table.fa-fw
+                                                    | Bandeja
+                                            li
+                                                a(href='/biometrias/new')
+                                                    i.fas.fa-plus-circle.fa-fw
+                                                    | Nuevo
                                         // MENÚ PARAMETROS
                                         li
                                             a(href='#')#menuParametros

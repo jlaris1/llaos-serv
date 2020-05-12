@@ -591,6 +591,20 @@ $(document).ready( function() {
                     }        
                 });
 
+                /***************** BIOMETRIAS */
+                $('#menuBiometrias').click( function(){
+                    if ($('#subMenuBiometrias').hasClass('hidden')) {
+                        $('#subMenuBiometrias').removeClass('hidden');
+                        $('#spanMenuBiometrias').removeClass('fa-angle-left');
+                        $('#spanMenuBiometrias').addClass('fa-angle-down');
+                    }else{
+                        $('#subMenuBiometrias').addClass('hidden');
+                        $('#spanMenuBiometrias').removeClass('fa-angle-down');
+                        $('#spanMenuBiometrias').addClass('fa-angle-left');
+                    }        
+                });
+
+
             /*******************************/
 
 });
