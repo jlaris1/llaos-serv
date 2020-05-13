@@ -266,32 +266,39 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		}else{      
-            console.log(solicitud.body.nutricion);      
-            for(let i = 0; i <= solicitud.body.nutricion.length -1; i++){
-                
-                if(solicitud.body.cambiar_fecha == true){
-                    solicitud.body.nutricion[i].fecha =  solicitud.body.fecha_new;
-                }
+            console.log(solicitud.body.nutricion.length);           
 
-                console.log(solicitud.body.nutricion[i]);
-
-                nutricion = new Nutricion(solicitud.body.nutricion[i]);
-
-                nutricion.save( function(error){
-                    if(error){
-                        console.log(chalk.bgRed(error));
-                    } else {
-                        
-
-                        if(i == solicitud.body.nutricion.length -1){
-                            respuesta.json(
-                                {
-                                    estatus: 'Guardado'
-                                }
-                            );
+            if( solicitud.body.nutricion != undefined && solicitud.body.nutricion.length > 0){
+                for(let i = 0; i <= solicitud.body.nutricion.length -1; i++){
+                    var nutricion = new Nutricion(solicitud.body.nutricion[i]);
+    
+                    console.log(solicitud.body.nutricion[i]);
+    
+                    nutricion.save( (error) =>{
+                        if(error){
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            /*********** AGREGAR AL HISTORIAL */
+                                historial.save(
+                                    'perano',
+                                    'fa-seedling',
+                                    'registró nutrición para la piscina <em class="text-md">' + solicitud.body.parametros[i].codigo_piscina + '.</em>',
+                                    solicitud.session.user._id
+                                )
+                            /******************************* */
+    
+                            if(i == solicitud.body.nutricion.length -1){
+                                respuesta.json(
+                                    {
+                                        estatus: 'Guardado'
+                                    }
+                                );
+                            }
                         }
-                    }
-                });
+                    });
+                }
+            } else {
+                console.log("no guardar llego todo en 0's");
             }
         }
     },
@@ -743,7 +750,7 @@ module.exports = {
 
                             /** Reciones del día */                            
                             Nutricion.find(
-                               { $and: [
+                                { $and: [
                                     { estanque: { $in: piscinas }},
                                     { fecha: {
                                         $gte: fecha,
@@ -883,7 +890,9 @@ module.exports = {
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.redirect('/nutricion/all')
+                    respuesta.json({
+                        id: solicitud.params.id 
+                    });
                 }
             });
         }

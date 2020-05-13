@@ -52,7 +52,7 @@ block contenido
             margin-right: 10px;
         }
     script.
-        var nutricion = [];
+        var biometrias = [];
         var cambiar_tiempo = true;
         var cambiar_fecha = false;
         var hora;
@@ -71,7 +71,6 @@ block contenido
             var today = new Date();
             document.getElementById("fecha_new").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
         
-
             obtenerFecha();
             obtenerHora(); 
             mostrarPiscinas();
@@ -128,118 +127,95 @@ block contenido
             setTimeout('obtenerhora()',1000);
         }
 
-        function sumarCodigo(idS, num_charola){
-            var id = idS.split("_")[1];
-            var dividir = 0.00;
-            var suma = 0.00;
-            var codigo_racion = 0.00;
-            //  tamaño_suma.includes()
-
-            if(parseFloat($('input[name="charola'+num_charola+''+id+'"]').val()) < 0 || parseFloat($('input[name="charola'+num_charola+''+id+'"]').val()) > 3) {
-                $('#alert').removeClass('success');
-                $('#alert').addClass('warning');
-                $('#alertDiv').removeClass('hidden');
-                $('#msg1').text('Se adminten solo cantidades ');
-                $('#msg2').text('revise la charola ' + num_charola);
-                $('#msg_alert').text('de 0 a 3 ');
-                // focus charola.
-                $('input[name="charola'+num_charola+''+id+'"]').focus();
-                return;
-            }
-
-            var charola_1 = $('input[name="charola1'+id+'"]').val() == "" ? null : parseFloat($('input[name="charola1'+id+'"]').val());
-            var charola_2 = $('input[name="charola2'+id+'"]').val() == "" ? null : parseFloat($('input[name="charola2'+id+'"]').val());
-            var charola_3 = $('input[name="charola3'+id+'"]').val() == "" ? null : parseFloat($('input[name="charola3'+id+'"]').val());
-            var charola_4 = $('input[name="charola4'+id+'"]').val() == "" ? null : parseFloat($('input[name="charola4'+id+'"]').val());           
-
-            dividir += charola_1 == null ? 0 : 1;
-            dividir += charola_2 == null ? 0 : 1;
-            dividir += charola_3 == null ? 0 : 1;
-            dividir += charola_4 == null ? 0 : 1;
-
-            suma += charola_1 == null ? 0 : charola_1;
-            suma += charola_2 == null ? 0 : charola_2;
-            suma += charola_3 == null ? 0 : charola_3;
-            suma += charola_4 == null ? 0 : charola_4;
-
-            $('#suma'+id).text(suma);
-            $('#cod'+id).text(parseFloat(suma/dividir).toFixed(2));
-        }
-
         function mostrarPiscinas() {
             abrirLoader();
             var listaModulos = $("#modulos").val().split(",");
 
-            $.post( "/nutricion/piscinas", {
+            $.post( "/biometrias/piscinas", {
                 modulos: listaModulos
             }, (data) => {
                 if(data.piscinas.length > 0){
-
                     $('#num_piscinas').text(data.piscinas.length);
                     
                     for(var i = 0; i <= data.piscinas.length - 1; i ++){
-                        /** Contrucción de piscinas*/
-                        $("#lista_nutricion")
-                        .append('<li id="pis'+data.piscinas[i]._id+'"> ' +
-                            '<div class="d-flex justify-content-between">' +
-                                '<input type="text" id="idPis'+data.piscinas[i]._id+'" name="idPis'+data.piscinas[i]._id+'" value="'+data.piscinas[i]._id+'" class="hidden">'+
-                                '<div class="center-middle">' +
-                                    '<i class="fas fa-water" style="margin-right: 1px; color: #2d6e99"></i>' +
-                                    '<label id="codPis_'+data.piscinas[i]._id+'">'+data.piscinas[i].codigo+'</label>' +
-                                '</div>'+
-                                '<div class="form-group margin-div">' +
-                                    '<label> Charola 1 </label>' +
-                                    '<input class="form-control" type="text" id="c1_'+data.piscinas[i]._id+'" name="charola1'+data.piscinas[i]._id+'" placeholder="Charola 1" onblur="sumarCodigo(this.id,1)">' + 
-                                '</div>' +
-                                '<div class="form-group margin-div">' +
-                                    '<label> Charola 2 </label>' +
-                                    '<input class="form-control" type="text" id="c2_'+data.piscinas[i]._id+'" name="charola2'+data.piscinas[i]._id+'" placeholder="Charola 2" onblur="sumarCodigo(this.id,2)">' + 
-                                '</div>' +
-                                '<div class="form-group margin-div">' +
-                                    '<label> Charola 3 </label>' +
-                                    '<input class="form-control" type="text" id="c3_'+data.piscinas[i]._id+'" name="charola3'+data.piscinas[i]._id+'" placeholder="Charola 3" onblur="sumarCodigo(this.id,3)">' + 
-                                '</div>' +
-                                '<div class="form-group margin-div">' +
-                                    '<label> Charola 4 </label>' +
-                                    '<input class="form-control" type="text" id="c4_'+data.piscinas[i]._id+'" name="charola4'+data.piscinas[i]._id+'" placeholder="Charola 4" onblur="sumarCodigo(this.id,4)">' + 
-                                '</div>' +
-                                '<div class="form-group margin-div">' +
-                                    '<label> Kg ración </label>' +
-                                    '<input class="form-control" type="text" id="ra_'+data.piscinas[i]._id+'" name="racion'+data.piscinas[i]._id+'" placeholder="Kg ración" onkeyup="registrarParametro(this.id)">' + 
-                                '</div>' +
-                                '<div class="form-group margin-div">' +
-                                    '<label> % Ajuste </label>' +
-                                    '<input class="form-control" type="text" id="aj_'+data.piscinas[i]._id+'" name="ajuste'+data.piscinas[i]._id+'" placeholder="% Ajuste" onkeyup="siguienteRacion(this.id)" onblur="registrarParametro(this.id)">' + 
-                                '</div>' +
-                            '</div>' +
-                            '<div style="margin-top: -10px;" class="text-right">' +
-                                '<label> Superfi (ha): </label>' +
-                                '<label class="margin-div2 blue-text" id="super'+data.piscinas[i]._id+'" name"super'+data.piscinas[i]._id+'">5.0</label>' +
-                                '<label> Fecha siemb: </label>' +
-                                '<label class="margin-div2 blue-text" id="fsiembra'+data.piscinas[i]._id+'" name"fsiembra'+data.piscinas[i]._id+'">14/04/2020</label>' +
-                                '<label> Días culti: </label>' +
-                                '<label class="margin-div2 blue-text" id="dculti'+data.piscinas[i]._id+'" name"dculti'+data.piscinas[i]._id+'">21</label>' +
-                                '<label> Peso siemb: </label>' +
-                                '<label class="margin-div2 blue-text" id="peso_siem'+data.piscinas[i]._id+'" name"peso_siem'+data.piscinas[i]._id+'">0.307</label>' +
-                                '<label> Peso ant: </label>' +
-                                '<label class="margin-div2 blue-text" id="peso_ant'+data.piscinas[i]._id+'" name"peso_ant'+data.piscinas[i]._id+'">1.70</label>' +
-                                '<label> Incre: </label>' +
-                                '<label class="margin-div2 blue-text" id="incre'+data.piscinas[i]._id+'" name"incre'+data.piscinas[i]._id+'">0.65</label>' +
-                                '<label> Alim Sem: </label>' +
-                                '<label class="margin-div2 blue-text" id="alim_sem'+data.piscinas[i]._id+'" name"alim_sem'+data.piscinas[i]._id+'">815</label>' +
-                                '<label> Kg x ha: </label>' +
-                                '<label class="margin-div2 blue-text" id="kg_x_ha'+data.piscinas[i]._id+'" name"kg_x_ha'+data.piscinas[i]._id+'">23.3</label>' +
-                                '<label> Acumul: </label>' +
-                                '<label class="margin-div2 blue-text" id="acumu'+data.piscinas[i]._id+'" name"acumu'+data.piscinas[i]._id+'">1907</label>' +
-                            '</div>' +
-                            '<hr>'+
-                        '</li>');
-
+                        console.log(data.piscinas[i]);
+                        let obj = data.piscinas[i];
+            
                         /** Obtener el acumulado de cada una de las piscinas y agregarlo */
-                        $.post( "/nutricion/acumulado", {
-                            id: data.piscinas[i]._id
+                        $.post( "/biometrias/acumulado", {
+                            id: obj._id,
+                            fecha_siembra: obj.fecha_siembra
                         }, (datos) => {
-                            $('#kg_acumu'+datos.id).text(datos.kg_acumulados);
+                            var date = new Date(obj.fecha_siembra);
+                            date.setDate(date.getDate() + 1);
+                            var day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
+                            var month = (date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1);
+
+                            $("#lista_nutricion")
+                                .append('<li id="pis'+obj._id+'"> ' +
+                                    '<div class="d-flex justify-content-between">' +
+                                        '<input type="text" id="idPis'+obj._id+'" name="idPis'+obj._id+'" value="'+obj._id+'" class="hidden">'+
+                                        '<div class="center-middle">' +
+                                            '<i class="fas fa-water" style="margin-right: 1px; color: #2d6e99"></i>' +
+                                            '<label id="codPis_'+obj._id+'">'+obj.codigo+'</label>' +
+                                        '</div>'+
+                                        '<div class="form-group margin-div">' +
+                                            '<label> Peso actual </label>' +
+                                            '<input class="form-control" type="text" id="peso_act_'+obj._id+'" name="peso_act_'+obj._id+'" placeholder="Charola 1" onblur="sumarCodigo(this.id,1)">' + 
+                                        '</div>' +
+                                        '<div class="form-group margin-div">' +
+                                            '<label> Org x lance </label>' +
+                                            '<input class="form-control" type="text" id="org_lance_'+obj._id+'" name="org_lance_'+obj._id+'" placeholder="Charola 2" onblur="sumarCodigo(this.id,2)">' + 
+                                        '</div>' +
+                                        '<div class="form-group margin-div">' +
+                                            '<label> Código 4hr. </label>' +
+                                            '<input class="form-control" type="text" id="cod_4_'+obj._id+'" name="cod_4_'+obj._id+'" placeholder="Charola 3" onblur="sumarCodigo(this.id,3)">' + 
+                                        '</div>' +
+                                        '<div class="form-group margin-div">' +
+                                            '<label> Código 10hr. </label>' +
+                                            '<input class="form-control" type="text" id="cod_10_'+obj._id+'" name="cod_10_'+obj._id+'" placeholder="Charola 4" onblur="sumarCodigo(this.id,4)">' + 
+                                        '</div>' +
+                                        '<div class="form-group margin-div">' +
+                                            '<label> Org muert sem </label>' +
+                                            '<input class="form-control" type="text" id="org_muert_sem_'+obj._id+'" name="org_muert_sem_'+obj._id+'" placeholder="Kg ración" onkeyup="registrarParametro(this.id)">' + 
+                                        '</div>' +
+                                        '<div class="form-group margin-div">' +
+                                            '<label> Presencia paj </label>' +
+                                            '<input class="form-control" type="text" id="prese_paj_'+obj._id+'" name="prese_paj_'+obj._id+'" placeholder="% Ajuste" onkeyup="siguienteRacion(this.id)" onblur="registrarParametro(this.id)">' + 
+                                        '</div>' +
+                                        '<div class="form-group margin-div">' +
+                                            '<label> Observa </label>' +
+                                            '<input class="form-control" type="text" id="obs_'+obj._id+'" name="obs_'+obj._id+'" placeholder="% Ajuste" onkeyup="siguienteRacion(this.id)" onblur="registrarParametro(this.id)">' + 
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div style="margin-top: -10px;" class="text-right">' +
+                                        '<label> Superfi (ha): </label>' +
+                                        '<label class="margin-div2 blue-text" id="super_'+obj._id+'" name"super_'+obj._id+'">'+obj.superficie+'</label>' +
+                                        '<label> Fecha siemb: </label>' +
+                                        '<label class="margin-div2 blue-text" id="fsiembra_'+obj._id+'" name"fsiembra_'+obj._id+'">'+day+'/'+month+'/'+date.getFullYear()+'</label>' +
+                                        '<label> Densidad siemb: </label>' +
+                                        '<label class="margin-div2 blue-text" id="den_siembra_'+obj._id+'" name"den_siembra_'+obj._id+'">'+obj.densidad_siembra+'</label>' +
+                                        '<label> Int. origen: </label>' +
+                                        '<label class="margin-div2 blue-text" id="int_ori_'+obj._id+'" name"int_ori_'+obj._id+'">'+obj.intensivo_origen.toString()+'</label>' +
+                                        '<label> Días culti: </label>' +
+                                        '<label class="margin-div2 blue-text" id="dculti_'+obj._id+'" name"dculti_'+obj._id+'">'+datos.dias_siembra+'</label>' +
+                                        '<label> Peso siemb: </label>' +
+                                        '<label class="margin-div2 blue-text" id="peso_siem_'+obj._id+'" name"peso_siem_'+obj._id+'">'+obj.peso_siembra+'</label>' +
+                                        '<label> Peso ant: </label>' +
+                                        '<label class="margin-div2 blue-text" id="peso_ant_'+obj._id+'" name"peso_ant_'+obj._id+'">1.70</label>' +
+                                        '<label> Incre: </label>' +
+                                        '<label class="margin-div2 blue-text" id="incre_'+obj._id+'" name"incre_'+obj._id+'">0.65</label>' +
+                                        '<label> Alim Sem: </label>' +
+                                        '<label class="margin-div2 blue-text" id="alim_sem_'+obj._id+'" name"alim_sem_'+obj._id+'">'+datos.kg_acumulados_sem+'</label>' +
+                                        '<label> Kg x ha: </label>' +
+                                        '<label class="margin-div2 blue-text" id="kg_x_ha_'+obj._id+'" name"kg_x_ha_'+obj._id+'">'+ ((datos.kg_acumulados_sem / 7) / obj.superficie).toFixed(2)+'</label>' +
+                                        '<label> Acumul: </label>' +
+                                        '<label class="margin-div2 blue-text" id="acumu_'+obj._id+'" name"acumu_'+obj._id+'">'+datos.kg_acumulados+'</label>' +
+                                        '<label> Org muert. Acum: </label>' +
+                                        '<label class="margin-div2 blue-text" id="org_muert_acum_'+obj._id+'" name"org_muert_acum_'+obj._id+'">0</label>' +
+                                    '</div>' +
+                                    '<hr>'+
+                                '</li>');
                         });
 
                         if(i == data.piscinas.length -1){
@@ -258,67 +234,17 @@ block contenido
                         }
                     }
                 }
-
-                if(data.lista_nutricion.length > 0){
-                    for(var i=0; i <= data.lista_nutricion.length -1 ; i++){
-                        for(var j=0; j <= data.piscinas.length - 1; j ++){
-                            if(data.lista_nutricion[i] != undefined && data.lista_nutricion[i].estanque == $('#idPis'+data.piscinas[j]._id).val()){
-                                var contador = 0;
-                                var id = data.lista_nutricion[i].estanque;
-                                var r1  = parseFloat(0);
-                                var r2 = parseFloat(0);
-                                var r3 = parseFloat(0);
-                                var r4 = parseFloat(0);
-                                var r5 = parseFloat(0);
-
-                                r1 = data.lista_nutricion[i] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i].kg_racion).toFixed(2);
-                                contador += 1;
-
-                                if(data.lista_nutricion[i + 1] != undefined && data.lista_nutricion[i + 1].estanque == $('#idPis'+data.piscinas[j]._id).val()){
-                                    r2 = data.lista_nutricion[i + 1] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 1].kg_racion).toFixed(2);
-                                    contador += 1;
-                                }
-
-                                if(data.lista_nutricion[i + 2] != undefined && data.lista_nutricion[i + 2].estanque == $('#idPis'+data.piscinas[j]._id).val()){
-                                    r3 = data.lista_nutricion[i + 2] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 2].kg_racion).toFixed(2);
-                                    contador += 1;
-                                }
-
-                                if(data.lista_nutricion[i + 3] != undefined && data.lista_nutricion[i + 3].estanque == $('#idPis'+data.piscinas[j]._id).val()){
-                                    r4 = data.lista_nutricion[i + 3] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 3].kg_racion).toFixed(2);
-                                    contador += 1;
-                                }
-
-                                if(data.lista_nutricion[i + 4] != undefined && data.lista_nutricion[i + 4].estanque == $('#idPis'+data.piscinas[j]._id).val()){
-                                    r5 = data.lista_nutricion[i + 4] == undefined ? parseFloat(0) : parseFloat(data.lista_nutricion[i + 4].kg_racion).toFixed(2);
-                                    contador += 1;
-                                }
-
-                                var suma = parseFloat(r1) + parseFloat(r2) + parseFloat(r3) + parseFloat(r4) + parseFloat(r5);
-
-                                $('#r1'+id).text(r1);
-                                $('#r2'+id).text(r2);
-                                $('#r3'+id).text(r3);
-                                $('#r4'+id).text(r4);
-                                $('#r5'+id).text(r5);
-                                
-                                $('#kg_dia'+id).text(parseFloat(suma).toFixed(2));
-                                i += contador;
-                            }
-                        }
-                    }
-                }
-
             }, "json");
+            cerrarLoader();
         }
 
         function guardarRegistros(){
             $('#guardar').addClass('disabled');
             abrirLoader();
             
-            console.log(nutricion);
+            console.log(biometrias);
             
-            if(nutricion.length == 0) {
+            if(biometrias.length == 0) {
                 $('#alert').removeClass('success');
                 $('#alert').addClass('warning');
                 $('#alertDiv').removeClass('hidden');
@@ -330,8 +256,8 @@ block contenido
                 return;
             }
 
-            $.post( "/nutricion/add", {
-                nutricion: nutricion,
+            /*$.post( "/biometrias/add", {
+                biometrias: biometrias,
                 cambiar_fecha: cambiar_fecha
             }, (data) => {
                 //console.log(data);
@@ -349,7 +275,7 @@ block contenido
                 
             }, "json");
 
-            $('#loader').addClass('hidden');
+            $('#loader').addClass('hidden');*/
             
             cerrarLoader();
         }
@@ -368,35 +294,46 @@ block contenido
 
             console.log($('#fecha_new').val());
             
-            if(existeRegistro(id)){ } else {
-                obj.charola_1 = $("input[name=charola1"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola1"+id+"]").val();
-                obj.charola_2 = $("input[name=charola2"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola2"+id+"]").val();
-                obj.charola_3 = $("input[name=charola3"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola3"+id+"]").val();
-                obj.charola_4 = $("input[name=charola4"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola4"+id+"]").val();
-                obj.kg_racion = $("input[name=racion"+id+"]").val() == "" ? parseFloat(0) : $("input[name=racion"+id+"]").val();
-                obj.porcent_ajuste = $("input[name=ajuste"+id+"]").val() == "" ? parseFloat(0) : $("input[name=ajuste"+id+"]").val();
-                obj.codigo_racion = $("#cod" + id).text();
-                obj.suma = $("#suma" + id).text();
-                obj.siguiente_racion = $("#kg_sig" + id ).text();
+            //if(existeRegistro(id)){ } else {
+                /*** DATOS DE LA PISCINA **/
                 obj.estanque = $("input[name=idPis"+id+"]").val();
                 obj.codigo_piscina = $("#codPis_"+id).text();
-                obj.hora = hora;
-                obj.fecha = $('#fecha_new').val();
-                obj.tiempo = $("#span_tiempo").text();
-                obj.charolero = $('#user').val();
+                obj.superficie = $("input[name=super_"+id+"]").val() == "" ? "" : $("input[name=super_"+id+"]").val();
+                obj.fecha_siembra = $("input[name=fsiembra_"+id+"]").val() == "" ? "" : $("input[name=fsiembra_"+id+"]").val();
+                
+                /*** DATOS PARA MOSTRAR O INFORMATIVOS **/
+                obj.fecha_biometria = $('#fecha_new').val();
+                obj.dias_cultivo = $("input[name=dculti_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=dculti_"+id+"]").val();
+                obj.int_origen = $("input[name=int_ori_"+id+"]").val() == "" ? "" : $("input[name=int_ori_"+id+"]").val(); // <-- Revisar como se va a mostrar
+                obj.peso_siembra = $("input[name=peso_siem_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=peso_siem_"+id+"]").val();
+                obj.peso_anterior = $("input[name=peso_ant_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=peso_ant_"+id+"]").val();
+                obj.densidad = $("input[name=den_siembra_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=den_siembra_"+id+"]").val();
+                obj.organismos_muerto_acumulado = $("input[name=org_muert_acum_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=org_muert_acum_"+id+"]").val();
 
-                if( obj.charola_1 == 0 &&
-                obj.charola_2 == 0 &&
-                obj.charola_3 == 0 &&
-                obj.charola_4 == 0 &&
-                obj.kg_racion == 0 /*&&
-                obj.porcent_ajuste == 0*/ ) { 
+                /*** DATOS DE SUBCONSULTAS **/
+                obj.alimento_semanal = $("input[name=alim_sem_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=alim_sem_"+id+"]").val();
+                obj.alimento_acumulado = $("input[name=acumu_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=acumu_"+id+"]").val();
+                obj.kg_has_sembrada_prom = $("input[name=kg_x_ha_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=kg_x_ha_"+id+"]").val();
+
+                /*** DATOS DE CAPTURA **/
+                obj.peso_actual = $("input[name=peso_act_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=peso_act_"+id+"]").val();
+                obj.organismos_lance = $("input[name=org_lance_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=org_lance_"+id+"]").val();
+                obj.cod_4h = $("input[name=cod_4_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=cod_4_"+id+"]").val();
+                obj.cod_10h = $("input[name=cod_10_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=cod_10_"+id+"]").val();
+                obj.organismos_muertos_semana = $("input[name=org_muert_sem_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=org_muert_sem_"+id+"]").val();
+                obj.presencia_pajaros = $("input[name=prese_paj_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=prese_paj_"+id+"]").val();
+                obj.observaciones = $("input[name=obs_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=obs_"+id+"]").val();
+
+                if( obj.peso_actual == 0 &&
+                obj.organismos_lance == 0 &&
+                obj.cod_4h == 0 &&
+                obj.cod_10h == 0) { 
                     console.log(" Nose mandará a registrar piscina: " + id);
                 } else {
                     console.log(obj);
-                    nutricion.push(obj);
+                    biometrias.push(obj);
                 }
-            }
+           // }
         }
 
         function existeRegistro(id){

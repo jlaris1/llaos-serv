@@ -513,5 +513,7 @@ module.exports = function(app){
     biometriasRouter.get('/all', biometrias.all);
     biometriasRouter.get('/new', biometrias.new);
     biometriasRouter.post('/save', biometrias.add);
+    biometriasRouter.post('/piscinas', biometrias.findPiscinas);
+    biometriasRouter.post('/acumulado', biometrias.acumulado);
 
 } 

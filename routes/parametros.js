@@ -242,7 +242,7 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else { 
-            console.log(solicitud.body);
+            //console.log(solicitud.body);
 
             if( solicitud.body.parametros != undefined && solicitud.body.parametros.length > 0){
                 for(let i=0; i <= solicitud.body.parametros.length -1; i++){
@@ -253,13 +253,13 @@ module.exports = {
                             console.log(chalk.bgRed(error));
                         } else {
                             /*********** AGREGAR AL HISTORIAL */
-                            historial.save(
-                                'perano',
-                                'fa-eye-dropper',
-                                'registró parámetros para la piscina <em class="text-md">' + solicitud.body.parametros[i].codigo_piscina + '.</em>',
-                                solicitud.session.user._id
-                            )
-                        /******************************* */
+                                historial.save(
+                                    'perano',
+                                    'fa-eye-dropper',
+                                    'registró parámetros para la piscina <em class="text-md">' + solicitud.body.parametros[i].codigo_piscina + '.</em>',
+                                    solicitud.session.user._id
+                                )
+                            /******************************* */
 
                             if(i == solicitud.body.parametros.length -1 ){
                                 respuesta.json({
@@ -855,7 +855,7 @@ module.exports = {
                         if(error) {
                             console.log(error);
                         } else {
-                           respuesta.json({
+                            respuesta.json({
                                 piscinas: piscinas,
                                 modulos: modulos
                             });

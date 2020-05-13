@@ -19,7 +19,10 @@ var estanquesSchemaJSON = {
             }]
         }
     ],
-    estatus: String
+    estatus: String,
+    fecha_siembra: Date,
+    densidad_siembra: Number,
+    superficie: Number
 }
 
 // Módulos

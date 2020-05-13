@@ -170,5 +170,24 @@ module.exports = {
         }
     
         return dia+"/"+mes+"/"+anio;
+    },
+    getMondayOfCurrentWeek(d){
+        var day = d.getDay();
+        return new Date(d.getFullYear(), d.getMonth(), d.getDate() + (day == 0?-6:1)-day );
+    },
+    getSundayOfCurrentWeek(d){
+        var day = d.getDay();
+        return new Date(d.getFullYear(), d.getMonth(), d.getDate() + (day == 0?0:7)-day );
+    },
+    getMondayOfCurrentWeekString: (d) => {
+        var day = d.getDay();
+        return d.getFullYear() +'-'+ (d.getMonth() + 1) +'-'+ (d.getDate() + (day == 0?-6:1)-day);
+    },
+    getSundayOfCurrentWeekString: (d) => {
+        var day = d.getDay();
+        return d.getFullYear() +'-'+ (d.getMonth() + 1)+'-'+ (d.getDate() + (day == 0?0:7)-day);
+    },
+    getDaysBeetweenTwoDates: (d1, d2) => {
+        return Math.round((d1-d2)/(1000*60*60*24));
     }
 }

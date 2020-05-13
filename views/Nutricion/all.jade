@@ -20,11 +20,13 @@ block contenido
         });
 
         function eliminarRegistros(piscina) {
+            abrirLoader();
             $.post('/nutricion/delete/piscina', {
                 id: piscina
-            }, (estatus) => {
-                alert(estatus);
+            }, (data) => {
+                $("#tr"+data.id).remove();
             });
+            cerrarLoader();
         }
     //Termina Javascript
 
@@ -72,7 +74,7 @@ block contenido
                         th Hora
                     tbody
                         each nut in nutricion
-                            tr  
+                            tr(id="tr"+nut.id)  
                                 if user.permisos == "gerente_modulo" || user.permisos == "developer"
                                     td.text-center
                                         div.d-flex

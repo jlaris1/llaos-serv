@@ -159,6 +159,10 @@ block contenido
             $('#fecha').text(fecha[2]+"/"+fecha[1]+"/"+fecha[0] + " - ");
         }
     
+        function asignarTiempo(){
+            cambiar_tiempo = false;
+            $('#span_tiempo').text($('#select_tiempo').val());
+        }
     // Inputs funcionamiento
     input#id_param.hidden(name="id" value="#{nutricion.id}")
     input#est.hidden(name="estanque" value="#{nutricion.estanque.id}")
