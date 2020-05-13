@@ -425,8 +425,6 @@ module.exports = {
                                             //console.log(nutricion);
                                             let n = nutricion.filter( n => n.estanque.modulo.unidad_negocio._id == solicitud.session.user.unidad_negocio._id);
 
-                                            console.log(n);
-
                                             for(let i = 0; i <= n.length - 1; i ++) {
                                                 if(existePiscina(n[i].estanque.codigo) == false){
                                                     piscinas.push(
@@ -452,7 +450,7 @@ module.exports = {
 
                                             respuesta.json({piscinas,total});
                                         }
-                                    }).sort({codigo: 1});
+                                    });
                                 }
                             });                               
 
@@ -676,7 +674,7 @@ module.exports = {
                         }
                     });
                 }
-            }).sort({fecha: 1, codigo: 1});
+            }).sort({codigo: 1});
         }
     },
     historial: (solicitud, respuesta) => {
