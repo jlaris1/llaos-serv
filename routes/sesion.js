@@ -423,13 +423,16 @@ module.exports = {
                                             console.log(error);
                                         } else {
                                             //console.log(nutricion);
+                                            let n = nutricion.filter( n => n.estanque.modulo.unidad_negocio._id == solicitud.session.user.unidad_negocio._id);
 
-                                            for(let i = 0; i <= nutricion.length - 1; i ++) {
-                                                if(existePiscina(nutricion[i].estanque.codigo) == false){
+                                            console.log(n);
+
+                                            for(let i = 0; i <= n.length - 1; i ++) {
+                                                if(existePiscina(n[i].estanque.codigo) == false){
                                                     piscinas.push(
                                                         { 
-                                                            codigo: nutricion[i].estanque.codigo,
-                                                            unidad_negocio: nutricion[i].estanque.modulo.unidad_negocio.nombre
+                                                            codigo: n[i].estanque.codigo,
+                                                            unidad_negocio: n[i].estanque.modulo.unidad_negocio.nombre
                                                         }
                                                     );
                                                 }                
@@ -449,7 +452,7 @@ module.exports = {
 
                                             respuesta.json({piscinas,total});
                                         }
-                                    })
+                                    }).sort({codigo: 1});
                                 }
                             });                               
 
