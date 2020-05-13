@@ -282,7 +282,7 @@ module.exports = {
                                 historial.save(
                                     'perano',
                                     'fa-seedling',
-                                    'registró nutrición para la piscina <em class="text-md">' + solicitud.body.parametros[i].codigo_piscina + '.</em>',
+                                    'registró nutrición para la piscina <em class="text-md">' + solicitud.body.nutricion[i].codigo_piscina + '.</em>',
                                     solicitud.session.user._id
                                 )
                             /******************************* */
@@ -890,9 +890,10 @@ module.exports = {
                 if(error){
                     console.log(error);
                 } else {
-                    respuesta.json({
+                    respuesta.redirect('/nutricion/all');
+                    /*respuesta.json({
                         id: solicitud.params.id 
-                    });
+                    });*/
                 }
             });
         }
@@ -1463,3 +1464,4 @@ function generateXLS(data, title, xls_name){
         return xls_name;
     });
 }
+
