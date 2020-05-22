@@ -17,14 +17,14 @@ block contenido
         }
 
         .center-middle {
-           margin-top: 13px;
+            margin-top: 13px;
         }
 
         .margin-div {
             margin-right: 5px;
         }
 
-         .btn-small {
+        .btn-small {
             font-size: 0.5rem;
         }
 
@@ -53,7 +53,7 @@ block contenido
         }
     script.
         var hora;
-        var cambiar_tiempo = true;
+        var cambiar_tiempo = false;
         var cambiar_fecha = false;
 
         $(document).ready( function(){
@@ -66,12 +66,15 @@ block contenido
 
             $('[data-toggle="tooltip"]').tooltip();
             
-            var today = new Date();
+            var today = new Date($('#fecha_registro').val());
+            today.setDate(today.getDate() + 1);
             document.getElementById("fecha_new").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+            
         });
 
         function obtenerFecha(){
-            var fecha = new Date()
+            var fecha = new Date($('#fecha_registro').val());
+            fecha.setDate(fecha.getDate() + 1);
             var dia = fecha.getDate();
             var mes = fecha.getMonth()+1;
             var anio = fecha.getFullYear();
@@ -167,6 +170,8 @@ block contenido
     input#id_param.hidden(name="id" value="#{nutricion.id}")
     input#est.hidden(name="estanque" value="#{nutricion.estanque.id}")
     input#user.hidden(type="text" name="user_id" value="#{nutricion.charolero.id}")
+    input#fecha_registro.hidden(name="fregistro" value="#{nutricion.fecha}")
+    input#tiempo_registro.hidden(name="tregistro" value="#{nutricion.tiempo}")
 
     // Título
     section.mb-4
@@ -201,6 +206,7 @@ block contenido
                             strong
                                 - var date = new Date(nutricion.fecha);
                                 - date.setDate(date.getDate() + 1);
+                                - console.log(date);
                                 span#span_fecha_hora #{date.toLocaleDateString("es-MX",{dateStyle: 'short'})} - #{nutricion.hora}
                                 span.hidden#span_fecha #{date.toLocaleDateString("es-MX",{dateStyle: 'short'})}
                                 span.hidden#span_anio #{date.getFullYear()}

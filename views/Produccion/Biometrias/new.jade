@@ -151,6 +151,8 @@ block contenido
                             var day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
                             var month = (date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1);
 
+                            var peso_anterior = datos.biometria_anterior == undefined ? "" : datos.biometria_anterior.peso_actual;
+
                             $("#lista_nutricion")
                                 .append('<li id="pis'+obj._id+'"> ' +
                                     '<div class="d-flex justify-content-between">' +
@@ -161,31 +163,31 @@ block contenido
                                         '</div>'+
                                         '<div class="form-group margin-div">' +
                                             '<label> Peso actual </label>' +
-                                            '<input class="form-control" type="text" id="peso_act_'+obj._id+'" name="peso_act_'+obj._id+'" placeholder="Charola 1" onblur="sumarCodigo(this.id,1)">' + 
+                                            '<input class="form-control" type="text" id="peso_act_'+obj._id+'" name="peso_act_'+obj._id+'" placeholder="Peso actual" onkeyup="obtenerIncremento(this.id)">' + 
                                         '</div>' +
                                         '<div class="form-group margin-div">' +
                                             '<label> Org x lance </label>' +
-                                            '<input class="form-control" type="text" id="org_lance_'+obj._id+'" name="org_lance_'+obj._id+'" placeholder="Charola 2" onblur="sumarCodigo(this.id,2)">' + 
+                                            '<input class="form-control" type="text" id="org_lance_'+obj._id+'" name="org_lance_'+obj._id+'" placeholder="Org x lance" >' + 
                                         '</div>' +
                                         '<div class="form-group margin-div">' +
                                             '<label> Código 4hr. </label>' +
-                                            '<input class="form-control" type="text" id="cod_4_'+obj._id+'" name="cod_4_'+obj._id+'" placeholder="Charola 3" onblur="sumarCodigo(this.id,3)">' + 
+                                            '<input class="form-control" type="text" id="cod_4_'+obj._id+'" name="cod_4_'+obj._id+'" placeholder="Código 4hr." >' + 
                                         '</div>' +
                                         '<div class="form-group margin-div">' +
                                             '<label> Código 10hr. </label>' +
-                                            '<input class="form-control" type="text" id="cod_10_'+obj._id+'" name="cod_10_'+obj._id+'" placeholder="Charola 4" onblur="sumarCodigo(this.id,4)">' + 
+                                            '<input class="form-control" type="text" id="cod_10_'+obj._id+'" name="cod_10_'+obj._id+'" placeholder="Código 10hr." >' + 
                                         '</div>' +
                                         '<div class="form-group margin-div">' +
-                                            '<label> Org muert sem </label>' +
-                                            '<input class="form-control" type="text" id="org_muert_sem_'+obj._id+'" name="org_muert_sem_'+obj._id+'" placeholder="Kg ración" onkeyup="registrarParametro(this.id)">' + 
+                                            '<label> Org muertos </label>' +
+                                            '<input class="form-control" type="text" id="org_muert_sem_'+obj._id+'" name="org_muert_sem_'+obj._id+'" placeholder="Org muertos">' + 
                                         '</div>' +
                                         '<div class="form-group margin-div">' +
                                             '<label> Presencia paj </label>' +
-                                            '<input class="form-control" type="text" id="prese_paj_'+obj._id+'" name="prese_paj_'+obj._id+'" placeholder="% Ajuste" onkeyup="siguienteRacion(this.id)" onblur="registrarParametro(this.id)">' + 
+                                            '<input class="form-control" type="text" id="paj_'+obj._id+'" name="paj_'+obj._id+'" placeholder="Presencia paj" onkeyup="registrarParametro(this.id)">' + 
                                         '</div>' +
                                         '<div class="form-group margin-div">' +
                                             '<label> Observa </label>' +
-                                            '<input class="form-control" type="text" id="obs_'+obj._id+'" name="obs_'+obj._id+'" placeholder="% Ajuste" onkeyup="siguienteRacion(this.id)" onblur="registrarParametro(this.id)">' + 
+                                            '<input class="form-control" type="text" id="obs_'+obj._id+'" name="obs_'+obj._id+'" placeholder="Observa" onblur="registrarParametro(this.id)">' + 
                                         '</div>' +
                                     '</div>' +
                                     '<div style="margin-top: -10px;" class="text-right">' +
@@ -202,9 +204,9 @@ block contenido
                                         '<label> Peso siemb: </label>' +
                                         '<label class="margin-div2 blue-text" id="peso_siem_'+obj._id+'" name"peso_siem_'+obj._id+'">'+obj.peso_siembra+'</label>' +
                                         '<label> Peso ant: </label>' +
-                                        '<label class="margin-div2 blue-text" id="peso_ant_'+obj._id+'" name"peso_ant_'+obj._id+'">1.70</label>' +
+                                        '<label class="margin-div2 blue-text" id="peso_ant_'+obj._id+'" name"peso_ant_'+obj._id+'">'+ peso_anterior +'</label>' +
                                         '<label> Incre: </label>' +
-                                        '<label class="margin-div2 blue-text" id="incre_'+obj._id+'" name"incre_'+obj._id+'">0.65</label>' +
+                                        '<label class="margin-div2 blue-text" id="incre_'+obj._id+'" name"incre_'+obj._id+'"></label>' +
                                         '<label> Alim Sem: </label>' +
                                         '<label class="margin-div2 blue-text" id="alim_sem_'+obj._id+'" name"alim_sem_'+obj._id+'">'+datos.kg_acumulados_sem+'</label>' +
                                         '<label> Kg x ha: </label>' +
@@ -212,7 +214,7 @@ block contenido
                                         '<label> Acumul: </label>' +
                                         '<label class="margin-div2 blue-text" id="acumu_'+obj._id+'" name"acumu_'+obj._id+'">'+datos.kg_acumulados+'</label>' +
                                         '<label> Org muert. Acum: </label>' +
-                                        '<label class="margin-div2 blue-text" id="org_muert_acum_'+obj._id+'" name"org_muert_acum_'+obj._id+'">0</label>' +
+                                        '<label class="margin-div2 blue-text" id="org_muert_acum_'+obj._id+'" name"org_muert_acum_'+obj._id+'">'+datos.org_muert_acum+'</label>' +
                                     '</div>' +
                                     '<hr>'+
                                 '</li>');
@@ -280,12 +282,17 @@ block contenido
             cerrarLoader();
         }
 
-        function siguienteRacion(idS) {
-            var id = idS.split("_")[1];
+        function obtenerIncremento(idS) {
+            var id = idS.split("_")[2];
 
-            var kg = $('input[name="racion'+id+'"]').val() == "" ? parseFloat(0) : parseFloat($('input[name="racion'+id+'"]').val());
-            var kg_sig = kg * ( 1.0 + parseFloat(parseFloat($('input[name="ajuste'+id+'"]').val()) / 100));
-            $('#kg_sig'+id).text(parseFloat(kg_sig).toFixed(2));       
+            console.log($('#peso_ant_'+id).text());
+
+            var peso_actual = $('input[name="peso_act_'+id+'"]').val() == "" ? parseFloat(0) : parseFloat($('input[name="peso_act_'+id+'"]').val());
+            var peso_anterior = $('#peso_ant_'+id).text() == "" ? parseFloat(0) : parseFloat($('#peso_ant_'+id).text());
+
+            console.log("pa: "+  peso_actual + " pant: "+ peso_anterior);
+            var incremento = parseFloat(peso_actual) - parseFloat(peso_anterior);
+            $('#incre_'+id).text(parseFloat(incremento).toFixed(2));       
         }
 
         function registrarParametro(idS){
@@ -294,26 +301,26 @@ block contenido
 
             console.log($('#fecha_new').val());
             
-            //if(existeRegistro(id)){ } else {
+            if(existeRegistro(id)){ } else {
                 /*** DATOS DE LA PISCINA **/
                 obj.estanque = $("input[name=idPis"+id+"]").val();
                 obj.codigo_piscina = $("#codPis_"+id).text();
-                obj.superficie = $("input[name=super_"+id+"]").val() == "" ? "" : $("input[name=super_"+id+"]").val();
-                obj.fecha_siembra = $("input[name=fsiembra_"+id+"]").val() == "" ? "" : $("input[name=fsiembra_"+id+"]").val();
+                obj.superficie = $("#super_"+id).text() == "" ? "" : $("#super_"+id).text();
+                obj.fecha_siembra = $("#fsiembra_"+id).text() == "" ? "" : $("#fsiembra_"+id).text();
                 
                 /*** DATOS PARA MOSTRAR O INFORMATIVOS **/
                 obj.fecha_biometria = $('#fecha_new').val();
-                obj.dias_cultivo = $("input[name=dculti_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=dculti_"+id+"]").val();
-                obj.int_origen = $("input[name=int_ori_"+id+"]").val() == "" ? "" : $("input[name=int_ori_"+id+"]").val(); // <-- Revisar como se va a mostrar
-                obj.peso_siembra = $("input[name=peso_siem_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=peso_siem_"+id+"]").val();
-                obj.peso_anterior = $("input[name=peso_ant_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=peso_ant_"+id+"]").val();
-                obj.densidad = $("input[name=den_siembra_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=den_siembra_"+id+"]").val();
-                obj.organismos_muerto_acumulado = $("input[name=org_muert_acum_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=org_muert_acum_"+id+"]").val();
+                obj.dias_cultivo = $("#dculti_"+id).text() == "" ? parseFloat(0) : $("#dculti_"+id).text();
+                obj.int_origen = $("#int_ori_"+id).text() == "" ? "" : $("#int_ori_"+id).text(); // <-- Revisar como se va a mostrar
+                obj.peso_siembra = $("#peso_siem_"+id).text() == "" ? parseFloat(0) : $("#peso_siem_"+id).text();
+                obj.peso_anterior = $("#peso_ant_"+id).text() == "" ? parseFloat(0) : $("#peso_ant_"+id).text();
+                obj.densidad = $("#den_siembra_"+id).text() == "" ? parseFloat(0) : $("#den_siembra_"+id).text();
+                obj.organismos_muerto_acumulado = $("#org_muert_acum_"+id).text() == "" ? parseFloat(0) : $("#org_muert_acum_"+id).text();
 
                 /*** DATOS DE SUBCONSULTAS **/
-                obj.alimento_semanal = $("input[name=alim_sem_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=alim_sem_"+id+"]").val();
-                obj.alimento_acumulado = $("input[name=acumu_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=acumu_"+id+"]").val();
-                obj.kg_has_sembrada_prom = $("input[name=kg_x_ha_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=kg_x_ha_"+id+"]").val();
+                obj.alimento_semanal = $("#alim_sem_"+id).text() == "" ? parseFloat(0) : $("#alim_sem_"+id).text();
+                obj.alimento_acumulado = $("#acumu_"+id).text() == "" ? parseFloat(0) : $("#acumu_"+id).text();
+                obj.kg_has_sembrada_prom = $("#kg_x_ha_"+id).text() == "" ? parseFloat(0) : $("#kg_x_ha_"+id).text();
 
                 /*** DATOS DE CAPTURA **/
                 obj.peso_actual = $("input[name=peso_act_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=peso_act_"+id+"]").val();
@@ -321,7 +328,7 @@ block contenido
                 obj.cod_4h = $("input[name=cod_4_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=cod_4_"+id+"]").val();
                 obj.cod_10h = $("input[name=cod_10_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=cod_10_"+id+"]").val();
                 obj.organismos_muertos_semana = $("input[name=org_muert_sem_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=org_muert_sem_"+id+"]").val();
-                obj.presencia_pajaros = $("input[name=prese_paj_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=prese_paj_"+id+"]").val();
+                obj.presencia_pajaros = $("input[name=paj_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=paj_"+id+"]").val();
                 obj.observaciones = $("input[name=obs_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=obs_"+id+"]").val();
 
                 if( obj.peso_actual == 0 &&
@@ -333,39 +340,50 @@ block contenido
                     console.log(obj);
                     biometrias.push(obj);
                 }
-           // }
+            }
         }
 
         function existeRegistro(id){
             var obj = new Object();
 
-            for(var i=0; i <= nutricion.length -1; i ++){    
-                if(nutricion[i].estanque == id){
-                    obj.charola_1 = $("input[name=charola1"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola1"+id+"]").val();
-                    obj.charola_2 = $("input[name=charola2"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola2"+id+"]").val();
-                    obj.charola_3 = $("input[name=charola3"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola3"+id+"]").val();
-                    obj.charola_4 = $("input[name=charola4"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola4"+id+"]").val();
-                    obj.kg_racion = $("input[name=racion"+id+"]").val() == "" ? parseFloat(0) : $("input[name=racion"+id+"]").val();
-                    obj.porcent_ajuste = $("input[name=ajuste"+id+"]").val() == "" ? parseFloat(0) : $("input[name=ajuste"+id+"]").val();
-                    obj.codigo_racion = $("#cod" + id).text();
-                    obj.suma = $("#suma" + id).text();
-                    obj.siguiente_racion = $("#kg_sig" + id ).text();
-                    obj.estanque = $("input[name=idPis"+id+"]").val();
-                    obj.codigo_piscina = $("#codPis_"+id).text();
-                    obj.fecha = $('#fecha_new').val();
-                    obj.hora = hora;
-                    obj.tiempo = $("#span_tiempo").text();
-                    obj.charolero = $('#user').val();
+            for(var i=0; i <= biometrias.length -1; i ++){    
+                if(biometrias[i].estanque == id){
+                        /*** DATOS DE LA PISCINA **/
+                        obj.estanque = $("input[name=idPis"+id+"]").val();
+                        obj.codigo_piscina = $("#codPis_"+id).text();
+                        obj.superficie = $("#super_"+id).text() == "" ? "" : $("#super_"+id).text();
+                        obj.fecha_siembra = $("#fsiembra_"+id).text() == "" ? "" : $("#fsiembra_"+id).text();
+                        
+                        /*** DATOS PARA MOSTRAR O INFORMATIVOS **/
+                        obj.fecha_biometria = $('#fecha_new').val();
+                        obj.dias_cultivo = $("#dculti_"+id).text() == "" ? parseFloat(0) : $("#dculti_"+id).text();
+                        obj.int_origen = $("#int_ori_"+id).text() == "" ? "" : $("#int_ori_"+id).text(); // <-- Revisar como se va a mostrar
+                        obj.peso_siembra = $("#peso_siem_"+id).text() == "" ? parseFloat(0) : $("#peso_siem_"+id).text();
+                        obj.peso_anterior = $("#peso_ant_"+id).text() == "" ? parseFloat(0) : $("#peso_ant_"+id).text();
+                        obj.densidad = $("#den_siembra_"+id).text() == "" ? parseFloat(0) : $("#den_siembra_"+id).text();
+                        obj.organismos_muerto_acumulado = $("#org_muert_acum_"+id).text() == "" ? parseFloat(0) : $("#org_muert_acum_"+id).text();
 
-                        if( obj.charola_1 == 0 &&
-                            obj.charola_2 == 0 &&
-                            obj.charola_3 == 0 &&
-                            obj.charola_4 == 0 &&
-                            obj.kg_racion == 0 &&
-                            obj.porcent_ajuste == 0 ) { 
-                                console.log(" Nose mandará a registrar piscina: " + id);
+                        /*** DATOS DE SUBCONSULTAS **/
+                        obj.alimento_semanal = $("#alim_sem_"+id).text() == "" ? parseFloat(0) : $("#alim_sem_"+id).text();
+                        obj.alimento_acumulado = $("#acumu_"+id).text() == "" ? parseFloat(0) : $("#acumu_"+id).text();
+                        obj.kg_has_sembrada_prom = $("#kg_x_ha_"+id).text() == "" ? parseFloat(0) : $("#kg_x_ha_"+id).text();
+
+                        /*** DATOS DE CAPTURA **/
+                        obj.peso_actual = $("input[name=peso_act_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=peso_act_"+id+"]").val();
+                        obj.organismos_lance = $("input[name=org_lance_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=org_lance_"+id+"]").val();
+                        obj.cod_4h = $("input[name=cod_4_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=cod_4_"+id+"]").val();
+                        obj.cod_10h = $("input[name=cod_10_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=cod_10_"+id+"]").val();
+                        obj.organismos_muertos_semana = $("input[name=org_muert_sem_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=org_muert_sem_"+id+"]").val();
+                        obj.presencia_pajaros = $("input[name=paj_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=paj_"+id+"]").val();
+                        obj.observaciones = $("input[name=obs_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=obs_"+id+"]").val();
+
+                        if( obj.peso_actual == 0 &&
+                        obj.organismos_lance == 0 &&
+                        obj.cod_4h == 0 &&
+                        obj.cod_10h == 0) { 
+                            console.log(" Nose mandará a registrar piscina: " + id);
                         } else {
-                            nutricion[i] =  obj;
+                            biometrias[i] =  obj;
                         }
 
                         return true;
@@ -447,7 +465,7 @@ block contenido
                                     i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Cambiar fecha").fas.fa-2x.fa-sync-alt
                                 span#fecha.blue-text
                                 span#hora.blue-text
-                        h5.h5-responsive
+                        //h5.h5-responsive
                             small Captura para
                             br
                             strong

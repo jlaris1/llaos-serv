@@ -13,7 +13,7 @@ var mongoose = require('mongoose');
 var file_path = './files/reports/nutricion/';
 
 module.exports = {
-    all: function(solicitud, respuesta){
+    all: (solicitud, respuesta) => {
         if (solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else { 
@@ -85,7 +85,7 @@ module.exports = {
             }).sort({fecha: -1});
         } 
     },
-    new: function(solicitud, respuesta){
+    new: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		}else{ 
@@ -206,7 +206,7 @@ module.exports = {
             });
         }
     },
-    find: function(solicitud, respuesta){
+    find: (solicitud, respuesta) => {
         Estanques.find({"modulo": solicitud.body.modulo}, function(error, estanques){
             if(error){
                 console.log(chalk.bgRed(error));
@@ -262,7 +262,7 @@ module.exports = {
             }
         }).sort({codigo: 1});
     },
-    add: function(solicitud, respuesta){
+    add: async (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		}else{      
@@ -274,28 +274,27 @@ module.exports = {
     
                     console.log(solicitud.body.nutricion[i]);
     
-                    nutricion.save( (error) =>{
+                    var s = await nutricion.save( (error) => {
                         if(error){
                             console.log(chalk.bgRed(error));
-                        } else {
-                            /*********** AGREGAR AL HISTORIAL */
-                                historial.save(
-                                    'perano',
-                                    'fa-seedling',
-                                    'registró nutrición para la piscina <em class="text-md">' + solicitud.body.nutricion[i].codigo_piscina + '.</em>',
-                                    solicitud.session.user._id
-                                )
-                            /******************************* */
-    
-                            if(i == solicitud.body.nutricion.length -1){
-                                respuesta.json(
-                                    {
-                                        estatus: 'Guardado'
-                                    }
-                                );
-                            }
-                        }
+                        } else {}
                     });
+
+                    /*********** AGREGAR AL HISTORIAL */
+                    var h = await historial.save(
+                        'perano',
+                        'fa-seedling',
+                        'registró nutrición para la piscina <em class="text-md">' + solicitud.body.nutricion[i].codigo_piscina + '.</em>',
+                        solicitud.session.user._id
+                    );
+
+                    if(i == solicitud.body.nutricion.length -1){
+                        respuesta.json(
+                            {
+                                estatus: 'Guardado'
+                            }
+                        );
+                    }
                 }
             } else {
                 console.log("no guardar llego todo en 0's");
