@@ -263,43 +263,15 @@ module.exports = {
         }).sort({codigo: 1});
     },
     add: async (solicitud, respuesta) => {
-        if(solicitud.session.user === undefined){
-			respuesta.redirect("/sesion-expirada");
-		}else{      
-            console.log(solicitud.body.nutricion.length);           
+        if (!solicitud.user) return respuesta.redirect('/sesion-expirada');
+        if (!solicitud.body.nutricion || !body.nutricion.length) return console.log('No guardar, llego todo en 0');
 
-            if( solicitud.body.nutricion != undefined && solicitud.body.nutricion.length > 0){
-                for(let i = 0; i <= solicitud.body.nutricion.length -1; i++){
-                    var nutricion = new Nutricion(solicitud.body.nutricion[i]);
-    
-                    console.log(solicitud.body.nutricion[i]);
-    
-                    var s = await nutricion.save( (error) => {
-                        if(error){
-                            console.log(chalk.bgRed(error));
-                        } else {}
-                    });
+        const documents = body.nutricion.map((val) => new Nutricion(val));
 
-                    /*********** AGREGAR AL HISTORIAL */
-                    var h = await historial.save(
-                        'perano',
-                        'fa-seedling',
-                        'registró nutrición para la piscina <em class="text-md">' + solicitud.body.nutricion[i].codigo_piscina + '.</em>',
-                        solicitud.session.user._id
-                    );
+        await saveDocuments(documents, user);
 
-                    if(i == solicitud.body.nutricion.length -1){
-                        respuesta.json(
-                            {
-                                estatus: 'Guardado'
-                            }
-                        );
-                    }
-                }
-            } else {
-                console.log("no guardar llego todo en 0's");
-            }
-        }
+        respuesta.json({ estatus: 'Guardado' });
+
     },
     pdf: function(solicitud, respuesta){
         if(solicitud.session.user === undefined){
@@ -326,7 +298,7 @@ module.exports = {
                                     if(error){
                                         console.log(chalk.bgRed(error));
                                     } else {                                                                            
-                                       search = nutricion[0].estanque.codigo;
+                                        search = nutricion[0].estanque.codigo;
 
                                         generatePdf(nutricion, title, search, pdf_name);
                                     }
@@ -1462,5 +1434,27 @@ function generateXLS(data, title, xls_name){
         console.log("XLS terminado.")
         return xls_name;
     });
+}
+
+function generateConcentrado(data){
+
+}
+
+const saveDocuments = async (documents = [], user) => {
+    for(let i = 0; i < documents.length; i++){
+        try {
+            const currentDocument = await documents[i].save();
+
+            await historial.save(
+                'perano',
+                'fa-seeding',
+                'registró nutrición para la piscina <em class="text-md">' +  documents[i].codigo_piscina + '.</em>',
+                user._id
+            );
+
+        } catch (error) {
+            console.log(chalk.bgRed(error));
+        }
+    }
 }
 

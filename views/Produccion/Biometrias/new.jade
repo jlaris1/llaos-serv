@@ -204,7 +204,7 @@ block contenido
                                         '<label> Peso siemb: </label>' +
                                         '<label class="margin-div2 blue-text" id="peso_siem_'+obj._id+'" name"peso_siem_'+obj._id+'">'+obj.peso_siembra+'</label>' +
                                         '<label> Peso ant: </label>' +
-                                        '<label class="margin-div2 blue-text" id="peso_ant_'+obj._id+'" name"peso_ant_'+obj._id+'">'+ peso_anterior +'</label>' +
+                                        '<label class="margin-div2 blue-text" id="peso_ant_'+obj._id+'" name"peso_ant_'+obj._id+'">'+ peso_anterior.toFixed(2) +'</label>' +
                                         '<label> Incre: </label>' +
                                         '<label class="margin-div2 blue-text" id="incre_'+obj._id+'" name"incre_'+obj._id+'"></label>' +
                                         '<label> Alim Sem: </label>' +
@@ -258,9 +258,8 @@ block contenido
                 return;
             }
 
-            /*$.post( "/biometrias/add", {
-                biometrias: biometrias,
-                cambiar_fecha: cambiar_fecha
+            $.post( "/biometrias/add", {
+                biometrias: biometrias
             }, (data) => {
                 //console.log(data);
                 $('#span_estatus').text(data.estatus);

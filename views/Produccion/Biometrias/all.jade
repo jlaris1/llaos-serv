@@ -1,0 +1,125 @@
+extends ../../layouts/layout.jade
+block contenido
+    script.
+        $(document).ready( function() { 
+            $('#subMenuBiometrias').removeClass('hidden');
+            $('#spanMenuBiometrias').removeClass('fa-angle-left');
+            $('#spanMenuBiometrias').addClass('fa-angle-down');
+
+            $('#biometrias').dataTable(
+                {"fecha_biometria": [[ 0, "desc" ]]}
+            );
+
+            if($('#url').text() != ''){
+                url = '../../reports/biometrias/'+ $('#url').text();
+                window.open(url, 'Download');
+                $('#url').text('');
+            }
+
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        function eliminarRegistros(piscina) {
+            abrirLoader();
+            $.post('/biometrias/delete/piscina', {
+                id: piscina
+            }, (data) => {
+                $("#tr"+data.id).remove();
+            });
+            cerrarLoader();
+        }
+    //Termina Javascript
+
+    // Inputs funcionamiento
+    label#url.hidden #{url}
+    
+    // Título
+    section.mb-4
+        .card
+            .card-body.d-flex.justify-content-between
+                h4.h4-responsive.mt-3
+                    i.fas.fa-ruler-combined
+                    |   Biometrias
+                div
+                    a(href="/biometrias/new" style="margin-right: 5px;").btn.btn-success
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Nuevo registro de nutrición").fas.fa-plus-circle
+                    a(href="#reports" data-toggle="modal" data-target="#reports" style="margin-right: 5px;").btn.btn-danger
+                        i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Reportes").fas.fa-file-pdf
+                    if user.permisos == "gerente_modulo" || user.permisos == "developer"
+                        a(href="javascript:eliminarRegistros('')").btn.btn-warning
+                            i(style="color: #000;" data-toggle="tooltip", data-placement="top", title="Eliminar registros").fas.fa-minus-circle
+
+    // Datos
+    section.mb-4
+        .card
+            .table-responsive(style="margin-top: 10px;") 
+                table#biometrias.table.table-striped.table-hover
+                    thead
+                        if user.permisos == "gerente_modulo" || user.permisos == "developer"
+                            th.text-center
+                                i(style="color: gray;").fas.fa-cog
+                        th Piscina
+                        th Fecha Siembra
+                        th Fecha Biometria
+                        th Superficie
+                        th Dias de Cultivo
+                        th Int Origen
+                        th Peso Siembra
+                        th Peso Anterior
+                        th Peso Actual
+                        th Incremento
+                        th Organismos Lance
+                        th Densidad
+                        th Cod 4h
+                        th Cod 10h
+                        th Alimento Semanal
+                        th Kg has Sembrado
+                        th Alimento Acumulado has
+                        th Alimento Acumulado
+                        th Organismos Muertos
+                        th Organismos Muertos Semana
+                        th Organismos Muertos Acumul
+                        th Presencia Pajaros
+                        th Observaciones
+                    tbody
+                        each b in biometrias
+                            tr(id="tr"+b.id)  
+                                if user.permisos == "gerente_modulo" || user.permisos == "developer"
+                                    td.text-center
+                                        div.d-flex
+                                            a.btn.btn-danger.btn-small(style='margin-right: 5px;' href='/biometrias/eliminar/#{b._id}' data-toggle='tooltip', data-placement='top', title='Eliminar') 
+                                                i.fas.fa-2x.fa-minus-circle(style='color: white')
+                                            a.btn.btn-primary.btn-small(href='/biometrias/editar/#{b._id}' data-toggle='tooltip', data-placement='top', title='Editar') 
+                                                i.fas.fa-2x.fa-edit(style='color: white')
+                                td #{ b.estanque.codigo }
+                                - var date = new Date(b.fecha_siembra);
+                                - date.setDate(date.getDate() + 1);
+                                - var day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
+                                - var month = (date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1);
+                                td #{  day + '/' + month + '/' + date.getFullYear() }
+                                - var date2 = new Date(b.fecha_biometria);
+                                - date2.setDate(date2.getDate() + 1);
+                                - var day2 = date2.getDate() > 9 ? date2.getDate() : '0' + date2.getDate();
+                                - var month2 = (date.getMonth() + 1) > 9 ? (date2.getMonth() + 1) : '0' + (date2.getMonth() + 1);
+                                td #{  day2 + '/' + month2 + '/' + date2.getFullYear() }
+                                td #{ b.superficie }
+                                - for(let i = 0; i < b.int_origen.length; i++){ console.log(b.int_origen[i]) }//var int += b.int_origen[0].0 + b.int_origen[0].1 + b.int_origen[0].2 +',' }
+                                td #{ b.dias_cultivo}
+                                td #{ b.int_origen }
+                                td #{ b.peso_siembra }
+                                td #{ b.peso_anterior }
+                                td #{ b.peso_actual }
+                                td #{ b.incremento }
+                                td #{ b.organismos_lance }
+                                td #{ b.densidad.toFixed(2) }
+                                td #{ b.cod_4h }
+                                td #{ b.cod_10h }
+                                td #{ b.alimento_semanal }
+                                td #{ b.kg_has_sembrada_prom }
+                                td #{ b.alimento_acumulado_has }
+                                td #{ b.alimento_acumulado }
+                                td #{ b.organismos_muertos }
+                                td #{ b.organismos_muertos_semana }
+                                td #{ b.organismos_muertos_acumulado }
+                                td #{ b.presencia_pajaros }
+                                td #{ b.observaciones }

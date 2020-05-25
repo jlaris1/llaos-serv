@@ -8,13 +8,58 @@ module.exports = {
         if (solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else {
-            Biometrias.find( (error, biometrias) =>{
+            Biometrias.find( function(error, biometrias){
                 if(error){
                     console.log(chalk.bgRed(error));
                 } else {
+                    Estanques.populate(biometrias, {path: 'estanque'}, function(error, biometrias){
+                        if(error){
+                            console.log(chalk.bgRed(error));
+                        } else {
+                            Usuarios.populate(biometrias, { path: 'charolero'}, function(error, biometrias){
+                                if(error){
+                                    console.log(chalk.bgRed(error));
+                                } else {
+                                    Usuarios.find( function(error, usuarios){
+                                        if(error){
+                                            console.log(error);
+                                        } else { 
 
+                                            console.log(biometrias);
+
+                                            respuesta.render('Produccion/Biometrias/all',
+                                                {
+                                                    user: solicitud.session.user,
+                                                    biometrias: biometrias,
+                                                    titulo: "Biometrias",
+                                                    criterios: [
+                                                        {
+                                                            val: "piscina",
+                                                            name: "Piscina"
+                                                        },
+                                                        {
+                                                            val: "fecha",
+                                                            name: "Fecha"
+                                                        },
+                                                        {
+                                                            val: "fechas",
+                                                            name: "Fechas"
+                                                        }
+                                                    ],
+                                                    usuarios: usuarios,
+                                                    piscinas: [],
+                                                    charoleros: [],
+                                                    ruta: "biometrias"
+                                                }
+                                            );
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
                 }
-            });
+            }).sort({fecha_biometria: 0});
         }
     },
     new: (solicitud, respuesta) => {
@@ -52,10 +97,15 @@ module.exports = {
             });
         }
     },
-    add: (solicitud, respuesta) => {
-        if (solicitud.session.user === undefined){
-			respuesta.redirect("/sesion-expirada");
-		} else {}
+    add: async (solicitud, respuesta) => {
+        if (!solicitud.user) return respuesta.redirect('/sesion-expirada');
+        if (!solicitud.body.biometrias || !body.biometrias.length) return console.log('No guardar, llego todo en 0');
+
+        const documents = body.biometrias.map((val) => new Biometrias(val));
+
+        await saveDocuments(documents, user);
+
+        respuesta.json({ estatus: 'Guardado' });
     },
     findPiscinas: (solicitud, respuesta) => {
         if (solicitud.session.user === undefined){
@@ -141,3 +191,21 @@ function GetSortOrder(prop) {
         return 0;    
     }    
 } 
+
+const saveDocuments = async (documents = [], user) => {
+    for(let i = 0; i < documents.length; i++){
+        try {
+            const currentDocument = await documents[i].save();
+
+            await historial.save(
+                'yellow',
+                'fa-ruler-combined',
+                'registró biometrias para la piscina <em class="text-md">' +  documents[i].codigo_piscina + '.</em>',
+                user._id
+            );
+            
+        } catch (error) {
+            console.log(chalk.bgRed(error));
+        }
+    }
+}
