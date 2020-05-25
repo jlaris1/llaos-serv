@@ -459,8 +459,11 @@ block contenido
             obtenerFecha();
             obtenerHora();
 
+            nutricion = [];
             cambiar_tiempo = true;
             cambiar_fecha = false;
+            tamaño_suma = [];
+            lista_nutricion = [];
 
             var today = new Date();
             document.getElementById("fecha_new").value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
