@@ -98,12 +98,12 @@ module.exports = {
         }
     },
     add: async (solicitud, respuesta) => {
-        if (!solicitud.user) return respuesta.redirect('/sesion-expirada');
-        if (!solicitud.body.biometrias || !body.biometrias.length) return console.log('No guardar, llego todo en 0');
+        if (!solicitud.session.user) return respuesta.redirect('/sesion-expirada');
+        if (!solicitud.body.biometrias || !solicitud.body.biometrias.length) return console.log('No guardar, llego todo en 0');
 
-        const documents = body.biometrias.map((val) => new Biometrias(val));
+        const documents = solicitud.body.biometrias.map((val) => new Biometrias(val));
 
-        await saveDocuments(documents, user);
+        await saveDocuments(documents, solicitud.session.user);
 
         respuesta.json({ estatus: 'Guardado' });
     },

@@ -17,7 +17,14 @@ module.exports = {
         if (solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else { 
-            Nutricion.find( function(error, nutricion){
+            var dia_actual = new Date(), y = dia_actual.getFullYear(), m = dia_actual.getMonth();
+            var primerDiaMes = new Date(y, m, 1).toLocaleDateString("es-MX",{dateStyle: 'short'});
+
+            Nutricion.find({
+                fecha: {
+                    $gte: primerDiaMes
+                }
+            }, function(error, nutricion){
                 if(error){
                     console.log(chalk.bgRed(error));
                 } else {
@@ -263,12 +270,12 @@ module.exports = {
         }).sort({codigo: 1});
     },
     add: async (solicitud, respuesta) => {
-        if (!solicitud.user) return respuesta.redirect('/sesion-expirada');
-        if (!solicitud.body.nutricion || !body.nutricion.length) return console.log('No guardar, llego todo en 0');
+        if (!solicitud.session.user) return respuesta.redirect('/sesion-expirada');
+        if (!solicitud.body.nutricion || !solicitud.body.nutricion.length) return console.log('No guardar, llego todo en 0');
 
-        const documents = body.nutricion.map((val) => new Nutricion(val));
+        const documents = solicitud.body.nutricion.map((val) => new Nutricion(val));
 
-        await saveDocuments(documents, user);
+        await saveDocuments(documents, solicitud.session.user);
 
         respuesta.json({ estatus: 'Guardado' });
 
