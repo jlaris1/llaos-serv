@@ -733,7 +733,7 @@ function reports(){
             $('#estatus').addClass('hidden');
             $('#otros').addClass('hidden');
 
-            if($('#titulo').val() == "Parámetros") {
+            if($('#titulo').val() == "Parámetros" || $('#titulo').val() == "Nutrición") {
                 $('#fechaInicio').removeClass('hidden');
                 $('#fechaFin').removeClass('hidden');
             } else {

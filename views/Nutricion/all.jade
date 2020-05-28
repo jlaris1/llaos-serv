@@ -11,9 +11,11 @@ block contenido
             );
 
             if($('#url').text() != ''){
+                abrirLoader();
                 url = '../../reports/nutricion/'+ $('#url').text();
                 window.open(url, 'Download');
                 $('#url').text('');
+                cerrarLoader();
             }
 
             $('[data-toggle="tooltip"]').tooltip();

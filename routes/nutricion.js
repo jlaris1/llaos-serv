@@ -64,6 +64,10 @@ module.exports = {
                                                             name: "Piscina"
                                                         },
                                                         {
+                                                            val: "modulo",
+                                                            name: "Modulo"
+                                                        },
+                                                        {
                                                             val: "charolero",
                                                             name: "Charolero"
                                                         },
@@ -495,7 +499,7 @@ module.exports = {
             }).sort({fecha: 1, hora: 1});
         }
     },
-    xls: function(solicitud, respuesta){
+    xls: async function(solicitud, respuesta){
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else { 
@@ -626,6 +630,54 @@ module.exports = {
                         });
                     }
                 }).sort({fecha: 1, hora: 1});
+            } else if (column == 'modulo'){
+                Modulos.findOne( {"codigo": solicitud.body.modulo}, (error, modulo) => {
+                    if(error){
+                        console.log(chalk.bgRed(error));
+                        respuesta.sendStatus(500);
+                    } else {
+                        Estanques.find({"modulo": modulo.id}, { _id: 1}, (error, estanques) => {
+                            if(error){
+                                console.log(chalk.bgRed(error));
+                                respuesta.sendStatus(501);
+                            } else {             
+                                // Un día menos del que quieran el reporte y un día más
+                                Nutricion.find(
+                                    { $and: [
+                                        { estanque: { $in: estanques }},
+                                        { fecha: {
+                                            $gte: solicitud.body.fechaInicio,
+                                            $lte: solicitud.body.fechaFin
+                                        }}
+                                    ]
+                                }, (error, nutricion) => {
+                                    if(error){
+                                        console.log(chalk.bgRed(error));
+                                        respuesta.sendStatus(417);
+                                    } else {
+                                        Estanques.populate(nutricion, { path: 'estanque' }, function(error, nutricion){
+                                            if(error){
+                                                console.log(chalk.bgRed(error));
+                                            } else {
+                                                Usuarios.populate(nutricion, { path: 'charolero'}, function(error, nutricion){
+                                                    if(error){
+                                                        console.log(chalk.bgRed(error));
+                                                    } else {
+                                                        //console.log(nutricion);
+                                                        title = solicitud.body.modulo;
+                                                        xls_name = 'reporte_concetrado_nutricion_modulo_' + solicitud.body.modulo + '.xlsx';
+                                                        pdf_name = 'reporte_concetrado_nutricion_modulo_' + solicitud.body.modulo + '.xlsx';
+                                                        generateConcentrado(nutricion, title, xls_name, solicitud.body.fechaInicio, solicitud.body.fechaFin);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                }).sort({estanque: 1, fecha: 1});
+                            }
+                        });
+                    }
+                });
             }
 
             Nutricion.find( function(error, nutricion){
@@ -657,16 +709,14 @@ module.exports = {
                                                 }
                                             });
                                         
-
-
-                                        /*********** AGREGAR AL HISTORIAL */
-                                            historial.save(
-                                                'brinkpink',
-                                                'fa-file-excel',
-                                                'generó reporte en excel por <em class="text-md">'+ column + '.</em>',
-                                                solicitud.session.user._id
-                                            )
-                                        /******************************* */
+                                            /*********** AGREGAR AL HISTORIAL */
+                                                historial.save(
+                                                    'brinkpink',
+                                                    'fa-file-excel',
+                                                    'generó reporte en excel por <em class="text-md">'+ column + '.</em>',
+                                                    solicitud.session.user._id
+                                                )
+                                            /******************************* */
 
                                             respuesta.render('Nutricion/all',
                                                 {
@@ -677,6 +727,10 @@ module.exports = {
                                                         {
                                                             val: "piscina",
                                                             name: "Piscina"
+                                                        },
+                                                        {
+                                                            val: "modulo",
+                                                            name: "Modulo"
                                                         },
                                                         {
                                                             val: "charolero",
@@ -1443,10 +1497,115 @@ function generateXLS(data, title, xls_name){
     });
 }
 
-function generateConcentrado(data){
+async function generateConcentrado(data, title, xls_name, fecha_ini, fecha_fina){
+    var filename =  file_path + '/' + xls_name;
+    var wb = new Excel.Workbook();
 
+    await wb.xlsx.readFile( file_path + '/reporte_nutricion.xlsx');
+
+    var ws = wb.getWorksheet('Reporte');
+
+    ws.getCell('M1').value = title;
+    ws.getCell('M9').value = fecha_ini;
+    ws.getCell('M9').numFmt = 'dd/mm/yyyy';
+
+    ws.getCell('M10').value = fecha_fina;
+    ws.getCell('M10').numFmt = 'dd/mm/yyyy';
+
+    ws.columns = [
+        {  key: 'piscina', width: 12},
+        {  key: 'charola_1', width: 10, style: { numFmt: '#,##'}},
+        {  key: 'charola_2', width: 10, style: { numFmt: '#,##'}},
+        {  key: 'charola_3', width: 10, style: { numFmt: '#,##'}},
+        {  key: 'charola_4', width: 10, style: { numFmt: '#,##'}},
+        {  key: 'kg_racion', width: 25, style: { numFmt: '#,##'}},
+        {  key: 'porcent_ajuste', width: 10},
+        {  key: 'suma', width: 10, style: { numFmt: '#,##'}},
+        {  key: 'codigo_racion', width: 25 },
+        {  key: 'tiempo', width: 10},
+        {  key: 'fecha', width: 15 , style: { numFmt: 'dd/mm/yyyy' }},
+        {  key: 'hora', width: 12 },
+        {  key: 'charolero', width: 30 }
+    ];
+
+    // CONTADORES
+    var fila = 13;
+    var suma = 0;
+    var prom = 0;
+
+    /**** LLENADO DE CONTENDIO POR ESTANQUE */
+    for(var i = 0; i <= data.length - 1; i ++){
+        suma += parseFloat(data[i].kg_racion);
+
+        ws.getCell('A'+fila).value = data[i].estanque.codigo;
+        ws.getCell('A'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+        ws.getCell('B'+fila).value = parseFloat(data[i].charola_1);
+        ws.getCell('B'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+        
+        ws.getCell('C'+fila).value = parseFloat(data[i].charola_2);
+        ws.getCell('C'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+        ws.getCell('D'+fila).value = parseFloat(data[i].charola_3);
+        ws.getCell('D'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+        ws.getCell('E'+fila).value = parseFloat(data[i].charola_4);
+        ws.getCell('E'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+        ws.getCell('F'+fila).value = parseFloat(data[i].kg_racion);
+        ws.getCell('F'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+        ws.getCell('G'+fila).value = parseFloat(data[i].porcent_ajuste);
+        ws.getCell('G'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+        
+        ws.getCell('H'+fila).value = data[i].suma;
+        ws.getCell('H'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+        ws.getCell('I'+fila).value = data[i].codigo_racion;
+        ws.getCell('I'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+        ws.getCell('J'+fila).value = data[i].tiempo;
+        ws.getCell('J'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+        ws.getCell('K'+fila).value = data[i].fecha;
+        ws.getCell('K'+fila).numFmt= 'dd/mm/yyyy';
+        ws.getCell('K'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+        ws.getCell('L'+fila).value = data[i].hora;
+        ws.getCell('L'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+        ws.getCell('M'+fila).value = data[i].charolero.nombre;
+        ws.getCell('M'+fila).alignment = { vertical: 'middle', horizontal: 'center' }; 
+
+        if (fila%2==0) {
+            ws.getCell('A'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'ccd8e5'}}
+            ws.getCell('B'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'ccd8e5'}}
+            ws.getCell('C'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'ccd8e5'}}
+            ws.getCell('D'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'ccd8e5'}}
+            ws.getCell('E'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'ccd8e5'}}
+            ws.getCell('F'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'ccd8e5'}}
+            ws.getCell('G'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'ccd8e5'}}
+            ws.getCell('H'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'ccd8e5'}}
+            ws.getCell('I'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'ccd8e5'}}
+            ws.getCell('J'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'ccd8e5'}}
+            ws.getCell('K'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'ccd8e5'}}
+            ws.getCell('L'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'ccd8e5'}}
+            ws.getCell('M'+fila).fill = { type: 'pattern', pattern:'solid', fgColor: {argb:'ccd8e5'}}            
+        }
+
+        fila += 1;
+    }
+
+    ws.getCell('D9').value = { formula: 'SUMA(F13:F'+fila+')', result: suma}
+    ws.getCell('D10').value = { formula: 'PROMEDIO(F13:F'+fila+')', result: suma / data.length -1}
+    
+    await wb.xlsx.writeFile(filename).then( function(){
+        console.log("XLS terminado.")
+        return xls_name;
+    });
 }
 
+// GUARDADO DE DATOS NUTRICION E HISTORIAL
 const saveDocuments = async (documents = [], user) => {
     for(let i = 0; i < documents.length; i++){
         try {
@@ -1464,4 +1623,3 @@ const saveDocuments = async (documents = [], user) => {
         }
     }
 }
-
