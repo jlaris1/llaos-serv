@@ -887,6 +887,20 @@ module.exports = {
             });
         }
     },
+    obtenerAlimentosSemiIntensivos: (solicitud, respuesta) => {
+        if(solicitud.session.user === undefined){
+			respuesta.redirect("/sesion-expirada");
+		}else{ 
+            /***Búscar el alimento que perteneza a maternidad */
+            Productos.find({"categoria": "5e5e8ab5e353ee43602d6bc8"}, (error, alimento) => {
+                if(error) {
+                    console.log(error);
+                } else {
+                    respuesta.json({ alimento: alimento});
+                }
+            });
+        }
+    },
     obtenerInsumos: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
             respuesta.redirect("/sesion-expirada");

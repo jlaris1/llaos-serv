@@ -23,10 +23,7 @@ module.exports = {
                                     Usuarios.find( function(error, usuarios){
                                         if(error){
                                             console.log(error);
-                                        } else { 
-
-                                            console.log(biometrias);
-
+                                        } else {
                                             respuesta.render('Produccion/Biometrias/all',
                                                 {
                                                     user: solicitud.session.user,
@@ -59,7 +56,7 @@ module.exports = {
                         }
                     });
                 }
-            }).sort({fecha_biometria: 0});
+            }).sort({estanque: 1, fecha_biometria: 0});
         }
     },
     new: (solicitud, respuesta) => {
@@ -179,6 +176,14 @@ module.exports = {
             }).sort({ codigo : 1});
         }
     },
+    deleteOne: (solicitud, respuesta) => {
+        if (!solicitud.session.user) return respuesta.redirect('/sesion-expirada');
+        
+        Biometrias.deleteOne({"_id": solicitud.params.id}, (error) => {
+            if(error) return console.log(chalk.bgRed(error));
+            respuesta.redirect('/biometrias/all');
+        });
+    }
 }
 
 function GetSortOrder(prop) {    

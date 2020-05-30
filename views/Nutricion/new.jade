@@ -315,6 +315,31 @@ block contenido
             }, "json");
         }
 
+        function obtenerAlimentos() {
+            abrirLoader();
+
+            $.getJSON('/nutricion/alimento/semi', (data)=>{
+                if(data.alimento != undefined && data.alimento.length > 0){
+                    alimentos = data.alimento;
+
+                    $('#alimento_1')
+                            .empty()
+                            .append('<option value=-1> << Seleccione >> </option>');
+                        
+                    for(var i = 0; i <= data.alimento.length - 1; i ++){
+                        $("#alimento_1")
+                            .append($("<option></option>")
+                            .attr("value",data.alimento[i]._id)
+                            .text(data.alimento[i].nombre));
+                    }
+                }               
+            });
+
+            $('#loader').addClass('hidden');
+
+            cerrarLoader();
+        }
+
         function guardarRegistros(){
             $('#guardar').addClass('disabled');
             abrirLoader();

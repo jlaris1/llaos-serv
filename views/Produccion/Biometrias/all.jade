@@ -103,20 +103,24 @@ block contenido
                                 - var month2 = (date.getMonth() + 1) > 9 ? (date2.getMonth() + 1) : '0' + (date2.getMonth() + 1);
                                 td #{  day2 + '/' + month2 + '/' + date2.getFullYear() }
                                 td #{ b.superficie }
-                                - for(let i = 0; i < b.int_origen.length; i++){ console.log(b.int_origen[i]) }//var int += b.int_origen[0].0 + b.int_origen[0].1 + b.int_origen[0].2 +',' }
+                                - for(let i = 0; i < b.int_origen.length; i++){
+                                -   var int = "";
+                                -   int += b.int_origen[i].toJSON()[0] + "-" + b.int_origen[i].toJSON()[2]+""+b.int_origen[i].toJSON()[3];   
+                                -   if(i > 0 && i != b.int_origen.length) int += ","
+                                - } 
                                 td #{ b.dias_cultivo}
-                                td #{ b.int_origen }
-                                td #{ b.peso_siembra }
-                                td #{ b.peso_anterior }
-                                td #{ b.peso_actual }
-                                td #{ b.incremento }
+                                td #{ int }
+                                td #{ b.peso_siembra != undefined ? b.peso_siembra.toFixed(3) : ''}
+                                td #{ b.peso_anterior  != undefined ? b.peso_anterior.toFixed(3) : ''}
+                                td #{ b.peso_actual != undefined ? b.peso_actual.toFixed(3) : '' }
+                                td #{ b.incremento.toFixed(2) }
                                 td #{ b.organismos_lance }
                                 td #{ b.densidad.toFixed(2) }
-                                td #{ b.cod_4h }
-                                td #{ b.cod_10h }
+                                td #{ b.cod_4h != undefined ? b.cod_4h.toFixed(2) : '' }
+                                td #{ b.cod_10h != undefined ? b.cod_10h.toFixed(2) : ''}
                                 td #{ b.alimento_semanal }
-                                td #{ b.kg_has_sembrada_prom }
-                                td #{ b.alimento_acumulado_has }
+                                td #{ b.kg_has_sembrada_prom != undefined ? b.kg_has_sembrada_prom.toFixed(3) : ''}
+                                td #{ (b.alimento_acumulado / b.superficie).toFixed(0) }
                                 td #{ b.alimento_acumulado }
                                 td #{ b.organismos_muertos }
                                 td #{ b.organismos_muertos_semana }
