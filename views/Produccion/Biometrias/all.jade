@@ -103,10 +103,10 @@ block contenido
                                 - var month2 = (date.getMonth() + 1) > 9 ? (date2.getMonth() + 1) : '0' + (date2.getMonth() + 1);
                                 td #{  day2 + '/' + month2 + '/' + date2.getFullYear() }
                                 td #{ b.superficie }
+                                - var int = "";
                                 - for(let i = 0; i < b.int_origen.length; i++){
-                                -   var int = "";
-                                -   int += b.int_origen[i].toJSON()[0] + "-" + b.int_origen[i].toJSON()[2]+""+b.int_origen[i].toJSON()[3];   
-                                -   if(i > 0 && i != b.int_origen.length) int += ","
+                                -   int += b.int_origen[i];   
+                                -   if(b.int_origen.length > 1) int += ","
                                 - } 
                                 td #{ b.dias_cultivo}
                                 td #{ int }

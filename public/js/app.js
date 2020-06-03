@@ -1134,6 +1134,33 @@ function reports(){
             $('#combo').attr('required', false);
 
             sub_ruta = 'entradas';
+        } else if(this.value == 'concentrado'){
+            $('#piscinas').addClass('hidden');
+            $('#areas').addClass('hidden');
+            $('#estatus').addClass('hidden');
+            $('#otros').addClass('hidden');
+            $('#fechas').addClass('hidden');
+            $('#responsables').addClass('hidden');
+            $('#solicitantes').addClass('hidden');
+            $('#modulos').addClass('hidden');
+            $('#fechaInicio').addClass('hidden');
+            $('#fechaFin').addClass('hidden');
+            $('#inputs').addClass('hidden');
+            $('#combos').addClass('hidden');
+            $('#charolero').addClass('hidden');
+            $('#piscina').attr('required', false);
+            $('#estatus').attr('required', false);
+            $('#modulo').attr('required', false);
+            $('#otro').attr('required', false);
+            $('#fecha').attr('required', false);
+            $('#area').attr('required', false);
+            $('#charoleros').attr('required', false);
+            $('#solicitante').attr('required', false);
+            $('#responsable').attr('required', false);
+            $('#fInicio').attr('required', false);
+            $('#fFin').attr('required', false);
+            $('#input').attr('required', false);
+            $('#combo').attr('required', false);
         }
     });
 /********************** */

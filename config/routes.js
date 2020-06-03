@@ -454,6 +454,7 @@ module.exports = function(app){
     nutricionRouter.post('/acumulado', nutricion.acumulado);
     nutricionRouter.get('/config', nutricion.config);
     nutricionRouter.get('/alimento', nutricion.obtenerAlimentos);
+    nutricionRouter.get('/alimento/semi', nutricion.obtenerAlimentosSemiIntensivos);
     nutricionRouter.get('/insumos', nutricion.obtenerInsumos);
     nutricionRouter.post('/delete/piscina/', nutricion.delete);
     nutricionRouter.get('/eliminar/:id', nutricion.deleteOne);
@@ -512,8 +513,9 @@ module.exports = function(app){
     app.use('/biometrias', biometriasRouter);
     biometriasRouter.get('/all', biometrias.all);
     biometriasRouter.get('/new', biometrias.new);
-    biometriasRouter.post('/save', biometrias.add);
+    biometriasRouter.post('/add', biometrias.add);
     biometriasRouter.post('/piscinas', biometrias.findPiscinas);
     biometriasRouter.post('/acumulado', biometrias.acumulado);
+    biometriasRouter.post('/report/xls', biometrias.xls);
 
 } 

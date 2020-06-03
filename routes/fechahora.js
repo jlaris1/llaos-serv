@@ -189,5 +189,12 @@ module.exports = {
     },
     getDaysBeetweenTwoDates: (d1, d2) => {
         return Math.round((d1-d2)/(1000*60*60*24));
-    }
+    },
+    getTuesdayOfLastWeek(d){
+        var day = d.getDay();
+        var dat2 = new Date((new Date(d.getFullYear(), d.getMonth(), d.getDate() + (day == 0?-6:1)-day )));
+        dat2.setDate(dat2.getDate() - 6);
+
+        return dat2;
+    },
 }

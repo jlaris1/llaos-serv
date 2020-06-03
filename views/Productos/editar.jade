@@ -137,6 +137,7 @@ block contenido
             label#fecha(style="margin-right: 10px;")
             label#hora
     form(role="form" method="post" action="/productos/actualizar/#{producto.id}?_method=put")
+        label #{producto._id}
         .row
             .col-lg-12
                 h2.page-header 

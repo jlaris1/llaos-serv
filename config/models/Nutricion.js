@@ -8,6 +8,7 @@ var nutricionSchemaJSON = {
     charola_3: String,
     charola_4: String,
     kg_racion: String,
+    codigo_piscina: String,
     porcent_ajuste: String,
     suma: String,
     tiempo: String,
@@ -16,6 +17,7 @@ var nutricionSchemaJSON = {
     estanque: { type: Schema.ObjectId, ref: "Estanques" },
     fecha: { type: Date, default: new Date().toLocaleDateString("es-MX", {dateStyle: 'short'})},
     hora: String,
+    alimento: {type: Schema.ObjectId, reg: "Productos"},
     charolero: { type: Schema.ObjectId, ref: "Usuarios" }
 }
 

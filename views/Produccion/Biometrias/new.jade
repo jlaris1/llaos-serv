@@ -58,6 +58,8 @@ block contenido
         var hora;
         var tamaño_suma = [];
         var lista_nutricion = [];
+        var lista_biometrias = [];
+        var contador = 0;
 
         $(document).ready( function(){
             $('#subMenuProduccion').removeClass('hidden');
@@ -74,7 +76,7 @@ block contenido
             obtenerFecha();
             obtenerHora(); 
             mostrarPiscinas();
-            
+
             $('[data-toggle="tooltip"]').tooltip();
         });
 
@@ -137,90 +139,79 @@ block contenido
                 if(data.piscinas.length > 0){
                     $('#num_piscinas').text(data.piscinas.length);
                     
+
                     for(var i = 0; i <= data.piscinas.length - 1; i ++){
-                        //console.log(data.piscinas[i]);
                         let obj = data.piscinas[i];
-            
-                        /** Obtener el acumulado de cada una de las piscinas y agregarlo */
-                        $.post( "/biometrias/acumulado", {
-                            id: obj._id,
-                            fecha_siembra: obj.fecha_siembra
-                        }, (datos) => {
-                            var date = new Date(obj.fecha_siembra);
-                            date.setDate(date.getDate() + 1);
-                            var day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
-                            var month = (date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1);
+                        lista_biometrias.push(data.piscinas[i]);
 
-                            var peso_anterior = datos.biometria_anterior == undefined ? "" : datos.biometria_anterior.peso_actual;
-
-                            $("#lista_nutricion")
-                                .append('<li id="pis'+obj._id+'"> ' +
-                                    '<div class="d-flex justify-content-between">' +
-                                        '<input type="text" id="idPis'+obj._id+'" name="idPis'+obj._id+'" value="'+obj._id+'" class="hidden">'+
-                                        '<div class="center-middle">' +
-                                            '<i class="fas fa-water" style="margin-right: 1px; color: #2d6e99"></i>' +
-                                            '<label id="codPis_'+obj._id+'">'+obj.codigo+'</label>' +
-                                        '</div>'+
-                                        '<div class="form-group margin-div">' +
-                                            '<label> Peso actual </label>' +
-                                            '<input class="form-control" type="text" id="peso_act_'+obj._id+'" name="peso_act_'+obj._id+'" placeholder="Peso actual" onkeyup="obtenerIncremento(this.id)">' + 
-                                        '</div>' +
-                                        '<div class="form-group margin-div">' +
-                                            '<label> Org x lance </label>' +
-                                            '<input class="form-control" type="text" id="org_lance_'+obj._id+'" name="org_lance_'+obj._id+'" placeholder="Org x lance" >' + 
-                                        '</div>' +
-                                        '<div class="form-group margin-div">' +
-                                            '<label> Código 4hr. </label>' +
-                                            '<input class="form-control" type="text" id="cod_4_'+obj._id+'" name="cod_4_'+obj._id+'" placeholder="Código 4hr." >' + 
-                                        '</div>' +
-                                        '<div class="form-group margin-div">' +
-                                            '<label> Código 10hr. </label>' +
-                                            '<input class="form-control" type="text" id="cod_10_'+obj._id+'" name="cod_10_'+obj._id+'" placeholder="Código 10hr." >' + 
-                                        '</div>' +
-                                        '<div class="form-group margin-div">' +
-                                            '<label> Org muertos </label>' +
-                                            '<input class="form-control" type="text" id="org_muert_sem_'+obj._id+'" name="org_muert_sem_'+obj._id+'" placeholder="Org muertos">' + 
-                                        '</div>' +
-                                        '<div class="form-group margin-div">' +
-                                            '<label> Presencia paj </label>' +
-                                            '<input class="form-control" type="text" id="paj_'+obj._id+'" name="paj_'+obj._id+'" placeholder="Presencia paj" onkeyup="registrarParametro(this.id)">' + 
-                                        '</div>' +
-                                        '<div class="form-group margin-div">' +
-                                            '<label> Observa </label>' +
-                                            '<input class="form-control" type="text" id="obs_'+obj._id+'" name="obs_'+obj._id+'" placeholder="Observa" onblur="registrarParametro(this.id)">' + 
-                                        '</div>' +
+                        $("#lista_nutricion")
+                            .append('<li id="pis'+obj._id+'"> ' +
+                                '<div class="d-flex justify-content-between">' +
+                                    '<input type="text" id="idPis'+obj._id+'" name="idPis'+obj._id+'" value="'+obj._id+'" class="hidden">'+
+                                    '<div class="center-middle">' +
+                                        '<i class="fas fa-water" style="margin-right: 1px; color: #2d6e99"></i>' +
+                                        '<label id="codPis_'+obj._id+'">'+obj.codigo+'</label>' +
+                                    '</div>'+
+                                    '<div class="form-group margin-div">' +
+                                        '<label> Peso actual </label>' +
+                                        '<input class="form-control" type="text" id="peso_act_'+obj._id+'" name="peso_act_'+obj._id+'" placeholder="Peso actual" onkeyup="obtenerIncremento(this.id)">' + 
                                     '</div>' +
-                                    '<div style="margin-top: -10px;" class="text-right">' +
-                                        '<label> Superfi (ha): </label>' +
-                                        '<label class="margin-div2 blue-text" id="super_'+obj._id+'" name"super_'+obj._id+'">'+obj.superficie+'</label>' +
-                                        '<label> Fecha siemb: </label>' +
-                                        '<label class="margin-div2 blue-text" id="fsiembra_'+obj._id+'" name"fsiembra_'+obj._id+'">'+day+'/'+month+'/'+date.getFullYear()+'</label>' +
-                                        '<label> Densidad siemb: </label>' +
-                                        '<label class="margin-div2 blue-text" id="den_siembra_'+obj._id+'" name"den_siembra_'+obj._id+'">'+obj.densidad_siembra+'</label>' +
-                                        '<label> Int. origen: </label>' +
-                                        '<label class="margin-div2 blue-text" id="int_ori_'+obj._id+'" name"int_ori_'+obj._id+'">'+obj.intensivo_origen.toString()+'</label>' +
-                                        '<label> Días culti: </label>' +
-                                        '<label class="margin-div2 blue-text" id="dculti_'+obj._id+'" name"dculti_'+obj._id+'">'+datos.dias_siembra+'</label>' +
-                                        '<label> Peso siemb: </label>' +
-                                        '<label class="margin-div2 blue-text" id="peso_siem_'+obj._id+'" name"peso_siem_'+obj._id+'">'+obj.peso_siembra+'</label>' +
-                                        '<label> Peso ant: </label>' +
-                                        '<label class="margin-div2 blue-text" id="peso_ant_'+obj._id+'" name"peso_ant_'+obj._id+'">'+ peso_anterior.toFixed(2) +'</label>' +
-                                        '<label> Incre: </label>' +
-                                        '<label class="margin-div2 blue-text" id="incre_'+obj._id+'" name"incre_'+obj._id+'"></label>' +
-                                        '<label> Alim Sem: </label>' +
-                                        '<label class="margin-div2 blue-text" id="alim_sem_'+obj._id+'" name"alim_sem_'+obj._id+'">'+datos.kg_acumulados_sem+'</label>' +
-                                        '<label> Kg x ha: </label>' +
-                                        '<label class="margin-div2 blue-text" id="kg_x_ha_'+obj._id+'" name"kg_x_ha_'+obj._id+'">'+ ((datos.kg_acumulados_sem / 7) / obj.superficie).toFixed(2)+'</label>' +
-                                        '<label> Acumul: </label>' +
-                                        '<label class="margin-div2 blue-text" id="acumu_'+obj._id+'" name"acumu_'+obj._id+'">'+datos.kg_acumulados+'</label>' +
-                                        '<label> Org muert. Acum: </label>' +
-                                        '<label class="margin-div2 blue-text" id="org_muert_acum_'+obj._id+'" name"org_muert_acum_'+obj._id+'">'+datos.org_muert_acum+'</label>' +
+                                    '<div class="form-group margin-div">' +
+                                        '<label> Org x lance </label>' +
+                                        '<input class="form-control" type="text" id="org_lance_'+obj._id+'" name="org_lance_'+obj._id+'" placeholder="Org x lance" >' + 
                                     '</div>' +
-                                    '<hr>'+
-                                '</li>');
-                        });
+                                    '<div class="form-group margin-div">' +
+                                        '<label> Código 4hr. </label>' +
+                                        '<input class="form-control" type="text" id="cod_4_'+obj._id+'" name="cod_4_'+obj._id+'" placeholder="Código 4hr." >' + 
+                                    '</div>' +
+                                    '<div class="form-group margin-div">' +
+                                        '<label> Código 10hr. </label>' +
+                                        '<input class="form-control" type="text" id="cod_10_'+obj._id+'" name="cod_10_'+obj._id+'" placeholder="Código 10hr." >' + 
+                                    '</div>' +
+                                    '<div class="form-group margin-div">' +
+                                        '<label> Org muertos </label>' +
+                                        '<input class="form-control" type="text" id="org_muert_sem_'+obj._id+'" name="org_muert_sem_'+obj._id+'" placeholder="Org muertos">' + 
+                                    '</div>' +
+                                    '<div class="form-group margin-div">' +
+                                        '<label> Presencia paj </label>' +
+                                        '<input class="form-control" type="text" id="paj_'+obj._id+'" name="paj_'+obj._id+'" placeholder="Presencia paj" onkeyup="registrarParametro(this.id)">' + 
+                                    '</div>' +
+                                    '<div class="form-group margin-div">' +
+                                        '<label> Observa </label>' +
+                                        '<input class="form-control" type="text" id="obs_'+obj._id+'" name="obs_'+obj._id+'" placeholder="Observa" onkeyup="registrarParametro(this.id)">' + 
+                                    '</div>' +
+                                '</div>' +
+                                '<div style="margin-top: -10px;" class="text-right">' +
+                                    '<label> Superfi (ha): </label>' +
+                                    '<label class="margin-div2 blue-text" id="super_'+obj._id+'" name"super_'+obj._id+'"></label>' +
+                                    '<label> Fecha siemb: </label>' +
+                                    '<label class="margin-div2 blue-text" id="fsiembra_'+obj._id+'" name"fsiembra_'+obj._id+'"></label>' +
+                                    '<label> Densidad siemb: </label>' +
+                                    '<label class="margin-div2 blue-text" id="den_siembra_'+obj._id+'" name"den_siembra_'+obj._id+'"></label>' +
+                                    '<label> Int. origen: </label>' +
+                                    '<label class="margin-div2 blue-text" id="int_ori_'+obj._id+'" name"int_ori_'+obj._id+'"></label>' +
+                                    '<label> Días culti: </label>' +
+                                    '<label class="margin-div2 blue-text" id="dculti_'+obj._id+'" name"dculti_'+obj._id+'"></label>' +
+                                    '<label> Peso siemb: </label>' +
+                                    '<label class="margin-div2 blue-text" id="peso_siem_'+obj._id+'" name"peso_siem_'+obj._id+'"></label>' +
+                                    '<label> Peso ant: </label>' +
+                                    '<label class="margin-div2 blue-text" id="peso_ant_'+obj._id+'" name"peso_ant_'+obj._id+'"></label>' +
+                                    '<label> Incre: </label>' +
+                                    '<label class="margin-div2 blue-text" id="incre_'+obj._id+'" name"incre_'+obj._id+'"></label>' +
+                                    '<label> Alim Sem: </label>' +
+                                    '<label class="margin-div2 blue-text" id="alim_sem_'+obj._id+'" name"alim_sem_'+obj._id+'"></label>' +
+                                    '<label> Kg x ha: </label>' +
+                                    '<label class="margin-div2 blue-text" id="kg_x_ha_'+obj._id+'" name"kg_x_ha_'+obj._id+'"></label>' +
+                                    '<label> Acumul: </label>' +
+                                    '<label class="margin-div2 blue-text" id="acumu_'+obj._id+'" name"acumu_'+obj._id+'"></label>' +
+                                    '<label> Org muert. Acum: </label>' +
+                                    '<label class="margin-div2 blue-text" id="org_muert_acum_'+obj._id+'" name"org_muert_acum_'+obj._id+'"></label>' +
+                                '</div>' +
+                                '<hr>'+
+                            '</li>');
 
                         if(i == data.piscinas.length -1){
+                            actualizarAcumulados();
                             cerrarLoader();
                         }
                     }
@@ -237,7 +228,52 @@ block contenido
                     }
                 }
             }, "json");
+
             cerrarLoader();
+        }
+
+        async function actualizarAcumulados(){
+            abrirLoader();
+            for(var i = 0; i <= lista_biometrias.length - 1; i ++){
+                let obj = lista_biometrias[i];
+
+                //console.log(obj);
+                
+                /** Obtener el acumulado de cada una de las piscinas y agregarlo */
+                const p = await $.post( "/biometrias/acumulado", {
+                    id: obj._id,
+                    fecha_siembra: obj.fecha_siembra
+                }, (datos) => {
+                    var date = new Date(obj.fecha_siembra);
+                    date.setDate(date.getDate() + 1);
+                    var day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
+                    var month = (date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1);
+                    var peso_anterior = datos.biometria_anterior == undefined ? "" : datos.biometria_anterior.peso_actual;
+
+                    $('#super_'+obj._id).text(obj.superficie);
+                    $('#fsiembra_'+obj._id).text(day+'/'+month+'/'+date.getFullYear())                    
+                    $('#den_siembra_'+obj._id).text(obj.densidad_siembra);
+                    $('#int_ori_'+obj._id).text(obj.intensivo_origen.toString());                    
+                    $('#dculti_'+obj._id).text(datos.dias_siembra);                    
+                    $('#peso_siem_'+obj._id).text(obj.peso_siembra);                    
+                    $('#peso_ant_'+obj._id).text(peso_anterior.toFixed(2));                    
+                    $('#alim_sem_'+obj._id).text(datos.kg_acumulados_sem);                    
+                    $('#kg_x_ha_'+obj._id).text(((datos.kg_acumulados_sem / 7) / obj.superficie).toFixed(2));                    
+                    $('#acumu_'+obj._id).text(datos.kg_acumulados);                    
+                    $('#org_muert_acum_'+obj._id).text(datos.org_muert_acum);
+
+                    
+                }).done(function() {
+                    contador += 1;
+                })
+                .fail(function() {
+                    alert( "error" );
+                });
+
+                if(contador == (lista_biometrias.length -1)){
+                    cerrarLoader();
+                }
+            }
         }
 
         function guardarRegistros(){
@@ -276,7 +312,7 @@ block contenido
                 
             }, "json");
 
-            $('#loader').addClass('hidden');*/
+            $('#loader').addClass('hidden');
             
             cerrarLoader();
         }
@@ -304,30 +340,32 @@ block contenido
                 /*** DATOS DE LA PISCINA **/
                 obj.estanque = $("input[name=idPis"+id+"]").val();
                 obj.codigo_piscina = $("#codPis_"+id).text();
-                obj.superficie = $("#super_"+id).text() == "" ? "" : $("#super_"+id).text();
-                obj.fecha_siembra = $("#fsiembra_"+id).text() == "" ? "" : $("#fsiembra_"+id).text();
+                obj.superficie = parseFloat($("#super_"+id).text() == "" ? "" : $("#super_"+id).text());
+                obj.fecha_siembra = $("#fsiembra_"+id).text() == "" ? "" : new Date($("#fsiembra_"+id).text().split("/")[2]+"-"+$("#fsiembra_"+id).text().split("/")[1]+"-"+$("#fsiembra_"+id).text().split("/")[0]);
                 
                 /*** DATOS PARA MOSTRAR O INFORMATIVOS **/
                 obj.fecha_biometria = $('#fecha_new').val();
-                obj.dias_cultivo = $("#dculti_"+id).text() == "" ? parseFloat(0) : $("#dculti_"+id).text();
-                obj.int_origen = $("#int_ori_"+id).text() == "" ? "" : $("#int_ori_"+id).text(); // <-- Revisar como se va a mostrar
-                obj.peso_siembra = $("#peso_siem_"+id).text() == "" ? parseFloat(0) : $("#peso_siem_"+id).text();
-                obj.peso_anterior = $("#peso_ant_"+id).text() == "" ? parseFloat(0) : $("#peso_ant_"+id).text();
-                obj.densidad = $("#den_siembra_"+id).text() == "" ? parseFloat(0) : $("#den_siembra_"+id).text();
-                obj.organismos_muerto_acumulado = $("#org_muert_acum_"+id).text() == "" ? parseFloat(0) : $("#org_muert_acum_"+id).text();
+                obj.dias_cultivo = parseFloat($("#dculti_"+id).text() == "" ? parseFloat(0) : $("#dculti_"+id).text());
+                obj.int_origen = $("#int_ori_"+id).text() == "" ? [] : $("#int_ori_"+id).text().split(",");
+                obj.peso_siembra = parseFloat($("#peso_siem_"+id).text() == "" ? parseFloat(0) : $("#peso_siem_"+id).text());
+                obj.peso_anterior = parseFloat($("#peso_ant_"+id).text() == "" ? parseFloat(0) : $("#peso_ant_"+id).text());
+                obj.densidad = parseFloat($("#den_siembra_"+id).text() == "" ? parseFloat(0) : $("#den_siembra_"+id).text());
+                obj.incremento = parseFloat($("#incre_"+id).text() == "" ? parseFloat(0) : $("#incre_"+id).text());
+                obj.organismos_muerto_acumulado = parseFloat($("#org_muert_acum_"+id).text() == "" ? parseFloat(0) : $("#org_muert_acum_"+id).text());
+
 
                 /*** DATOS DE SUBCONSULTAS **/
-                obj.alimento_semanal = $("#alim_sem_"+id).text() == "" ? parseFloat(0) : $("#alim_sem_"+id).text();
-                obj.alimento_acumulado = $("#acumu_"+id).text() == "" ? parseFloat(0) : $("#acumu_"+id).text();
-                obj.kg_has_sembrada_prom = $("#kg_x_ha_"+id).text() == "" ? parseFloat(0) : $("#kg_x_ha_"+id).text();
+                obj.alimento_semanal = parseFloat($("#alim_sem_"+id).text() == "" ? parseFloat(0) : $("#alim_sem_"+id).text());
+                obj.alimento_acumulado = parseFloat($("#acumu_"+id).text() == "" ? parseFloat(0) : $("#acumu_"+id).text());
+                obj.kg_has_sembrada_prom = parseFloat($("#kg_x_ha_"+id).text() == "" ? parseFloat(0) : $("#kg_x_ha_"+id).text());
 
                 /*** DATOS DE CAPTURA **/
-                obj.peso_actual = $("input[name=peso_act_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=peso_act_"+id+"]").val();
-                obj.organismos_lance = $("input[name=org_lance_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=org_lance_"+id+"]").val();
-                obj.cod_4h = $("input[name=cod_4_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=cod_4_"+id+"]").val();
-                obj.cod_10h = $("input[name=cod_10_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=cod_10_"+id+"]").val();
-                obj.organismos_muertos_semana = $("input[name=org_muert_sem_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=org_muert_sem_"+id+"]").val();
-                obj.presencia_pajaros = $("input[name=paj_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=paj_"+id+"]").val();
+                obj.peso_actual = parseFloat($("input[name=peso_act_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=peso_act_"+id+"]").val());
+                obj.organismos_lance = parseFloat($("input[name=org_lance_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=org_lance_"+id+"]").val());
+                obj.cod_4h = parseFloat($("input[name=cod_4_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=cod_4_"+id+"]").val());
+                obj.cod_10h = parseFloat($("input[name=cod_10_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=cod_10_"+id+"]").val());
+                obj.organismos_muertos_semana = parseFloat($("input[name=org_muert_sem_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=org_muert_sem_"+id+"]").val());
+                obj.presencia_pajaros = parseFloat($("input[name=paj_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=paj_"+id+"]").val());
                 obj.observaciones = $("input[name=obs_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=obs_"+id+"]").val();
 
                 if( obj.peso_actual == 0 &&
@@ -350,30 +388,31 @@ block contenido
                         /*** DATOS DE LA PISCINA **/
                         obj.estanque = $("input[name=idPis"+id+"]").val();
                         obj.codigo_piscina = $("#codPis_"+id).text();
-                        obj.superficie = $("#super_"+id).text() == "" ? "" : $("#super_"+id).text();
-                        obj.fecha_siembra = $("#fsiembra_"+id).text() == "" ? "" : $("#fsiembra_"+id).text();
+                        obj.superficie = parseFloat($("#super_"+id).text() == "" ? "" : $("#super_"+id).text());
+                        obj.fecha_siembra = $("#fsiembra_"+id).text() == "" ? "" : new Date($("#fsiembra_"+id).text().split("/")[2]+"-"+$("#fsiembra_"+id).text().split("/")[1]+"-"+$("#fsiembra_"+id).text().split("/")[0]);
                         
                         /*** DATOS PARA MOSTRAR O INFORMATIVOS **/
                         obj.fecha_biometria = $('#fecha_new').val();
                         obj.dias_cultivo = $("#dculti_"+id).text() == "" ? parseFloat(0) : $("#dculti_"+id).text();
-                        obj.int_origen = $("#int_ori_"+id).text() == "" ? "" : $("#int_ori_"+id).text(); // <-- Revisar como se va a mostrar
-                        obj.peso_siembra = $("#peso_siem_"+id).text() == "" ? parseFloat(0) : $("#peso_siem_"+id).text();
-                        obj.peso_anterior = $("#peso_ant_"+id).text() == "" ? parseFloat(0) : $("#peso_ant_"+id).text();
-                        obj.densidad = $("#den_siembra_"+id).text() == "" ? parseFloat(0) : $("#den_siembra_"+id).text();
-                        obj.organismos_muerto_acumulado = $("#org_muert_acum_"+id).text() == "" ? parseFloat(0) : $("#org_muert_acum_"+id).text();
+                        obj.int_origen = $("#int_ori_"+id).text() == "" ? [] : $("#int_ori_"+id).text().split(",");
+                        obj.peso_siembra = parseFloat($("#peso_siem_"+id).text() == "" ? parseFloat(0) : $("#peso_siem_"+id).text());
+                        obj.peso_anterior = parseFloat($("#peso_ant_"+id).text() == "" ? parseFloat(0) : $("#peso_ant_"+id).text());
+                        obj.densidad = parseFloat($("#den_siembra_"+id).text() == "" ? parseFloat(0) : $("#den_siembra_"+id).text());
+                        obj.incremento = parseFloat($("#incre_"+id).text() == "" ? parseFloat(0) : $("#incre_"+id).text());
+                        obj.organismos_muerto_acumulado = parseFloat($("#org_muert_acum_"+id).text() == "" ? parseFloat(0) : $("#org_muert_acum_"+id).text());
 
                         /*** DATOS DE SUBCONSULTAS **/
-                        obj.alimento_semanal = $("#alim_sem_"+id).text() == "" ? parseFloat(0) : $("#alim_sem_"+id).text();
-                        obj.alimento_acumulado = $("#acumu_"+id).text() == "" ? parseFloat(0) : $("#acumu_"+id).text();
-                        obj.kg_has_sembrada_prom = $("#kg_x_ha_"+id).text() == "" ? parseFloat(0) : $("#kg_x_ha_"+id).text();
+                        obj.alimento_semanal = parseFloat($("#alim_sem_"+id).text() == "" ? parseFloat(0) : $("#alim_sem_"+id).text());
+                        obj.alimento_acumulado = parseFloat($("#acumu_"+id).text() == "" ? parseFloat(0) : $("#acumu_"+id).text());
+                        obj.kg_has_sembrada_prom = parseFloat($("#kg_x_ha_"+id).text() == "" ? parseFloat(0) : $("#kg_x_ha_"+id).text());
 
                         /*** DATOS DE CAPTURA **/
-                        obj.peso_actual = $("input[name=peso_act_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=peso_act_"+id+"]").val();
-                        obj.organismos_lance = $("input[name=org_lance_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=org_lance_"+id+"]").val();
-                        obj.cod_4h = $("input[name=cod_4_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=cod_4_"+id+"]").val();
-                        obj.cod_10h = $("input[name=cod_10_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=cod_10_"+id+"]").val();
-                        obj.organismos_muertos_semana = $("input[name=org_muert_sem_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=org_muert_sem_"+id+"]").val();
-                        obj.presencia_pajaros = $("input[name=paj_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=paj_"+id+"]").val();
+                        obj.peso_actual = parseFloat($("input[name=peso_act_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=peso_act_"+id+"]").val());
+                        obj.organismos_lance = parseFloat($("input[name=org_lance_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=org_lance_"+id+"]").val());
+                        obj.cod_4h = parseFloat($("input[name=cod_4_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=cod_4_"+id+"]").val());
+                        obj.cod_10h = parseFloat($("input[name=cod_10_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=cod_10_"+id+"]").val());
+                        obj.organismos_muertos_semana = parseFloat($("input[name=org_muert_sem_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=org_muert_sem_"+id+"]").val());
+                        obj.presencia_pajaros =parseFloat($("input[name=paj_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=paj_"+id+"]").val());
                         obj.observaciones = $("input[name=obs_"+id+"]").val() == "" ? parseFloat(0) : $("input[name=obs_"+id+"]").val();
 
                         if( obj.peso_actual == 0 &&

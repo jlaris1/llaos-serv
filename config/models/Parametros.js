@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
 var parametrosSchemaJSON = {
     oxigeno: String,
     ph: String,
+    codigo_piscina: String,
     salinidad: { type:String , default: null},
     temperatura: String,
     nivel_agua: { type:String , default: null},

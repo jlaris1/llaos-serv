@@ -39,7 +39,7 @@ block contenido
             .table-responsive(style="margin-top: 10px;") 
                 table#estanques.table.table-striped.table-hover
                     thead
-                        th ID
+                        //th ID
                         th Código
                         th Nombre
                         th Modulo
@@ -48,7 +48,7 @@ block contenido
                     tbody
                         each e in estanques
                             tr
-                                td #{ e.id }
+                                //td #{ e.id }
                                 td #{ e.codigo }
                                 td #{ e.nombre }
                                 td #{ e.modulo.nombre }

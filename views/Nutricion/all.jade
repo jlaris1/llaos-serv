@@ -34,7 +34,7 @@ block contenido
     //Termina Javascript
 
     // Inputs funcionamiento
-    label#url #{url}
+    label#url.hidden #{url}
     
     // Título
     section.mb-4
@@ -49,7 +49,7 @@ block contenido
                     a(href="#reports" data-toggle="modal" data-target="#reports" style="margin-right: 5px;").btn.btn-danger
                         i(style="color: white;" data-toggle="tooltip", data-placement="top", title="Reportes").fas.fa-file-pdf
                     if user.permisos == "gerente_modulo" || user.permisos == "developer"
-                        a(href="javascript:eliminarRegistros('')").btn.btn-warning
+                        a(href="javascript:eliminarRegistros('5cae2f6a34dc281768f6c844')").btn.btn-warning
                             i(style="color: #000;" data-toggle="tooltip", data-placement="top", title="Eliminar registros").fas.fa-minus-circle
 
     // Datos

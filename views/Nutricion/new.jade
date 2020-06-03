@@ -209,6 +209,15 @@ block contenido
                                     '<input class="form-control" type="text" id="ra_'+data.piscinas[i]._id+'" name="racion'+data.piscinas[i]._id+'" placeholder="Kg ración" onkeyup="registrarParametro(this.id)">' + 
                                 '</div>' +
                                 '<div class="form-group margin-div">' +
+                                    '<label> Alimento </label>' +
+                                    '<select class="form-control" id="alim'+data.piscinas[i]._id+'">'+
+                                        '<option id="opt1_'+data.piscinas[i]._id+'" value=-1> << Seleccione >> </option>' +
+                                        '<option id="opt2_'+data.piscinas[i]._id+'" value=5c785f3d65d071130010dc5c> TOTAL RANGE MICRO PELLET 35% </option>' +
+                                        '<option id="opt3_'+data.piscinas[i]._id+'" value=5d9253fd0a72db05f03c9c2c> TOTAL RANGE 35 MICRO PELLET + OXI + PHIBRO </option>' +
+                                        '<option id="opt4_'+data.piscinas[i]._id+'" value=5ecbed246524e361b05efa94> TOTAL RANGE 35 MICRO PELLET + PHIBRO </option>' +
+                                    '</select>'+
+                                '</div>'+
+                                '<div class="form-group margin-div">' +
                                     '<label> % Ajuste </label>' +
                                     '<input class="form-control" type="text" id="aj_'+data.piscinas[i]._id+'" name="ajuste'+data.piscinas[i]._id+'" placeholder="% Ajuste" onkeyup="siguienteRacion(this.id)" onblur="registrarParametro(this.id)">' + 
                                 '</div>' +
@@ -268,7 +277,7 @@ block contenido
                             if(data.lista_nutricion[i] != undefined && data.lista_nutricion[i].estanque == $('#idPis'+data.piscinas[j]._id).val()){
                                 var contador = 0;
                                 var id = data.lista_nutricion[i].estanque;
-                                var r1  = parseFloat(0);
+                                var r1 = parseFloat(0);
                                 var r2 = parseFloat(0);
                                 var r3 = parseFloat(0);
                                 var r4 = parseFloat(0);
@@ -403,6 +412,7 @@ block contenido
                 obj.charola_4 = $("input[name=charola4"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola4"+id+"]").val();
                 obj.kg_racion = $("input[name=racion"+id+"]").val() == "" ? parseFloat(0) : $("input[name=racion"+id+"]").val();
                 obj.porcent_ajuste = $("input[name=ajuste"+id+"]").val() == "" ? parseFloat(0) : $("input[name=ajuste"+id+"]").val();
+                obj.alimento = $("#alim"+id).val() == "" ? "" : $("#alim"+id).val();
                 obj.codigo_racion = $("#cod" + id).text();
                 obj.suma = $("#suma" + id).text();
                 obj.siguiente_racion = $("#kg_sig" + id ).text();
@@ -438,6 +448,7 @@ block contenido
                     obj.charola_4 = $("input[name=charola4"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola4"+id+"]").val();
                     obj.kg_racion = $("input[name=racion"+id+"]").val() == "" ? parseFloat(0) : $("input[name=racion"+id+"]").val();
                     obj.porcent_ajuste = $("input[name=ajuste"+id+"]").val() == "" ? parseFloat(0) : $("input[name=ajuste"+id+"]").val();
+                    obj.alimento = $("#alim"+id).val() == "" ? "" : $("#alim"+id).val();
                     obj.codigo_racion = $("#cod" + id).text();
                     obj.suma = $("#suma" + id).text();
                     obj.siguiente_racion = $("#kg_sig" + id ).text();

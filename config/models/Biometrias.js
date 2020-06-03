@@ -5,14 +5,10 @@ var mongoose = require('mongoose'),
 var biometriaSchemaJSON = {
     estanque: { type: Schema.ObjectId, ref: "Estanques"},
     superficie: Number,
-    fecha_siembra: Date,
-    fecha_biometria: Date,
+    fecha_siembra: { type: Date, default: new Date().toLocaleDateString("es-MX", {dateStyle: 'short'})},
+    fecha_biometria: { type: Date, default: new Date().toLocaleDateString("es-MX", {dateStyle: 'short'})},
     dias_cultivo: Number,
-    int_origen: [
-        {
-            estanque: { type: Schema.ObjectId, ref: "Estanques"}
-        }
-    ],
+    int_origen: [],
     peso_siembra: Number,
     peso_anterior: Number,
     peso_actual: Number,
@@ -24,6 +20,8 @@ var biometriaSchemaJSON = {
     alimento_semanal: Number,
     kg_has_sembrada_prom: Number,
     alimento_acumulado: Number,
+    alimento_acumulado_has: Number,
+    organismos_muertos: Number,
     organismos_muertos_semana: Number,
     organismos_muertos_acumulado: Number,
     presencia_pajaros: Number,

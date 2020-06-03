@@ -21,9 +21,10 @@ module.exports = {
             var primerDiaMes = new Date(y, m, 1).toLocaleDateString("es-MX",{dateStyle: 'short'});
 
             Nutricion.find({
-                fecha: {
-                    $gte: primerDiaMes
-                }
+                /*fecha: {
+                    //$gte: primerDiaMes
+                    $gte: '2020-04-01'
+                }*/
             }, function(error, nutricion){
                 if(error){
                     console.log(chalk.bgRed(error));
@@ -918,14 +919,27 @@ module.exports = {
     delete: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){
             respuesta.redirect("/sesion-expirada");
-        }else{ 
-            Nutricion.deleteMany({ estanque: solicitud.body.id } , (error) => {
-                if(error) {
+        }else{
+            Estanques.find({modulo: solicitud.body.id}, {id: 1}, (error, estanques) => {
+                if(error){
                     console.log(error);
                 } else {
-                    respuesta.json('terminado');
+                    Nutricion.deleteMany(
+                        {
+                            $and: [
+                                { estanque:  { $in: estanques }},
+                                { fecha: {$gte: '2020-05-18'}}
+                            ]
+                        }
+                        , (error) => {
+                        if(error) {
+                            console.log(error);
+                        } else {
+                            respuesta.json('terminado');
+                        }
+                    });
                 }
-            });
+            }); 
         }
     },
     deleteOne: (solicitud, respuesta) => {
