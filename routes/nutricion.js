@@ -14,88 +14,84 @@ var file_path = './files/reports/nutricion/';
 
 module.exports = {
     all: (solicitud, respuesta) => {
-        if (solicitud.session.user === undefined){
-			respuesta.redirect("/sesion-expirada");
-		} else { 
-            var dia_actual = new Date(), y = dia_actual.getFullYear(), m = dia_actual.getMonth();
-            var primerDiaMes = new Date(y, m, 1).toLocaleDateString("es-MX",{dateStyle: 'short'});
+        if(!solicitud.session.user) return respuesta.redirect("/sesion-expirada");
 
-            Nutricion.find({
-                /*fecha: {
-                    //$gte: primerDiaMes
-                    $gte: '2020-04-01'
-                }*/
-            }, function(error, nutricion){
-                if(error){
-                    console.log(chalk.bgRed(error));
-                } else {
-                    Estanques.populate(nutricion, {path: 'estanque'}, function(error, nutricion){
-                        if(error){
-                            console.log(chalk.bgRed(error));
-                        } else {
-                            Usuarios.populate(nutricion, { path: 'charolero'}, function(error, nutricion){
-                                if(error){
-                                    console.log(chalk.bgRed(error));
-                                } else {
-                                    Usuarios.find( function(error, usuarios){
-                                        if(error){
-                                            console.log(error);
-                                        } else { 
-                                            var piscinas = [];
-                                            var charoleros = [];
+        var dia_actual = new Date(), y = dia_actual.getFullYear(), m = dia_actual.getMonth();
+        var primerDiaMes = new Date(y, m, 1).toLocaleDateString("es-MX",{dateStyle: 'short'});
 
-                                            nutricion.forEach(function(n){
-                                                if(piscinas.includes(n.estanque) == false){
-                                                    piscinas.push(n.estanque);
-                                                }
+        Nutricion.find({
+            /*fecha: {
+                //$gte: primerDiaMes
+                $gte: '2020-04-01'
+            }*/
+        }, (error, nutricion) => {
+            if(error) return console.log(chalk.bgRed(error));
 
-                                                if(charoleros.includes(n.charolero) == false){
-                                                    charoleros.push(n.charolero);
-                                                }
-                                            });
+            Estanques.populate(nutricion, {path: 'estanque'}, (error, nutricion)=> {
+                if(error) return console.log(chalk.bgRed(error));
+            
+                Usuarios.populate(nutricion, { path: 'charolero'}, (error, nutricion) =>{
+                    if(error) return console.log(chalk.bgRed(error));
 
-                                            respuesta.render('Nutricion/all',
-                                                {
-                                                    user: solicitud.session.user,
-                                                    nutricion: nutricion,
-                                                    titulo: "Nutrición",
-                                                    criterios: [
-                                                        {
-                                                            val: "piscina",
-                                                            name: "Piscina"
-                                                        },
-                                                        {
-                                                            val: "modulo",
-                                                            name: "Modulo"
-                                                        },
-                                                        {
-                                                            val: "charolero",
-                                                            name: "Charolero"
-                                                        },
-                                                        {
-                                                            val: "fecha",
-                                                            name: "Fecha"
-                                                        },
-                                                        {
-                                                            val: "fechas",
-                                                            name: "Fechas"
-                                                        }
-                                                    ],
-                                                    usuarios: usuarios,
-                                                    piscinas: piscinas,
-                                                    charoleros: charoleros,
-                                                    ruta: "nutricion"
-                                                }
-                                            );
-                                        }
-                                    });
+                    Usuarios.find( (error, usuarios) => {
+                        if(error) return console.log(chalk.bgRed(error));
+
+                        Productos.populate(nutricion, {path: 'alimento'}, (error, nutricion) =>{
+                            if(error) return console.log(chalk.bgRed(error));
+
+                            var piscinas = [];
+                            var charoleros = [];
+
+                            nutricion.forEach( (n) => {
+                                if(piscinas.includes(n.estanque) == false){
+                                    piscinas.push(n.estanque);
+                                }
+
+                                if(charoleros.includes(n.charolero) == false){
+                                    charoleros.push(n.charolero);
                                 }
                             });
-                        }
+
+                            respuesta.render('Nutricion/all',
+                                {
+                                    user: solicitud.session.user,
+                                    nutricion: nutricion,
+                                    titulo: "Nutrición",
+                                    criterios: [
+                                        {
+                                            val: "piscina",
+                                            name: "Piscina"
+                                        },
+                                        {
+                                            val: "modulo",
+                                            name: "Modulo"
+                                        },
+                                        {
+                                            val: "charolero",
+                                            name: "Charolero"
+                                        },
+                                        {
+                                            val: "fecha",
+                                            name: "Fecha"
+                                        },
+                                        {
+                                            val: "fechas",
+                                            name: "Fechas"
+                                        }
+                                    ],
+                                    usuarios: usuarios,
+                                    piscinas: piscinas,
+                                    charoleros: charoleros,
+                                    ruta: "nutricion"
+                                }
+                            );
+                        });
+                        
                     });
-                }
-            }).sort({fecha: -1});
-        } 
+                    
+                })
+            });
+        }).sort({fecha: -1});
     },
     new: (solicitud, respuesta) => {
         if(solicitud.session.user === undefined){

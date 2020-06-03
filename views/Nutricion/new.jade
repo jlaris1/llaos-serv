@@ -210,7 +210,7 @@ block contenido
                                 '</div>' +
                                 '<div class="form-group margin-div">' +
                                     '<label> Alimento </label>' +
-                                    '<select class="form-control" id="alim'+data.piscinas[i]._id+'">'+
+                                    '<select class="form-control" id="alim_'+data.piscinas[i]._id+'" onchange="registrarParametro(this.id)">'+
                                         '<option id="opt1_'+data.piscinas[i]._id+'" value=-1> << Seleccione >> </option>' +
                                         '<option id="opt2_'+data.piscinas[i]._id+'" value=5c785f3d65d071130010dc5c> TOTAL RANGE MICRO PELLET 35% </option>' +
                                         '<option id="opt3_'+data.piscinas[i]._id+'" value=5d9253fd0a72db05f03c9c2c> TOTAL RANGE 35 MICRO PELLET + OXI + PHIBRO </option>' +
@@ -403,7 +403,8 @@ block contenido
             var id = idS.split("_")[1];
             var obj = new Object()
 
-            console.log($('#fecha_new').val());
+            console.log(idS);
+            //console.log($('#fecha_new').val());
             
             if(existeRegistro(id)){ } else {
                 obj.charola_1 = $("input[name=charola1"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola1"+id+"]").val();
@@ -412,7 +413,7 @@ block contenido
                 obj.charola_4 = $("input[name=charola4"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola4"+id+"]").val();
                 obj.kg_racion = $("input[name=racion"+id+"]").val() == "" ? parseFloat(0) : $("input[name=racion"+id+"]").val();
                 obj.porcent_ajuste = $("input[name=ajuste"+id+"]").val() == "" ? parseFloat(0) : $("input[name=ajuste"+id+"]").val();
-                obj.alimento = $("#alim"+id).val() == "" ? "" : $("#alim"+id).val();
+                obj.alimento = $("#alim_"+id).val() == "" ? "" : $("#alim_"+id).val();
                 obj.codigo_racion = $("#cod" + id).text();
                 obj.suma = $("#suma" + id).text();
                 obj.siguiente_racion = $("#kg_sig" + id ).text();
@@ -431,7 +432,7 @@ block contenido
                 obj.porcent_ajuste == 0*/ ) { 
                     console.log(" Nose mandará a registrar piscina: " + id);
                 } else {
-                    console.log(obj);
+                    //console.log(obj);
                     nutricion.push(obj);
                 }
             }
@@ -448,7 +449,7 @@ block contenido
                     obj.charola_4 = $("input[name=charola4"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola4"+id+"]").val();
                     obj.kg_racion = $("input[name=racion"+id+"]").val() == "" ? parseFloat(0) : $("input[name=racion"+id+"]").val();
                     obj.porcent_ajuste = $("input[name=ajuste"+id+"]").val() == "" ? parseFloat(0) : $("input[name=ajuste"+id+"]").val();
-                    obj.alimento = $("#alim"+id).val() == "" ? "" : $("#alim"+id).val();
+                    obj.alimento = $("#alim_"+id).val() == "" ? "" : $("#alim_"+id).val();
                     obj.codigo_racion = $("#cod" + id).text();
                     obj.suma = $("#suma" + id).text();
                     obj.siguiente_racion = $("#kg_sig" + id ).text();
@@ -458,6 +459,8 @@ block contenido
                     obj.hora = hora;
                     obj.tiempo = $("#span_tiempo").text();
                     obj.charolero = $('#user').val();
+
+                    console.log(obj);
 
                         if( obj.charola_1 == 0 &&
                             obj.charola_2 == 0 &&

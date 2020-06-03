@@ -73,6 +73,7 @@ block contenido
                         th Sig. Ración
                         th Tiempo
                         th Charolero
+                        th Alimento
                         th Fecha
                         th Hora
                     tbody
@@ -97,7 +98,7 @@ block contenido
                                 td.text-center #{ nut.siguiente_racion == "" ? "" : parseFloat(nut.siguiente_racion).toFixed(2) }
                                 td.text-center #{ nut.tiempo }
                                 td.text-center #{ nut.charolero.nombre }
-                                
+                                td.text-center #{ !nut.alimento ? "" : nut.alimento.nombre }
                                 - var date = new Date(nut.fecha);
                                 - date.setDate(date.getDate() + 1);
                                 - var day = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
