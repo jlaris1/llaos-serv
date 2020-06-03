@@ -73,7 +73,7 @@ module.exports = {
                 if(error){
                     console.log(chalk.bgRed(error));
                 } else { 
-                    respuesta.render('Produccion/biometrias/new', {
+                    respuesta.render('Produccion/Biometrias/new', {
                         user: solicitud.session.user,
                         usuarios: usuarios,
                         titulo: "",
