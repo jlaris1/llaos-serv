@@ -924,7 +924,8 @@ module.exports = {
                         {
                             $and: [
                                 { estanque:  { $in: estanques }},
-                                { fecha: {$gte: '2020-05-18'}}
+                                { fecha: {$gte: '2020-05-02',
+                                          $lte: '2020-05-15'      }}
                             ]
                         }
                         , (error) => {
