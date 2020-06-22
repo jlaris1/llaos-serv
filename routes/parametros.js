@@ -238,7 +238,18 @@ module.exports = {
             });
         }
     },
-    add: function(solicitud, respuesta){    
+    add: async (solicitud, respuesta) => {
+        if (!solicitud.session.user) return respuesta.redirect('/sesion-expirada');
+        if (!solicitud.body.parametros || !solicitud.body.parametros.length) return console.log('No guardar, llego todo en 0');
+
+        const documents = solicitud.body.parametros.map((val) => new Parametros(val));
+
+        await saveDocuments(documents, solicitud.session.user);
+
+        respuesta.json({ estatus: 'Guardado' });
+
+    },
+    /*add: function(solicitud, respuesta){    
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		} else { 
@@ -252,14 +263,12 @@ module.exports = {
                         if(error){
                             console.log(chalk.bgRed(error));
                         } else {
-                            /*********** AGREGAR AL HISTORIAL */
                                 historial.save(
                                     'perano',
                                     'fa-eye-dropper',
                                     'registró parámetros para la piscina <em class="text-md">' + solicitud.body.parametros[i].codigo_piscina + '.</em>',
                                     solicitud.session.user._id
                                 )
-                            /******************************* */
 
                             if(i == solicitud.body.parametros.length -1 ){
                                 respuesta.json({
@@ -274,7 +283,7 @@ module.exports = {
                 console.log("no guardar llego todo en 0's");
             }
         }
-    },
+    },*/
     update: function(solicitud, respuesta){
         if (solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
@@ -2105,4 +2114,23 @@ function generateConcentradoXLS(data, title, xls_name, fecha_ini, fecha_fin){
         console.log("XLS terminado.")
         return xls_name;
     });
+}
+
+// GUARDADO DE DATOS NUTRICION E HISTORIAL
+const saveDocuments = async (documents = [], user) => {
+    for(let i = 0; i < documents.length; i++){
+        try {
+            const currentDocument = await documents[i].save();
+
+            await historial.save(
+                'perano',
+                'fa-seeding',
+                'registró nutrición para la piscina <em class="text-md">' +  documents[i].codigo_piscina + '.</em>',
+                user._id
+            );
+
+        } catch (error) {
+            console.log(chalk.bgRed(error));
+        }
+    }
 }

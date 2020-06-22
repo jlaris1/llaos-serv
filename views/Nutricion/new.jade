@@ -407,8 +407,8 @@ block contenido
             var id = idS.split("_")[1];
             var obj = new Object()
 
-            console.log(idS);
-            //console.log($('#fecha_new').val());
+            //console.log(idS);
+            console.log($('#fecha_new').val());
             
             if(existeRegistro(id)){ } else {
                 obj.charola_1 = $("input[name=charola1"+id+"]").val() == "" ? parseFloat(0) : $("input[name=charola1"+id+"]").val();

@@ -11,6 +11,7 @@ var mongoose = require('mongoose');
 
     var fechas = [];
     var alimento = [];
+    var piscinas_alimento = [];
     var piscinas = [];
 
     var dia1 = 0, dia2 = 0, dia3 = 0, dia4 = 0, dia5 = 0, dia6 = 0, dia7 = 0, dia8 = 0, dia9 = 0, dia10 = 0,
@@ -399,14 +400,13 @@ module.exports = {
             // Variables año en curso
             var primerDiaMes = new Date(y, m, 1).toLocaleDateString("es-MX",{dateStyle: 'short'});
             var ultimoDiaMes = new Date(y, m + 1, 0).toLocaleDateString("es-MX",{dateStyle: 'short'});
-            
 
             Nutricion.find({
                 /*fecha: {
                     $gte: primerDiaMes,
                     $lte: ultimoDiaMes
                 }*/
-            },{fecha: 1, estanque: 1, kg_racion: 1}, (error, nutricion) => {
+            }, (error, nutricion) => {
                 if(error){
                     console.log(error);
                 } else {
@@ -422,257 +422,55 @@ module.exports = {
                                         if(error){
                                             console.log(error);
                                         } else {
-                                            //console.log(nutricion);
-                                            let n = nutricion.filter( n => n.estanque.modulo.unidad_negocio._id == solicitud.session.user.unidad_negocio._id);
+                                            Productos.populate( nutricion, {path: 'alimento'}, (error, nutricion) => {
+                                                if(error) return console.log(error);
 
-                                            for(let i = 0; i <= n.length - 1; i ++) {
-                                                if(existePiscina(n[i].estanque.codigo) == false){
-                                                    piscinas.push(
-                                                        { 
-                                                            codigo: n[i].estanque.codigo,
-                                                            unidad_negocio: n[i].estanque.modulo.unidad_negocio.nombre
+                                                //console.log(nutricion);
+                                                let n = nutricion.filter( n => n.estanque.modulo.unidad_negocio._id == solicitud.session.user.unidad_negocio._id);
+
+                                                for(let i = 0; i <= n.length - 1; i ++) {
+                                                    if(existePiscina(n[i].estanque.codigo) == false){
+                                                        piscinas.push(
+                                                            { 
+                                                                codigo: n[i].estanque.codigo,
+                                                                unidad_negocio: n[i].estanque.modulo.unidad_negocio.nombre
+                                                            }
+                                                        );
+                                                    }                
+                                                } 
+
+                                                var total = 0;
+                                                var fechas_alimento = [];
+                                                
+                                                piscinas.forEach( p => {
+                                                    p.acumulado =  nutricion.map( n => {
+                                                        if( n.estanque.codigo == p.codigo ){
+                                                            return parseFloat(n.kg_racion);
                                                         }
-                                                    );
-                                                }                
-                                            } 
+                                                    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
 
-                                            var total = 0;
-                                            
-                                            piscinas.forEach( p => {
-                                                p.acumulado =  nutricion.map( n => {
-                                                    if( n.estanque.codigo == p.codigo ){
-                                                        return parseFloat(n.kg_racion);
+                                                    total += p.acumulado;
+                                                });
+
+                                                /*** KG donde seleccionaron alimento */
+                                                piscinas_alimento = nutricion.map( n => {
+                                                    if(n.alimento){
+                                                        if(existeFecha(n.fecha) == false){ fechas.push(n.fecha)}; 
+                                                        return n;
                                                     }
-                                                }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+                                                }).filter(n => n !== undefined);
 
-                                                total += p.acumulado;
+                                                //console.log(piscinas_alimento);
+                                                console.log(fechas);
+
+                                                piscinas.sort(GetSortOrder('codigo'));
+
+                                                respuesta.json({piscinas,total});
                                             });
-
-                                            piscinas.sort(GetSortOrder('codigo'));
-
-                                            respuesta.json({piscinas,total});
                                         }
                                     });
                                 }
                             });                               
-
-                            /*var m05_list = [];
-                            var m05_list_dia = [];
-                            var m07_list = [];
-                            var m07_list_dia = [];
-                            var m2_01_list = [];
-                            var m2_01_list_dia = [];
-                            var m06_list = [];
-                            var m06_list_dia = [];
-                            
-                            m05_list = nutricion.map( n => {
-                                if(n.estanque.codigo == "M-05"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined);
-
-                            var d1_m05 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(primerDiaMes).getTime() && n.estanque.codigo == "M-05"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-                            var d2_m05 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 2).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-05"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-                            var d3_m05 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 3).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-05"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-                            var d4_m05 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 4).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-05"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-                            var d5_m05 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 5).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-05"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-
-                            m05_list_dia = [d1_m05, d2_m05, d3_m05, d4_m05, d5_m05];
-
-                            /// M-06
-                            m06_list = nutricion.map( n => {
-                                if(n.estanque.codigo == "M-06"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined);
-
-                            var d1_m06 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(primerDiaMes).getTime() && n.estanque.codigo == "M-06"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-                            var d2_m06 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 2).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-06"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-                            var d3_m06 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 3).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-06"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-                            var d4_m06 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 4).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-06"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-                            var d5_m06 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 5).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-06"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-
-                            m06_list_dia = [d1_m06, d2_m06, d3_m06, d4_m06, d5_m06];
-
-                            ///
-                            m07_list = nutricion.map( n => {
-                                if(n.estanque.codigo == "M-07"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined);
-
-                            var d1_m07 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(primerDiaMes).getTime() && n.estanque.codigo == "M-07"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-                            var d2_m07 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 2).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-07"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-                            var d3_m07 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 3).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-07"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-                            var d4_m07 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 4).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-07"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-                            var d5_m07 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 5).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-07"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-                            m07_list_dia = [d1_m07, d2_m07, d3_m07, d4_m07, d5_m07];
-
-                            m2_01_list = nutricion.map( n => {
-                                if(n.estanque.codigo == "M2-01"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined);
-
-                            var d1_m2_01 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(primerDiaMes).getTime() && n.estanque.codigo == "M2-01"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-                            
-                            
-                            var d2_m2_01 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 2).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M2-01"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-
-                            var d3_m2_01 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 3).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M2-01"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-
-                            var d4_m2_01 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 4).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M2-01"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-                            var d5_m2_01 = nutricion.map( n => {
-                                if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 5).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M2-01"){
-                                    return parseFloat(n.kg_racion);
-                                }
-                            }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
-
-                            m2_01_list_dia = [d1_m2_01, d2_m2_01, d3_m2_01, d4_m2_01, d5_m2_01];
-
-                            m05 = m05_list.reduce((a, b) => a + b, 0);   
-                            m07 = m07_list.reduce((a, b) => a + b, 0);
-                            m06 = m06_list.reduce((a, b) => a + b, 0);                         
-                            m2_01 = m2_01_list.reduce((a, b) => a + b, 0);                          
-
-                            for(let i = 0; i <= nutricion.length - 1; i ++) {
-                                
-                                if(i == 0){
-                                    var date = new Date(nutricion[i].fecha);
-                                    date.setDate(date.getDate() + 1);
-                                    
-                                    fechas.push(new Date(date).toLocaleDateString("es-MX",{dateStyle: 'short'}));
-                                    dia += 1;
-                                    sumarAlDia(dia, nutricion[i].kg_racion);
-                                } 
-                                
-                                if(i > 0) {
-                                    if(new Date(nutricion[i].fecha).getTime() != new Date(nutricion[i-1].fecha).getTime()){
-                                        var date = new Date(nutricion[i].fecha);
-                                        date.setDate(date.getDate() + 1);
-                                        fechas.push(new Date(date).toLocaleDateString("es-MX",{dateStyle: 'short'}));
-                                        sumarAlDia(dia, nutricion[i].kg_racion);
-                                        dia += 1;
-                                    } else {
-                                        sumarAlDia(dia, nutricion[i].kg_racion);
-                                    }
-                                }
-
-                                if(i == nutricion.length - 1){  
-                                    agregarDiasLista();
-                                }
-                            }
-                            
-                            respuesta.json({
-                                m01: m01,
-                                m05: m05,
-                                m06: m06,
-                                m07: m07,
-                                m2_01: m2_01,
-                                m05_list_dia: m05_list_dia,
-                                m07_list_dia: m07_list_dia,
-                                m06_list_dia: m06_list_dia,
-                                m2_01_list_dia: m2_01_list_dia,
-                                fechas: fechas,
-                                alimento: alimento
-                            });*/
-
-                            
-
                         }
                     });
                 }
@@ -683,7 +481,14 @@ module.exports = {
         if(solicitud.session.user === undefined){
 			respuesta.redirect("/sesion-expirada");
 		}else{
-            Historial.find( (error, historial) => {
+            var dia_actual = new Date(), y = dia_actual.getFullYear(), m = dia_actual.getMonth(), d = dia_actual.getDate();
+
+            // Variables año en curso
+            var primerDiaMes = new Date(y, m, 1).toLocaleDateString("es-MX",{dateStyle: 'short'});
+
+            Historial.find({ fecha: {
+                $gte: primerDiaMes
+            }}, (error, historial) => {
                 if(error){
                     console.log(error);
                 } else {
@@ -921,6 +726,20 @@ function existePiscina(piscina) {
     return false;
 }
 
+function existeFecha(fecha) {
+    if(fechas != undefined && fechas != null && fechas.length > 0){
+        for(let i = 0; i <= fechas.length -1; i ++){
+            if(new Date(fecha).getTime() != new Date(fechas[i]).getTime()){
+                return true;
+            }
+        }
+    } else {
+        return false;
+    }
+
+    return false;
+}
+
 function GetSortOrder(prop) {    
     return function(a, b) {    
         if (a[prop] > b[prop]) {    
@@ -931,3 +750,221 @@ function GetSortOrder(prop) {
         return 0;    
     }    
 } 
+
+
+////////////////// INDICADORES ALIMENTO
+
+/*var m05_list = [];
+    var m05_list_dia = [];
+    var m07_list = [];
+    var m07_list_dia = [];
+    var m2_01_list = [];
+    var m2_01_list_dia = [];
+    var m06_list = [];
+    var m06_list_dia = [];
+    
+    m05_list = nutricion.map( n => {
+        if(n.estanque.codigo == "M-05"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined);
+
+    var d1_m05 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(primerDiaMes).getTime() && n.estanque.codigo == "M-05"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+    var d2_m05 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 2).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-05"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+    var d3_m05 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 3).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-05"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+    var d4_m05 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 4).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-05"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+    var d5_m05 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 5).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-05"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+
+    m05_list_dia = [d1_m05, d2_m05, d3_m05, d4_m05, d5_m05];
+
+    /// M-06
+    m06_list = nutricion.map( n => {
+        if(n.estanque.codigo == "M-06"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined);
+
+    var d1_m06 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(primerDiaMes).getTime() && n.estanque.codigo == "M-06"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+    var d2_m06 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 2).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-06"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+    var d3_m06 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 3).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-06"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+    var d4_m06 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 4).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-06"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+    var d5_m06 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 5).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-06"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+
+    m06_list_dia = [d1_m06, d2_m06, d3_m06, d4_m06, d5_m06];
+
+    ///
+    m07_list = nutricion.map( n => {
+        if(n.estanque.codigo == "M-07"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined);
+
+    var d1_m07 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(primerDiaMes).getTime() && n.estanque.codigo == "M-07"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+    var d2_m07 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 2).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-07"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+    var d3_m07 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 3).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-07"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+    var d4_m07 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 4).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-07"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+    var d5_m07 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 5).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M-07"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+    m07_list_dia = [d1_m07, d2_m07, d3_m07, d4_m07, d5_m07];
+
+    m2_01_list = nutricion.map( n => {
+        if(n.estanque.codigo == "M2-01"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined);
+
+    var d1_m2_01 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(primerDiaMes).getTime() && n.estanque.codigo == "M2-01"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+    
+    
+    var d2_m2_01 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 2).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M2-01"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+
+    var d3_m2_01 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 3).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M2-01"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+
+    var d4_m2_01 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 4).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M2-01"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+    var d5_m2_01 = nutricion.map( n => {
+        if(new Date(n.fecha).getTime() == new Date(new Date(y, m, 5).toLocaleDateString("es-MX",{dateStyle: 'short'})).getTime() && n.estanque.codigo == "M2-01"){
+            return parseFloat(n.kg_racion);
+        }
+    }).filter(n => n !== undefined).reduce((a, b) => a + b, 0);
+
+    m2_01_list_dia = [d1_m2_01, d2_m2_01, d3_m2_01, d4_m2_01, d5_m2_01];
+
+    m05 = m05_list.reduce((a, b) => a + b, 0);   
+    m07 = m07_list.reduce((a, b) => a + b, 0);
+    m06 = m06_list.reduce((a, b) => a + b, 0);                         
+    m2_01 = m2_01_list.reduce((a, b) => a + b, 0);                          
+
+    for(let i = 0; i <= nutricion.length - 1; i ++) {
+        
+        if(i == 0){
+            var date = new Date(nutricion[i].fecha);
+            date.setDate(date.getDate() + 1);
+            
+            fechas.push(new Date(date).toLocaleDateString("es-MX",{dateStyle: 'short'}));
+            dia += 1;
+            sumarAlDia(dia, nutricion[i].kg_racion);
+        } 
+        
+        if(i > 0) {
+            if(new Date(nutricion[i].fecha).getTime() != new Date(nutricion[i-1].fecha).getTime()){
+                var date = new Date(nutricion[i].fecha);
+                date.setDate(date.getDate() + 1);
+                fechas.push(new Date(date).toLocaleDateString("es-MX",{dateStyle: 'short'}));
+                sumarAlDia(dia, nutricion[i].kg_racion);
+                dia += 1;
+            } else {
+                sumarAlDia(dia, nutricion[i].kg_racion);
+            }
+        }
+
+        if(i == nutricion.length - 1){  
+            agregarDiasLista();
+        }
+    }
+    
+    respuesta.json({
+        m01: m01,
+        m05: m05,
+        m06: m06,
+        m07: m07,
+        m2_01: m2_01,
+        m05_list_dia: m05_list_dia,
+        m07_list_dia: m07_list_dia,
+        m06_list_dia: m06_list_dia,
+        m2_01_list_dia: m2_01_list_dia,
+        fechas: fechas,
+        alimento: alimento
+    });*/

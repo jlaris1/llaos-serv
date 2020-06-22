@@ -20,10 +20,10 @@ module.exports = {
         var primerDiaMes = new Date(y, m, 1).toLocaleDateString("es-MX",{dateStyle: 'short'});
 
         Nutricion.find({
-            /*fecha: {
+            fecha: {
                 //$gte: primerDiaMes
                 $gte: '2020-04-01'
-            }*/
+            }
         }, (error, nutricion) => {
             if(error) return console.log(chalk.bgRed(error));
 
@@ -924,8 +924,8 @@ module.exports = {
                         {
                             $and: [
                                 { estanque:  { $in: estanques }},
-                                { fecha: {$gte: '2020-05-02',
-                                          $lte: '2020-05-15'      }}
+                                { fecha: {$gte: '2020-05-06',
+                                          $lte: '2020-05-08'      }}
                             ]
                         }
                         , (error) => {
