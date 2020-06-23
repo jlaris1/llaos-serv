@@ -8,7 +8,7 @@ var express = require('express'),
 	cookieParser = require('cookie-parser'),
 	session = require('express-session'),
 	fileUpload = require('express-fileupload'),
-	PORT = 3000,
+	PORT = 80,
 	app = express();
 	compression = require('compression');
 	fs = require('fs');
@@ -17,13 +17,13 @@ var express = require('express'),
 	http = require('http');
 
 
-https.createServer({
+/*https.createServer({
     key: fs.readFileSync('./public/ssl/key.pem'),
     cert: fs.readFileSync('./public/ssl/cert.pem'),
     passphrase: 'llaos2019'
-}, app).listen(PORT);
+}, app).listen(PORT);*/
 
-//http.createServer(app).listen(PORT);
+http.createServer(app).listen(PORT);
 	
 require('mongoose-double')(mongoose);
 
